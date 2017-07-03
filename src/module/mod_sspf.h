@@ -45,6 +45,8 @@
         
         mics_obj * mics;
 
+        float epsilon;
+
         unsigned int nThetas;
         float gainMin;       
 

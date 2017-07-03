@@ -50,8 +50,6 @@
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed; 
 
-        float epsilon;
-
         unsigned int nThetas;
         float gainMin;       
 

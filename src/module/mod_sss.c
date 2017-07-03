@@ -37,7 +37,7 @@
 
         obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize,
                                                   0,
-                                                  mod_sss_config->epsilon);
+                                                  0.0f);
 
         obj->in1 = (msg_spectra_obj *) NULL;
         obj->in2 = (msg_tracks_obj *) NULL;
@@ -136,8 +136,6 @@
         cfg->mics = (mics_obj *) NULL;
         cfg->samplerate = (samplerate_obj *) NULL;
         cfg->soundspeed = (soundspeed_obj *) NULL;
-
-        cfg->epsilon = 0.0f;
 
         cfg->nThetas = 0;
         cfg->gainMin = 0.0f;

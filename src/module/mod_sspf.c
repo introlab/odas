@@ -28,7 +28,7 @@
 
         obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize,
                                                   0,
-                                                  0.0f);
+                                                  mod_sspf_config->epsilon);
 
         obj->in1 = (msg_spectra_obj *) NULL;
         obj->in2 = (msg_spectra_obj *) NULL;
@@ -122,6 +122,8 @@
         cfg = (mod_sspf_cfg *) malloc(sizeof(mod_sspf_cfg));
 
         cfg->mics = (mics_obj *) NULL;
+
+        cfg->epsilon = 0.0f;
 
         cfg->nThetas = 0;
         cfg->gainMin = 0.0f;
