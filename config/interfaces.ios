@@ -1,0 +1,58 @@
+# Input
+
+input:
+{
+   
+    raw: { type = "file"; path = "in.raw"; format = "bin16"; }
+
+};
+
+# Output:
+
+output:
+{
+    raw:
+    (
+#        { type = "file"; path = "recorded_raw_16.raw"; format = "bin16"; },
+#        { type = "file"; path = "recorded_raw_32.raw"; format = "bin32"; },
+#        { type = "file"; path = "recorded_raw_24.raw"; format = "bin24"; }
+    );
+
+    mapping:
+    (
+#        { type = "file"; path = "recorded_mapping_16.raw"; format = "bin16"; },
+#        { type = "file"; path = "recorded_mapping_32.raw"; format = "bin32"; }
+    );
+
+    resample:
+    (
+#        { type = "file"; path = "recorded_resample_16.raw"; format = "bin16"; },
+#        { type = "file"; path = "recorded_resample_32.raw"; format = "bin32"; }
+    );
+
+    stft:
+    (
+        { type = "file"; path = "recorded_stft.bin"; format = "float"; }
+    );
+
+    ssl:
+    (
+        { type = "file"; path = "potential.bin"; format = "float"; }
+    );
+
+    sst:
+    (
+        { type = "file"; path = "tracked.bin"; format = "float"; }
+    )
+
+    sss:
+    (
+        { type = "file"; path = "separated_stft.bin"; format = "float"; }
+    )
+
+    sspf:
+    (
+        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
+    )
+
+}
