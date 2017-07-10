@@ -132,7 +132,6 @@
     int snk_tracks_process_file(snk_tracks_obj * obj) {
 
         int rtnValue;
-        //unsigned int iTrack;
 
         if (obj->in->timeStamp != 0) {
 
@@ -142,11 +141,6 @@
 
                     fwrite(obj->in->tracks->ids, sizeof(unsigned long long), obj->in->tracks->nTracks, obj->fp);
                     fwrite(obj->in->tracks->array, sizeof(float), 3 * obj->in->tracks->nTracks, obj->fp);
-
-                    /*for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
-                        printf("(%03llu): (%f,%f,%f)\n",obj->in->tracks->ids[iTrack],obj->in->tracks->array[iTrack*3+0],obj->in->tracks->array[iTrack*3+1],obj->in->tracks->array[iTrack*3+2]);
-                    }
-                    printf("\n");*/
 
                 break;
 

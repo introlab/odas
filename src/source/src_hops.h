@@ -4,6 +4,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include <alsa/asoundlib.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -24,7 +25,9 @@
         interface_obj * interface;
 
         FILE * fp;
+        snd_pcm_t * ch;
 
+        char * buffer;
         char bytes[4];
 
         msg_hops_obj * out;
@@ -49,7 +52,19 @@
 
     void src_hops_open(src_hops_obj * obj);
 
+    void src_hops_open_file(src_hops_obj * obj);
+
+    void src_hops_open_socket(src_hops_obj * obj);
+
+    void src_hops_open_soundcard(src_hops_obj * obj);
+
     void src_hops_close(src_hops_obj * obj);
+
+    void src_hops_close_file(src_hops_obj * obj);
+
+    void src_hops_close_socket(src_hops_obj * obj);
+
+    void src_hops_close_soundcard(src_hops_obj * obj);
 
     int src_hops_process(src_hops_obj * obj);
 

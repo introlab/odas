@@ -132,7 +132,6 @@
     int snk_pots_process_file(snk_pots_obj * obj) {
 
         int rtnValue;
-        //unsigned int iPot;
 
         if (obj->in->timeStamp != 0) {
 
@@ -141,11 +140,6 @@
                 case format_float:
 
                     fwrite(obj->in->pots->array, sizeof(float), 4 * obj->in->pots->nPots, obj->fp);
-
-                    /*for (iPot = 0; iPot < obj->in->pots->nPots; iPot++) {
-                        printf("(%f,%f,%f)\n",obj->in->pots->array[iPot*4+0],obj->in->pots->array[iPot*4+1],obj->in->pots->array[iPot*4+2]);
-                    }
-                    printf("\n");*/
 
                 break;
 

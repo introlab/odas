@@ -30,8 +30,8 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
+            obj->card = 0;
             obj->device = 0;
-            obj->subdevice = 0;
 
         return obj;
 
@@ -67,8 +67,8 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
+            obj->card = 0;
             obj->device = 0;
-            obj->subdevice = 0;
 
         return obj;
 
@@ -104,14 +104,14 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
+            obj->card = 0;
             obj->device = 0;
-            obj->subdevice = 0;
 
         return obj;        
 
     }
 
-    interface_obj * interface_construct_soundcard(const unsigned int device, const unsigned int subdevice) {
+    interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device) {
 
         interface_obj * obj;
 
@@ -140,8 +140,8 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
+            obj->card = card;
             obj->device = device;
-            obj->subdevice = subdevice;
 
         return obj;
 
@@ -188,8 +188,8 @@
 
             if (obj->type == interface_soundcard) {
                 
+                clone->card = obj->card;
                 clone->device = obj->device;
-                clone->subdevice = obj->subdevice;
 
             }
 
@@ -235,7 +235,7 @@
 
                 case interface_soundcard:
 
-                    printf("type = soundcard, device = %u, subdevice = %u\n",obj->device,obj->subdevice);
+                    printf("type = soundcard, card = %u, device = %u\n",obj->card,obj->device);
 
                 break;
 

@@ -23,8 +23,8 @@
         char * ip;
         unsigned int port;
 
+        unsigned int card;
         unsigned int device;
-        unsigned int subdevice;
 
     } interface_obj;
 
@@ -34,7 +34,7 @@
 
     interface_obj * interface_construct_socket(const char * ip, const unsigned int port);
 
-    interface_obj * interface_construct_soundcard(const unsigned int device, const unsigned int subdevice);
+    interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
 
     interface_obj * interface_clone(const interface_obj * obj);
 

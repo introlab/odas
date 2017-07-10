@@ -4,20 +4,8 @@
     #include <math.h>
     #include <limits.h>
 
-    float pcm_signed08bits2normalized(const char * bytes);
+    float pcm_signedXXbits2normalized(const char * bytes, const unsigned int nBytes);
 
-    float pcm_signed16bits2normalized(const char * bytes);
-
-    float pcm_signed24bits2normalized(const char * bytes);
-
-    float pcm_signed32bits2normalized(const char * bytes);
-
-    void pcm_normalized2signed08bits(const float sample, char * bytes);
-
-    void pcm_normalized2signed16bits(const float sample, char * bytes);
-
-    void pcm_normalized2signed24bits(const float sample, char * bytes);
-
-    void pcm_normalized2signed32bits(const float sample, char * bytes);
+    void pcm_normalized2signedXXbits(const float sample, const unsigned int nBytes, char * bytes);
 
 #endif

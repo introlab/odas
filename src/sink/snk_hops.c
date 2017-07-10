@@ -160,46 +160,27 @@
         signed short sampleShort;
         signed int sampleInt;
         float sample;
+        unsigned int nBytes;
         int rtnValue;
 
         if (obj->in->timeStamp != 0) {
+
+            switch (obj->format->type) {
+
+                case format_bin08: nBytes = 1; break;
+                case format_bin16: nBytes = 2; break;
+                case format_bin24: nBytes = 3; break;
+                case format_bin32: nBytes = 4; break;
+
+            }
 
             for (iSample = 0; iSample < obj->hopSize; iSample++) {
                 
                 for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
                     sample = obj->in->hops->array[iChannel][iSample];
-
-                    switch (obj->format->type) {
-                        
-                        case format_bin08:
-
-                            pcm_normalized2signed08bits(sample, obj->bytes);
-                            fwrite(&(obj->bytes[3]), sizeof(char), 1, obj->fp);
-
-                        break;
-
-                        case format_bin16:
-
-                            pcm_normalized2signed16bits(sample, obj->bytes);
-                            fwrite(&(obj->bytes[2]), sizeof(char), 2, obj->fp);
-
-                        break;
-
-                        case format_bin24:
-
-                            pcm_normalized2signed24bits(sample, obj->bytes);
-                            fwrite(&(obj->bytes[1]), sizeof(char), 3, obj->fp);
-
-                        break;
-                        
-                        case format_bin32:
-                        
-                            pcm_normalized2signed32bits(sample, obj->bytes);
-                            fwrite(&(obj->bytes[0]), sizeof(char), 4, obj->fp);
-                        
-                        break;
-                    }
+                    pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                    fwrite(&(obj->bytes[4-nBytes]), sizeof(char), nBytes, obj->fp);
 
                 }
 
