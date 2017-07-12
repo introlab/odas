@@ -53,22 +53,6 @@
 
     }
 
-    void msg_spectra_printf(const msg_spectra_obj * obj) {
-
-        if (obj != NULL) {
-
-            printf("timeStamp = %llu\n", obj->timeStamp);
-            printf("freqs = %p\n", obj->freqs);
-
-        }
-        else {
-
-            printf("(null)\n");
-
-        }
-
-    }
-
     msg_spectra_cfg * msg_spectra_cfg_construct(void) {
 
         msg_spectra_cfg * cfg;

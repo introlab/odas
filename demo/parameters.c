@@ -198,8 +198,8 @@
             }
             else if (strcmp(tmpStr1, "soundcard") == 0) {
 
-                tmpInt1 = parameters_lookup_int(fileIOs, "input.raw.device");
-                tmpInt2 = parameters_lookup_int(fileIOs, "input.raw.subdevice");
+                tmpInt1 = parameters_lookup_int(fileIOs, "input.raw.card");
+                tmpInt2 = parameters_lookup_int(fileIOs, "input.raw.device");
 
                 cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
 

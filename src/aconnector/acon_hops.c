@@ -15,7 +15,7 @@
             obj->outs[iOut] = amsg_hops_construct(nMessages, msg_hops_config);
         }
 
-        obj->con_hops = con_hops_construct_zero(nOuts, msg_hops_config);
+        obj->con_hops = con_hops_construct(nOuts, msg_hops_config);
 
         obj->thread = thread_construct(&acon_hops_thread, (void *) obj);
 

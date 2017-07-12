@@ -114,6 +114,7 @@ set(SRC
     src/asink/asnk_spectra.c
     src/asink/asnk_tracks.c
     src/asource/asrc_hops.c  
+    src/asource/asrc_spectra.c
     
     src/connector/con_hops.c
     src/connector/con_pots.c
@@ -123,6 +124,7 @@ set(SRC
     src/message/msg_pots.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
+    src/message/msg_xcorrs.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
     src/module/mod_resample.c
@@ -135,7 +137,11 @@ set(SRC
     src/sink/snk_pots.c
     src/sink/snk_spectra.c
     src/sink/snk_tracks.c
+    src/sink/snk_xcorrs.c
     src/source/src_hops.c
+    src/source/src_pots.c
+    src/source/src_spectra.c
+    src/source/src_tracks.c
 
 )
 
@@ -156,6 +162,7 @@ add_executable(core
     demo/configs.c
     demo/objects.c
     demo/parameters.c
+    demo/profiler.c
     demo/threads.c
 )
 target_link_libraries(core

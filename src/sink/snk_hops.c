@@ -18,6 +18,21 @@
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
+        switch (obj->format->type) {
+            
+            case format_bin08: break;
+            case format_bin16: break;
+            case format_bin24: break;
+            case format_bin32: break;
+            default:
+
+                printf("Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+
+        }
+
         obj->in = (msg_hops_obj *) NULL;
 
         return obj;

@@ -15,7 +15,7 @@
 
     } con_spectra_obj;
 
-    con_spectra_obj * con_spectra_construct_zero(const unsigned int nOuts, const msg_spectra_cfg * msg_spectra_config);
+    con_spectra_obj * con_spectra_construct(const unsigned int nOuts, const msg_spectra_cfg * msg_spectra_config);
 
     void con_spectra_destroy(con_spectra_obj * obj);
 

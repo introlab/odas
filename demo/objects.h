@@ -7,6 +7,58 @@
     #include <stdlib.h>
 
     typedef struct objects {
+
+        src_hops_obj * src_hops_raw_object;
+        msg_hops_obj * msg_hops_raw_object;        
+        unsigned int snk_hops_raw_object_count;
+        snk_hops_obj ** snk_hops_raw_objects;                
+        con_hops_obj * con_hops_raw_object; 
+
+        mod_mapping_obj * mod_mapping_object;
+        msg_hops_obj * msg_hops_mapping_object;
+        unsigned int snk_hops_mapping_object_count;
+        snk_hops_obj ** snk_hops_mapping_objects;
+        con_hops_obj * con_hops_mapping_object;              
+
+        mod_resample_obj * mod_resample_object;
+        msg_hops_obj * msg_hops_resample_object;
+        unsigned int snk_hops_resample_object_count;
+        snk_hops_obj ** snk_hops_resample_objects;
+        con_hops_obj * con_hops_resample_object;
+
+        mod_stft_obj * mod_stft_object;
+        msg_spectra_obj * msg_spectra_stft_object;
+        unsigned int snk_spectra_stft_object_count;
+        snk_spectra_obj ** snk_spectra_stft_objects;
+        con_spectra_obj * con_spectra_stft_object;
+
+        mod_ssl_obj * mod_ssl_object;
+        msg_pots_obj * msg_pots_ssl_object;
+        unsigned int snk_pots_ssl_object_count;
+        snk_pots_obj ** snk_pots_ssl_objects;
+        con_pots_obj * con_pots_ssl_object;
+
+        mod_sst_obj * mod_sst_object;
+        msg_tracks_obj * msg_tracks_sst_object;
+        unsigned int snk_tracks_sst_object_count;
+        snk_tracks_obj ** snk_tracks_sst_objects;
+        con_tracks_obj * con_tracks_sst_object;
+
+        mod_sss_obj * mod_sss_object;
+        msg_spectra_obj * msg_spectra_sss_object;
+        unsigned int snk_spectra_sss_object_count;
+        snk_spectra_obj ** snk_spectra_sss_objects;
+        con_spectra_obj * con_spectra_sss_object;
+
+        mod_sspf_obj * mod_sspf_object;
+        msg_spectra_obj * msg_spectra_sspf_object;
+        unsigned int snk_spectra_sspf_object_count;
+        snk_spectra_obj ** snk_spectra_sspf_objects;
+        con_spectra_obj * con_spectra_sspf_object;
+
+    } objects;   
+
+    typedef struct aobjects {
       
         unsigned int nMessages;
 
@@ -58,10 +110,14 @@
         asnk_spectra_obj ** asnk_spectra_sspf_objects;
         acon_spectra_obj * acon_spectra_sspf_object;
 
-    } objects;
-
+    } aobjects;
+ 
     objects * objects_construct(const configs * cfgs);
 
     void objects_destroy(objects * objs);
+
+    aobjects * aobjects_construct(const configs * cfgs);
+
+    void aobjects_destroy(aobjects * objs);
 
 #endif

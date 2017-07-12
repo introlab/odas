@@ -4,6 +4,7 @@ input:
 {
    
     raw: { type = "file"; path = "in.raw"; format = "bin16"; }
+    #raw: { type = "soundcard"; card = 2; device = 0; format = "bin16"; }
 
 };
 
@@ -13,14 +14,14 @@ output:
 {
     raw:
     (
-#        { type = "file"; path = "recorded_raw_16.raw"; format = "bin16"; },
+#        { type = "file"; path = "recorded_raw_16.raw"; format = "bin16"; }
 #        { type = "file"; path = "recorded_raw_32.raw"; format = "bin32"; },
 #        { type = "file"; path = "recorded_raw_24.raw"; format = "bin24"; }
     );
 
     mapping:
     (
-#        { type = "file"; path = "recorded_mapping_16.raw"; format = "bin16"; },
+#        { type = "file"; path = "recorded_mapping_16.raw"; format = "bin16"; }
 #        { type = "file"; path = "recorded_mapping_32.raw"; format = "bin32"; }
     );
 
@@ -32,7 +33,7 @@ output:
 
     stft:
     (
-        { type = "file"; path = "recorded_stft.bin"; format = "float"; }
+#        { type = "file"; path = "recorded_stft.bin"; format = "float"; }
     );
 
     ssl:
@@ -52,7 +53,7 @@ output:
 
     sspf:
     (
-        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
+        #{ type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
     )
 
 }

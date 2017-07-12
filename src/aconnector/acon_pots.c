@@ -15,7 +15,7 @@
             obj->outs[iOut] = amsg_pots_construct(nMessages, msg_pots_config);
         }
 
-        obj->con_pots = con_pots_construct_zero(nOuts, msg_pots_config);
+        obj->con_pots = con_pots_construct(nOuts, msg_pots_config);
 
         obj->thread = thread_construct(&acon_pots_thread, (void *) obj);
 

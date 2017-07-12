@@ -66,7 +66,6 @@
 
     void src_hops_open(src_hops_obj * obj) {
 
-
         switch(obj->interface->type) {
 
             case interface_file:

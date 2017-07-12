@@ -1,7 +1,7 @@
     
     #include "con_tracks.h"
 
-    con_tracks_obj * con_tracks_construct_zero(const unsigned int nOuts, const msg_tracks_cfg * msg_tracks_config) {
+    con_tracks_obj * con_tracks_construct(const unsigned int nOuts, const msg_tracks_cfg * msg_tracks_config) {
 
         con_tracks_obj * obj;
         unsigned int iOut;

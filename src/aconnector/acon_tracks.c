@@ -15,7 +15,7 @@
             obj->outs[iOut] = amsg_tracks_construct(nMessages, msg_tracks_config);
         }
 
-        obj->con_tracks = con_tracks_construct_zero(nOuts, msg_tracks_config);
+        obj->con_tracks = con_tracks_construct(nOuts, msg_tracks_config);
 
         obj->thread = thread_construct(&acon_tracks_thread, (void *) obj);
 

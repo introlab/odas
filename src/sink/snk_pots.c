@@ -15,6 +15,18 @@
         obj->format = format_clone(snk_pots_config->format);
         obj->interface = interface_clone(snk_pots_config->interface);
 
+        switch (obj->format->type) {
+            
+            case format_float: break;
+            default:
+
+                printf("Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+
+        }
+
         obj->in = (msg_pots_obj *) NULL;
 
         return obj;

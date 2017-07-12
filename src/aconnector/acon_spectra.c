@@ -15,7 +15,7 @@
             obj->outs[iOut] = amsg_spectra_construct(nMessages, msg_spectra_config);
         }
 
-        obj->con_spectra = con_spectra_construct_zero(nOuts, msg_spectra_config);
+        obj->con_spectra = con_spectra_construct(nOuts, msg_spectra_config);
 
         obj->thread = thread_construct(&acon_spectra_thread, (void *) obj);
 

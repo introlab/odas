@@ -8,7 +8,6 @@
 
     #include "../general/format.h"
     #include "../general/interface.h"
-    #include "../general/thread.h"
     #include "../message/msg_hops.h"
     #include "../signal/hop.h"
     #include "../utils/pcm.h"

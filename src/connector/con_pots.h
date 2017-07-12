@@ -15,7 +15,7 @@
 
     } con_pots_obj;
 
-    con_pots_obj * con_pots_construct_zero(const unsigned int nOuts, const msg_pots_cfg * msg_pots_config);
+    con_pots_obj * con_pots_construct(const unsigned int nOuts, const msg_pots_cfg * msg_pots_config);
 
     void con_pots_destroy(con_pots_obj * obj);
 

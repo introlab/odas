@@ -15,6 +15,18 @@
         obj->format = format_clone(snk_tracks_config->format);
         obj->interface = interface_clone(snk_tracks_config->interface);
 
+        switch (obj->format->type) {
+            
+            case format_float: break;
+            default:
+
+                printf("Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+
+        }
+
         obj->in = (msg_tracks_obj *) NULL;
 
         return obj;

@@ -17,6 +17,10 @@
 
     void xcorrs_destroy(xcorrs_obj * obj);
 
+    void xcorrs_copy(xcorrs_obj * dest, const xcorrs_obj * src);
+
+    void xcorrs_zero(xcorrs_obj * obj);
+
     void xcorrs_printf(const xcorrs_obj * obj);
 
     void xcorrs_printf_signal(const xcorrs_obj * obj, const unsigned int iSignal);

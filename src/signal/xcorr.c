@@ -34,6 +34,26 @@
 
     }
 
+    void xcorrs_copy(xcorrs_obj * dest, const xcorrs_obj * src) {
+
+        unsigned int iSignal;
+
+        for (iSignal = 0; iSignal < src->nSignals; iSignal++) {
+            memcpy(dest->array[iSignal], src->array[iSignal], src->frameSize * sizeof(float));
+        }
+
+    }
+
+    void xcorrs_zero(xcorrs_obj * obj) {
+
+        unsigned int iSignal;
+
+        for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
+            memset(obj->array[iSignal], 0x00, obj->frameSize * sizeof(float));
+        }
+
+    }
+
     void xcorrs_printf(const xcorrs_obj * obj) {
 
         unsigned int iSignal;
