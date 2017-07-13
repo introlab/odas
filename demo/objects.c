@@ -698,7 +698,7 @@
 
         objs = (aobjects *) malloc(sizeof(aobjects));
 
-        objs->nMessages = 10;
+        objs->nMessages = 100;
 
         // +----------------------------------------------------------+
         // | Construct                                                |
