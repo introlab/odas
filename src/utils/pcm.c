@@ -10,7 +10,7 @@
             case 1:
 
                 sample32 = 0;
-                sample32 += ((((signed int) bytes[3]) << 0) & 0xFFFFFFFF);
+                sample32 += ((((signed char) bytes[3]) << 0) & 0xFFFFFFFF);
 
                 sampleFloat = (float) sample32;
 
@@ -21,8 +21,8 @@
             case 2:
 
                 sample32 = 0;
-                sample32 += ((((signed int) bytes[2]) << 0) & 0x000000FF);
-                sample32 += ((((signed int) bytes[3]) << 8) & 0xFFFFFF00);
+                sample32 += ((((signed char) bytes[2]) << 0) & 0x000000FF);
+                sample32 += ((((signed char) bytes[3]) << 8) & 0xFFFFFF00);
 
                 sampleFloat = (float) sample32;
 
@@ -33,9 +33,9 @@
             case 3:
 
                 sample32 = 0;
-                sample32 += ((((signed int) bytes[1]) << 0) & 0x000000FF);
-                sample32 += ((((signed int) bytes[2]) << 8) & 0x0000FF00);
-                sample32 += ((((signed int) bytes[3]) << 16) & 0xFFFF0000);
+                sample32 += ((((signed char) bytes[1]) << 0) & 0x000000FF);
+                sample32 += ((((signed char) bytes[2]) << 8) & 0x0000FF00);
+                sample32 += ((((signed char) bytes[3]) << 16) & 0xFFFF0000);
 
                 sampleFloat = (float) sample32;
 
@@ -46,10 +46,10 @@
             case 4:
 
                 sample32 = 0;
-                sample32 += ((((signed int) bytes[0]) << 0) & 0x000000FF);
-                sample32 += ((((signed int) bytes[1]) << 8) & 0x0000FF00);
-                sample32 += ((((signed int) bytes[2]) << 16) & 0x00FF0000);
-                sample32 += ((((signed int) bytes[3]) << 24) & 0xFF000000);
+                sample32 += ((((signed char) bytes[0]) << 0) & 0x000000FF);
+                sample32 += ((((signed char) bytes[1]) << 8) & 0x0000FF00);
+                sample32 += ((((signed char) bytes[2]) << 16) & 0x00FF0000);
+                sample32 += ((((signed char) bytes[3]) << 24) & 0xFF000000);
 
                 sampleFloat = (float) sample32;
 
