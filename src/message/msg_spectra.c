@@ -8,7 +8,7 @@
         obj = (msg_spectra_obj *) malloc(sizeof(msg_spectra_obj));
 
         obj->timeStamp = 0;
-        obj->fS = 0;
+        obj->fS = msg_spectra_config->fS;
         obj->freqs = freqs_construct_zero(msg_spectra_config->nChannels, msg_spectra_config->halfFrameSize);
 
         return obj;
