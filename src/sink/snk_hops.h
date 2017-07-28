@@ -23,6 +23,10 @@
 
         FILE * fp;
 
+        //struct sockaddr_in sserver;
+        //char * smessage;
+        //int sid;
+
         char bytes[4];
 
         msg_hops_obj * in;

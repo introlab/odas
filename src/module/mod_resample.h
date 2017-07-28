@@ -21,6 +21,7 @@
     typedef struct mod_resample_obj {
 
         unsigned long long timeStamp;
+        char noMorePush;
 
         char type;
 
@@ -64,13 +65,21 @@
 
     void mod_resample_destroy(mod_resample_obj * obj);
 
-    int mod_resample_process(mod_resample_obj * obj);
+    int mod_resample_process_push(mod_resample_obj * obj);
 
-    int mod_resample_process_down(mod_resample_obj * obj);
+    int mod_resample_process_pop(mod_resample_obj * obj);
 
-    int mod_resample_process_up(mod_resample_obj * obj);
+    int mod_resample_process_push_down(mod_resample_obj * obj);
 
-    int mod_resample_process_same(mod_resample_obj * obj);
+    int mod_resample_process_push_up(mod_resample_obj * obj);
+
+    int mod_resample_process_push_same(mod_resample_obj * obj);    
+
+    int mod_resample_process_pop_down(mod_resample_obj * obj);
+
+    int mod_resample_process_pop_up(mod_resample_obj * obj);
+
+    int mod_resample_process_pop_same(mod_resample_obj * obj);    
 
     void mod_resample_connect(mod_resample_obj * obj, msg_hops_obj * in, msg_hops_obj * out);
 

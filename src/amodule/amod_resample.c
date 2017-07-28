@@ -45,34 +45,39 @@
         amod_resample_obj * obj;
         msg_hops_obj * msg_hops_in;
         msg_hops_obj * msg_hops_out;
-        int rtnValue;
+        int rtnValuePush;
+        int rtnValuePop;
 
         obj = (amod_resample_obj *) ptr;
 
-        rtnValue = 4;
+        rtnValuePush = 0;
+        rtnValuePop = 0;
 
         while(1) {
-                        
-            if ((rtnValue == 3) || (rtnValue == 4)) {
-                msg_hops_in = amsg_hops_filled_pop(obj->in);   
+                         
+            if (rtnValuePush != -1) {
+                msg_hops_in = amsg_hops_filled_pop(obj->in);
             }
-            if ((rtnValue == 2) || (rtnValue == 4)) {
+            if (rtnValuePop != -1) {
                 msg_hops_out = amsg_hops_empty_pop(obj->out);
-            }          
-                
+            }
+
             mod_resample_connect(obj->mod_resample, msg_hops_in, msg_hops_out);
-            rtnValue = mod_resample_process(obj->mod_resample);
+            rtnValuePush = mod_resample_process_push(obj->mod_resample);
+            rtnValuePop = mod_resample_process_pop(obj->mod_resample);
             mod_resample_disconnect(obj->mod_resample);
 
-            if ((rtnValue == 3) || (rtnValue == 4) || (rtnValue == -1)) {
+            if (rtnValuePush != -1) {
                 amsg_hops_empty_push(obj->in, msg_hops_in);
             }
-            if ((rtnValue == 2) || (rtnValue == 4) || (rtnValue == -1)) {
+            if (rtnValuePop != -1) {
                 amsg_hops_filled_push(obj->out, msg_hops_out);
             }
 
-            // If this is the last frame, rtnValue = -1
-            if (rtnValue == -1) {
+            // If this is the last frame
+            if ((rtnValuePush == -1) && (rtnValuePop == -1)) {
+                amsg_hops_empty_push(obj->in, msg_hops_in);
+                amsg_hops_filled_push(obj->out, msg_hops_out);
                 break;
             }
 

@@ -72,6 +72,10 @@
 
             case interface_socket:
 
+                //struct sockaddr_in sserver;
+                //char * smessage;
+                //int sid;
+
                 printf("Not implemented yet.\n");
                 exit(EXIT_FAILURE);
 

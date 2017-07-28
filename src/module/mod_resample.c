@@ -8,6 +8,7 @@
         obj = (mod_resample_obj *) malloc(sizeof(mod_resample_obj));
 
         obj->timeStamp = 0;
+        obj->noMorePush = 0;
 
         if (mod_resample_config->fSin == mod_resample_config->fSout) {
             obj->type = 's';
@@ -150,41 +151,202 @@
 
     }
 
-    int mod_resample_process(mod_resample_obj * obj) {
+    int mod_resample_process_push(mod_resample_obj * obj) {
+
+        int rtnValue;
+
+        switch(obj->type) {
+
+            case 'd':
+
+                rtnValue = mod_resample_process_push_down(obj);
+
+            break;
+
+            case 'u':
+
+                rtnValue = mod_resample_process_push_up(obj);
+
+            break;
+
+            case 's':
+
+                rtnValue = mod_resample_process_push_same(obj);
+
+            break;
+
+        }
+
+        return rtnValue;
+
+    }
+
+    int mod_resample_process_pop(mod_resample_obj * obj) {
+
+        int rtnValue;
+
+        switch(obj->type) {
+
+            case 'd':
+
+                rtnValue = mod_resample_process_pop_down(obj);
+
+            break;
+
+            case 'u':
+
+                rtnValue = mod_resample_process_pop_up(obj);
+
+            break;
+
+            case 's':
+
+                rtnValue = mod_resample_process_pop_same(obj);
+
+            break;
+
+        }
+
+        return rtnValue;
+
+    }
+
+    int mod_resample_process_push_down(mod_resample_obj * obj) {
 
         int rtnValue;
 
         if (msg_hops_isZero(obj->in) == 0) {
 
-            switch(obj->type) {
+            if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
 
-                case 'd':
+                hop2frame_process(obj->hop2frame, 
+                                  obj->in->hops,
+                                  obj->framesAnalysis);
 
-                    rtnValue = mod_resample_process_down(obj);
+                frame2freq_process(obj->frame2freq,
+                                   obj->framesAnalysis,
+                                   obj->freqsAnalysis);
 
-                break;
+                freq2freq_process_lowpass(obj->freq2freq,
+                                          obj->freqsAnalysis,
+                                          obj->freqsSynthesis);
 
-                case 'u':
+                freq2frame_process(obj->freq2frame,
+                                   obj->freqsSynthesis,
+                                   obj->framesSynthesis);
+             
+                frame2hop_process(obj->frame2hop,
+                                  obj->framesSynthesis,
+                                  obj->hops);
 
-                    rtnValue = mod_resample_process_up(obj);
+                hop2hop_buffer_push(obj->hop2hop,
+                                    obj->hops);
 
-                break;
+                rtnValue = 0;
 
-                case 's':
+            }
+            else {
 
-                    rtnValue = mod_resample_process_same(obj);
-
-                break;
+                rtnValue = -1;
 
             }
 
-            obj->timeStamp++;
-            obj->out->timeStamp = obj->timeStamp;
-            
         }
         else {
 
-            msg_hops_zero(obj->out);
+            obj->noMorePush = 1;
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
+
+    }
+
+    int mod_resample_process_push_up(mod_resample_obj * obj) {
+
+        int rtnValue;
+
+        if (msg_hops_isZero(obj->in) == 0) {
+
+            if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
+
+                hop2hop_buffer_push(obj->hop2hop,
+                                    obj->in->hops);
+
+                rtnValue = 0;
+
+            }
+            else {
+
+                rtnValue = -1;
+
+            }
+
+        }
+        else {
+
+            obj->noMorePush = 1;
+            rtnValue = -1;
+
+        }        
+
+        return rtnValue;
+
+    }
+
+    int mod_resample_process_push_same(mod_resample_obj * obj) {
+
+        int rtnValue;
+
+        if (msg_hops_isZero(obj->in) == 0) {
+
+            if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
+
+                hop2hop_buffer_push(obj->hop2hop,
+                                    obj->in->hops);
+
+                rtnValue = 0;
+
+            }
+            else {
+
+                rtnValue = -1;
+
+            }
+
+        }
+        else {
+
+            obj->noMorePush = 1;
+            rtnValue = -1;            
+
+        }
+
+        return rtnValue;
+
+    }
+
+    int mod_resample_process_pop_down(mod_resample_obj * obj) {
+
+        int rtnValue;
+
+        if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
+
+            hop2hop_buffer_pop(obj->hop2hop,
+                               obj->out->hops);
+
+            obj->timeStamp++;
+            obj->out->timeStamp = obj->timeStamp;
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            if (obj->noMorePush == 1) {
+                msg_hops_zero(obj->out);
+            }
 
             rtnValue = -1;
 
@@ -194,96 +356,9 @@
 
     }
 
-    int mod_resample_process_down(mod_resample_obj * obj) {
+    int mod_resample_process_pop_up(mod_resample_obj * obj) {
 
         int rtnValue;
-        char pushDone;
-        char popDone;
-
-        if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
-
-            hop2frame_process(obj->hop2frame, 
-                              obj->in->hops,
-                              obj->framesAnalysis);
-
-            frame2freq_process(obj->frame2freq,
-                               obj->framesAnalysis,
-                               obj->freqsAnalysis);
-
-            freq2freq_process_lowpass(obj->freq2freq,
-                                      obj->freqsAnalysis,
-                                      obj->freqsSynthesis);
-
-            freq2frame_process(obj->freq2frame,
-                               obj->freqsSynthesis,
-                               obj->framesSynthesis);
-         
-            frame2hop_process(obj->frame2hop,
-                              obj->framesSynthesis,
-                              obj->hops);
-
-            hop2hop_buffer_push(obj->hop2hop,
-                                obj->hops);
-
-            pushDone = 1;
-
-        }
-        else {
-
-            pushDone = 0;
-
-        }
-
-        if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
-
-            hop2hop_buffer_pop(obj->hop2hop,
-                               obj->out->hops);
-
-            popDone = 1;
-
-        }
-        else {
-
-            popDone = 0;
-
-        }
-
-        if ((pushDone == 0) && (popDone == 0)) {
-            rtnValue = 1;
-        }
-        if ((pushDone == 0) && (popDone == 1)) {
-            rtnValue = 2;
-        }
-        if ((pushDone == 1) && (popDone == 0)) {
-            rtnValue = 3;
-        }
-        if ((pushDone == 1) && (popDone == 1)) {
-            rtnValue = 4;
-        }
-
-        return rtnValue;
-
-    }
-
-    int mod_resample_process_up(mod_resample_obj * obj) {
-
-        int rtnValue;
-        char pushDone;
-        char popDone;
-
-        if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
-
-            hop2hop_buffer_push(obj->hop2hop,
-                                obj->in->hops);
-
-            pushDone = 1;
-
-        }
-        else {
-
-            pushDone = 0;
-
-        }
 
         if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
 
@@ -310,77 +385,49 @@
                               obj->framesSynthesis,
                               obj->out->hops);
 
-            popDone = 1;
+            obj->timeStamp++;
+            obj->out->timeStamp = obj->timeStamp;
+
+            rtnValue = 0;
 
         }
         else {
 
-            popDone = 0;
+            if (obj->noMorePush == 1) {
+                msg_hops_zero(obj->out);
+            }
 
-        }
+            rtnValue = -1;
 
-        if ((pushDone == 0) && (popDone == 0)) {
-            rtnValue = 1;
-        }
-        if ((pushDone == 0) && (popDone == 1)) {
-            rtnValue = 2;
-        }
-        if ((pushDone == 1) && (popDone == 0)) {
-            rtnValue = 3;
-        }
-        if ((pushDone == 1) && (popDone == 1)) {
-            rtnValue = 4;
         }
 
         return rtnValue;
 
     }
 
-    int mod_resample_process_same(mod_resample_obj * obj) {
+    int mod_resample_process_pop_same(mod_resample_obj * obj) {
 
         int rtnValue;
-        char pushDone;
-        char popDone;
-
-        if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
-
-            hop2hop_buffer_push(obj->hop2hop,
-                                obj->in->hops);
-
-            pushDone = 1;
-
-        }
-        else {
-
-            pushDone = 0;
-
-        }
 
         if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
 
             hop2hop_buffer_pop(obj->hop2hop,
                                obj->out->hops);
 
-            popDone = 1;
+            obj->timeStamp++;
+            obj->out->timeStamp = obj->timeStamp;
+
+            rtnValue = 0;
 
         }
         else {
 
-            popDone = 0;
+            if (obj->noMorePush == 1) {
+                msg_hops_zero(obj->out);
+            }
 
-        }
+            rtnValue = -1;
 
-        if ((pushDone == 0) && (popDone == 0)) {
-            rtnValue = 1;
-        }
-        if ((pushDone == 0) && (popDone == 1)) {
-            rtnValue = 2;
-        }
-        if ((pushDone == 1) && (popDone == 0)) {
-            rtnValue = 3;
-        }
-        if ((pushDone == 1) && (popDone == 1)) {
-            rtnValue = 4;
         }
 
         return rtnValue;

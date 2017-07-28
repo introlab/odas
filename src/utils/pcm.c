@@ -63,6 +63,26 @@
 
     }
 
+    void pcm_signedXXbits2json(const char * bytes, const unsigned int nBytes, char * json) {
+
+        unsigned int iByte;
+        char high;
+        char low;
+
+        char hex[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+        for (iByte = 0; iByte < nBytes; iByte++) {
+
+            high = (bytes[iByte] >> 4) & 0x0F;
+            low = (bytes[iByte]) & 0x0F;
+
+            json[iByte*2+0] = hex[high];
+            json[iByte*2+1] = hex[low];
+
+        }
+
+    }
+
     void pcm_normalized2signedXXbits(const float sample, const unsigned int nBytes, char * bytes) {
 
         int sample32;
