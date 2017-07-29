@@ -42,7 +42,7 @@
                            tracks->array[iSep * 3 + 1] * obj->mics[iChannel * 3 + 1] +
                            tracks->array[iSep * 3 + 2] * obj->mics[iChannel * 3 + 2]; 
 
-                    shifts->array[iSep * obj->nChannels + iChannel] = (((float) obj->fS) / obj->c) * dist;
+                    shifts->array[iSep * obj->nChannels + iChannel] = -1.0f * (((float) obj->fS) / obj->c) * dist;
 
                 }
 
