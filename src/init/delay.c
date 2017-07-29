@@ -39,7 +39,7 @@
                     dist += (mics->mu[iChannel1*3+1] - mics->mu[iChannel2*3+1]) * points->array[iPoint*3+1];                    
                     dist += (mics->mu[iChannel1*3+2] - mics->mu[iChannel2*3+2]) * points->array[iPoint*3+2];                    
 
-                    tau = (((float) fS) / soundspeed->mu) * dist;
+                    tau = -1.0f * (((float) fS) / soundspeed->mu) * dist;
 
                     tdoa = (unsigned int) (roundf(tau)+(float) (frameSize/2));
                     obj->array[iPoint*nPairs+iPair] = tdoa;
@@ -62,95 +62,7 @@
         return obj;
 
     }
-/*
-    tdoas_obj * delay_tdoas_minmax(const tdoas_obj * tdoas, const deltas_obj * deltas) {
 
-        unsigned int nPairs;
-        unsigned int nPoints;
-        unsigned int iPair;
-        unsigned int iPoint;
-
-        unsigned int value;
-        unsigned int valueLeft;
-        unsigned int valueRight; 
-        unsigned int minValue;
-        unsigned int maxValue;
-
-        tdoas_obj * obj;
-
-        nPairs = tdoas->nPairs;
-        nPoints = tdoas->nPoints;
-
-        obj = tdoas_construct_zero(2, nPairs);
-
-        for (iPair = 0; iPair < nPairs; iPair++) {
-
-            obj->array[0 * nPairs + iPair] = tdoas->array[0 * nPairs + iPair] - deltas->array[iPair];
-            obj->array[1 * nPairs + iPair] = tdoas->array[0 * nPairs + iPair] + deltas->array[iPair];
-
-        }
-
-        for (iPoint = 0; iPoint < nPoints; iPoint++) {
-
-            for (iPair = 0; iPair < nPairs; iPair++) {               
-
-                value = tdoas->array[iPoint * nPairs + iPair];
-                valueLeft = value - deltas->array[iPair];
-                valueRight = value + deltas->array[iPair];
-
-                minValue = obj->array[0 * nPairs + iPair];
-                maxValue = obj->array[1 * nPairs + iPair];
-
-                // Min value
-                if (valueLeft < minValue) {
-
-                    minValue = valueLeft;
-
-                }
-
-                // Max value
-                if (valueRight > maxValue) {
-
-                    maxValue = valueRight;
-
-                }
-
-                obj->array[0 * nPairs + iPair] = minValue;
-                obj->array[1 * nPairs + iPair] = maxValue;
-
-            }
-
-        }
-
-        return obj;
-
-    }
-
-    void delay_tdoas_allminmax(tdoas_obj * tdoas, const tdoas_obj * minmax) {
-
-        unsigned int nPairs;
-        unsigned int iPair;
-
-        nPairs = tdoas->nPairs;
-
-        for (iPair = 0; iPair < nPairs; iPair++) {
-
-            if (minmax->array[0*nPairs + iPair] < tdoas->array[0*nPairs + iPair]) {
-
-                tdoas->array[0*nPairs + iPair] = minmax->array[0*nPairs + iPair];
-
-            }
-
-            if (minmax->array[1*nPairs + iPair] > tdoas->array[1*nPairs + iPair]) {
-
-                tdoas->array[1*nPairs + iPair] = minmax->array[1*nPairs + iPair];
-
-            }
-
-        }
-
-    }
-*/
     taus_obj * delay_taus(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize) {
 
         taus_obj * obj;
@@ -178,7 +90,7 @@
 
         obj = taus_construct_zero(points->nPoints, nPairs);
 
-        mu_t = ((float) fS) / soundspeed->mu;
+        mu_t = -1.0f * ((float) fS) / soundspeed->mu;
         sigma2_t = ((float) fS) * soundspeed->sigma2 / (soundspeed->mu * soundspeed->mu);
 
         iPair = 0;
