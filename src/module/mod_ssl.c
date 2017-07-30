@@ -20,9 +20,10 @@
         obj->nPots = msg_pots_config->nPots;
         obj->nLevels = mod_ssl_config->nLevels;
         obj->frameSize = 2 * (msg_spectra_config->halfFrameSize - 1);
-        obj->halfFrameSize = msg_spectra_config->halfFrameSize;
+        obj->halfFrameSize = msg_spectra_config->halfFrameSize; 
 
         obj->scans = scanning_init_scans(mod_ssl_config->mics, 
+                                         mod_ssl_config->spatialfilter,
                                          mod_ssl_config->nLevels, 
                                          mod_ssl_config->levels, 
                                          mod_ssl_config->samplerate->mu, 
@@ -33,7 +34,7 @@
                                          mod_ssl_config->probMin, 
                                          mod_ssl_config->nRefinedLevels, 
                                          mod_ssl_config->nThetas, 
-                                         mod_ssl_config->gainMin);
+                                         mod_ssl_config->gainMin); 
 
         obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize, 
                                                   0,
@@ -55,7 +56,7 @@
                                                2 * (msg_spectra_config->halfFrameSize - 1));
 
         obj->aimgs = (aimg_obj **) malloc(sizeof(aimg_obj *) * msg_pots_config->nPots);
-        
+
         for (iLevel = 0; iLevel < mod_ssl_config->nLevels; iLevel++) {
 
             obj->aimgs[iLevel] = aimg_construct_zero(obj->scans->points[iLevel]->nPoints);
@@ -235,6 +236,7 @@
         cfg->mics = (mics_obj *) NULL;
         cfg->samplerate = (samplerate_obj *) NULL;
         cfg->soundspeed = (soundspeed_obj *) NULL;
+        cfg->spatialfilter = (spatialfilter_obj *) NULL;
         
         cfg->nLevels = 0;;
         cfg->levels = (unsigned int *) NULL;
@@ -263,6 +265,10 @@
             soundspeed_destroy(cfg->soundspeed);
         }
 
+        if (cfg->spatialfilter != NULL) {
+            spatialfilter_destroy(cfg->spatialfilter);
+        }
+
         if (cfg->levels != NULL) {
             free((void *) cfg->levels);
         }
@@ -282,6 +288,7 @@
         mics_printf(cfg->mics);
         samplerate_printf(cfg->samplerate);
         soundspeed_printf(cfg->soundspeed);
+        spatialfilter_printf(cfg->spatialfilter);
 
         for (iLevel = 0; iLevel < cfg->nLevels; iLevel++) {
 

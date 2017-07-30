@@ -226,7 +226,7 @@
 
                     for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
                         objs->snk_spectra_sspf_objects[iSink] = snk_spectra_construct(cfgs->snk_spectra_sspf_configs[iSink], cfgs->msg_spectra_sspf_config);
-                    }                    
+                    }
 
         // +----------------------------------------------------------+
         // | Connect                                                  |

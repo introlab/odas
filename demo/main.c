@@ -170,7 +170,7 @@
             // +--------------------------------------------------+  
 
                 printf("  + Initializing objects............. "); fflush(stdout); 
-                
+
                 objs = objects_construct(cfgs);    
                 
                 printf("[Done]\n");   

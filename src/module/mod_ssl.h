@@ -7,6 +7,7 @@
     #include "../general/mic.h"
     #include "../general/samplerate.h"
     #include "../general/soundspeed.h"
+    #include "../general/spatialfilter.h"
 
     #include "../signal/aimg.h"   
     #include "../signal/freq.h"
@@ -58,6 +59,7 @@
         mics_obj * mics;
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed;
+        spatialfilter_obj * spatialfilter;
 
         float epsilon; 
         unsigned int nLevels;

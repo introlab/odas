@@ -24,6 +24,7 @@ set(SRC
     src/general/mic.c
     src/general/samplerate.c
     src/general/soundspeed.c
+    src/general/spatialfilter.c    
     src/general/thread.c
 
     src/init/combining.c

@@ -10,11 +10,13 @@
         obj->nChannels = mod_sspf_config->mics->nChannels;
         obj->nSeps = msg_tracks_config->nTracks;
 
-        obj->beampatterns = directivity_beampattern(mod_sspf_config->mics, mod_sspf_config->nThetas);
+        obj->beampatterns_mics = directivity_beampattern_mics(mod_sspf_config->mics, mod_sspf_config->nThetas);
+        obj->beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sspf_config->spatialfilter, mod_sspf_config->nThetas);
 
         obj->track2gain = track2gain_construct_zero(obj->nSeps,
                                                     obj->nChannels,
-                                                    mod_sspf_config->mics->direction);
+                                                    mod_sspf_config->mics->direction,
+                                                    mod_sspf_config->spatialfilter->direction);
 
         obj->gains = gains_construct_zero(obj->nSeps,
                                           obj->nChannels);
@@ -41,7 +43,8 @@
 
     void mod_sspf_destroy(mod_sspf_obj * obj) {
 
-        beampatterns_destroy(obj->beampatterns);
+        beampatterns_destroy(obj->beampatterns_mics);
+        beampatterns_destroy(obj->beampatterns_spatialfilter);
 
         track2gain_destroy(obj->track2gain);
         gains_destroy(obj->gains);
@@ -65,7 +68,8 @@
             }
 
             track2gain_process(obj->track2gain,
-                               obj->beampatterns,
+                               obj->beampatterns_mics,
+                               obj->beampatterns_spatialfilter,
                                obj->in3->tracks,
                                obj->gains);
 
@@ -122,6 +126,7 @@
         cfg = (mod_sspf_cfg *) malloc(sizeof(mod_sspf_cfg));
 
         cfg->mics = (mics_obj *) NULL;
+        cfg->spatialfilter = (spatialfilter_obj *) NULL;
 
         cfg->epsilon = 0.0f;
 
@@ -136,6 +141,10 @@
 
         if (cfg->mics != NULL) {
             mics_destroy(cfg->mics);
+        }
+
+        if (cfg->spatialfilter != NULL) {
+            spatialfilter_destroy(cfg->spatialfilter);
         }
 
         free((void *) cfg);

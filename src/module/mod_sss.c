@@ -10,7 +10,8 @@
         obj->nChannels = mod_sss_config->mics->nChannels;
         obj->nSeps = msg_tracks_config->nTracks;
 
-        obj->beampatterns = directivity_beampattern(mod_sss_config->mics, mod_sss_config->nThetas);
+        obj->beampatterns_mics = directivity_beampattern_mics(mod_sss_config->mics, mod_sss_config->nThetas);
+        obj->beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sss_config->spatialfilter, mod_sss_config->nThetas);
 
         obj->track2shift = track2shift_construct_zero(obj->nSeps,
                                                       obj->nChannels,
@@ -23,7 +24,8 @@
 
         obj->track2gain = track2gain_construct_zero(obj->nSeps,
                                                     obj->nChannels,
-                                                    mod_sss_config->mics->direction);
+                                                    mod_sss_config->mics->direction,
+                                                    mod_sss_config->spatialfilter->direction);
 
         obj->gains = gains_construct_zero(obj->nSeps,
                                           obj->nChannels);
@@ -49,7 +51,8 @@
 
     void mod_sss_destroy(mod_sss_obj * obj) {
 
-        beampatterns_destroy(obj->beampatterns);
+        beampatterns_destroy(obj->beampatterns_mics);
+        beampatterns_destroy(obj->beampatterns_spatialfilter);
 
         track2shift_destroy(obj->track2shift);
         shifts_destroy(obj->shifts);
@@ -79,7 +82,8 @@
                                 obj->shifts);
 
             track2gain_process(obj->track2gain,
-                               obj->beampatterns,
+                               obj->beampatterns_mics,
+                               obj->beampatterns_spatialfilter,
                                obj->in2->tracks,
                                obj->gains);
 
@@ -134,6 +138,7 @@
         cfg = (mod_sss_cfg *) malloc(sizeof(mod_sss_cfg));
 
         cfg->mics = (mics_obj *) NULL;
+        cfg->spatialfilter = (spatialfilter_obj *) NULL;
         cfg->samplerate = (samplerate_obj *) NULL;
         cfg->soundspeed = (soundspeed_obj *) NULL;
 
@@ -148,6 +153,10 @@
 
         if (cfg->mics != NULL) {
             mics_destroy(cfg->mics);
+        }
+
+        if (cfg->spatialfilter != NULL) {
+            spatialfilter_destroy(cfg->spatialfilter);
         }
 
         if (cfg->samplerate != NULL) {

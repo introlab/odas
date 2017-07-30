@@ -13,6 +13,7 @@
     #include "../general/mic.h"
     #include "../general/samplerate.h"
     #include "../general/soundspeed.h"
+    #include "../general/spatialfilter.h"
 
     #include "../init/directivity.h"
 
@@ -26,7 +27,8 @@
         unsigned int nChannels;
         unsigned int nSeps;
 
-        beampatterns_obj * beampatterns;
+        beampatterns_obj * beampatterns_mics;
+        beampatterns_obj * beampatterns_spatialfilter;
 
         track2gain_obj * track2gain;
         gains_obj * gains;
@@ -44,6 +46,7 @@
     typedef struct mod_sspf_cfg {
         
         mics_obj * mics;
+        spatialfilter_obj * spatialfilter;
 
         float epsilon;
 

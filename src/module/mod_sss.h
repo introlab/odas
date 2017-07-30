@@ -15,6 +15,7 @@
     #include "../general/mic.h"
     #include "../general/samplerate.h"
     #include "../general/soundspeed.h"
+    #include "../general/spatialfilter.h"
 
     #include "../init/directivity.h"
 
@@ -28,7 +29,8 @@
         unsigned int nChannels;
         unsigned int nSeps;
 
-        beampatterns_obj * beampatterns;
+        beampatterns_obj * beampatterns_mics;
+        beampatterns_obj * beampatterns_spatialfilter;
 
         track2shift_obj * track2shift;
         shifts_obj * shifts;
@@ -49,6 +51,7 @@
         mics_obj * mics;
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed; 
+        spatialfilter_obj * spatialfilter;
 
         unsigned int nThetas;
         float gainMin;       

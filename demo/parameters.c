@@ -939,6 +939,18 @@
 
             cfg->gainMin = parameters_lookup_float(fileConfig, "ssl.gainMin");
 
+        // +----------------------------------------------------------+
+        // | Spatial filter                                           |
+        // +----------------------------------------------------------+
+
+            cfg->spatialfilter = spatialfilter_construct_zero();
+
+            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
+            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
+            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
+            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
+            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
+
         return cfg;
 
     }
@@ -1435,6 +1447,18 @@
             cfg->soundspeed->sigma2 = parameters_lookup_float(fileConfig, "general.speedofsound.sigma2");
 
         // +----------------------------------------------------------+
+        // | Spatial filter                                           |
+        // +----------------------------------------------------------+
+
+            cfg->spatialfilter = spatialfilter_construct_zero();
+
+            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
+            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
+            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
+            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
+            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
+
+        // +----------------------------------------------------------+
         // | Directivity                                              |
         // +----------------------------------------------------------+
 
@@ -1647,6 +1671,18 @@
         // +----------------------------------------------------------+
 
             cfg->epsilon = parameters_lookup_float(fileConfig, "general.epsilon");
+
+        // +----------------------------------------------------------+
+        // | Spatial filter                                           |
+        // +----------------------------------------------------------+
+
+            cfg->spatialfilter = spatialfilter_construct_zero();
+
+            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
+            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
+            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
+            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
+            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
 
         // +----------------------------------------------------------+
         // | Directivity                                              |

@@ -1,12 +1,13 @@
 
     #include "scanning.h"
 
-    scans_obj * scanning_init_scans(const mics_obj * mics, const unsigned int nLevels, const unsigned int * levels, const unsigned int fS, const soundspeed_obj * soundspeed, const unsigned int nMatches, const unsigned int frameSize, const signed int * deltas, const float probMin, const unsigned int nRefineLevels, const unsigned int nThetas, const float gainMin) {
+    scans_obj * scanning_init_scans(const mics_obj * mics, const spatialfilter_obj * spatialfilter, const unsigned int nLevels, const unsigned int * levels, const unsigned int fS, const soundspeed_obj * soundspeed, const unsigned int nMatches, const unsigned int frameSize, const signed int * deltas, const float probMin, const unsigned int nRefineLevels, const unsigned int nThetas, const float gainMin) {
 
         scans_obj * obj;
         unsigned int iLevel;
 
-        beampatterns_obj * beampatterns;
+        beampatterns_obj * beampatterns_mics;
+        beampatterns_obj * beampatterns_spatialfilter;
         spatialgains_obj * spatialgains;
         spatialmasks_obj ** spatialmasks;
         pairs_obj * pairs;        
@@ -17,7 +18,8 @@
         obj = scans_construct_null(nLevels);       
 
         obj->pairs = pairs_construct_zero(mics->nPairs);
-        beampatterns = directivity_beampattern(mics, nThetas);
+        beampatterns_mics = directivity_beampattern_mics(mics, nThetas);
+        beampatterns_spatialfilter = directivity_beampattern_spatialfilter(spatialfilter, nThetas);
 
         spatialmasks = (spatialmasks_obj **) malloc(sizeof(spatialmasks_obj *) * nLevels);
 
@@ -35,7 +37,9 @@
 
             // Generate gains in space
             spatialgains = directivity_spatialgains(mics, 
-                                                    beampatterns, 
+                                                    beampatterns_mics,
+                                                    spatialfilter, 
+                                                    beampatterns_spatialfilter,
                                                     obj->points[iLevel]);           
 
             // Generate masks in space
@@ -82,7 +86,8 @@
 
         }
 
-        beampatterns_destroy(beampatterns);        
+        beampatterns_destroy(beampatterns_mics);
+        beampatterns_destroy(beampatterns_spatialfilter);
 
         for (iLevel = 0; iLevel < obj->nLevels; iLevel++) {
 
