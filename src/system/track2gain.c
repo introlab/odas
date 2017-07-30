@@ -81,7 +81,7 @@
                     thetaFilter = (360.0f/(2.0f * M_PI)) * acosf(projFilter / (sNorm * uNorm));
 
                     iThetaMic = roundf((thetaMic - beampatterns_mics->minThetas[iChannel]) / (beampatterns_mics->deltaThetas[iChannel]) + beampatterns_mics->minThetas[iChannel]);
-                    iThetaFilter = roundf((thetaFilter - beampatterns_spatialfilter->minThetas[iChannel]) / (beampatterns_spatialfilter->deltaThetas[iChannel]) + beampatterns_spatialfilter->minThetas[iChannel]);
+                    iThetaFilter = roundf((thetaFilter - beampatterns_spatialfilter->minThetas[0]) / (beampatterns_spatialfilter->deltaThetas[0]) + beampatterns_spatialfilter->minThetas[0]);
 
                     if (iThetaMic < 0) {
                         iThetaMic = 0;
@@ -98,7 +98,7 @@
                     }                    
 
                     gainMic = beampatterns_mics->gains[iChannel * beampatterns_mics->nThetas + iThetaMic];
-                    gainFilter = beampatterns_spatialfilter->gains[iChannel * beampatterns_spatialfilter->nThetas + iThetaFilter];
+                    gainFilter = beampatterns_spatialfilter->gains[iThetaFilter];
 
                     gains->array[iSep * obj->nChannels + iChannel] = gainMic * gainFilter;
 

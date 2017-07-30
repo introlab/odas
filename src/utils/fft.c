@@ -27,6 +27,8 @@
         fftwf_free(obj->realArray);
         fftwf_free(obj->complexArray);
 
+        fftwf_cleanup();
+
         free((void *) obj);
 
     }
