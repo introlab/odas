@@ -27,6 +27,10 @@
 
         }
 
+        obj->fp = (FILE *) NULL;
+
+        obj->smessage = (char *) malloc(sizeof(char) * (1024 + 1024 * msg_pots_config->nPots));
+
         obj->in = (msg_pots_obj *) NULL;
 
         return obj;
@@ -34,6 +38,8 @@
     }
 
     void snk_pots_destroy(snk_pots_obj * obj) {
+
+        free((void *) obj->smessage);
 
         format_destroy(obj->format);
         interface_destroy(obj->interface);
@@ -65,9 +71,17 @@
             break;
 
             case interface_socket:
+        
+                obj->sclient.sin_family = AF_INET;
+                obj->sclient.sin_port = htons(obj->interface->port);
+                obj->sid = socket(AF_INET, SOCK_STREAM, 0);
 
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                if ( (connect(obj->sid, (struct sockaddr *) &(obj->sclient), sizeof(obj->sclient))) < 0 ) {
+
+                    printf("Cannot connect to server\n");
+                    exit(EXIT_FAILURE);
+
+                }                
 
             break;
 
@@ -94,8 +108,7 @@
 
             case interface_socket:
 
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                close(obj->sid);
 
             break;
 
@@ -172,8 +185,58 @@
 
     int snk_pots_process_socket(snk_pots_obj * obj) {
 
-        printf("Not implemented\n");
-        exit(EXIT_FAILURE);
+        int rtnValue;
+        unsigned int iPot;
+
+        if (obj->in->timeStamp != 0) {
+
+            switch(obj->format->type) {
+
+                case format_float:
+
+                    obj->smessage[0] = 0x00;
+
+                    sprintf(obj->smessage,"%s{\n",obj->smessage);
+                    sprintf(obj->smessage,"%s    \"timeStamp\": %llu,\n",obj->smessage,obj->in->timeStamp);
+                    sprintf(obj->smessage,"%s    \"src\": [\n",obj->smessage);
+
+                    for (iPot = 0; iPot < obj->nPots; iPot++) {
+
+                        sprintf(obj->smessage,"%s        { x = %+1.3f, y = %+1.3f, z = %+1.3f, E = %+1.3f }", obj->smessage, 
+                                obj->in->pots->array[iPot*4+0], obj->in->pots->array[iPot*4+1], obj->in->pots->array[iPot*4+2], obj->in->pots->array[iPot*4+3]);
+
+                        if (iPot != (obj->nPots - 1)) {
+
+                            sprintf(obj->smessage,"%s,",obj->smessage);
+
+                        }
+
+                        sprintf(obj->smessage,"%s\n",obj->smessage);
+
+                    }
+                    
+                    sprintf(obj->smessage,"%s    ]\n",obj->smessage);
+                    sprintf(obj->smessage,"%s}\n",obj->smessage);
+
+                    if (send(obj->sid, obj->smessage, strlen(obj->smessage), 0) < 0) {
+                        printf("Could not send message.\n");
+                        exit(EXIT_FAILURE);
+                    }
+
+                    rtnValue = 0;
+
+                break;               
+
+            }
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
 
     }
 

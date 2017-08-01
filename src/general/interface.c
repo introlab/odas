@@ -176,7 +176,7 @@
 
             if (obj->type == interface_socket) {
                 
-                clone->ip = (char *) malloc(sizeof(char) * (strlen(obj->fileName) + 1));
+                clone->ip = (char *) malloc(sizeof(char) * (strlen(obj->ip) + 1));
                 strcpy(clone->ip, obj->ip);
                 clone->port = obj->port;
 

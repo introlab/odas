@@ -4,6 +4,10 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -20,6 +24,10 @@
         interface_obj * interface;
 
         FILE * fp;
+
+        char * smessage;
+        struct sockaddr_in sclient;
+        int sid;
 
         msg_pots_obj * in;
 

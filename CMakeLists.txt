@@ -169,3 +169,7 @@ add_executable(core
 target_link_libraries(core
     odas
 )
+
+add_executable(server
+    demo/server.c
+)
