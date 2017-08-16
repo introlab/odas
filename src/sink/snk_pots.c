@@ -17,7 +17,7 @@
 
         switch (obj->format->type) {
             
-            case format_float: break;
+            case format_json: break;
             default:
 
                 printf("Invalid format.\n");
@@ -192,7 +192,7 @@
 
             switch(obj->format->type) {
 
-                case format_float:
+                case format_json:
 
                     obj->smessage[0] = 0x00;
 
@@ -202,7 +202,7 @@
 
                     for (iPot = 0; iPot < obj->nPots; iPot++) {
 
-                        sprintf(obj->smessage,"%s        { x = %+1.3f, y = %+1.3f, z = %+1.3f, E = %+1.3f }", obj->smessage, 
+                        sprintf(obj->smessage,"%s        { \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"E\": %1.3f }", obj->smessage, 
                                 obj->in->pots->array[iPot*4+0], obj->in->pots->array[iPot*4+1], obj->in->pots->array[iPot*4+2], obj->in->pots->array[iPot*4+3]);
 
                         if (iPot != (obj->nPots - 1)) {
