@@ -167,7 +167,7 @@
             else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
             else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
             else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink hops raw: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);
 
@@ -275,7 +275,7 @@
             else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
             else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
             else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink hops raw: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -436,7 +436,7 @@
             else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
             else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
             else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink hops mapping: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -588,7 +588,7 @@
             else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
             else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
             else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink hops resample: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -731,7 +731,7 @@
             free((void *) tmpLabel);
 
             if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink spectra stft: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1009,8 +1009,8 @@
             tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
             free((void *) tmpLabel);
 
-            if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_json(); }
+            else { printf("Sink pots: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1295,8 +1295,8 @@
             tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
             free((void *) tmpLabel);
 
-            if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_json(); }
+            else { printf("Sink tracks: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1535,7 +1535,7 @@
             free((void *) tmpLabel);
 
             if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink spectra separation: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1760,7 +1760,7 @@
             free((void *) tmpLabel);
 
             if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Invalid format\n"); exit(EXIT_FAILURE); }
+            else { printf("Sink spectra postfilter: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
