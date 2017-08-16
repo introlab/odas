@@ -72,7 +72,10 @@
 
             case interface_socket:
         
+                memset(&(obj->sclient), 0x00, sizeof(struct sockaddr_in));
+
                 obj->sclient.sin_family = AF_INET;
+                obj->sclient.sin_addr.s_addr = inet_addr(obj->interface->ip);
                 obj->sclient.sin_port = htons(obj->interface->port);
                 obj->sid = socket(AF_INET, SOCK_STREAM, 0);
 
