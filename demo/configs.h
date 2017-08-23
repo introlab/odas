@@ -40,6 +40,7 @@
 
         mod_sss_cfg * mod_sss_config;
         msg_spectra_cfg * msg_spectra_sss_config;
+        msg_envs_cfg * msg_envs_sss_config;
         unsigned int snk_spectra_sss_config_count;
         snk_spectra_cfg ** snk_spectra_sss_configs;
 
@@ -47,6 +48,16 @@
         msg_spectra_cfg * msg_spectra_sspf_config;
         unsigned int snk_spectra_sspf_config_count;
         snk_spectra_cfg ** snk_spectra_sspf_configs;
+
+        mod_istft_cfg * mod_istft_config;
+        msg_hops_cfg * msg_hops_istft_config;
+        unsigned int snk_hops_istft_config_count;
+        snk_hops_cfg ** snk_hops_istft_configs;
+
+        mod_gain_cfg * mod_gain_config;
+        msg_hops_cfg * msg_hops_gain_config;
+        unsigned int snk_hops_gain_config_count;
+        snk_hops_cfg ** snk_hops_gain_configs;
 
     } configs;
 

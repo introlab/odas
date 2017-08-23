@@ -71,6 +71,8 @@
 
     msg_spectra_cfg * parameters_msg_spectra_sss_config(const char * fileConfig, const char * fileIOs);
 
+    msg_envs_cfg * parameters_msg_envs_sss_config(const char * fileConfig, const char * fileIOs);
+
     unsigned int parameters_snk_spectra_sss_count(const char * fileConfig, const char * fileIOs);
 
     snk_spectra_cfg * parameters_snk_spectra_sss_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
@@ -84,5 +86,22 @@
 
     snk_spectra_cfg * parameters_snk_spectra_sspf_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
 
+
+    mod_istft_cfg * parameters_mod_istft_config(const char * fileConfig, const char * fileIOs);
+
+    msg_hops_cfg * parameters_msg_hops_istft_config(const char * fileConfig, const char * fileIOs);
+
+    unsigned int parameters_snk_hops_istft_count(const char * fileConfig, const char * fileIOs);
+
+    snk_hops_cfg * parameters_snk_hops_istft_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+
+
+    mod_gain_cfg * parameters_mod_gain_config(const char * fileConfig, const char * fileIOs);
+
+    msg_hops_cfg * parameters_msg_hops_gain_config(const char * fileConfig, const char * fileIOs);
+
+    unsigned int parameters_snk_hops_gain_count(const char * fileConfig, const char * fileIOs);
+
+    snk_hops_cfg * parameters_snk_hops_gain_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
 
 #endif

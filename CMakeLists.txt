@@ -42,6 +42,7 @@ set(SRC
     src/signal/beampattern.c
     src/signal/coherence.c
     src/signal/delta.c
+    src/signal/env.c
     src/signal/frame.c
     src/signal/freq.c
     src/signal/gain.c
@@ -57,10 +58,10 @@ set(SRC
     src/signal/postprob.c
     src/signal/pot.c
     src/signal/scan.c
-    src/signal/shift.c
     src/signal/spatialgain.c
     src/signal/spatialindex.c
     src/signal/spatialmask.c
+    src/signal/steer.c
     src/signal/tau.c
     src/signal/tdoa.c
     src/signal/track.c
@@ -71,6 +72,7 @@ set(SRC
     src/system/hop2hop.c
     src/system/hop2frame.c
     src/system/frame2freq.c
+    src/system/freq2env.c
     src/system/freq2freq.c
     src/system/freq2frame.c
     src/system/freq2xcorr.c
@@ -81,9 +83,10 @@ set(SRC
     src/system/mixture2mixture.c
     src/system/particle2coherence.c
     src/system/particle2particle.c
-    src/system/shift2freq.c
+    src/system/steer2env.c
+    src/system/steer2freq.c
     src/system/track2gain.c
-    src/system/track2shift.c
+    src/system/track2steer.c
     src/system/xcorr2aimg.c
     src/system/xcorr2xcorr.c
 
@@ -94,14 +97,17 @@ set(SRC
     src/utils/pcm.c
     src/utils/random.c
 
+    src/aconnector/acon_envs.c
     src/aconnector/acon_hops.c
     src/aconnector/acon_pots.c
     src/aconnector/acon_spectra.c
     src/aconnector/acon_tracks.c
+    src/amessage/amsg_envs.c
     src/amessage/amsg_hops.c
     src/amessage/amsg_pots.c
     src/amessage/amsg_spectra.c
     src/amessage/amsg_tracks.c
+    src/amodule/amod_gain.c
     src/amodule/amod_istft.c
     src/amodule/amod_mapping.c
     src/amodule/amod_resample.c
@@ -117,15 +123,18 @@ set(SRC
     src/asource/asrc_hops.c  
     src/asource/asrc_spectra.c
     
+    src/connector/con_envs.c
     src/connector/con_hops.c
     src/connector/con_pots.c
     src/connector/con_spectra.c
     src/connector/con_tracks.c
+    src/message/msg_envs.c
     src/message/msg_hops.c
     src/message/msg_pots.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
     src/message/msg_xcorrs.c
+    src/module/mod_gain.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
     src/module/mod_resample.c
@@ -172,4 +181,11 @@ target_link_libraries(core
 
 add_executable(server
     demo/server.c
+)
+
+add_executable(debug
+    demo/debug.c
+)
+target_link_libraries(debug
+    odas
 )

@@ -18,6 +18,7 @@
         switch (obj->format->type) {
             
             case format_json: break;
+            case format_float: break;
             default:
 
                 printf("Invalid format.\n");

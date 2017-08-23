@@ -33,6 +33,13 @@
 
     } hop2hop_buffer_obj;
 
+    typedef struct hop2hop_gain_obj {
+
+        unsigned int hopSize;
+        float gain;
+
+    } hop2hop_gain_obj;
+
     hop2hop_multiplex_obj * hop2hop_multiplex_construct_zero(const unsigned int hopSize);
 
     void hop2hop_multiplex_destroy(hop2hop_multiplex_obj * obj);
@@ -50,5 +57,11 @@
     char hop2hop_buffer_isFull(hop2hop_buffer_obj * obj);
 
     char hop2hop_buffer_isEmpty(hop2hop_buffer_obj * obj);
+
+    hop2hop_gain_obj * hop2hop_gain_construct_zero(const unsigned int hopSize, const float gain);
+
+    void hop2hop_gain_destroy(hop2hop_gain_obj * obj);
+
+    void hop2hop_gain_process(hop2hop_gain_obj * obj, const hops_obj * src, hops_obj * dest);
 
 #endif

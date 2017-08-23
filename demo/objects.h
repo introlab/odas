@@ -50,12 +50,25 @@
         unsigned int snk_spectra_sss_object_count;
         snk_spectra_obj ** snk_spectra_sss_objects;
         con_spectra_obj * con_spectra_sss_object;
+        con_envs_obj * con_envs_sss_object;
 
         mod_sspf_obj * mod_sspf_object;
         msg_spectra_obj * msg_spectra_sspf_object;
         unsigned int snk_spectra_sspf_object_count;
         snk_spectra_obj ** snk_spectra_sspf_objects;
         con_spectra_obj * con_spectra_sspf_object;
+
+        mod_istft_obj * mod_istft_object;
+        msg_hops_obj * msg_hops_istft_object;
+        unsigned int snk_hops_istft_object_count;
+        snk_hops_obj ** snk_hops_istft_objects;
+        con_hops_obj * con_hops_istft_object;
+
+        mod_gain_obj * mod_gain_object;
+        msg_hops_obj * msg_hops_gain_object;
+        unsigned int snk_hops_gain_object_count;
+        snk_hops_obj ** snk_hops_gain_objects;
+        con_hops_obj * con_hops_gain_object;
 
     } objects;   
 
@@ -104,12 +117,25 @@
         unsigned int asnk_spectra_sss_object_count;
         asnk_spectra_obj ** asnk_spectra_sss_objects;
         acon_spectra_obj * acon_spectra_sss_object;
+        acon_envs_obj * acon_envs_sss_object;
 
         amod_sspf_obj * amod_sspf_object;
         amsg_spectra_obj * amsg_spectra_sspf_object;
         unsigned int asnk_spectra_sspf_object_count;
         asnk_spectra_obj ** asnk_spectra_sspf_objects;
         acon_spectra_obj * acon_spectra_sspf_object;
+
+        amod_istft_obj * amod_istft_object;
+        amsg_hops_obj * amsg_hops_istft_object;
+        unsigned int asnk_hops_istft_object_count;
+        asnk_hops_obj ** asnk_hops_istft_objects;
+        acon_hops_obj * acon_hops_istft_object;
+
+        amod_gain_obj * amod_gain_object;
+        amsg_hops_obj * amsg_hops_gain_object;
+        unsigned int asnk_hops_gain_object_count;
+        asnk_hops_obj ** asnk_hops_gain_objects;
+        acon_hops_obj * acon_hops_gain_object;        
 
     } aobjects;
  

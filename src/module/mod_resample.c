@@ -41,7 +41,7 @@
                 obj->framesAnalysis = frames_construct_zero(obj->nChannels, obj->frameSize);
                 obj->frame2freq = frame2freq_construct_zero(obj->frameSize, obj->halfFrameSize);
                 obj->freqsAnalysis = freqs_construct_zero(obj->nChannels, obj->halfFrameSize);
-                obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, obj-> lowPassCut, 0.0f);
+                obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, obj-> lowPassCut, 0.0f, 0.0f, 0.0f, 0.0f);
                 obj->freqsSynthesis = freqs_construct_zero(obj->nChannels, obj->halfFrameSize);
                 obj->freq2frame = freq2frame_construct_zero(obj->frameSize, obj->halfFrameSize);
                 obj->framesSynthesis = frames_construct_zero(obj->nChannels, obj->frameSize);
@@ -62,7 +62,7 @@
                 obj->framesAnalysis = frames_construct_zero(obj->nChannels, obj->frameSize);
                 obj->frame2freq = frame2freq_construct_zero(obj->frameSize, obj->halfFrameSize);
                 obj->freqsAnalysis = freqs_construct_zero(obj->nChannels, obj->halfFrameSize);
-                obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, obj-> lowPassCut, 0.0f);
+                obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, obj-> lowPassCut, 0.0f, 0.0f, 0.0f, 0.0f);
                 obj->freqsSynthesis = freqs_construct_zero(obj->nChannels, obj->halfFrameSize);
                 obj->freq2frame = freq2frame_construct_zero(obj->frameSize, obj->halfFrameSize);
                 obj->framesSynthesis = frames_construct_zero(obj->nChannels, obj->frameSize);

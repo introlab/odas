@@ -3,7 +3,7 @@
 input:
 {
    
-    raw: { type = "file"; path = "in.raw"; format = "bin16"; }
+    raw: { type = "file"; path = "meeting_recorded_raw_16.raw"; format = "bin16"; }
     #raw: { type = "soundcard"; card = 3; device = 0; format = "bin16"; }
 
 };
@@ -38,22 +38,34 @@ output:
 
     ssl:
     (
-        { type = "file"; path = "potential.bin"; format = "float"; }
+#        { type = "file"; path = "potential.bin"; format = "float"; },
+#        { type = "socket"; ip = "10.51.80.27"; port = 5000; format = "json"; }
     );
 
     sst:
     (
-        { type = "file"; path = "tracked.bin"; format = "float"; }
+#        { type = "file"; path = "tracked.bin"; format = "float"; }
+#        { type = "socket"; ip = "10.51.80.27"; port = 5000; format = "json"; }
     );
 
     sss:
     (
-        { type = "file"; path = "separated_stft.bin"; format = "float"; }
+#        { type = "file"; path = "separated_stft.bin"; format = "float"; }
     );
 
     sspf:
     (
-        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
+#        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
     );
+
+    istft:
+    (
+#        { type = "file"; path = "separated_16.raw"; format = "bin16"; }
+    )
+
+    playback:
+    (
+        { type = "file"; path = "playback_16.raw"; format = "bin16"; }    
+    )
 
 }

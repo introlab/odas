@@ -38,7 +38,10 @@
 
         obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize, 
                                                   0,
-                                                  mod_ssl_config->epsilon);
+                                                  mod_ssl_config->epsilon,
+                                                  0.0f,
+                                                  0.0f,
+                                                  0.0f);
 
         obj->phasors = freqs_construct_zero(mod_ssl_config->mics->nChannels, 
                                             msg_spectra_config->halfFrameSize);

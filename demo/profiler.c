@@ -35,11 +35,20 @@
 
         prf->mod_sss_prf = 0.0f;
         prf->con_spectra_sss_prf = 0.0f;
+        prf->con_envs_sss_prf = 0.0f;
         prf->snk_spectra_sss_prf = 0.0f;
 
         prf->mod_sspf_prf = 0.0f;
         prf->con_spectra_sspf_prf = 0.0f;
         prf->snk_spectra_sspf_prf = 0.0f;
+
+        prf->mod_istft_prf = 0.0f;
+        prf->con_hops_istft_prf = 0.0f;
+        prf->snk_hops_istft_prf = 0.0f;
+
+        prf->mod_gain_prf = 0.0f;
+        prf->con_hops_gain_prf = 0.0f;
+        prf->snk_hops_gain_prf = 0.0f;
 
         return prf;
 
@@ -65,7 +74,9 @@
                prf->snk_pots_ssl_prf +
                prf->snk_tracks_sst_prf +
                prf->snk_spectra_sss_prf +
-               prf->snk_spectra_sspf_prf;
+               prf->snk_spectra_sspf_prf +
+               prf->snk_hops_istft_prf +
+               prf->snk_hops_gain_prf;
 
         module = prf->mod_mapping_prf + 
                  prf->mod_resample_prf +
@@ -73,7 +84,9 @@
                  prf->mod_ssl_prf +
                  prf->mod_sst_prf +
                  prf->mod_sss_prf +
-                 prf->mod_sspf_prf;
+                 prf->mod_sspf_prf +
+                 prf->mod_istft_prf +
+                 prf->mod_gain_prf;
 
         connector = prf->con_hops_raw_prf +
                     prf->con_hops_mapping_prf +
@@ -82,7 +95,10 @@
                     prf->con_pots_ssl_prf +
                     prf->con_tracks_sst_prf +
                     prf->con_spectra_sss_prf +
-                    prf->con_spectra_sspf_prf;
+                    prf->con_envs_sss_prf + 
+                    prf->con_spectra_sspf_prf +
+                    prf->con_hops_istft_prf + 
+                    prf->con_hops_gain_prf;
 
         total = source + sink + module + connector;                    
 
@@ -121,6 +137,14 @@
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sspf_prf,roundf(10000.0f * prf->mod_sspf_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_spectra_sspf_prf,roundf(10000.0f * prf->con_spectra_sspf_prf / prf->duration) / 100.0f);
         printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_spectra_sspf_prf,roundf(10000.0f * prf->snk_spectra_sspf_prf / prf->duration) / 100.0f); 
+        printf("| + ISTFT                                    |\n");
+        printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_istft_prf,roundf(10000.0f * prf->mod_istft_prf / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_istft_prf,roundf(10000.0f * prf->con_hops_istft_prf / prf->duration) / 100.0f);
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_hops_istft_prf,roundf(10000.0f * prf->snk_hops_istft_prf / prf->duration) / 100.0f);      
+        printf("| + Playback                                 |\n");
+        printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_gain_prf,roundf(10000.0f * prf->mod_gain_prf / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_gain_prf,roundf(10000.0f * prf->con_hops_gain_prf / prf->duration) / 100.0f);
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_hops_gain_prf,roundf(10000.0f * prf->snk_hops_gain_prf / prf->duration) / 100.0f);            
         printf("+--------------------------------------------+\n");
         printf("| + TOTAL.............. %07.3f (%06.2f%%)    |\n",total,roundf(10000.0f * total / prf->duration) / 100.0f);
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",module,roundf(10000.0f * module / prf->duration) / 100.0f);

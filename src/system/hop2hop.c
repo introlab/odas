@@ -230,3 +230,39 @@
         return rtnValue;
 
     }
+
+    hop2hop_gain_obj * hop2hop_gain_construct_zero(const unsigned int hopSize, const float gain) {
+
+        hop2hop_gain_obj * obj;
+
+        obj = (hop2hop_gain_obj *) malloc(sizeof(hop2hop_gain_obj));
+
+        obj->hopSize = hopSize;
+        obj->gain = gain;
+
+        return obj;
+
+    }
+
+    void hop2hop_gain_destroy(hop2hop_gain_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void hop2hop_gain_process(hop2hop_gain_obj * obj, const hops_obj * src, hops_obj * dest) {
+
+        unsigned int iSignal;
+        unsigned int iSample;
+
+        for (iSignal = 0; iSignal < src->nSignals; iSignal++) {
+
+            for (iSample = 0; iSample < src->hopSize; iSample++) {
+
+                dest->array[iSignal][iSample] = obj->gain * src->array[iSignal][iSample];
+
+            }
+
+        }
+
+    }

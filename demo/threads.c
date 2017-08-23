@@ -172,6 +172,7 @@
             // +------------------------------------------------------+                     
 
                 thread_start(aobjs->acon_spectra_sss_object->thread);
+                thread_start(aobjs->acon_envs_sss_object->thread);
 
         // +----------------------------------------------------------+
         // | SSPF                                                     |
@@ -196,6 +197,54 @@
             // +------------------------------------------------------+                     
 
                 thread_start(aobjs->acon_spectra_sspf_object->thread);
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_start(aobjs->amod_istft_object->thread);
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < aobjs->asnk_hops_istft_object_count; iSink++) {
+                    thread_start(aobjs->asnk_hops_istft_objects[iSink]->thread);
+                }
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+                     
+
+                thread_start(aobjs->acon_hops_istft_object->thread);
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_start(aobjs->amod_gain_object->thread);
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < aobjs->asnk_hops_gain_object_count; iSink++) {
+                    thread_start(aobjs->asnk_hops_gain_objects[iSink]->thread);
+                }
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+                     
+
+                thread_start(aobjs->acon_hops_gain_object->thread);
 
     }
 
@@ -388,6 +437,7 @@
             // +------------------------------------------------------+  
 
                 thread_join(aobjs->acon_spectra_sss_object->thread);
+                thread_join(aobjs->acon_envs_sss_object->thread);
 
         // +----------------------------------------------------------+
         // | SSPF                                                     |
@@ -412,6 +462,54 @@
             // +------------------------------------------------------+  
 
                 thread_join(aobjs->acon_spectra_sspf_object->thread);
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->amod_istft_object->thread);               
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+   
+                
+                for (iSink = 0; iSink < aobjs->asnk_hops_istft_object_count; iSink++) {
+                    thread_join(aobjs->asnk_hops_istft_objects[iSink]->thread);
+                }
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->acon_hops_istft_object->thread);
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->amod_gain_object->thread);               
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+   
+                
+                for (iSink = 0; iSink < aobjs->asnk_hops_gain_object_count; iSink++) {
+                    thread_join(aobjs->asnk_hops_gain_objects[iSink]->thread);
+                }
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->acon_hops_gain_object->thread);
 
     }
 
@@ -521,6 +619,30 @@
                     snk_spectra_open(objs->snk_spectra_sspf_objects[iSink]);
                 }
 
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
+                    snk_hops_open(objs->snk_hops_istft_objects[iSink]);
+                }
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
+                    snk_hops_open(objs->snk_hops_gain_objects[iSink]);
+                }
+
     }
 
     void threads_single_close(objects * objs) {
@@ -628,6 +750,30 @@
                 for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
                     snk_spectra_close(objs->snk_spectra_sspf_objects[iSink]);
                 }
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
+                    snk_hops_close(objs->snk_hops_istft_objects[iSink]);
+                }                
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
+                    snk_hops_close(objs->snk_hops_gain_objects[iSink]);
+                }  
 
     }
 
@@ -892,6 +1038,11 @@
                     end = clock();
                     prf->con_spectra_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
 
+                    begin = clock();
+                    con_envs_process(objs->con_envs_sss_object);
+                    end = clock();
+                    prf->con_envs_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
                 // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+                      
@@ -929,12 +1080,78 @@
                 // | Sinks                                            |
                 // +--------------------------------------------------+                      
 
-                    begin = clock();
+                    begin = clock();                    
                     for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
                         snk_spectra_process(objs->snk_spectra_sspf_objects[iSink]);
                     }
                     end = clock();
                     prf->snk_spectra_sspf_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_istft_process(objs->mod_istft_object);
+                    end = clock();
+                    prf->mod_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                              
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                     
+
+                    begin = clock();
+                    con_hops_process(objs->con_hops_istft_object);
+                    end = clock();
+                    prf->con_hops_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
+
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+                      
+
+                    begin = clock();                    
+                    for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
+                        snk_hops_process(objs->snk_hops_istft_objects[iSink]);
+                    }
+                    end = clock();
+                    prf->snk_hops_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);       
+
+            // +------------------------------------------------------+
+            // | Gain                                                 |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_gain_process(objs->mod_gain_object);
+                    end = clock();
+                    prf->mod_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                              
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                     
+
+                    begin = clock();
+                    con_hops_process(objs->con_hops_gain_object);
+                    end = clock();
+                    prf->con_hops_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
+
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+                      
+
+                    begin = clock();                    
+                    for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
+                        snk_hops_process(objs->snk_hops_gain_objects[iSink]);
+                    }
+                    end = clock();
+                    prf->snk_hops_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);     
 
             }
 

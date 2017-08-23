@@ -35,11 +35,20 @@
 
         float mod_sss_prf;
         float con_spectra_sss_prf;
+        float con_envs_sss_prf;
         float snk_spectra_sss_prf;
 
         float mod_sspf_prf;
         float con_spectra_sspf_prf;
         float snk_spectra_sspf_prf;
+
+        float mod_istft_prf;
+        float con_hops_istft_prf;
+        float snk_hops_istft_prf;
+
+        float mod_gain_prf;
+        float con_hops_gain_prf;
+        float snk_hops_gain_prf;
 
     } profiler;
 

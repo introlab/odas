@@ -32,7 +32,9 @@
                 cfgs->snk_hops_raw_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_raw_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_hops_raw_config_count; iSink++) {
+
                     cfgs->snk_hops_raw_configs[iSink] = parameters_snk_hops_raw_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -59,7 +61,9 @@
                 cfgs->snk_hops_mapping_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_mapping_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_hops_mapping_config_count; iSink++) {
+
                     cfgs->snk_hops_mapping_configs[iSink] = parameters_snk_hops_mapping_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -86,7 +90,9 @@
                 cfgs->snk_hops_resample_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_resample_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_hops_resample_config_count; iSink++) {
+
                     cfgs->snk_hops_resample_configs[iSink] = parameters_snk_hops_resample_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -113,7 +119,9 @@
                 cfgs->snk_spectra_stft_configs = (snk_spectra_cfg **) malloc(sizeof(snk_spectra_cfg *) * cfgs->snk_spectra_stft_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_spectra_stft_config_count; iSink++) {
+
                     cfgs->snk_spectra_stft_configs[iSink] = parameters_snk_spectra_stft_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -140,7 +148,9 @@
                 cfgs->snk_pots_ssl_configs = (snk_pots_cfg **) malloc(sizeof(snk_pots_cfg *) * cfgs->snk_pots_ssl_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_pots_ssl_config_count; iSink++) {
+
                     cfgs->snk_pots_ssl_configs[iSink] = parameters_snk_pots_ssl_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -167,7 +177,9 @@
                 cfgs->snk_tracks_sst_configs = (snk_tracks_cfg **) malloc(sizeof(snk_tracks_cfg *) * cfgs->snk_tracks_sst_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_tracks_sst_config_count; iSink++) {
+
                     cfgs->snk_tracks_sst_configs[iSink] = parameters_snk_tracks_sst_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -185,6 +197,7 @@
             // +------------------------------------------------------+  
 
                 cfgs->msg_spectra_sss_config = parameters_msg_spectra_sss_config(file_config, file_ios);
+                cfgs->msg_envs_sss_config = parameters_msg_envs_sss_config(file_config, file_ios);
 
             // +------------------------------------------------------+
             // | Sinks                                                |
@@ -194,7 +207,9 @@
                 cfgs->snk_spectra_sss_configs = (snk_spectra_cfg **) malloc(sizeof(snk_spectra_cfg *) * cfgs->snk_spectra_sss_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_spectra_sss_config_count; iSink++) {
+
                     cfgs->snk_spectra_sss_configs[iSink] = parameters_snk_spectra_sss_config(file_config, file_ios, iSink);
+
                 }
 
         // +----------------------------------------------------------+
@@ -221,9 +236,69 @@
                 cfgs->snk_spectra_sspf_configs = (snk_spectra_cfg **) malloc(sizeof(snk_spectra_cfg *) * cfgs->snk_spectra_sspf_config_count);
 
                 for (iSink = 0; iSink < cfgs->snk_spectra_sspf_config_count; iSink++) {
+
                     cfgs->snk_spectra_sspf_configs[iSink] = parameters_snk_spectra_sspf_config(file_config, file_ios, iSink);
+
                 }
 
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                cfgs->mod_istft_config = parameters_mod_istft_config(file_config, file_ios);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+  
+
+                cfgs->msg_hops_istft_config = parameters_msg_hops_istft_config(file_config, file_ios);
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+  
+
+                cfgs->snk_hops_istft_config_count = parameters_snk_hops_istft_count(file_config, file_ios);
+                cfgs->snk_hops_istft_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_istft_config_count);
+
+                for (iSink = 0; iSink < cfgs->snk_hops_istft_config_count; iSink++) {
+
+                    cfgs->snk_hops_istft_configs[iSink] = parameters_snk_hops_istft_config(file_config, file_ios, iSink);
+
+                }
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                cfgs->mod_gain_config = parameters_mod_gain_config(file_config, file_ios);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+  
+
+                cfgs->msg_hops_gain_config = parameters_msg_hops_gain_config(file_config, file_ios);
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+  
+
+                cfgs->snk_hops_gain_config_count = parameters_snk_hops_gain_count(file_config, file_ios);
+                cfgs->snk_hops_gain_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_gain_config_count);
+
+                for (iSink = 0; iSink < cfgs->snk_hops_gain_config_count; iSink++) {
+
+                    cfgs->snk_hops_gain_configs[iSink] = parameters_snk_hops_gain_config(file_config, file_ios, iSink);
+
+                }
 
         return cfgs;
 
@@ -254,8 +329,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_hops_raw_config_count; iSink++) {
+
                     snk_hops_cfg_destroy(cfgs->snk_hops_raw_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_hops_raw_configs);
 
         // +----------------------------------------------------------+
@@ -279,8 +357,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_hops_mapping_config_count; iSink++) {
+
                     snk_hops_cfg_destroy(cfgs->snk_hops_mapping_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_hops_mapping_configs);
 
         // +----------------------------------------------------------+
@@ -304,8 +385,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_hops_resample_config_count; iSink++) {
+
                     snk_hops_cfg_destroy(cfgs->snk_hops_resample_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_hops_resample_configs);
 
         // +----------------------------------------------------------+
@@ -329,8 +413,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_spectra_stft_config_count; iSink++) {
+
                     snk_spectra_cfg_destroy(cfgs->snk_spectra_stft_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_spectra_stft_configs);
 
         // +----------------------------------------------------------+
@@ -354,8 +441,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_pots_ssl_config_count; iSink++) {
+
                     snk_pots_cfg_destroy(cfgs->snk_pots_ssl_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_pots_ssl_configs);
 
         // +----------------------------------------------------------+
@@ -379,8 +469,11 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_tracks_sst_config_count; iSink++) {
+
                     snk_tracks_cfg_destroy(cfgs->snk_tracks_sst_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_tracks_sst_configs);
 
         // +----------------------------------------------------------+
@@ -398,14 +491,18 @@
             // +------------------------------------------------------+  
 
                 msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_config);
+                msg_envs_cfg_destroy(cfgs->msg_envs_sss_config);
                             
             // +------------------------------------------------------+
             // | Sinks                                                |
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_spectra_sss_config_count; iSink++) {
+
                     snk_spectra_cfg_destroy(cfgs->snk_spectra_sss_configs[iSink]);
+
                 }
+
                 free((void *) cfgs->snk_spectra_sss_configs);
 
         // +----------------------------------------------------------+
@@ -429,9 +526,68 @@
             // +------------------------------------------------------+                 
             
                 for (iSink = 0; iSink < cfgs->snk_spectra_sspf_config_count; iSink++) {
+
                     snk_spectra_cfg_destroy(cfgs->snk_spectra_sspf_configs[iSink]);
+
                 }
+                
                 free((void *) cfgs->snk_spectra_sspf_configs);
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                mod_istft_cfg_destroy(cfgs->mod_istft_config);
+                
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+  
+
+                msg_hops_cfg_destroy(cfgs->msg_hops_istft_config);
+                            
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                 
+            
+                for (iSink = 0; iSink < cfgs->snk_hops_istft_config_count; iSink++) {
+
+                    snk_hops_cfg_destroy(cfgs->snk_hops_istft_configs[iSink]);
+
+                }
+                
+                free((void *) cfgs->snk_hops_istft_configs);
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                mod_gain_cfg_destroy(cfgs->mod_gain_config);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+  
+
+                msg_hops_cfg_destroy(cfgs->msg_hops_gain_config);
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+  
+
+                for (iSink = 0; iSink < cfgs->snk_hops_gain_config_count; iSink++) {
+
+                    snk_hops_cfg_destroy(cfgs->snk_hops_gain_configs[iSink]);
+
+                }
+
+                free((void *) cfgs->snk_hops_gain_configs);
 
         free((void *) cfgs);
 

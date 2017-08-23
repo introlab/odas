@@ -1,41 +1,28 @@
     
     #include "mod_sspf.h"
 
-    mod_sspf_obj * mod_sspf_construct(const mod_sspf_cfg * mod_sspf_config, const msg_spectra_cfg * msg_spectra_config, const msg_tracks_cfg * msg_tracks_config) {
+    mod_sspf_obj * mod_sspf_construct(const mod_sspf_cfg * mod_sspf_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config, const msg_envs_cfg * msg_envs_config) {
 
         mod_sspf_obj * obj;
 
         obj = (mod_sspf_obj *) malloc(sizeof(mod_sspf_obj));
 
-        obj->nChannels = mod_sspf_config->mics->nChannels;
-        obj->nSeps = msg_tracks_config->nTracks;
+        obj->nSeps = msg_spectra_config->nChannels;
+        obj->halfFrameSize = msg_spectra_config->halfFrameSize;
 
-        obj->beampatterns_mics = directivity_beampattern_mics(mod_sspf_config->mics, mod_sspf_config->nThetas);
-        obj->beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sspf_config->spatialfilter, mod_sspf_config->nThetas);
+        obj->alpha = mod_sspf_config->alpha;
+        obj->beta = mod_sspf_config->beta;
+        obj->Ginterf = mod_sspf_config->Ginterf;
+        obj->epsilon = mod_sspf_config->epsilon;
 
-        obj->track2gain = track2gain_construct_zero(obj->nSeps,
-                                                    obj->nChannels,
-                                                    mod_sspf_config->mics->direction,
-                                                    mod_sspf_config->spatialfilter->direction);
-
-        obj->gains = gains_construct_zero(obj->nSeps,
-                                          obj->nChannels);
-
-        obj->gain2mask = gain2mask_construct_zero(obj->nSeps,
-                                                  obj->nChannels,
-                                                  mod_sspf_config->gainMin);
-
-        obj->masks = masks_construct_zero(obj->nSeps,
-                                          obj->nChannels);
-
-        obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize,
-                                                  0,
-                                                  mod_sspf_config->epsilon);
+        obj->freq2env = freq2env_construct_zero(obj->halfFrameSize, obj->nSeps);
+        obj->envs = envs_construct_zero(obj->nSeps, obj->halfFrameSize);
+        obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, 0, obj->epsilon, obj->alpha, obj->beta, obj->Ginterf);
 
         obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_spectra_obj *) NULL;
+        obj->in2 = (msg_envs_obj *) NULL;
         obj->in3 = (msg_tracks_obj *) NULL;
-        obj->out = (msg_spectra_obj *) NULL;        
+        obj->out = (msg_spectra_obj *) NULL;
 
         return obj;
 
@@ -43,13 +30,8 @@
 
     void mod_sspf_destroy(mod_sspf_obj * obj) {
 
-        beampatterns_destroy(obj->beampatterns_mics);
-        beampatterns_destroy(obj->beampatterns_spatialfilter);
-
-        track2gain_destroy(obj->track2gain);
-        gains_destroy(obj->gains);
-        gain2mask_destroy(obj->gain2mask);
-        masks_destroy(obj->masks);
+        freq2env_destroy(obj->freq2env);
+        envs_destroy(obj->envs);
         freq2freq_destroy(obj->freq2freq);
 
         free((void *) obj);
@@ -60,29 +42,15 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) == 0) && (msg_spectra_isZero(obj->in2) == 0) && (msg_tracks_isZero(obj->in3) == 0)) {
+        if ((msg_spectra_isZero(obj->in1) == 0) && (msg_envs_isZero(obj->in2) == 0) && (msg_tracks_isZero(obj->in3) == 0)) {
 
             if ((obj->in1->timeStamp != obj->in2->timeStamp) || (obj->in1->timeStamp != obj->in3->timeStamp)) {
                 printf("Time stamp mismatch.\n");
                 exit(EXIT_FAILURE);
             }
 
-            track2gain_process(obj->track2gain,
-                               obj->beampatterns_mics,
-                               obj->beampatterns_spatialfilter,
-                               obj->in3->tracks,
-                               obj->gains);
-
-            gain2mask_process(obj->gain2mask,
-                              obj->gains,
-                              obj->masks);
-
-            freq2freq_process_postfilter(obj->freq2freq, 
-                                         obj->in1->freqs,
-                                         obj->in2->freqs, 
-                                         obj->gains,
-                                         obj->masks,
-                                         obj->out->freqs);
+            freq2env_process(obj->freq2env, obj->in1->freqs, obj->envs);
+            freq2freq_process_postfilter(obj->freq2freq,  obj->in3->tracks, obj->in1->freqs, obj->envs, obj->in2->envs, obj->out->freqs);
 
             obj->out->timeStamp = obj->in1->timeStamp;
 
@@ -93,7 +61,7 @@
 
             msg_spectra_zero(obj->out);
 
-            rtnValue = -1;
+            rtnValue = -1;            
 
         }
 
@@ -101,7 +69,7 @@
 
     }
 
-    void mod_sspf_connect(mod_sspf_obj * obj, msg_spectra_obj * in1, msg_spectra_obj * in2, msg_tracks_obj * in3, msg_spectra_obj * out) {
+    void mod_sspf_connect(mod_sspf_obj * obj, msg_spectra_obj * in1, msg_envs_obj * in2, msg_tracks_obj * in3, msg_spectra_obj * out) {
 
         obj->in1 = in1;
         obj->in2 = in2;
@@ -113,9 +81,9 @@
     void mod_sspf_disconnect(mod_sspf_obj * obj) {
 
         obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_spectra_obj *) NULL;
+        obj->in2 = (msg_envs_obj *) NULL;
         obj->in3 = (msg_tracks_obj *) NULL;
-        obj->out = (msg_spectra_obj *) NULL;  
+        obj->out = (msg_spectra_obj *) NULL;
 
     }
 
@@ -125,27 +93,16 @@
 
         cfg = (mod_sspf_cfg *) malloc(sizeof(mod_sspf_cfg));
 
-        cfg->mics = (mics_obj *) NULL;
-        cfg->spatialfilter = (spatialfilter_obj *) NULL;
-
+        cfg->alpha = 0.0f;
+        cfg->beta = 0.0f;
+        cfg->Ginterf = 0.0f;
         cfg->epsilon = 0.0f;
-
-        cfg->nThetas = 0;
-        cfg->gainMin = 0.0f;
 
         return cfg;
 
     }
 
     void mod_sspf_cfg_destroy(mod_sspf_cfg * cfg) {
-
-        if (cfg->mics != NULL) {
-            mics_destroy(cfg->mics);
-        }
-
-        if (cfg->spatialfilter != NULL) {
-            spatialfilter_destroy(cfg->spatialfilter);
-        }
 
         free((void *) cfg);
 
