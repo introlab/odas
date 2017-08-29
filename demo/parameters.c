@@ -1010,6 +1010,7 @@
             free((void *) tmpLabel);
 
             if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_json(); }
+            else if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
             else { printf("Sink pots: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
