@@ -189,3 +189,7 @@ add_executable(debug
 target_link_libraries(debug
     odas
 )
+
+install(TARGETS odas DESTINATION lib)
+
+
