@@ -1,0 +1,82 @@
+# Input
+
+input:
+{
+   
+    #XMOS Device, 32bits.
+    raw: { type = "soundcard"; card = 1; device = 0; format = "bin32"; }
+
+};
+
+# Output:
+
+output:
+{
+
+#No raw output for now...
+    raw:
+    (
+#        { type = "file"; path = "recorded_raw_16.raw"; format = "bin16"; }
+         { type = "file"; path = "recorded_raw_32.raw"; format = "bin32"; }
+#        { type = "file"; path = "recorded_raw_24.raw"; format = "bin24"; }
+    );
+
+#Mapped signals only.
+    mapping:
+    (
+#        { type = "file"; path = "recorded_mapping_16.raw"; format = "bin16"; }
+#        { type = "file"; path = "recorded_mapping_32.raw"; format = "bin32"; }
+    );
+
+
+#Resampled signals output (debug)
+    resample:
+    (
+#        { type = "file"; path = "recorded_resample_16.raw"; format = "bin16"; }
+#        { type = "file"; path = "recorded_resample_32.raw"; format = "bin32"; }
+    );
+
+#Fourier transforms (debug)
+    stft:
+    (
+#        { type = "file"; path = "recorded_stft.bin"; format = "float"; }
+    );
+
+
+#Sound Source Localization 
+    ssl:
+    (
+#odas_web output (localization, pots)
+        { type = "socket"; ip = "127.0.0.1"; port = 9001; format = "json"; }
+    );
+#odas_web output (tracking)
+    sst:
+    (
+        { type = "socket"; ip = "127.0.0.1"; port = 9000; format = "json"; }
+    );
+
+#odas_web (separated, before post-filtering, not used frequency domain)
+    sss:
+    (
+#        { type = "file"; path = "separated_stft.bin"; format = "float"; }
+    );
+
+#odas_web (post-filtered, not used, frequency domain)
+    sspf:
+    (
+#        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
+    );
+
+#inverse fourier transform
+    istft:
+    (
+#        { type = "file"; path = "separated_16.raw"; format = "bin16"; }
+    )
+
+#separated stream with gain
+    playback:
+    (
+#        { type = "file"; path = "playback_16.raw"; format = "bin16"; }    
+    )
+
+}
