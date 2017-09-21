@@ -1,0 +1,45 @@
+# Input
+
+input:
+{
+   
+    #ReSpeaker Device, 16bits.
+    raw: { type = "soundcard"; card = 3; device = 0; format = "bin16"; }
+
+};
+
+# Output:
+
+output:
+{
+
+    # No raw output for now...
+    raw: (
+        { type = "file"; path = "recorded.raw"; format = "bin16"; }
+    );
+
+    # For debug purpose, leave empty.
+    mapping: ();
+    resample: ();
+    stft: ();
+
+    # Sound Source Localization Results
+    ssl: (
+        { type = "file"; path = "potential.bin"; format = "float"; }
+    );
+
+    # Sound Source Tracking Results
+    sst:
+    (
+        { type = "terminal"; format = "json"; }
+    );
+
+    # For debug purpose, leave empty.
+    sss: ();
+    sspf: ();
+    istft: ();
+
+    # Separated signal, for now leave empty.
+    playback: ();
+
+}

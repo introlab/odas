@@ -11,6 +11,7 @@
         interface_file = 1,
         interface_socket = 2, 
         interface_soundcard = 3, 
+        interface_terminal = 4,
         
     } interface_type;
 
@@ -35,6 +36,8 @@
     interface_obj * interface_construct_socket(const char * ip, const unsigned int port);
 
     interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
+
+    interface_obj * interface_construct_terminal(void);
 
     interface_obj * interface_clone(const interface_obj * obj);
 

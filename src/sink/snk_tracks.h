@@ -59,6 +59,8 @@
 
     int snk_tracks_process_socket(snk_tracks_obj * obj);
 
+    int snk_tracks_process_terminal(snk_tracks_obj * obj);
+
     snk_tracks_cfg * snk_tracks_cfg_construct(void);
 
     void snk_tracks_cfg_destroy(snk_tracks_cfg * snk_tracks_config);

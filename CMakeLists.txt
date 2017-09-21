@@ -167,7 +167,7 @@ target_link_libraries(odas
     pthread
 )
 
-add_executable(core
+add_executable(odascore
     demo/main.c
     demo/configs.c
     demo/objects.c
@@ -175,20 +175,20 @@ add_executable(core
     demo/profiler.c
     demo/threads.c
 )
-target_link_libraries(core
+target_link_libraries(odascore
     odas
 )
 
-add_executable(server
-    demo/server.c
-)
+#add_executable(server
+#    demo/server.c
+#)
 
-add_executable(debug
-    demo/debug.c
-)
-target_link_libraries(debug
-    odas
-)
+#add_executable(debug
+#    demo/debug.c
+#)
+#target_link_libraries(debug
+#    odas
+#)
 
 install(TARGETS odas DESTINATION lib)
 

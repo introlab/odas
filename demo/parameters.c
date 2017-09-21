@@ -1057,6 +1057,11 @@
                 free((void *) tmpStr2);
 
             }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }
             else {
 
                 printf("Invalid type\n");
@@ -1344,6 +1349,11 @@
                 free((void *) tmpStr2);
 
             }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }            
             else {
 
                 printf("Invalid type\n");

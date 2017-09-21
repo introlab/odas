@@ -64,6 +64,14 @@
     void xcorr2xcorr_process_reset(xcorr2xcorr_obj * obj, const tdoas_obj * tdoas, const deltas_obj * deltas, const pairs_obj * pairs, const unsigned int iPoint, xcorrs_obj * xcorrs) {
 
         unsigned int iSignal;
+
+        signed int iMiddle;
+        float vMiddle;
+        signed int iLeft;
+        float vLeft;
+        signed int iRight;
+        float vRight;
+
         unsigned int iSample;
         unsigned int nSamples;
         unsigned int delta;
@@ -71,6 +79,32 @@
         for (iSignal = 0; iSignal < xcorrs->nSignals; iSignal++) {
 
             if (pairs->array[iSignal] == 0x01) {
+
+                iMiddle = tdoas->array[iPoint * tdoas->nPairs + iSignal];
+                vMiddle = xcorrs->array[iSignal][iMiddle];
+
+                for (iLeft = (iMiddle-1); iLeft >= 0; iLeft--) {
+                    
+                    vLeft = xcorrs->array[iSignal][iLeft];
+
+                    if (vLeft > vMiddle) {
+                        break;
+                    }
+
+                    xcorrs->array[iSignal][iLeft] = 0.0f;
+
+                }
+                for (iRight = (iMiddle+1); iRight < obj->frameSize; iRight++) {
+
+                    vRight = xcorrs->array[iSignal][iRight];
+
+                    if (vRight > vMiddle) {
+                        break;
+                    }
+
+                    xcorrs->array[iSignal][iRight] = 0.0f;
+
+                }
 
                 delta = deltas->array[iSignal];
                 iSample = tdoas->array[iPoint * tdoas->nPairs + iSignal] - delta;

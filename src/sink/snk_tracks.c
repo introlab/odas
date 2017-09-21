@@ -89,6 +89,12 @@
 
             break;
 
+            case interface_terminal:
+
+                // (Empty)
+
+            break;
+
             default:
 
                 printf("Invalid interface type.\n");
@@ -113,6 +119,12 @@
             case interface_socket:
 
                 close(obj->sid);
+
+            break;
+
+            case interface_terminal:
+
+                // (Empty)
 
             break;
 
@@ -142,6 +154,12 @@
             case interface_socket:
 
                 rtnValue = snk_tracks_process_socket(obj);
+
+            break;
+
+            case interface_terminal:
+
+                rtnValue = snk_tracks_process_terminal(obj);
 
             break;
 
@@ -243,6 +261,57 @@
         }
 
         return rtnValue;
+
+    }
+
+    int snk_tracks_process_terminal(snk_tracks_obj * obj) {
+
+        int rtnValue;
+        unsigned int iTrack;
+
+        if (obj->in->timeStamp != 0) {
+
+            switch(obj->format->type) {
+
+                case format_json:
+
+                    printf("{\n");
+                    printf("    \"timeStamp\": %llu,\n",obj->in->timeStamp);
+                    printf("    \"src\": [\n");
+
+                    for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
+
+                        printf("        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }",
+                                obj->in->tracks->ids[iTrack],
+                                obj->in->tracks->array[iTrack*3+0], obj->in->tracks->array[iTrack*3+1], obj->in->tracks->array[iTrack*3+2]);
+
+                        if (iTrack != (obj->nTracks - 1)) {
+
+                            printf(",");
+
+                        }
+
+                        printf("\n");
+
+                    }
+                    
+                    printf("    ]\n");
+                    printf("}\n");
+
+                    rtnValue = 0;
+
+                break;               
+
+            }
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;        
 
     }
 
