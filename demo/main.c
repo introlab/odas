@@ -84,10 +84,11 @@
 
             file_config = (char *) NULL;
             file_ios = (char *) NULL;
+            char verbose = 0x00;
 
             type = processing_multithread;
 
-            while ((c = getopt(argc,argv, "hc:i:s")) != -1) {
+            while ((c = getopt(argc,argv, "hc:i:sv")) != -1) {
 
                 switch(c) {
 
@@ -117,6 +118,12 @@
 
                     break;
 
+                    case 'v':
+
+                        verbose = 0x01;
+
+                    break;
+
                 }
 
             }
@@ -134,6 +141,8 @@
         // | Copyright                                            |
         // +------------------------------------------------------+ 
 
+            if (verbose == 0x01) {
+
             printf("+--------------------------------------------+\n");
             printf("|    ODAS (Open embeddeD Audition System)    |\n");
             printf("+--------------------------------------------+\n");
@@ -142,6 +151,8 @@
             printf("| Website: introlab.3it.usherbrooke.ca       |\n");
             printf("| Version: 1.0                               |\n");
             printf("+--------------------------------------------+\n");
+
+            }
 
         // +------------------------------------------------------+
         // | Single thread                                        |
@@ -159,53 +170,53 @@
             // | Configure                                        |
             // +--------------------------------------------------+ 
 
-                printf("  + Initializing configurations...... "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Initializing configurations...... "); fflush(stdout); 
 
                 cfgs = configs_construct(file_config, file_ios);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Construct                                        |
             // +--------------------------------------------------+  
 
-                printf("  + Initializing objects............. "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Initializing objects............. "); fflush(stdout); 
 
                 objs = objects_construct(cfgs);    
                 
-                printf("[Done]\n");   
+                if (verbose == 0x01) printf("[Done]\n");   
 
             // +--------------------------------------------------+
             // | Processing                                       |
             // +--------------------------------------------------+  
 
-                printf("  + Processing....................... "); fflush(stdout);
+                if (verbose == 0x01) printf("  + Processing....................... "); fflush(stdout);
 
                 threads_single_open(objs);
                 stopProcess = 0;
                 while((threads_single_process(objs, prf) == 0) && (stopProcess == 0));
                 threads_single_close(objs);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Free memory                                      |
             // +--------------------------------------------------+  
 
-                printf("  + Free memory...................... "); fflush(stdout);
+                if (verbose == 0x01) printf("  + Free memory...................... "); fflush(stdout);
 
                 objects_destroy(objs);
                 configs_destroy(cfgs);
                 free((void *) file_config);
                 free((void *) file_ios);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Results                                          |
             // +--------------------------------------------------+  
 
-                profiler_printf(prf);
+                if (verbose == 0x01) profiler_printf(prf);
 
                 profiler_destroy(prf);
 
@@ -221,21 +232,21 @@
             // | Configure                                        |
             // +--------------------------------------------------+ 
 
-                printf("  + Initializing configurations...... "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Initializing configurations...... "); fflush(stdout); 
 
                 cfgs = configs_construct(file_config, file_ios);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Construct                                        |
             // +--------------------------------------------------+  
 
-                printf("  + Initializing objects............. "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Initializing objects............. "); fflush(stdout); 
                 
                 aobjs = aobjects_construct(cfgs);    
 
-                printf("[Done]\n");                         
+                if (verbose == 0x01) printf("[Done]\n");                         
 
             // +--------------------------------------------------+
             // | Launch threads                                   |
@@ -243,34 +254,34 @@
 
                 signal(SIGINT, sighandler);
 
-                printf("  + Launch threads................... "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Launch threads................... "); fflush(stdout); 
 
                 threads_multiple_start(aobjs);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Wait                                             |
             // +--------------------------------------------------+  
 
-                printf("  + Threads running.................. "); fflush(stdout); 
+                if (verbose == 0x01) printf("  + Threads running.................. "); fflush(stdout); 
                 
                 threads_multiple_join(aobjs);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             // +--------------------------------------------------+
             // | Free memory                                      |
             // +--------------------------------------------------+  
 
-                printf("  + Free memory...................... "); fflush(stdout);
+                if (verbose == 0x01) printf("  + Free memory...................... "); fflush(stdout);
 
                 aobjects_destroy(aobjs);
                 configs_destroy(cfgs);
                 free((void *) file_config);
                 free((void *) file_ios);
 
-                printf("[Done]\n");
+                if (verbose == 0x01) printf("[Done]\n");
 
             }
 
