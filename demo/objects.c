@@ -202,7 +202,7 @@
                                                                                    cfgs->msg_tracks_sst_config);
 
                     }
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -331,7 +331,7 @@
                                                                                 cfgs->msg_hops_gain_config);
 
                     }
-
+*/
         // +----------------------------------------------------------+
         // | Connect                                                  |
         // +----------------------------------------------------------+  
@@ -398,15 +398,15 @@
             objs->con_hops_resample_object = con_hops_construct(objs->snk_hops_resample_object_count + 1, 
                                                                 cfgs->msg_hops_resample_config);
 
-            objs->con_spectra_stft_object = con_spectra_construct(objs->snk_spectra_stft_object_count + 2, 
+            objs->con_spectra_stft_object = con_spectra_construct(objs->snk_spectra_stft_object_count + 1, 
                                                                   cfgs->msg_spectra_stft_config);
 
             objs->con_pots_ssl_object = con_pots_construct(objs->snk_pots_ssl_object_count + 1, 
                                                            cfgs->msg_pots_ssl_config);
 
-            objs->con_tracks_sst_object = con_tracks_construct(objs->snk_tracks_sst_object_count + 2, 
+            objs->con_tracks_sst_object = con_tracks_construct(objs->snk_tracks_sst_object_count + 0, 
                                                                cfgs->msg_tracks_sst_config);
-
+/*
             objs->con_spectra_sss_object = con_spectra_construct(objs->snk_spectra_sss_object_count + 1, 
                                                                  cfgs->msg_spectra_sss_config);
 
@@ -421,7 +421,7 @@
 
             objs->con_hops_gain_object = con_hops_construct(objs->snk_hops_gain_object_count,
                                                             cfgs->msg_hops_gain_config);
-
+*/
             // +------------------------------------------------------+
             // | Raw                                                  |
             // +------------------------------------------------------+  
@@ -509,7 +509,7 @@
                     for (iSink = 0; iSink < objs->snk_spectra_stft_object_count; iSink++) {
 
                         snk_spectra_connect(objs->snk_spectra_stft_objects[iSink],
-                                            objs->con_spectra_stft_object->outs[iSink + 2]);
+                                            objs->con_spectra_stft_object->outs[iSink + 1]);
 
                     }
 
@@ -555,10 +555,10 @@
                     for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
 
                         snk_tracks_connect(objs->snk_tracks_sst_objects[iSink],
-                                           objs->con_tracks_sst_object->outs[iSink + 2]);
+                                           objs->con_tracks_sst_object->outs[iSink + 0]);
 
                     }
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -654,7 +654,7 @@
                                          objs->con_hops_gain_object->outs[iSink]);
 
                     }  
-
+*/
         return objs;
 
     }
@@ -870,7 +870,7 @@
                 // +--------------------------------------------------+  
 
                     con_tracks_destroy(objs->con_tracks_sst_object);   
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -1007,7 +1007,7 @@
                 // +--------------------------------------------------+  
 
                     con_hops_destroy(objs->con_hops_gain_object);                      
-
+*/
         free((void *) objs);
 
     }
@@ -1221,7 +1221,7 @@
                                                                                      cfgs->msg_tracks_sst_config);
 
                     }
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -1355,7 +1355,7 @@
                                                                                   cfgs->msg_hops_gain_config);
 
                     }      
-
+*/
         // +----------------------------------------------------------+
         // | Connect                                                  |
         // +----------------------------------------------------------+  
@@ -1425,7 +1425,7 @@
                                                                   objs->nMessages, 
                                                                   cfgs->msg_hops_resample_config);
 
-            objs->acon_spectra_stft_object = acon_spectra_construct(objs->asnk_spectra_stft_object_count + 2, 
+            objs->acon_spectra_stft_object = acon_spectra_construct(objs->asnk_spectra_stft_object_count + 1, 
                                                                     objs->nMessages,
                                                                     cfgs->msg_spectra_stft_config);
 
@@ -1433,10 +1433,10 @@
                                                              objs->nMessages,
                                                              cfgs->msg_pots_ssl_config);
 
-            objs->acon_tracks_sst_object = acon_tracks_construct(objs->asnk_tracks_sst_object_count + 2, 
+            objs->acon_tracks_sst_object = acon_tracks_construct(objs->asnk_tracks_sst_object_count + 0, 
                                                                  objs->nMessages, 
                                                                  cfgs->msg_tracks_sst_config);
-
+/*
             objs->acon_spectra_sss_object = acon_spectra_construct(objs->asnk_spectra_sss_object_count + 1, 
                                                                    objs->nMessages, 
                                                                    cfgs->msg_spectra_sss_config);
@@ -1456,7 +1456,7 @@
             objs->acon_hops_gain_object = acon_hops_construct(objs->asnk_hops_gain_object_count,
                                                               objs->nMessages,
                                                               cfgs->msg_hops_gain_config);
-
+*/
             // +------------------------------------------------------+
             // | Raw                                                  |
             // +------------------------------------------------------+  
@@ -1544,7 +1544,7 @@
                     for (iSink = 0; iSink < objs->asnk_spectra_stft_object_count; iSink++) {
 
                         asnk_spectra_connect(objs->asnk_spectra_stft_objects[iSink],
-                                             objs->acon_spectra_stft_object->outs[iSink + 2]);
+                                             objs->acon_spectra_stft_object->outs[iSink + 1]);
 
                     }
 
@@ -1590,10 +1590,10 @@
                     for (iSink = 0; iSink < objs->asnk_tracks_sst_object_count; iSink++) {
 
                         asnk_tracks_connect(objs->asnk_tracks_sst_objects[iSink],
-                                            objs->acon_tracks_sst_object->outs[iSink + 2]);
+                                            objs->acon_tracks_sst_object->outs[iSink + 0]);
 
                     }
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -1689,7 +1689,7 @@
                                           objs->acon_hops_gain_object->outs[iSink]);
 
                     }    
-
+*/
         return objs;
 
     }
@@ -1905,7 +1905,7 @@
                 // +--------------------------------------------------+  
 
                     acon_tracks_destroy(objs->acon_tracks_sst_object);   
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -2042,7 +2042,7 @@
                 // +--------------------------------------------------+  
 
                     acon_hops_destroy(objs->acon_hops_gain_object);  
-
+*/
         free((void *) objs);
 
     }

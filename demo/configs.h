@@ -38,6 +38,7 @@
         unsigned int snk_tracks_sst_config_count;
         snk_tracks_cfg ** snk_tracks_sst_configs;
 
+        /*
         mod_sss_cfg * mod_sss_config;
         msg_spectra_cfg * msg_spectra_sss_config;
         msg_envs_cfg * msg_envs_sss_config;
@@ -58,6 +59,7 @@
         msg_hops_cfg * msg_hops_gain_config;
         unsigned int snk_hops_gain_config_count;
         snk_hops_cfg ** snk_hops_gain_configs;
+        */
 
     } configs;
 

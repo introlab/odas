@@ -129,7 +129,7 @@
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sst_prf,roundf(10000.0f * prf->mod_sst_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_tracks_sst_prf,roundf(10000.0f * prf->con_tracks_sst_prf / prf->duration) / 100.0f);
         printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_tracks_sst_prf,roundf(10000.0f * prf->snk_tracks_sst_prf / prf->duration) / 100.0f);  
-        printf("| + SSS                                      |\n");
+/*        printf("| + SSS                                      |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sss_prf,roundf(10000.0f * prf->mod_sss_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_spectra_sss_prf,roundf(10000.0f * prf->con_spectra_sss_prf / prf->duration) / 100.0f);
         printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_spectra_sss_prf,roundf(10000.0f * prf->snk_spectra_sss_prf / prf->duration) / 100.0f);  
@@ -144,7 +144,7 @@
         printf("| + Playback                                 |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_gain_prf,roundf(10000.0f * prf->mod_gain_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_gain_prf,roundf(10000.0f * prf->con_hops_gain_prf / prf->duration) / 100.0f);
-        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_hops_gain_prf,roundf(10000.0f * prf->snk_hops_gain_prf / prf->duration) / 100.0f);            
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_hops_gain_prf,roundf(10000.0f * prf->snk_hops_gain_prf / prf->duration) / 100.0f);*/            
         printf("+--------------------------------------------+\n");
         printf("| + TOTAL.............. %07.3f (%06.2f%%)    |\n",total,roundf(10000.0f * total / prf->duration) / 100.0f);
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",module,roundf(10000.0f * module / prf->duration) / 100.0f);

@@ -67,6 +67,7 @@
     snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
 
 
+    /*
     mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig, const char * fileIOs);
 
     msg_spectra_cfg * parameters_msg_spectra_sss_config(const char * fileConfig, const char * fileIOs);
@@ -103,5 +104,6 @@
     unsigned int parameters_snk_hops_gain_count(const char * fileConfig, const char * fileIOs);
 
     snk_hops_cfg * parameters_snk_hops_gain_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    */
 
 #endif

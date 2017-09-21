@@ -181,7 +181,7 @@
                     cfgs->snk_tracks_sst_configs[iSink] = parameters_snk_tracks_sst_config(file_config, file_ios, iSink);
 
                 }
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -299,7 +299,7 @@
                     cfgs->snk_hops_gain_configs[iSink] = parameters_snk_hops_gain_config(file_config, file_ios, iSink);
 
                 }
-
+*/
         return cfgs;
 
     }
@@ -475,7 +475,7 @@
                 }
 
                 free((void *) cfgs->snk_tracks_sst_configs);
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -588,7 +588,7 @@
                 }
 
                 free((void *) cfgs->snk_hops_gain_configs);
-
+*/
         free((void *) cfgs);
 
     }

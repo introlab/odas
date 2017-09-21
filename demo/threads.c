@@ -148,7 +148,7 @@
             // +------------------------------------------------------+                     
 
                 thread_start(aobjs->acon_tracks_sst_object->thread);
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -245,7 +245,7 @@
             // +------------------------------------------------------+                     
 
                 thread_start(aobjs->acon_hops_gain_object->thread);
-
+*/
     }
 
     void threads_multiple_stop(aobjects * aobjs) {
@@ -413,7 +413,7 @@
             // +------------------------------------------------------+  
 
                 thread_join(aobjs->acon_tracks_sst_object->thread);
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -510,7 +510,7 @@
             // +------------------------------------------------------+  
 
                 thread_join(aobjs->acon_hops_gain_object->thread);
-
+*/
     }
 
     void threads_single_open(objects * objs) {
@@ -594,7 +594,7 @@
                 for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
                     snk_tracks_open(objs->snk_tracks_sst_objects[iSink]);
                 }
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -642,7 +642,7 @@
                 for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
                     snk_hops_open(objs->snk_hops_gain_objects[iSink]);
                 }
-
+*/
     }
 
     void threads_single_close(objects * objs) {
@@ -726,7 +726,7 @@
                 for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
                     snk_tracks_close(objs->snk_tracks_sst_objects[iSink]);
                 }
-
+/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -774,7 +774,7 @@
                 for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
                     snk_hops_close(objs->snk_hops_gain_objects[iSink]);
                 }  
-
+*/
     }
 
     int threads_single_process(objects * objs, profiler * prf) {
@@ -1015,7 +1015,7 @@
                     }
                     end = clock();
                     prf->snk_tracks_sst_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
+/*
             // +------------------------------------------------------+
             // | SSS                                                  |
             // +------------------------------------------------------+  
@@ -1152,7 +1152,7 @@
                     }
                     end = clock();
                     prf->snk_hops_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);     
-
+*/
             }
 
         return rtnValue;

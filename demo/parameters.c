@@ -1368,6 +1368,7 @@
 
     }
 
+    /*
     mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig, const char * fileIOs) {
 
         mod_sss_cfg * cfg;
@@ -2088,3 +2089,4 @@
         return cfg;  
 
     }
+    */

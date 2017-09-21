@@ -45,6 +45,7 @@
         snk_tracks_obj ** snk_tracks_sst_objects;
         con_tracks_obj * con_tracks_sst_object;
 
+        /*
         mod_sss_obj * mod_sss_object;
         msg_spectra_obj * msg_spectra_sss_object;
         unsigned int snk_spectra_sss_object_count;
@@ -69,6 +70,7 @@
         unsigned int snk_hops_gain_object_count;
         snk_hops_obj ** snk_hops_gain_objects;
         con_hops_obj * con_hops_gain_object;
+        */
 
     } objects;   
 
@@ -112,6 +114,7 @@
         asnk_tracks_obj ** asnk_tracks_sst_objects;
         acon_tracks_obj * acon_tracks_sst_object;
 
+        /*
         amod_sss_obj * amod_sss_object;
         amsg_spectra_obj * amsg_spectra_sss_object;
         unsigned int asnk_spectra_sss_object_count;
@@ -135,7 +138,8 @@
         amsg_hops_obj * amsg_hops_gain_object;
         unsigned int asnk_hops_gain_object_count;
         asnk_hops_obj ** asnk_hops_gain_objects;
-        acon_hops_obj * acon_hops_gain_object;        
+        acon_hops_obj * acon_hops_gain_object;    
+        */    
 
     } aobjects;
  
