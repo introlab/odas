@@ -43,8 +43,10 @@
 
             }
 
-            aimg->array[iPoint] /= ((float) spatialindexes->count[iPoint]);
+            aimg->array[iPoint] /= ((float) spatialindexes->count[iPoint]);     
 
         }
+
+        
 
     }

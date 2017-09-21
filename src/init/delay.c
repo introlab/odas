@@ -1,7 +1,7 @@
 
     #include "delay.h"
 
-    tdoas_obj * delay_tdoas(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize) {
+    tdoas_obj * delay_tdoas(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize, const unsigned int interpRate) {
 
         tdoas_obj * obj;
 
@@ -21,7 +21,7 @@
 
         for (iPair = 0; iPair < nPairs; iPair++) {
 
-            obj->min[iPair] = frameSize - 1;
+            obj->min[iPair] = frameSize * interpRate - 1;
             obj->max[iPair] = 0;
 
         }
@@ -39,9 +39,9 @@
                     dist += (mics->mu[iChannel1*3+1] - mics->mu[iChannel2*3+1]) * points->array[iPoint*3+1];                    
                     dist += (mics->mu[iChannel1*3+2] - mics->mu[iChannel2*3+2]) * points->array[iPoint*3+2];                    
 
-                    tau = -1.0f * (((float) fS) / soundspeed->mu) * dist;
+                    tau = -1.0f * (((float) fS * interpRate) / soundspeed->mu) * dist;
 
-                    tdoa = (unsigned int) (roundf(tau)+(float) (frameSize/2));
+                    tdoa = (unsigned int) (roundf(tau)+(float) (interpRate * frameSize/2));
                     obj->array[iPoint*nPairs+iPair] = tdoa;
 
                     if (tdoa < obj->min[iPair]) {
@@ -63,7 +63,7 @@
 
     }
 
-    taus_obj * delay_taus(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize) {
+    taus_obj * delay_taus(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize, const unsigned int interpRate) {
 
         taus_obj * obj;
 
@@ -90,8 +90,8 @@
 
         obj = taus_construct_zero(points->nPoints, nPairs);
 
-        mu_t = -1.0f * ((float) fS) / soundspeed->mu;
-        sigma2_t = ((float) fS) * soundspeed->sigma2 / (soundspeed->mu * soundspeed->mu);
+        mu_t = -1.0f * ((float) fS * interpRate) / soundspeed->mu;
+        sigma2_t = ((float) fS * interpRate) * soundspeed->sigma2 / (soundspeed->mu * soundspeed->mu);
 
         iPair = 0;
 
@@ -132,7 +132,7 @@
                     mu_tau = mu_t * mu_d;
                     sigma2_tau = mu_t*mu_t*sigma2_d + mu_d*mu_d*sigma2_t;
 
-                    obj->mu[iPoint*nPairs+iPair] = mu_tau + (float) (frameSize/2);
+                    obj->mu[iPoint*nPairs+iPair] = mu_tau + (float) (interpRate*frameSize/2);
                     obj->sigma2[iPoint*nPairs+iPair] = sigma2_tau;
 
                 }

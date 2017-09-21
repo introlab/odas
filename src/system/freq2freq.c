@@ -1,13 +1,14 @@
     
     #include "freq2freq.h"
 
-    freq2freq_obj * freq2freq_construct_zero(const unsigned int halfFrameSize, const unsigned int lowPassCut, const float epsilon, const float alpha, const float beta, const float Ginterf) {
+    freq2freq_obj * freq2freq_construct_zero(const unsigned int halfFrameSize, const unsigned int halfFrameSizeInterp, const unsigned int lowPassCut, const float epsilon, const float alpha, const float beta, const float Ginterf) {
 
         freq2freq_obj * obj;
 
         obj = (freq2freq_obj *) malloc(sizeof(freq2freq_obj));
 
         obj->halfFrameSize = halfFrameSize;
+        obj->halfFrameSizeInterp = halfFrameSizeInterp;
         obj->lowPassCut = lowPassCut;
         obj->epsilon = epsilon;
 
@@ -132,6 +133,19 @@
                 memset(freqsPosts->array[iSignal], 0x00, sizeof(float) * obj->halfFrameSize * 2);
 
             }
+
+        }
+
+    }
+
+    void freq2freq_process_interpolate(freq2freq_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp) {
+
+        unsigned int iSignal;
+
+        for (iSignal = 0; iSignal < freqs->nSignals; iSignal++) {
+
+            memset(freqsInterp->array[iSignal], 0x00, sizeof(float) * 2 * obj->halfFrameSizeInterp);
+            memcpy(freqsInterp->array[iSignal], freqs->array[iSignal], sizeof(float) * 2 * obj->halfFrameSize);
 
         }
 

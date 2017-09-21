@@ -6,14 +6,13 @@
 
     #include "../signal/env.h"
     #include "../signal/freq.h"
-    #include "../signal/gain.h"
-    #include "../signal/mask.h"
     #include "../signal/pair.h"
     #include "../signal/track.h"
     
     typedef struct freq2freq_obj {
 
         unsigned int halfFrameSize;
+        unsigned int halfFrameSizeInterp;
         unsigned int lowPassCut;
         float epsilon;
         float alpha;
@@ -22,7 +21,7 @@
 
     } freq2freq_obj;
 
-    freq2freq_obj * freq2freq_construct_zero(const unsigned int halfFrameSize, const unsigned int lowPassCut, const float epsilon, const float alpha, const float beta, const float Ginterf);
+    freq2freq_obj * freq2freq_construct_zero(const unsigned int halfFrameSize, const unsigned int halfFrameSizeInterp, const unsigned int lowPassCut, const float epsilon, const float alpha, const float beta, const float Ginterf);
 
     void freq2freq_destroy(freq2freq_obj * obj);
 
@@ -33,5 +32,7 @@
     void freq2freq_process_lowpass(freq2freq_obj * obj, const freqs_obj * freqsAllPass, freqs_obj * freqsLowPass);
 
     void freq2freq_process_postfilter(freq2freq_obj * obj, const tracks_obj * tracks, const freqs_obj * freqsSeps, const envs_obj * envsSeps, const envs_obj * envsDiffuse, freqs_obj * freqsPosts);
+
+    void freq2freq_process_interpolate(freq2freq_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp);
 
 #endif

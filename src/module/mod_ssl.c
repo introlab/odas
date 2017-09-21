@@ -1,5 +1,5 @@
     
-    #include "mod_ssl.h"    
+    #include "mod_ssl.h"       
 
     // +----------------------------------------------------------+
     // | Object - Constructor                                     |
@@ -21,6 +21,9 @@
         obj->nLevels = mod_ssl_config->nLevels;
         obj->frameSize = 2 * (msg_spectra_config->halfFrameSize - 1);
         obj->halfFrameSize = msg_spectra_config->halfFrameSize; 
+        obj->frameSizeInterp = obj->frameSize * mod_ssl_config->interpRate;
+        obj->halfFrameSizeInterp = (obj->halfFrameSize - 1) * mod_ssl_config->interpRate + 1;
+        obj->interpRate = mod_ssl_config->interpRate;
 
         obj->scans = scanning_init_scans(mod_ssl_config->mics, 
                                          mod_ssl_config->spatialfilter,
@@ -29,19 +32,21 @@
                                          mod_ssl_config->samplerate->mu, 
                                          mod_ssl_config->soundspeed, 
                                          mod_ssl_config->nMatches, 
-                                         2 * (msg_spectra_config->halfFrameSize - 1), 
+                                         obj->frameSize, 
                                          mod_ssl_config->deltas,
                                          mod_ssl_config->probMin, 
                                          mod_ssl_config->nRefinedLevels, 
                                          mod_ssl_config->nThetas, 
-                                         mod_ssl_config->gainMin); 
+                                         mod_ssl_config->gainMin,
+                                         mod_ssl_config->interpRate);      
 
-        obj->freq2freq = freq2freq_construct_zero(msg_spectra_config->halfFrameSize, 
+        obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, 
+                                                  obj->halfFrameSizeInterp,
                                                   0,
                                                   mod_ssl_config->epsilon,
                                                   0.0f,
                                                   0.0f,
-                                                  0.0f);
+                                                  0.0f);   
 
         obj->phasors = freqs_construct_zero(mod_ssl_config->mics->nChannels, 
                                             msg_spectra_config->halfFrameSize);
@@ -49,14 +54,17 @@
         obj->products = freqs_construct_zero(mod_ssl_config->mics->nPairs, 
                                              msg_spectra_config->halfFrameSize);
 
-        obj->freq2xcorr = freq2xcorr_construct_zero(2 * (msg_spectra_config->halfFrameSize - 1), 
-                                                    msg_spectra_config->halfFrameSize);
+        obj->productsInterp = freqs_construct_zero(mod_ssl_config->mics->nPairs,
+                                                   obj->halfFrameSizeInterp);
+
+        obj->freq2xcorr = freq2xcorr_construct_zero(obj->frameSizeInterp, 
+                                                    obj->halfFrameSizeInterp);
         
         obj->xcorrs = xcorrs_construct_zero(mod_ssl_config->mics->nPairs,
-                                            2 * (msg_spectra_config->halfFrameSize - 1));
+                                            obj->frameSizeInterp);
 
         obj->xcorrsMax = xcorrs_construct_zero(mod_ssl_config->mics->nPairs,
-                                               2 * (msg_spectra_config->halfFrameSize - 1));
+                                               obj->frameSizeInterp);
 
         obj->aimgs = (aimg_obj **) malloc(sizeof(aimg_obj *) * msg_pots_config->nPots);
 
@@ -66,8 +74,8 @@
 
         }
 
-        obj->xcorr2xcorr = xcorr2xcorr_construct_zero(2 * (msg_spectra_config->halfFrameSize - 1));
-
+        obj->xcorr2xcorr = xcorr2xcorr_construct_zero(obj->frameSizeInterp);
+        
         obj->xcorr2aimg = (xcorr2aimg_obj **) malloc(sizeof(xcorr2aimg_obj *) * mod_ssl_config->nLevels);
 
         for (iLevel = 0; iLevel < mod_ssl_config->nLevels; iLevel++) {
@@ -92,6 +100,7 @@
         freq2freq_destroy(obj->freq2freq);
         freqs_destroy(obj->phasors);
         freqs_destroy(obj->products);
+        freqs_destroy(obj->productsInterp);
         freq2xcorr_destroy(obj->freq2xcorr);
         xcorrs_destroy(obj->xcorrs);
         xcorrs_destroy(obj->xcorrsMax);
@@ -138,10 +147,14 @@
                                       obj->scans->pairs,
                                       obj->products);        
 
+            freq2freq_process_interpolate(obj->freq2freq,
+                                          obj->products,
+                                          obj->productsInterp);
+
             freq2xcorr_process(obj->freq2xcorr, 
-                               obj->products, 
+                               obj->productsInterp, 
                                obj->scans->pairs,
-                               obj->xcorrs);
+                               obj->xcorrs);           
 
             for (iPot = 0; iPot < obj->nPots; iPot++) {
                 
@@ -193,7 +206,7 @@
                 obj->pots->array[iPot * 4 + 0] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 0];
                 obj->pots->array[iPot * 4 + 1] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 1];
                 obj->pots->array[iPot * 4 + 2] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 2];
-                obj->pots->array[iPot * 4 + 3] = maxValue;
+                obj->pots->array[iPot * 4 + 3] = maxValue * ((float) obj->interpRate);
 
             }
             

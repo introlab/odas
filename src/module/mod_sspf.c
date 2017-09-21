@@ -17,7 +17,7 @@
 
         obj->freq2env = freq2env_construct_zero(obj->halfFrameSize, obj->nSeps);
         obj->envs = envs_construct_zero(obj->nSeps, obj->halfFrameSize);
-        obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, 0, obj->epsilon, obj->alpha, obj->beta, obj->Ginterf);
+        obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, 0, 0, obj->epsilon, obj->alpha, obj->beta, obj->Ginterf);
 
         obj->in1 = (msg_spectra_obj *) NULL;
         obj->in2 = (msg_envs_obj *) NULL;
@@ -50,7 +50,7 @@
             }
 
             freq2env_process(obj->freq2env, obj->in1->freqs, obj->envs);
-            freq2freq_process_postfilter(obj->freq2freq,  obj->in3->tracks, obj->in1->freqs, obj->envs, obj->in2->envs, obj->out->freqs);
+            freq2freq_process_postfilter(obj->freq2freq, obj->in3->tracks, obj->in1->freqs, obj->envs, obj->in2->envs, obj->out->freqs);
 
             obj->out->timeStamp = obj->in1->timeStamp;
 

@@ -881,6 +881,12 @@
             cfg->soundspeed->sigma2 = parameters_lookup_float(fileConfig, "general.speedofsound.sigma2");
 
         // +----------------------------------------------------------+
+        // | Interpolation                                            |
+        // +----------------------------------------------------------+
+
+            cfg->interpRate = parameters_lookup_int(fileConfig, "ssl.interpRate");
+
+        // +----------------------------------------------------------+
         // | Epsilon                                                  |
         // +----------------------------------------------------------+
 

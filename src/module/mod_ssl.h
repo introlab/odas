@@ -32,11 +32,15 @@
         unsigned int nLevels;
         unsigned int frameSize;
         unsigned int halfFrameSize;
+        unsigned int frameSizeInterp;
+        unsigned int halfFrameSizeInterp;
+        unsigned int interpRate;
 
         scans_obj * scans;
 
         freqs_obj * phasors;   
         freqs_obj * products;
+        freqs_obj * productsInterp;
         xcorrs_obj * xcorrs;
         xcorrs_obj * xcorrsMax;
         
@@ -61,6 +65,7 @@
         soundspeed_obj * soundspeed;
         spatialfilter_obj * spatialfilter;
 
+        unsigned int interpRate;
         float epsilon; 
         unsigned int nLevels;
         unsigned int * levels;
