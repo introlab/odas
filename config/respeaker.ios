@@ -14,9 +14,7 @@ output:
 {
 
     # No raw output for now...
-    raw: (
-        { type = "file"; path = "recorded.raw"; format = "bin16"; }
-    );
+    raw: ();
 
     # For debug purpose, leave empty.
     mapping: ();
