@@ -107,7 +107,7 @@ The timeStamp is a unique ID in time to identify each frame. The tracked sources
 
 ### XMOS xCore Array Microphone
 
-Connect the soundcard via USB to the computer. Then type the following command to see where is located the ReSpeaker:
+Connect the soundcard via USB to the computer. Then type the following command to see where is located the XMOS xCore Array Microphone:
 
 ```
 arecord -l
