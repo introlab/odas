@@ -4,7 +4,7 @@ input:
 {
    
     #XMOS Device, 32bits.
-    raw: { type = "soundcard"; card = 1; device = 0; format = "bin32"; }
+    raw: { type = "soundcard"; card = 3; device = 0; format = "bin32"; }
 
 };
 
@@ -13,70 +13,30 @@ input:
 output:
 {
 
-#No raw output for now...
-    raw:
-    (
-#        { type = "file"; path = "recorded_raw_16.raw"; format = "bin16"; }
-         { type = "file"; path = "recorded_raw_32.raw"; format = "bin32"; }
-#        { type = "file"; path = "recorded_raw_24.raw"; format = "bin24"; }
-    );
+    # No raw output for now...
+    raw: ();
 
-#Mapped signals only.
-    mapping:
-    (
-#        { type = "file"; path = "recorded_mapping_16.raw"; format = "bin16"; }
-#        { type = "file"; path = "recorded_mapping_32.raw"; format = "bin32"; }
-    );
+    # For debug purpose, leave empty.
+    mapping: ();
+    resample: ();
+    stft: ();
 
+    # Sound Source Localization Results
+    ssl: ();
 
-#Resampled signals output (debug)
-    resample:
-    (
-#        { type = "file"; path = "recorded_resample_16.raw"; format = "bin16"; }
-#        { type = "file"; path = "recorded_resample_32.raw"; format = "bin32"; }
-    );
-
-#Fourier transforms (debug)
-    stft:
-    (
-#        { type = "file"; path = "recorded_stft.bin"; format = "float"; }
-    );
-
-
-#Sound Source Localization 
-    ssl:
-    (
-#odas_web output (localization, pots)
-        { type = "socket"; ip = "127.0.0.1"; port = 9001; format = "json"; }
-    );
-#odas_web output (tracking)
+    # Sound Source Tracking Results
     sst:
     (
-        { type = "socket"; ip = "127.0.0.1"; port = 9000; format = "json"; }
+        { type = "terminal"; format = "json"; }
     );
 
-#odas_web (separated, before post-filtering, not used frequency domain)
-    sss:
-    (
-#        { type = "file"; path = "separated_stft.bin"; format = "float"; }
-    );
+    # For debug purpose, leave empty.
+    sss: ();
+    sspf: ();
+    istft: ();
 
-#odas_web (post-filtered, not used, frequency domain)
-    sspf:
-    (
-#        { type = "file"; path = "postfiltered_stft.bin"; format = "float"; }
-    );
-
-#inverse fourier transform
-    istft:
-    (
-#        { type = "file"; path = "separated_16.raw"; format = "bin16"; }
-    )
-
-#separated stream with gain
-    playback:
-    (
-#        { type = "file"; path = "playback_16.raw"; format = "bin16"; }    
-    )
+    # Separated signal, for now leave empty.
+    playback: ();
 
 }
+
