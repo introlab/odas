@@ -20,10 +20,10 @@
 
         switch (obj->format->type) {
             
-            case format_bin08: break;
-            case format_bin16: break;
-            case format_bin24: break;
-            case format_bin32: break;
+            case format_binary_int08: break;
+            case format_binary_int16: break;
+            case format_binary_int24: break;
+            case format_binary_int32: break;
             default:
 
                 printf("Invalid format.\n");
@@ -64,6 +64,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                // Empty
+
+            break;
+
             case interface_file:
 
                 obj->fp = fopen(obj->interface->fileName, "wb");
@@ -71,10 +77,6 @@
             break;
 
             case interface_socket:
-
-                //struct sockaddr_in sserver;
-                //char * smessage;
-                //int sid;
 
                 printf("Not implemented yet.\n");
                 exit(EXIT_FAILURE);
@@ -102,6 +104,12 @@
     int snk_hops_close(snk_hops_obj * obj) {
 
         switch(obj->interface->type) {
+
+            case interface_blackhole:
+
+                // Empty
+
+            break;
 
             case interface_file:
 
@@ -140,6 +148,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                rtnValue = snk_hops_process_blackhole(obj);
+
+            break;  
+
             case interface_file:
 
                 rtnValue = snk_hops_process_file(obj);
@@ -171,6 +185,25 @@
 
     }
 
+    int snk_hops_process_blackhole(snk_hops_obj * obj) {
+
+        int rtnValue;
+
+        if (obj->in->timeStamp != 0) {
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
+
+    }
+
     int snk_hops_process_file(snk_hops_obj * obj) {
 
         unsigned int iSample;
@@ -186,10 +219,10 @@
 
             switch (obj->format->type) {
 
-                case format_bin08: nBytes = 1; break;
-                case format_bin16: nBytes = 2; break;
-                case format_bin24: nBytes = 3; break;
-                case format_bin32: nBytes = 4; break;
+                case format_binary_int08: nBytes = 1; break;
+                case format_binary_int16: nBytes = 2; break;
+                case format_binary_int24: nBytes = 3; break;
+                case format_binary_int32: nBytes = 4; break;
 
             }
 

@@ -61,7 +61,7 @@
 
         cfg->hopSize = 0;
         cfg->nChannels = 0;
-        cfg->fS;
+        cfg->fS = 0;
 
         return cfg;
 

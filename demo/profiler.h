@@ -9,21 +9,17 @@
 
         float duration;
 
-        float src_hops_raw_prf;
-        float con_hops_raw_prf;
-        float snk_hops_raw_prf;
+        float src_hops_mics_prf;
+        float con_hops_mics_raw_prf;
 
-        float mod_mapping_prf;
-        float con_hops_mapping_prf;
-        float snk_hops_mapping_prf;
+        float mod_mapping_mics_prf;
+        float con_hops_mics_map_prf;
 
-        float mod_resample_prf;
-        float con_hops_resample_prf;
-        float snk_hops_resample_prf;
+        float mod_resample_mics_prf;
+        float con_hops_mics_rs_prf;
 
-        float mod_stft_prf;
-        float con_spectra_stft_prf;
-        float snk_spectra_stft_prf;
+        float mod_stft_mics_prf;
+        float con_spectra_mics_prf;
 
         float mod_ssl_prf;
         float con_pots_ssl_prf;
@@ -32,23 +28,6 @@
         float mod_sst_prf;
         float con_tracks_sst_prf;
         float snk_tracks_sst_prf;
-
-        float mod_sss_prf;
-        float con_spectra_sss_prf;
-        float con_envs_sss_prf;
-        float snk_spectra_sss_prf;
-
-        float mod_sspf_prf;
-        float con_spectra_sspf_prf;
-        float snk_spectra_sspf_prf;
-
-        float mod_istft_prf;
-        float con_hops_istft_prf;
-        float snk_hops_istft_prf;
-
-        float mod_gain_prf;
-        float con_hops_gain_prf;
-        float snk_hops_gain_prf;
 
     } profiler;
 

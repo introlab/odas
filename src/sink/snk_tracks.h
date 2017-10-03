@@ -55,6 +55,8 @@
 
     int snk_tracks_process(snk_tracks_obj * obj);
 
+    int snk_tracks_process_blackhole(snk_tracks_obj * obj);
+
     int snk_tracks_process_file(snk_tracks_obj * obj);
 
     int snk_tracks_process_socket(snk_tracks_obj * obj);

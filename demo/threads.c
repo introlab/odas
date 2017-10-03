@@ -13,21 +13,13 @@
             // | Source                                               |
             // +------------------------------------------------------+  
 
-                thread_start(aobjs->asrc_hops_raw_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_hops_raw_object_count; iSink++) {
-                    thread_start(aobjs->asnk_hops_raw_objects[iSink]->thread);
-                }
+                thread_start(aobjs->asrc_hops_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+                     
 
-                thread_start(aobjs->acon_hops_raw_object->thread);
+                thread_start(aobjs->acon_hops_mics_raw_object->thread);
 
         // +----------------------------------------------------------+
         // | Mapping                                                  |
@@ -37,21 +29,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_start(aobjs->amod_mapping_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_hops_mapping_object_count; iSink++) {
-                    thread_start(aobjs->asnk_hops_mapping_objects[iSink]->thread);
-                }
+                thread_start(aobjs->amod_mapping_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+                     
 
-                thread_start(aobjs->acon_hops_mapping_object->thread);
+                thread_start(aobjs->acon_hops_mics_map_object->thread);
 
         // +----------------------------------------------------------+
         // | Resample                                                 |
@@ -61,21 +45,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_start(aobjs->amod_resample_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_hops_resample_object_count; iSink++) {
-                    thread_start(aobjs->asnk_hops_resample_objects[iSink]->thread);
-                }
+                thread_start(aobjs->amod_resample_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+                     
 
-                thread_start(aobjs->acon_hops_resample_object->thread);
+                thread_start(aobjs->acon_hops_mics_rs_object->thread);
 
         // +----------------------------------------------------------+
         // | STFT                                                     |
@@ -85,21 +61,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_start(aobjs->amod_stft_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_spectra_stft_object_count; iSink++) {
-                    thread_start(aobjs->asnk_spectra_stft_objects[iSink]->thread);
-                }
+                thread_start(aobjs->amod_stft_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+                     
 
-                thread_start(aobjs->acon_spectra_stft_object->thread);
+                thread_start(aobjs->acon_spectra_mics_object->thread);
 
         // +----------------------------------------------------------+
         // | SSL                                                      |
@@ -115,9 +83,7 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < aobjs->asnk_pots_ssl_object_count; iSink++) {
-                    thread_start(aobjs->asnk_pots_ssl_objects[iSink]->thread);
-                }
+                thread_start(aobjs->asnk_pots_ssl_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
@@ -139,113 +105,14 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < aobjs->asnk_tracks_sst_object_count; iSink++) {
-                    thread_start(aobjs->asnk_tracks_sst_objects[iSink]->thread);
-                }
+                thread_start(aobjs->asnk_tracks_sst_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+                     
 
                 thread_start(aobjs->acon_tracks_sst_object->thread);
-/*
-        // +----------------------------------------------------------+
-        // | SSS                                                      |
-        // +----------------------------------------------------------+  
 
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_start(aobjs->amod_sss_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_spectra_sss_object_count; iSink++) {
-                    thread_start(aobjs->asnk_spectra_sss_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+                     
-
-                thread_start(aobjs->acon_spectra_sss_object->thread);
-                thread_start(aobjs->acon_envs_sss_object->thread);
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_start(aobjs->amod_sspf_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_spectra_sspf_object_count; iSink++) {
-                    thread_start(aobjs->asnk_spectra_sspf_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+                     
-
-                thread_start(aobjs->acon_spectra_sspf_object->thread);
-
-        // +----------------------------------------------------------+
-        // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_start(aobjs->amod_istft_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_hops_istft_object_count; iSink++) {
-                    thread_start(aobjs->asnk_hops_istft_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+                     
-
-                thread_start(aobjs->acon_hops_istft_object->thread);
-
-        // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_start(aobjs->amod_gain_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < aobjs->asnk_hops_gain_object_count; iSink++) {
-                    thread_start(aobjs->asnk_hops_gain_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+                     
-
-                thread_start(aobjs->acon_hops_gain_object->thread);
-*/
     }
 
     void threads_multiple_stop(aobjects * aobjs) {
@@ -258,7 +125,7 @@
             // | Source                                               |
             // +------------------------------------------------------+  
 
-                thread_stop(aobjs->asrc_hops_raw_object->thread);
+                thread_stop(aobjs->asrc_hops_mics_object->thread);
 
                 // Stops the source that generate frames to process.
                 // This will generate a "zero" message that will stop
@@ -278,21 +145,13 @@
             // | Source                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->asrc_hops_raw_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_hops_raw_object_count; iSink++) {
-                    thread_join(aobjs->asnk_hops_raw_objects[iSink]->thread);
-                }
+                thread_join(aobjs->asrc_hops_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->acon_hops_raw_object->thread);
+                thread_join(aobjs->acon_hops_mics_raw_object->thread);
 
         // +----------------------------------------------------------+
         // | Mapping                                                  |
@@ -302,21 +161,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_mapping_object->thread);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_hops_mapping_object_count; iSink++) {
-                    thread_join(aobjs->asnk_hops_mapping_objects[iSink]->thread);
-                }
+                thread_join(aobjs->amod_mapping_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->acon_hops_mapping_object->thread);
+                thread_join(aobjs->acon_hops_mics_map_object->thread);
 
         // +----------------------------------------------------------+
         // | Resample                                                 |
@@ -326,21 +177,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_resample_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_hops_resample_object_count; iSink++) {
-                    thread_join(aobjs->asnk_hops_resample_objects[iSink]->thread);
-                }
+                thread_join(aobjs->amod_resample_mics_object->thread);               
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->acon_hops_resample_object->thread);
+                thread_join(aobjs->acon_hops_mics_rs_object->thread);
 
         // +----------------------------------------------------------+
         // | STFT                                                     |
@@ -350,21 +193,13 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_stft_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_spectra_stft_object_count; iSink++) {
-                    thread_join(aobjs->asnk_spectra_stft_objects[iSink]->thread);
-                }
+                thread_join(aobjs->amod_stft_mics_object->thread);               
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->acon_spectra_stft_object->thread);
+                thread_join(aobjs->acon_spectra_mics_object->thread);
 
         // +----------------------------------------------------------+
         // | SSL                                                      |
@@ -380,9 +215,7 @@
             // | Sinks                                                |
             // +------------------------------------------------------+   
                 
-                for (iSink = 0; iSink < aobjs->asnk_pots_ssl_object_count; iSink++) {
-                    thread_join(aobjs->asnk_pots_ssl_objects[iSink]->thread);
-                }
+                thread_join(aobjs->asnk_pots_ssl_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
@@ -404,113 +237,14 @@
             // | Sinks                                                |
             // +------------------------------------------------------+   
                 
-                for (iSink = 0; iSink < aobjs->asnk_tracks_sst_object_count; iSink++) {
-                    thread_join(aobjs->asnk_tracks_sst_objects[iSink]->thread);
-                }
+                thread_join(aobjs->asnk_tracks_sst_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
             // +------------------------------------------------------+  
 
                 thread_join(aobjs->acon_tracks_sst_object->thread);
-/*
-        // +----------------------------------------------------------+
-        // | SSS                                                      |
-        // +----------------------------------------------------------+  
 
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->amod_sss_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_spectra_sss_object_count; iSink++) {
-                    thread_join(aobjs->asnk_spectra_sss_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->acon_spectra_sss_object->thread);
-                thread_join(aobjs->acon_envs_sss_object->thread);
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->amod_sspf_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_spectra_sspf_object_count; iSink++) {
-                    thread_join(aobjs->asnk_spectra_sspf_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->acon_spectra_sspf_object->thread);
-
-        // +----------------------------------------------------------+
-        // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->amod_istft_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_hops_istft_object_count; iSink++) {
-                    thread_join(aobjs->asnk_hops_istft_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->acon_hops_istft_object->thread);
-
-        // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->amod_gain_object->thread);               
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+   
-                
-                for (iSink = 0; iSink < aobjs->asnk_hops_gain_object_count; iSink++) {
-                    thread_join(aobjs->asnk_hops_gain_objects[iSink]->thread);
-                }
-
-            // +------------------------------------------------------+
-            // | Connector                                            |
-            // +------------------------------------------------------+  
-
-                thread_join(aobjs->acon_hops_gain_object->thread);
-*/
     }
 
     void threads_single_open(objects * objs) {
@@ -525,51 +259,7 @@
             // | Source                                               |
             // +------------------------------------------------------+  
 
-                src_hops_open(objs->src_hops_raw_object);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_raw_object_count; iSink++) {
-                    snk_hops_open(objs->snk_hops_raw_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | Mapping                                                  |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_mapping_object_count; iSink++) {
-                    snk_hops_open(objs->snk_hops_mapping_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | Resample                                                 |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_resample_object_count; iSink++) {
-                    snk_hops_open(objs->snk_hops_resample_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | STFT                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_stft_object_count; iSink++) {
-                    snk_spectra_open(objs->snk_spectra_stft_objects[iSink]);
-                }
+                src_hops_open(objs->src_hops_mics_object);
 
         // +----------------------------------------------------------+
         // | SSL                                                      |
@@ -579,9 +269,7 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < objs->snk_pots_ssl_object_count; iSink++) {
-                    snk_pots_open(objs->snk_pots_ssl_objects[iSink]);
-                }
+                snk_pots_open(objs->snk_pots_ssl_object);
 
         // +----------------------------------------------------------+
         // | SST                                                      |
@@ -591,58 +279,8 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
-                    snk_tracks_open(objs->snk_tracks_sst_objects[iSink]);
-                }
-/*
-        // +----------------------------------------------------------+
-        // | SSS                                                      |
-        // +----------------------------------------------------------+  
+                snk_tracks_open(objs->snk_tracks_sst_object);
 
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_sss_object_count; iSink++) {
-                    snk_spectra_open(objs->snk_spectra_sss_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
-                    snk_spectra_open(objs->snk_spectra_sspf_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
-                    snk_hops_open(objs->snk_hops_istft_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
-                    snk_hops_open(objs->snk_hops_gain_objects[iSink]);
-                }
-*/
     }
 
     void threads_single_close(objects * objs) {
@@ -657,51 +295,7 @@
             // | Source                                               |
             // +------------------------------------------------------+  
 
-                src_hops_close(objs->src_hops_raw_object);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_raw_object_count; iSink++) {
-                    snk_hops_close(objs->snk_hops_raw_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | Mapping                                                  |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_mapping_object_count; iSink++) {
-                    snk_hops_close(objs->snk_hops_mapping_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | Resample                                                 |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_resample_object_count; iSink++) {
-                    snk_hops_close(objs->snk_hops_resample_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | STFT                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_stft_object_count; iSink++) {
-                    snk_spectra_close(objs->snk_spectra_stft_objects[iSink]);
-                }
+                src_hops_close(objs->src_hops_mics_object);
 
         // +----------------------------------------------------------+
         // | SSL                                                      |
@@ -711,9 +305,7 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < objs->snk_pots_ssl_object_count; iSink++) {
-                    snk_pots_close(objs->snk_pots_ssl_objects[iSink]);
-                }
+                snk_pots_close(objs->snk_pots_ssl_object);
 
         // +----------------------------------------------------------+
         // | SST                                                      |
@@ -723,58 +315,8 @@
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
-                    snk_tracks_close(objs->snk_tracks_sst_objects[iSink]);
-                }
-/*
-        // +----------------------------------------------------------+
-        // | SSS                                                      |
-        // +----------------------------------------------------------+  
+                snk_tracks_close(objs->snk_tracks_sst_object);
 
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_sss_object_count; iSink++) {
-                    snk_spectra_close(objs->snk_spectra_sss_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
-                    snk_spectra_close(objs->snk_spectra_sspf_objects[iSink]);
-                }
-
-        // +----------------------------------------------------------+
-        // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
-                    snk_hops_close(objs->snk_hops_istft_objects[iSink]);
-                }                
-
-        // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                      
-
-                for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
-                    snk_hops_close(objs->snk_hops_gain_objects[iSink]);
-                }  
-*/
     }
 
     int threads_single_process(objects * objs, profiler * prf) {
@@ -785,7 +327,7 @@
 
         clock_t begin, end;
 
-        prf->duration += ((float) (objs->src_hops_raw_object->hopSize)) / ((float) (objs->src_hops_raw_object->fS));
+        prf->duration += ((float) (objs->src_hops_mics_object->hopSize)) / ((float) (objs->src_hops_mics_object->fS));
 
         // +----------------------------------------------------------+
         // | SECTION I                                                |
@@ -800,31 +342,18 @@
                 // +--------------------------------------------------+  
 
                     begin = clock();
-                    rtnValue = src_hops_process(objs->src_hops_raw_object);
+                    rtnValue = src_hops_process(objs->src_hops_mics_object);
                     end = clock();
-                    prf->src_hops_raw_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                    prf->src_hops_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                 // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+   
 
                     begin = clock();
-                    con_hops_process(objs->con_hops_raw_object);
+                    con_hops_process(objs->con_hops_mics_raw_object);
                     end = clock();
-                    prf->con_hops_raw_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();
-                    for (iSink = 0; iSink < objs->snk_hops_raw_object_count; iSink++) {
-
-                        snk_hops_process(objs->snk_hops_raw_objects[iSink]);
-
-                    }
-                    end = clock();
-                    prf->snk_hops_raw_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);               
+                    prf->con_hops_mics_raw_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
             // +------------------------------------------------------+
             // | Mapping                                              |
@@ -835,29 +364,18 @@
                 // +--------------------------------------------------+  
 
                     begin = clock();
-                    mod_mapping_process(objs->mod_mapping_object);
+                    mod_mapping_process(objs->mod_mapping_mics_object);
                     end = clock();
-                    prf->mod_mapping_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                    prf->mod_mapping_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                 // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+                     
 
                     begin = clock();
-                    con_hops_process(objs->con_hops_mapping_object);
+                    con_hops_process(objs->con_hops_mics_map_object);
                     end = clock();
-                    prf->con_hops_mapping_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();
-                    for (iSink = 0; iSink < objs->snk_hops_mapping_object_count; iSink++) {
-                        snk_hops_process(objs->snk_hops_mapping_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_hops_mapping_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                   
+                    prf->con_hops_mics_map_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
             // +------------------------------------------------------+
             // | Resample                                             |
@@ -868,9 +386,9 @@
                 // +--------------------------------------------------+  
 
                     begin = clock();
-                    mod_resample_process_push(objs->mod_resample_object);
+                    mod_resample_process_push(objs->mod_resample_mics_object);
                     end = clock();
-                    prf->mod_resample_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                    prf->mod_resample_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
         // +----------------------------------------------------------+
         // | SECTION II                                               |
@@ -888,9 +406,9 @@
                 // +--------------------------------------------------+  
 
                     begin = clock();
-                    rtnResample = mod_resample_process_pop(objs->mod_resample_object);
+                    rtnResample = mod_resample_process_pop(objs->mod_resample_mics_object);
                     end = clock();
-                    prf->mod_resample_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                    prf->mod_resample_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     // If there is no frames to process, stop
                     if (rtnResample == -1) {
@@ -902,20 +420,9 @@
                 // +--------------------------------------------------+      
 
                     begin = clock();
-                    con_hops_process(objs->con_hops_resample_object);
+                    con_hops_process(objs->con_hops_mics_rs_object);
                     end = clock();
-                    prf->con_hops_resample_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();
-                    for (iSink = 0; iSink < objs->snk_hops_resample_object_count; iSink++) {
-                        snk_hops_process(objs->snk_hops_resample_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_hops_resample_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                  
+                    prf->con_hops_mics_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -926,29 +433,18 @@
                 // +--------------------------------------------------+  
 
                     begin = clock();
-                    mod_stft_process(objs->mod_stft_object);
+                    mod_stft_process(objs->mod_stft_mics_object);
                     end = clock();
-                    prf->mod_stft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                    prf->mod_stft_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                 // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+                     
 
                     begin = clock();
-                    con_spectra_process(objs->con_spectra_stft_object);
+                    con_spectra_process(objs->con_spectra_mics_object);
                     end = clock();
-                    prf->con_spectra_stft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                     
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();
-                    for (iSink = 0; iSink < objs->snk_spectra_stft_object_count; iSink++) {
-                        snk_spectra_process(objs->snk_spectra_stft_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_spectra_stft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                 
+                    prf->con_spectra_mics_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                     
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -977,9 +473,7 @@
                 // +--------------------------------------------------+                      
 
                     begin = clock();
-                    for (iSink = 0; iSink < objs->snk_pots_ssl_object_count; iSink++) {
-                        snk_pots_process(objs->snk_pots_ssl_objects[iSink]);
-                    }
+                    snk_pots_process(objs->snk_pots_ssl_object);
                     end = clock();
                     prf->snk_pots_ssl_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                
 
@@ -1010,149 +504,10 @@
                 // +--------------------------------------------------+                      
 
                     begin = clock();
-                    for (iSink = 0; iSink < objs->snk_tracks_sst_object_count; iSink++) {
-                        snk_tracks_process(objs->snk_tracks_sst_objects[iSink]);
-                    }
+                    snk_tracks_process(objs->snk_tracks_sst_object);
                     end = clock();
                     prf->snk_tracks_sst_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-/*
-            // +------------------------------------------------------+
-            // | SSS                                                  |
-            // +------------------------------------------------------+  
 
-                // +--------------------------------------------------+
-                // | Module                                           |
-                // +--------------------------------------------------+  
-
-                    begin = clock();
-                    mod_sss_process(objs->mod_sss_object);
-                    end = clock();
-                    prf->mod_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                               
-
-                // +--------------------------------------------------+
-                // | Connector                                        |
-                // +--------------------------------------------------+                     
-
-                    begin = clock();
-                    con_spectra_process(objs->con_spectra_sss_object);
-                    end = clock();
-                    prf->con_spectra_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-                    begin = clock();
-                    con_envs_process(objs->con_envs_sss_object);
-                    end = clock();
-                    prf->con_envs_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();
-                    for (iSink = 0; iSink < objs->snk_spectra_sss_object_count; iSink++) {
-                        snk_spectra_process(objs->snk_spectra_sss_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_spectra_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-            // +------------------------------------------------------+
-            // | SSPF                                                 |
-            // +------------------------------------------------------+  
-
-                // +--------------------------------------------------+
-                // | Module                                           |
-                // +--------------------------------------------------+  
-
-                    begin = clock();
-                    mod_sspf_process(objs->mod_sspf_object);
-                    end = clock();
-                    prf->mod_sspf_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                              
-
-                // +--------------------------------------------------+
-                // | Connector                                        |
-                // +--------------------------------------------------+                     
-
-                    begin = clock();
-                    con_spectra_process(objs->con_spectra_sspf_object);
-                    end = clock();
-                    prf->con_spectra_sspf_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();                    
-                    for (iSink = 0; iSink < objs->snk_spectra_sspf_object_count; iSink++) {
-                        snk_spectra_process(objs->snk_spectra_sspf_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_spectra_sspf_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-            // +------------------------------------------------------+
-            // | ISTFT                                                |
-            // +------------------------------------------------------+  
-
-                // +--------------------------------------------------+
-                // | Module                                           |
-                // +--------------------------------------------------+  
-
-                    begin = clock();
-                    mod_istft_process(objs->mod_istft_object);
-                    end = clock();
-                    prf->mod_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                              
-
-                // +--------------------------------------------------+
-                // | Connector                                        |
-                // +--------------------------------------------------+                     
-
-                    begin = clock();
-                    con_hops_process(objs->con_hops_istft_object);
-                    end = clock();
-                    prf->con_hops_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();                    
-                    for (iSink = 0; iSink < objs->snk_hops_istft_object_count; iSink++) {
-                        snk_hops_process(objs->snk_hops_istft_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_hops_istft_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);       
-
-            // +------------------------------------------------------+
-            // | Gain                                                 |
-            // +------------------------------------------------------+  
-
-                // +--------------------------------------------------+
-                // | Module                                           |
-                // +--------------------------------------------------+  
-
-                    begin = clock();
-                    mod_gain_process(objs->mod_gain_object);
-                    end = clock();
-                    prf->mod_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                              
-
-                // +--------------------------------------------------+
-                // | Connector                                        |
-                // +--------------------------------------------------+                     
-
-                    begin = clock();
-                    con_hops_process(objs->con_hops_gain_object);
-                    end = clock();
-                    prf->con_hops_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
-
-                // +--------------------------------------------------+
-                // | Sinks                                            |
-                // +--------------------------------------------------+                      
-
-                    begin = clock();                    
-                    for (iSink = 0; iSink < objs->snk_hops_gain_object_count; iSink++) {
-                        snk_hops_process(objs->snk_hops_gain_objects[iSink]);
-                    }
-                    end = clock();
-                    prf->snk_hops_gain_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);     
-*/
             }
 
         return rtnValue;

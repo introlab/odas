@@ -12,7 +12,7 @@
 
         obj->hopSize = msg_hops_config->hopSize;
         obj->nChannels = msg_hops_config->nChannels;
-        obj->fS = src_hops_config->fS;
+        obj->fS = msg_hops_config->fS;
         
         obj->format = format_clone(src_hops_config->format);
         obj->interface = interface_clone(src_hops_config->interface);
@@ -21,10 +21,10 @@
 
         switch (obj->format->type) {
             
-            case format_bin08: nBytes = 1; break;
-            case format_bin16: nBytes = 2; break;
-            case format_bin24: nBytes = 3; break;
-            case format_bin32: nBytes = 4; break;
+            case format_binary_int08: nBytes = 1; break;
+            case format_binary_int16: nBytes = 2; break;
+            case format_binary_int24: nBytes = 3; break;
+            case format_binary_int32: nBytes = 4; break;
             default:
 
                 printf("Invalid format.\n");
@@ -119,25 +119,25 @@
 
         switch (obj->format->type) {
             
-            case format_bin08:
+            case format_binary_int08:
 
                 format = SND_PCM_FORMAT_S8;
 
             break;
 
-            case format_bin16:
+            case format_binary_int16:
 
                 format = SND_PCM_FORMAT_S16_LE;
 
             break;
 
-            case format_bin24:
+            case format_binary_int24:
 
                 format = SND_PCM_FORMAT_S24_LE;
 
             break;
             
-            case format_bin32:
+            case format_binary_int32:
             
                 format = SND_PCM_FORMAT_S32_LE;
             
@@ -312,10 +312,10 @@
 
         switch (obj->format->type) {
 
-            case format_bin08: nBytes = 1; break;
-            case format_bin16: nBytes = 2; break;
-            case format_bin24: nBytes = 3; break;
-            case format_bin32: nBytes = 4; break;
+            case format_binary_int08: nBytes = 1; break;
+            case format_binary_int16: nBytes = 2; break;
+            case format_binary_int24: nBytes = 3; break;
+            case format_binary_int32: nBytes = 4; break;
 
         }
 
@@ -373,10 +373,10 @@
 
         switch (obj->format->type) {
 
-            case format_bin08: nBytes = 1; break;
-            case format_bin16: nBytes = 2; break;
-            case format_bin24: nBytes = 3; break;
-            case format_bin32: nBytes = 4; break;
+            case format_binary_int08: nBytes = 1; break;
+            case format_binary_int16: nBytes = 2; break;
+            case format_binary_int24: nBytes = 3; break;
+            case format_binary_int32: nBytes = 4; break;
 
         }
 
@@ -417,7 +417,6 @@
 
         cfg = (src_hops_cfg *) malloc(sizeof(src_hops_cfg));
 
-        cfg->fS = 0;
         cfg->format = (format_obj *) NULL;
         cfg->interface = (interface_obj *) NULL;
 

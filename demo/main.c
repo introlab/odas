@@ -30,7 +30,6 @@
 
             int c;
             char * file_config;
-            char * file_ios;
 
         // +------------------------------------------------------+
         // | Objects                                              |
@@ -83,20 +82,13 @@
         // +------------------------------------------------------+  
 
             file_config = (char *) NULL;
-            file_ios = (char *) NULL;
             char verbose = 0x00;
 
             type = processing_multithread;
 
-            while ((c = getopt(argc,argv, "hc:i:sv")) != -1) {
+            while ((c = getopt(argc,argv, "c:hsv")) != -1) {
 
                 switch(c) {
-
-                    case 'h':
-
-                        exit(EXIT_SUCCESS);
-
-                    break;
 
                     case 'c':
 
@@ -105,10 +97,9 @@
 
                     break;
 
-                    case 'i':
+                    case 'h':
 
-                        file_ios = (char *) malloc(sizeof(char) * (strlen(optarg)+1));
-                        strcpy(file_ios, optarg);
+                        exit(EXIT_SUCCESS);
 
                     break;
 
@@ -130,10 +121,6 @@
 
             if (file_config == NULL) {
                 printf("Missing configuration file.\n");
-                exit(EXIT_FAILURE);
-            }
-            if (file_ios == NULL) {
-                printf("Missing ios file.\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -172,7 +159,7 @@
 
                 if (verbose == 0x01) printf("  + Initializing configurations...... "); fflush(stdout); 
 
-                cfgs = configs_construct(file_config, file_ios);
+                cfgs = configs_construct(file_config);
 
                 if (verbose == 0x01) printf("[Done]\n");
 
@@ -208,7 +195,6 @@
                 objects_destroy(objs);
                 configs_destroy(cfgs);
                 free((void *) file_config);
-                free((void *) file_ios);
 
                 if (verbose == 0x01) printf("[Done]\n");
 
@@ -234,7 +220,7 @@
 
                 if (verbose == 0x01) printf("  + Initializing configurations...... "); fflush(stdout); 
 
-                cfgs = configs_construct(file_config, file_ios);
+                cfgs = configs_construct(file_config);
 
                 if (verbose == 0x01) printf("[Done]\n");
 
@@ -279,7 +265,6 @@
                 aobjects_destroy(aobjs);
                 configs_destroy(cfgs);
                 free((void *) file_config);
-                free((void *) file_ios);
 
                 if (verbose == 0x01) printf("[Done]\n");
 

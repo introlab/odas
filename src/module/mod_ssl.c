@@ -1,10 +1,6 @@
     
     #include "mod_ssl.h"       
 
-    // +----------------------------------------------------------+
-    // | Object - Constructor                                     |
-    // +----------------------------------------------------------+
-
     mod_ssl_obj * mod_ssl_construct(const mod_ssl_cfg * mod_ssl_config, const msg_spectra_cfg * msg_spectra_config, const msg_pots_cfg * msg_pots_config) {
 
         mod_ssl_obj * obj;

@@ -4,7 +4,6 @@
     #include <stdlib.h>
     #include <math.h>
 
-    #include "../signal/env.h"
     #include "../signal/freq.h"
     #include "../signal/pair.h"
     #include "../signal/track.h"
@@ -30,8 +29,6 @@
     void freq2freq_process_product(freq2freq_obj * obj, const freqs_obj * freqs1, const freqs_obj * freqs2, const pairs_obj * pairs, freqs_obj * freqs12);
 
     void freq2freq_process_lowpass(freq2freq_obj * obj, const freqs_obj * freqsAllPass, freqs_obj * freqsLowPass);
-
-    void freq2freq_process_postfilter(freq2freq_obj * obj, const tracks_obj * tracks, const freqs_obj * freqsSeps, const envs_obj * envsSeps, const envs_obj * envsDiffuse, freqs_obj * freqsPosts);
 
     void freq2freq_process_interpolate(freq2freq_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp);
 

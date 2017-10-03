@@ -35,7 +35,6 @@
 
     typedef struct src_hops_cfg {
 
-        unsigned int fS;
         format_obj * format;
         interface_obj * interface;
 

@@ -7,12 +7,12 @@
     typedef enum format_type { 
         
         format_undefined = 0,
-        format_bin08 = 8, 
-        format_bin16 = 16, 
-        format_bin24 = 24, 
-        format_bin32 = 32, 
-        format_float = 1, 
-        format_json = 2,
+        format_binary_int08 = 8, 
+        format_binary_int16 = 16, 
+        format_binary_int24 = 24, 
+        format_binary_int32 = 32, 
+        format_binary_float = 1, 
+        format_text_json = 2,
 
     } format_type;
 
@@ -24,11 +24,11 @@
 
     format_obj * format_construct();
 
-    format_obj * format_construct_bin(const unsigned int nBits);
+    format_obj * format_construct_binary_int(const unsigned int nBits);
 
-    format_obj * format_construct_float();    
+    format_obj * format_construct_binary_float();    
 
-    format_obj * format_construct_json();
+    format_obj * format_construct_text_json();
 
     format_obj * format_clone(const format_obj * obj);
 

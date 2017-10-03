@@ -17,8 +17,8 @@
 
         switch (obj->format->type) {
             
-            case format_json: break;
-            case format_float: break;
+            case format_text_json: break;
+            case format_binary_float: break;
             default:
 
                 printf("Invalid format.\n");
@@ -65,6 +65,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                // Empty
+
+            break;
+
             case interface_file:
 
                 obj->fp = fopen(obj->interface->fileName, "wb");
@@ -89,6 +95,12 @@
 
             break;
 
+            case interface_terminal:
+
+                // Empty
+
+            break;
+
             default:
 
                 printf("Invalid interface type.\n");
@@ -104,6 +116,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                // Empty
+
+            break;
+
             case interface_file:
 
                 fclose(obj->fp);
@@ -113,6 +131,12 @@
             case interface_socket:
 
                 close(obj->sid);
+
+            break;
+
+            case interface_terminal:
+
+                // Empty
 
             break;
 
@@ -133,6 +157,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                rtnValue = snk_pots_process_blackhole(obj);
+
+            break;
+
             case interface_file:
 
                 rtnValue = snk_pots_process_file(obj);
@@ -142,6 +172,12 @@
             case interface_socket:
 
                 rtnValue = snk_pots_process_socket(obj);
+
+            break;
+
+            case interface_terminal:
+
+                rtnValue = snk_pots_process_terminal(obj);
 
             break;
 
@@ -158,6 +194,25 @@
 
     }
 
+    int snk_pots_process_blackhole(snk_pots_obj * obj) {
+
+        int rtnValue;
+
+        if (obj->in->timeStamp != 0) {
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
+
+    }
+
     int snk_pots_process_file(snk_pots_obj * obj) {
 
         int rtnValue;
@@ -166,7 +221,7 @@
 
             switch(obj->format->type) {
 
-                case format_float:
+                case format_binary_float:
 
                     fwrite(obj->in->pots->array, sizeof(float), 4 * obj->in->pots->nPots, obj->fp);
 
@@ -196,7 +251,7 @@
 
             switch(obj->format->type) {
 
-                case format_json:
+                case format_text_json:
 
                     obj->smessage[0] = 0x00;
 
@@ -243,6 +298,60 @@
         return rtnValue;
 
     }
+
+    int snk_pots_process_terminal(snk_pots_obj * obj) {
+
+        int rtnValue;
+        unsigned int iPot;
+
+        if (obj->in->timeStamp != 0) {
+
+            switch(obj->format->type) {
+
+                case format_text_json:
+
+                    printf("{\n");
+                    printf("    \"timeStamp\": %llu,\n",obj->in->timeStamp);
+                    printf("    \"src\": [\n");
+
+                    for (iPot = 0; iPot < obj->nPots; iPot++) {
+
+                        printf("        { \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"E\": %1.3f }",
+                                obj->in->pots->array[iPot*4+0], 
+                                obj->in->pots->array[iPot*4+1], 
+                                obj->in->pots->array[iPot*4+2],
+                                obj->in->pots->array[iPot*4+3]);
+
+                        if (iPot != (obj->nPots - 1)) {
+
+                            printf(",");
+
+                        }
+
+                        printf("\n");
+
+                    }
+                    
+                    printf("    ]\n");
+                    printf("}\n");
+
+                    rtnValue = 0;
+
+                break;               
+
+            }
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;           
+
+    }
+
 
     snk_pots_cfg * snk_pots_cfg_construct(void) {
 

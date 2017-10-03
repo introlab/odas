@@ -8,10 +8,11 @@
     typedef enum interface_type { 
         
         interface_undefined = 0,
-        interface_file = 1,
-        interface_socket = 2, 
-        interface_soundcard = 3, 
-        interface_terminal = 4,
+        interface_blackhole = 1,
+        interface_file = 2,
+        interface_socket = 3, 
+        interface_soundcard = 4, 
+        interface_terminal = 5,
         
     } interface_type;
 
@@ -30,6 +31,8 @@
     } interface_obj;
 
     interface_obj * interface_construct();
+
+    interface_obj * interface_construct_blackhole();
 
     interface_obj * interface_construct_file(const char * fileName);
 

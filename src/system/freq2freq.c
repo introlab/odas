@@ -99,45 +99,6 @@
 
     }
 
-    void freq2freq_process_postfilter(freq2freq_obj * obj, const tracks_obj * tracks, const freqs_obj * freqsSeps, const envs_obj * envsSeps, const envs_obj * envsDiffuse, freqs_obj * freqsPosts) {
-
-        unsigned int iSignal;
-        unsigned int iSample;
-
-        float ratio;
-        float gain;
-        float real;
-        float imag;
-
-        for (iSignal = 0; iSignal < freqsSeps->nSignals; iSignal++) {
-
-            if (tracks->ids[iSignal] != 0) {
-
-                for (iSample = 0; iSample < obj->halfFrameSize; iSample++) {
-
-                    ratio = envsSeps->array[iSignal][iSample] / (envsDiffuse->array[iSignal][iSample] + obj->epsilon);
-
-                    gain = (1.0f - obj->Ginterf) / (1.0f + expf(-1.0f * obj->alpha * (ratio - obj->beta))) + obj->Ginterf;
-
-                    real = freqsSeps->array[iSignal][iSample * 2 + 0];
-                    imag = freqsSeps->array[iSignal][iSample * 2 + 1];
-
-                    freqsPosts->array[iSignal][iSample * 2 + 0] = gain * real;
-                    freqsPosts->array[iSignal][iSample * 2 + 1] = gain * imag;
-
-                }
-
-            }
-            else {
-
-                memset(freqsPosts->array[iSignal], 0x00, sizeof(float) * obj->halfFrameSize * 2);
-
-            }
-
-        }
-
-    }
-
     void freq2freq_process_interpolate(freq2freq_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp) {
 
         unsigned int iSignal;

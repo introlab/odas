@@ -141,7 +141,7 @@
 
     }
 
-    src_hops_cfg * parameters_src_hops_raw_config(const char * fileConfig, const char * fileIOs) {
+    src_hops_cfg * parameters_src_hops_mics_config(const char * fileConfig) {
 
         src_hops_cfg * cfg;
         char * tmpStr1;
@@ -152,34 +152,28 @@
         cfg = src_hops_cfg_construct();
 
         // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "raw.fS");
-
-        // +----------------------------------------------------------+
         // | Format                                                   |
         // +----------------------------------------------------------+
 
-            tmpStr1 = parameters_lookup_string(fileIOs, "input.raw.format");
+            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
 
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops raw: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);
+            if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
+                cfg->format = format_construct_binary_int(tmpInt1);
+            }
+            else {
+                printf("raw.nBits: Invalid number of bits\n");
+                exit(EXIT_FAILURE);
+            }
 
         // +----------------------------------------------------------+
         // | Type                                                     |
         // +----------------------------------------------------------+
 
-            tmpStr1 = parameters_lookup_string(fileIOs, "input.raw.type");
+            tmpStr1 = parameters_lookup_string(fileConfig, "raw.interface.type");
 
             if (strcmp(tmpStr1, "file") == 0) { 
 
-                tmpStr2 = parameters_lookup_string(fileIOs, "input.raw.path");
+                tmpStr2 = parameters_lookup_string(fileConfig, "raw.interface.path");
 
                 cfg->interface = interface_construct_file(tmpStr2);
 
@@ -188,8 +182,8 @@
             }
             else if (strcmp(tmpStr1, "socket") == 0) { 
 
-                tmpStr2 = parameters_lookup_string(fileIOs, "input.raw.ip");
-                tmpInt1 = parameters_lookup_int(fileIOs, "input.raw.port");
+                tmpStr2 = parameters_lookup_string(fileConfig, "raw.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "raw.interface.port");
 
                 cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
 
@@ -198,11 +192,15 @@
             }
             else if (strcmp(tmpStr1, "soundcard") == 0) {
 
-                tmpInt1 = parameters_lookup_int(fileIOs, "input.raw.card");
-                tmpInt2 = parameters_lookup_int(fileIOs, "input.raw.device");
+                tmpInt1 = parameters_lookup_int(fileConfig, "raw.interface.card");
+                tmpInt2 = parameters_lookup_int(fileConfig, "raw.interface.device");
 
                 cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
 
+            }
+            else {
+                printf("raw.interface.type: Invalid type\n");
+                exit(EXIT_FAILURE);
             }
 
             free((void *) tmpStr1);
@@ -211,7 +209,7 @@
 
     }
 
-    msg_hops_cfg * parameters_msg_hops_raw_config(const char * fileConfig, const char * fileIOs) {
+    msg_hops_cfg * parameters_msg_hops_mics_raw_config(const char * fileConfig) {
 
         msg_hops_cfg * cfg;
 
@@ -239,111 +237,8 @@
 
     }
 
-    unsigned int parameters_snk_hops_raw_count(const char * fileConfig, const char * fileIOs) {
 
-        return parameters_count(fileIOs, "output.raw");
-
-    }
-
-    snk_hops_cfg * parameters_snk_hops_raw_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_hops_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_hops_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Sample rate                                          |
-        // +------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "raw.fS");
-
-        // +------------------------------------------------------+
-        // | Format                                               |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.raw.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops raw: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +------------------------------------------------------+
-        // | Type                                                 |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.raw.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.raw.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.raw.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.raw.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "soundcard") == 0) {
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.raw.[%u].device", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.raw.[%u].subdevice", iSink);                
-                tmpInt2 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }        
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_mapping_cfg * parameters_mod_mapping_config(const char * fileConfig, const char * fileIOs) {
+    mod_mapping_cfg * parameters_mod_mapping_mics_config(const char * fileConfig) {
 
         mod_mapping_cfg * cfg;
         unsigned int nLinks;
@@ -372,7 +267,7 @@
 
     }
 
-    msg_hops_cfg * parameters_msg_hops_mapping_config(const char * fileConfig, const char * fileIOs) {
+    msg_hops_cfg * parameters_msg_hops_mics_map_config(const char * fileConfig) {
 
         msg_hops_cfg * cfg;
 
@@ -400,131 +295,35 @@
 
     }
 
-    unsigned int parameters_snk_hops_mapping_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.mapping");
-
-    }
-
-    snk_hops_cfg * parameters_snk_hops_mapping_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_hops_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_hops_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Sample rate                                          |
-        // +------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "raw.fS");
-
-        // +------------------------------------------------------+
-        // | Format                                               |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.mapping.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops mapping: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +------------------------------------------------------+
-        // | Type                                                 |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.mapping.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.mapping.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.mapping.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.mapping.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "soundcard") == 0) {
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.mapping.[%u].device", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.mapping.[%u].subdevice", iSink);                
-                tmpInt2 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }        
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_resample_cfg * parameters_mod_resample_config(const char * fileConfig, const char * fileIOs) {
+    mod_resample_cfg * parameters_mod_resample_mics_config(const char * fileConfig) {
 
         mod_resample_cfg * cfg;
 
-        cfg = mod_resample_cfg_construct();
+        unsigned int tmpInt1;
+        unsigned int tmpInt2;
 
-        unsigned int fSin;
-        unsigned int fSout;
+        cfg = mod_resample_cfg_construct();
 
         // +----------------------------------------------------------+
         // | Sample rates                                             |
         // +----------------------------------------------------------+
 
-            cfg->fSin = parameters_lookup_int(fileConfig, "raw.fS");        
-            cfg->fSout = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+            tmpInt1 = parameters_lookup_int(fileConfig, "raw.fS");        
+            tmpInt2 = parameters_lookup_int(fileConfig, "general.samplerate.mu");              
+
+            if (tmpInt1 < tmpInt2) {
+                printf("general.samplerate.mu: This sample rate must be smaller or equal to raw.fS");
+                exit(EXIT_FAILURE);
+            }
+
+            cfg->fSin = tmpInt1;
+            cfg->fSout = tmpInt2;
 
         return cfg;
 
     }
 
-    msg_hops_cfg * parameters_msg_hops_resample_config(const char * fileConfig, const char * fileIOs) {
+    msg_hops_cfg * parameters_msg_hops_mics_rs_config(const char * fileConfig) {
 
         msg_hops_cfg * cfg;
 
@@ -552,111 +351,7 @@
 
     }
 
-    unsigned int parameters_snk_hops_resample_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.resample");
-
-    }
-
-    snk_hops_cfg * parameters_snk_hops_resample_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_hops_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_hops_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Sample rate                                          |
-        // +------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +------------------------------------------------------+
-        // | Format                                               |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.resample.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops resample: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +------------------------------------------------------+
-        // | Type                                                 |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.resample.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.resample.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.resample.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.resample.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "soundcard") == 0) {
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.resample.[%u].device", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.resample.[%u].subdevice", iSink);                
-                tmpInt2 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }        
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_stft_cfg * parameters_mod_stft_config(const char * fileConfig, const char * fileIOs) {
+    mod_stft_cfg * parameters_mod_stft_mics_config(const char * fileConfig) {
 
         mod_stft_cfg * cfg;
 
@@ -666,7 +361,7 @@
 
     }
 
-    msg_spectra_cfg * parameters_msg_spectra_stft_config(const char * fileConfig, const char * fileIOs) {
+    msg_spectra_cfg * parameters_msg_spectra_mics_config(const char * fileConfig) {
 
         msg_spectra_cfg * cfg;
 
@@ -698,93 +393,7 @@
 
     }
 
-    unsigned int parameters_snk_spectra_stft_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.stft");
-
-    }
-
-    snk_spectra_cfg * parameters_snk_spectra_stft_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_spectra_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_spectra_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +----------------------------------------------------------+
-        // | Format                                                   |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.stft.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Sink spectra stft: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.stft.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.stft.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.stft.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.stft.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig, const char * fileIOs) {
+    mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig) {
 
         mod_ssl_cfg * cfg;
 
@@ -937,13 +546,13 @@
         // | Number of thetas                                         |
         // +----------------------------------------------------------+
 
-            cfg->nThetas = parameters_lookup_int(fileConfig, "ssl.nThetas");
+            cfg->nThetas = parameters_lookup_int(fileConfig, "general.nThetas");
 
         // +----------------------------------------------------------+
         // | Number of thetas                                         |
         // +----------------------------------------------------------+
 
-            cfg->gainMin = parameters_lookup_float(fileConfig, "ssl.gainMin");
+            cfg->gainMin = parameters_lookup_float(fileConfig, "general.gainMin");
 
         // +----------------------------------------------------------+
         // | Spatial filter                                           |
@@ -961,7 +570,7 @@
 
     }
 
-    msg_pots_cfg * parameters_msg_pots_ssl_config(const char * fileConfig, const char * fileIOs) {
+    msg_pots_cfg * parameters_msg_pots_ssl_config(const char * fileConfig) {
 
         msg_pots_cfg * cfg;
 
@@ -983,13 +592,7 @@
 
     }
 
-    unsigned int parameters_snk_pots_ssl_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.ssl");
-
-    }
-
-    snk_pots_cfg * parameters_snk_pots_ssl_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
+    snk_pots_cfg * parameters_snk_pots_ssl_config(const char * fileConfig) {
 
         snk_pots_cfg * cfg;
         char * tmpStr1;
@@ -1010,14 +613,11 @@
         // | Format                                                   |
         // +----------------------------------------------------------+
 
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.ssl.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
+            tmpStr1 = parameters_lookup_string(fileConfig, "ssl.potential.format");
 
-            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_json(); }
-            else if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Sink pots: Invalid format\n"); exit(EXIT_FAILURE); }
+            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
+            else if (strcmp(tmpStr1, "binary") == 0) { cfg->format = format_construct_binary_float(); }
+            else { printf("ssl.potential.format: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1025,33 +625,24 @@
         // | Type                                                     |
         // +----------------------------------------------------------+
 
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.ssl.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
+            tmpStr1 = parameters_lookup_string(fileConfig, "ssl.potential.interface.type");
 
-            if (strcmp(tmpStr1, "file") == 0) { 
+            if (strcmp(tmpStr1, "blackhole") == 0) {
 
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.ssl.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
+                cfg->interface = interface_construct_blackhole();
 
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "ssl.potential.interface.path");
                 cfg->interface = interface_construct_file(tmpStr2);
                 free((void *) tmpStr2);
 
             }
             else if (strcmp(tmpStr1, "socket") == 0) { 
 
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.ssl.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.ssl.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
+                tmpStr2 = parameters_lookup_string(fileConfig, "ssl.potential.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "ssl.potential.interface.port");
 
                 cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
                 free((void *) tmpStr2);
@@ -1064,7 +655,7 @@
             }
             else {
 
-                printf("Invalid type\n");
+                printf("ssl.potential.interface.type: Invalid type\n");
                 exit(EXIT_FAILURE);
 
             }
@@ -1075,7 +666,7 @@
 
     }
 
-    mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig, const char * fileIOs) {
+    mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig) {
 
         mod_sst_cfg * cfg;
 
@@ -1103,7 +694,7 @@
                 cfg->mode = 'p';
             }
             else {
-                printf("Invalid filter type.\n");
+                printf("sst.mode: Invalid filter type.\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -1253,7 +844,7 @@
 
     }
 
-    msg_tracks_cfg * parameters_msg_tracks_sst_config(const char * fileConfig, const char * fileIOs) {
+    msg_tracks_cfg * parameters_msg_tracks_sst_config(const char * fileConfig) {
 
         msg_tracks_cfg * cfg;
 
@@ -1275,13 +866,7 @@
 
     }
 
-    unsigned int parameters_snk_tracks_sst_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.sst");
-
-    }
-
-    snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
+    snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig) {
 
         snk_tracks_cfg * cfg;
         char * tmpStr1;
@@ -1302,14 +887,11 @@
         // | Format                                                   |
         // +----------------------------------------------------------+
 
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sst.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
+            tmpStr1 = parameters_lookup_string(fileConfig, "sst.tracked.format");
 
-            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_json(); }
-            else if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Sink tracks: Invalid format\n"); exit(EXIT_FAILURE); }
+            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
+            else if (strcmp(tmpStr1, "binary") == 0) { cfg->format = format_construct_binary_float(); }
+            else { printf("sst.tracked.format: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
@@ -1317,33 +899,24 @@
         // | Type                                                     |
         // +----------------------------------------------------------+
 
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sst.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
+            tmpStr1 = parameters_lookup_string(fileConfig, "sst.tracked.interface.type");
 
-            if (strcmp(tmpStr1, "file") == 0) { 
+            if (strcmp(tmpStr1, "blackhole") == 0) {
 
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sst.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
+                cfg->interface = interface_construct_blackhole();
 
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "sst.tracked.interface.path");
                 cfg->interface = interface_construct_file(tmpStr2);
                 free((void *) tmpStr2);
 
             }
             else if (strcmp(tmpStr1, "socket") == 0) { 
 
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sst.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sst.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
+                tmpStr2 = parameters_lookup_string(fileConfig, "sst.tracked.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "sst.tracked.interface.port");
 
                 cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
                 free((void *) tmpStr2);
@@ -1353,10 +926,10 @@
 
                 cfg->interface = interface_construct_terminal();               
 
-            }            
+            }
             else {
 
-                printf("Invalid type\n");
+                printf("sst.tracked.interface.type: Invalid type\n");
                 exit(EXIT_FAILURE);
 
             }
@@ -1368,725 +941,4 @@
 
     }
 
-    /*
-    mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig, const char * fileIOs) {
-
-        mod_sss_cfg * cfg;
-
-        unsigned int nChannels;
-        unsigned int iChannel;
-        unsigned int iSample;
-        unsigned int iLevel;
-
-        char * tmpLabel;
-
-        cfg = mod_sss_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            nChannels = parameters_count(fileConfig, "general.mics");
-
-            cfg->mics = mics_construct_zero(nChannels);
-
-            for (iChannel = 0; iChannel < nChannels; iChannel++) {
-
-                // +--------------------------------------------------+
-                // | Mu                                               |
-                // +--------------------------------------------------+
-
-                    for (iSample = 0; iSample < 3; iSample++) {
-
-                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                        sprintf(tmpLabel, "general.mics.[%u].mu.[%u]", iChannel, iSample);
-                        cfg->mics->mu[iChannel * 3 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
-                        free((void *) tmpLabel);
-
-                    }
-
-                // +--------------------------------------------------+
-                // | Sigma2                                           |
-                // +--------------------------------------------------+
-
-                    for (iSample = 0; iSample < 9; iSample++) {
-
-                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                        sprintf(tmpLabel, "general.mics.[%u].sigma2.[%u]", iChannel, iSample);
-                        cfg->mics->sigma2[iChannel * 9 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
-                        free((void *) tmpLabel);
-
-                    }            
-
-                // +--------------------------------------------------+
-                // | Direction                                        |
-                // +--------------------------------------------------+
-
-                    for (iSample = 0; iSample < 3; iSample++) {
-
-                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                        sprintf(tmpLabel, "general.mics.[%u].direction.[%u]", iChannel, iSample);
-                        cfg->mics->direction[iChannel * 3 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
-                        free((void *) tmpLabel);
-
-                    } 
-
-                // +--------------------------------------------------+
-                // | Angle                                            |
-                // +--------------------------------------------------+
-
-                    tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                    sprintf(tmpLabel, "general.mics.[%u].angle.[%u]", iChannel, 0);
-                    cfg->mics->thetaAllPass[iChannel] = parameters_lookup_float(fileConfig, tmpLabel);
-                    free((void *) tmpLabel);
-
-                    tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                    sprintf(tmpLabel, "general.mics.[%u].angle.[%u]", iChannel, 1);
-                    cfg->mics->thetaNoPass[iChannel] = parameters_lookup_float(fileConfig, tmpLabel);
-                    free((void *) tmpLabel);
-
-            }
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->samplerate = samplerate_construct_zero();
-
-            cfg->samplerate->mu = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-            cfg->samplerate->sigma2 = parameters_lookup_float(fileConfig, "general.samplerate.sigma2");
-
-        // +----------------------------------------------------------+
-        // | Sound speed                                              |
-        // +----------------------------------------------------------+
-
-            cfg->soundspeed = soundspeed_construct_zero();
-
-            cfg->soundspeed->mu = parameters_lookup_float(fileConfig, "general.speedofsound.mu");
-            cfg->soundspeed->sigma2 = parameters_lookup_float(fileConfig, "general.speedofsound.sigma2");
-
-        // +----------------------------------------------------------+
-        // | Spatial filter                                           |
-        // +----------------------------------------------------------+
-
-            cfg->spatialfilter = spatialfilter_construct_zero();
-
-            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
-            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
-            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
-            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
-            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
-
-        // +----------------------------------------------------------+
-        // | Directivity                                              |
-        // +----------------------------------------------------------+
-
-            cfg->nThetas = parameters_lookup_int(fileConfig, "sss.nThetas");
-            cfg->gainMin = parameters_lookup_float(fileConfig, "sss.gainMin");
-
-        return cfg;
-
-    }
-
-    msg_spectra_cfg * parameters_msg_spectra_sss_config(const char * fileConfig, const char * fileIOs) {
-
-        msg_spectra_cfg * cfg;
-
-        unsigned int halfFrameSize;
-        unsigned int nChannels;
-        unsigned int fS;
-
-        cfg = msg_spectra_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
-
-        // +----------------------------------------------------------+
-        // | Half Frame Size                                          |
-        // +----------------------------------------------------------+
-
-            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
-
-        return cfg;
-
-
-    }
-
-    msg_envs_cfg * parameters_msg_envs_sss_config(const char * fileConfig, const char * fileIOs) {
-
-        msg_envs_cfg * cfg;
-
-        unsigned int halfFrameSize;
-        unsigned int nChannels;
-        unsigned int fS;
-
-        cfg = msg_envs_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
-
-        // +----------------------------------------------------------+
-        // | Half Frame Size                                          |
-        // +----------------------------------------------------------+
-
-            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");        
-
-        return cfg;
-
-    }
-
-    unsigned int parameters_snk_spectra_sss_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.sss");
-
-    }
-
-    snk_spectra_cfg * parameters_snk_spectra_sss_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_spectra_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_spectra_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +----------------------------------------------------------+
-        // | Format                                                   |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sss.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Sink spectra separation: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sss.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sss.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sss.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sss.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_sspf_cfg * parameters_mod_sspf_config(const char * fileConfig, const char * fileIOs) {
-
-        mod_sspf_cfg * cfg;
-
-        unsigned int nChannels;
-        unsigned int iChannel;
-        unsigned int iSample;
-        unsigned int iLevel;
-
-        char * tmpLabel;
-
-        cfg = mod_sspf_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | alpha                                                    |
-        // +----------------------------------------------------------+
-
-            cfg->alpha = parameters_lookup_float(fileConfig, "sspf.alpha");
-
-        // +----------------------------------------------------------+
-        // | beta                                                     |
-        // +----------------------------------------------------------+
-
-            cfg->beta = parameters_lookup_float(fileConfig, "sspf.beta");
-
-        // +----------------------------------------------------------+
-        // | Ginterf                                                  |
-        // +----------------------------------------------------------+
-
-            cfg->Ginterf = parameters_lookup_float(fileConfig, "sspf.Ginterf");
-
-        // +----------------------------------------------------------+
-        // | Epsilon                                                  |
-        // +----------------------------------------------------------+
-
-            cfg->epsilon = parameters_lookup_float(fileConfig, "general.epsilon");
-
-
-
-        return cfg;
-
-    }
-
-    msg_spectra_cfg * parameters_msg_spectra_sspf_config(const char * fileConfig, const char * fileIOs) {
-
-        msg_spectra_cfg * cfg;
-
-        unsigned int halfFrameSize;
-        unsigned int nChannels;
-        unsigned int fS;
-
-        cfg = msg_spectra_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
-
-        // +----------------------------------------------------------+
-        // | Hop size                                                 |
-        // +----------------------------------------------------------+
-
-            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
-
-        return cfg;
-
-    }
-
-    unsigned int parameters_snk_spectra_sspf_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.sspf");
-
-    }
-
-    snk_spectra_cfg * parameters_snk_spectra_sspf_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_spectra_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_spectra_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +----------------------------------------------------------+
-        // | Format                                                   |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sspf.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "float") == 0) { cfg->format = format_construct_float(); }
-            else { printf("Sink spectra postfilter: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.sspf.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sspf.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sspf.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.sspf.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }
-
-            free((void *) tmpStr1);
-
-        return cfg;
-
-    }
-
-    mod_istft_cfg * parameters_mod_istft_config(const char * fileConfig, const char * fileIOs) {
-
-        mod_istft_cfg * cfg;
-
-        cfg = mod_istft_cfg_construct();
-
-        return cfg;        
-
-    }
-
-    msg_hops_cfg * parameters_msg_hops_istft_config(const char * fileConfig, const char * fileIOs) {
-
-        msg_hops_cfg * cfg;
-
-        cfg = msg_hops_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
-
-        // +----------------------------------------------------------+
-        // | Hop size                                                 |
-        // +----------------------------------------------------------+
-
-            cfg->hopSize = parameters_lookup_int(fileConfig, "general.size.hopSize");
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
-
-        return cfg;        
-
-    }
-
-    unsigned int parameters_snk_hops_istft_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.istft");
-
-    }
-
-    snk_hops_cfg * parameters_snk_hops_istft_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_hops_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_hops_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Sample rate                                          |
-        // +------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +------------------------------------------------------+
-        // | Format                                               |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.istft.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops ISTFT: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +------------------------------------------------------+
-        // | Type                                                 |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.istft.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.istft.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.istft.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.istft.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "soundcard") == 0) {
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.istft.[%u].device", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.istft.[%u].subdevice", iSink);                
-                tmpInt2 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }        
-
-            free((void *) tmpStr1);
-
-        return cfg;  
-
-    }   
-
-    mod_gain_cfg * parameters_mod_gain_config(const char * fileConfig, const char * fileIOs) {
-
-        mod_gain_cfg * cfg;
-
-        cfg = mod_gain_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Gain                                                 |
-        // +------------------------------------------------------+
-
-            cfg->gain = parameters_lookup_float(fileConfig, "playback.volume");
-
-        return cfg;     
-
-    }
-
-    msg_hops_cfg * parameters_msg_hops_gain_config(const char * fileConfig, const char * fileIOs) {
-
-        msg_hops_cfg * cfg;
-
-        cfg = msg_hops_cfg_construct();
-
-        // +----------------------------------------------------------+
-        // | Sample rate                                              |
-        // +----------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
-
-        // +----------------------------------------------------------+
-        // | Hop size                                                 |
-        // +----------------------------------------------------------+
-
-            cfg->hopSize = parameters_lookup_int(fileConfig, "general.size.hopSize");
-
-        // +----------------------------------------------------------+
-        // | Number of channels                                       |
-        // +----------------------------------------------------------+
-
-            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
-
-        return cfg;      
-
-    }
-
-    unsigned int parameters_snk_hops_gain_count(const char * fileConfig, const char * fileIOs) {
-
-        return parameters_count(fileIOs, "output.playback");
-
-    }
-
-    snk_hops_cfg * parameters_snk_hops_gain_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink) {
-
-        snk_hops_cfg * cfg;
-        char * tmpStr1;
-        char * tmpStr2;
-        char * tmpLabel;
-        unsigned int tmpInt1;
-        unsigned int tmpInt2;
-
-        cfg = snk_hops_cfg_construct();
-
-        // +------------------------------------------------------+
-        // | Sample rate                                          |
-        // +------------------------------------------------------+
-
-            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
-
-        // +------------------------------------------------------+
-        // | Format                                               |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.playback.[%u].format", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "bin08") == 0) { cfg->format = format_construct_bin(8); }
-            else if (strcmp(tmpStr1, "bin16") == 0) { cfg->format = format_construct_bin(16); }
-            else if (strcmp(tmpStr1, "bin24") == 0) { cfg->format = format_construct_bin(24); }
-            else if (strcmp(tmpStr1, "bin32") == 0) { cfg->format = format_construct_bin(32); }
-            else { printf("Sink hops ISTFT: Invalid format\n"); exit(EXIT_FAILURE); }
-
-            free((void *) tmpStr1);       
-
-        // +------------------------------------------------------+
-        // | Type                                                 |
-        // +------------------------------------------------------+
-
-            tmpLabel = (char *) malloc(sizeof(char) * 1024);
-            sprintf(tmpLabel, "output.playback.[%u].type", iSink);
-            tmpStr1 = parameters_lookup_string(fileIOs, tmpLabel);
-            free((void *) tmpLabel);
-
-            if (strcmp(tmpStr1, "file") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.playback.[%u].path", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_file(tmpStr2);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "socket") == 0) { 
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.playback.[%u].ip", iSink);
-                tmpStr2 = parameters_lookup_string(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.playback.[%u].port", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
-                free((void *) tmpStr2);
-
-            }
-            else if (strcmp(tmpStr1, "soundcard") == 0) {
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.playback.[%u].device", iSink);
-                tmpInt1 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                tmpLabel = (char *) malloc(sizeof(char) * 1024);
-                sprintf(tmpLabel, "output.playback.[%u].subdevice", iSink);                
-                tmpInt2 = parameters_lookup_int(fileIOs, tmpLabel);
-                free((void *) tmpLabel);
-
-                cfg->interface = interface_construct_soundcard(tmpInt1, tmpInt2);
-
-            }
-            else {
-
-                printf("Invalid type\n");
-                exit(EXIT_FAILURE);
-
-            }        
-
-            free((void *) tmpStr1);
-
-        return cfg;  
-
-    }
-    */
+    

@@ -17,8 +17,8 @@
 
         switch (obj->format->type) {
             
-            case format_json: break;
-            case format_float: break;
+            case format_text_json: break;
+            case format_binary_float: break;
             default:
 
                 printf("Invalid format.\n");
@@ -65,6 +65,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                // Empty
+
+            break;
+
             case interface_file:
 
                 obj->fp = fopen(obj->interface->fileName, "wb");
@@ -110,6 +116,12 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                // Empty
+
+            break;
+
             case interface_file:
 
                 fclose(obj->fp);
@@ -124,7 +136,7 @@
 
             case interface_terminal:
 
-                // (Empty)
+                // Empty
 
             break;
 
@@ -144,6 +156,12 @@
         int rtnValue;
 
         switch(obj->interface->type) {
+
+            case interface_blackhole:
+
+                rtnValue = snk_tracks_process_blackhole(obj);
+
+            break;
 
             case interface_file:
 
@@ -176,6 +194,25 @@
 
     }
 
+    int snk_tracks_process_blackhole(snk_tracks_obj * obj) {
+
+        int rtnValue;
+
+        if (obj->in->timeStamp != 0) {
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;          
+
+    }
+
     int snk_tracks_process_file(snk_tracks_obj * obj) {
 
         int rtnValue;
@@ -184,7 +221,7 @@
 
             switch(obj->format->type) {
 
-                case format_float:
+                case format_binary_float:
 
                     fwrite(obj->in->tracks->ids, sizeof(unsigned long long), obj->in->tracks->nTracks, obj->fp);
                     fwrite(obj->in->tracks->array, sizeof(float), 3 * obj->in->tracks->nTracks, obj->fp);
@@ -215,7 +252,7 @@
 
             switch(obj->format->type) {
 
-                case format_json:
+                case format_text_json:
 
                     obj->smessage[0] = 0x00;
 
@@ -227,7 +264,9 @@
 
                         sprintf(obj->smessage,"%s        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }", obj->smessage, 
                                 obj->in->tracks->ids[iTrack],
-                                obj->in->tracks->array[iTrack*3+0], obj->in->tracks->array[iTrack*3+1], obj->in->tracks->array[iTrack*3+2]);
+                                obj->in->tracks->array[iTrack*3+0], 
+                                obj->in->tracks->array[iTrack*3+1], 
+                                obj->in->tracks->array[iTrack*3+2]);
 
                         if (iTrack != (obj->nTracks - 1)) {
 
@@ -273,7 +312,7 @@
 
             switch(obj->format->type) {
 
-                case format_json:
+                case format_text_json:
 
                     printf("{\n");
                     printf("    \"timeStamp\": %llu,\n",obj->in->timeStamp);

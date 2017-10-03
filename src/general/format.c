@@ -13,7 +13,7 @@
 
     }
 
-    format_obj * format_construct_bin(const unsigned int nBits) {
+    format_obj * format_construct_binary_int(const unsigned int nBits) {
 
         format_obj * obj;
 
@@ -23,25 +23,25 @@
 
             case 8:
 
-                obj->type = format_bin08;
+                obj->type = format_binary_int08;
 
             break;
 
             case 16:
 
-                obj->type = format_bin16;
+                obj->type = format_binary_int16;
 
             break;
 
             case 24:
 
-                obj->type = format_bin24;
+                obj->type = format_binary_int24;
 
             break;
 
             case 32:
 
-                obj->type = format_bin32;
+                obj->type = format_binary_int32;
 
             break;
 
@@ -58,25 +58,25 @@
 
     }
 
-    format_obj * format_construct_float() {
+    format_obj * format_construct_binary_float() {
 
         format_obj * obj;
 
         obj = (format_obj *) malloc(sizeof(format_obj));
 
-        obj->type = format_float;
+        obj->type = format_binary_float;
 
         return obj;
 
     }
 
-    format_obj * format_construct_json() {
+    format_obj * format_construct_text_json() {
 
         format_obj * obj;
 
         obj = (format_obj *) malloc(sizeof(format_obj));
 
-        obj->type = format_json;
+        obj->type = format_text_json;
 
         return obj;
 
@@ -106,28 +106,28 @@
 
             switch(obj->type) {
 
-                case format_bin08:
-                    printf("type = bin08\n");
+                case format_binary_int08:
+                    printf("type = binary_int08\n");
                 break;
 
-                case format_bin16:
-                    printf("type = bin16\n");
+                case format_binary_int16:
+                    printf("type = binary_int16\n");
                 break;
 
-                case format_bin24:
-                    printf("type = bin24\n");
+                case format_binary_int24:
+                    printf("type = binary_int24\n");
                 break;
 
-                case format_bin32:
-                    printf("type = bin32\n");
+                case format_binary_int32:
+                    printf("type = binary_int32\n");
                 break;
 
-                case format_float:
-                    printf("type = float\n");
+                case format_binary_float:
+                    printf("type = binary_float\n");
                 break;
 
-                case format_json:
-                    printf("type = json\n");
+                case format_text_json:
+                    printf("type = text_json\n");
                 break;
 
             }

@@ -13,97 +13,37 @@
     unsigned int parameters_count(const char * file, const char * path);
 
 
-    src_hops_cfg * parameters_src_hops_raw_config(const char * fileConfig, const char * fileIOs);
+    src_hops_cfg * parameters_src_hops_mics_config(const char * fileConfig);
 
-    msg_hops_cfg * parameters_msg_hops_raw_config(const char * fileConfig, const char * fileIOs);
-    
-    unsigned int parameters_snk_hops_raw_count(const char * fileConfig, const char * fileIOs);
-
-    snk_hops_cfg * parameters_snk_hops_raw_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    msg_hops_cfg * parameters_msg_hops_mics_raw_config(const char * fileConfig);
 
 
-    mod_mapping_cfg * parameters_mod_mapping_config(const char * fileConfig, const char * fileIOs);
+    mod_mapping_cfg * parameters_mod_mapping_mics_config(const char * fileConfig);
 
-    msg_hops_cfg * parameters_msg_hops_mapping_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_hops_mapping_count(const char * fileConfig, const char * fileIOs);
-
-    snk_hops_cfg * parameters_snk_hops_mapping_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    msg_hops_cfg * parameters_msg_hops_mics_map_config(const char * fileConfig);
 
 
-    mod_resample_cfg * parameters_mod_resample_config(const char * fileConfig, const char * fileIOs);
+    mod_resample_cfg * parameters_mod_resample_mics_config(const char * fileConfig);
 
-    msg_hops_cfg * parameters_msg_hops_resample_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_hops_resample_count(const char * fileConfig, const char * fileIOs);
-
-    snk_hops_cfg * parameters_snk_hops_resample_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    msg_hops_cfg * parameters_msg_hops_mics_rs_config(const char * fileConfig);
 
 
-    mod_stft_cfg * parameters_mod_stft_config(const char * fileConfig, const char * fileIOs);
+    mod_stft_cfg * parameters_mod_stft_mics_config(const char * fileConfig);
 
-    msg_spectra_cfg * parameters_msg_spectra_stft_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_spectra_stft_count(const char * fileConfig, const char * fileIOs);
-
-    snk_spectra_cfg * parameters_snk_spectra_stft_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    msg_spectra_cfg * parameters_msg_spectra_mics_config(const char * fileConfig);
 
 
-    mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig, const char * fileIOs);
+    mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig);
 
-    msg_pots_cfg * parameters_msg_pots_ssl_config(const char * fileConfig, const char * fileIOs);
+    msg_pots_cfg * parameters_msg_pots_ssl_config(const char * fileConfig);
 
-    unsigned int parameters_snk_pots_ssl_count(const char * fileConfig, const char * fileIOs);
-
-    snk_pots_cfg * parameters_snk_pots_ssl_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
+    snk_pots_cfg * parameters_snk_pots_ssl_config(const char * fileConfig);
 
 
-    mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig, const char * fileIOs);
+    mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig);
 
-    msg_tracks_cfg * parameters_msg_tracks_sst_config(const char * fileConfig, const char * fileIOs);
+    msg_tracks_cfg * parameters_msg_tracks_sst_config(const char * fileConfig);
 
-    unsigned int parameters_snk_tracks_sst_count(const char * fileConfig, const char * fileIOs);
-
-    snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
-
-
-    /*
-    mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig, const char * fileIOs);
-
-    msg_spectra_cfg * parameters_msg_spectra_sss_config(const char * fileConfig, const char * fileIOs);
-
-    msg_envs_cfg * parameters_msg_envs_sss_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_spectra_sss_count(const char * fileConfig, const char * fileIOs);
-
-    snk_spectra_cfg * parameters_snk_spectra_sss_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
-
-
-    mod_sspf_cfg * parameters_mod_sspf_config(const char * fileConfig, const char * fileIOs);
-
-    msg_spectra_cfg * parameters_msg_spectra_sspf_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_spectra_sspf_count(const char * fileConfig, const char * fileIOs);
-
-    snk_spectra_cfg * parameters_snk_spectra_sspf_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
-
-
-    mod_istft_cfg * parameters_mod_istft_config(const char * fileConfig, const char * fileIOs);
-
-    msg_hops_cfg * parameters_msg_hops_istft_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_hops_istft_count(const char * fileConfig, const char * fileIOs);
-
-    snk_hops_cfg * parameters_snk_hops_istft_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
-
-
-    mod_gain_cfg * parameters_mod_gain_config(const char * fileConfig, const char * fileIOs);
-
-    msg_hops_cfg * parameters_msg_hops_gain_config(const char * fileConfig, const char * fileIOs);
-
-    unsigned int parameters_snk_hops_gain_count(const char * fileConfig, const char * fileIOs);
-
-    snk_hops_cfg * parameters_snk_hops_gain_config(const char * fileConfig, const char * fileIOs, const unsigned int iSink);
-    */
+    snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig);
 
 #endif

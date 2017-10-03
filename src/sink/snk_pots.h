@@ -55,9 +55,13 @@
 
     int snk_pots_process(snk_pots_obj * obj);
 
+    int snk_pots_process_blackhole(snk_pots_obj * obj);
+
     int snk_pots_process_file(snk_pots_obj * obj);
 
     int snk_pots_process_socket(snk_pots_obj * obj);
+
+    int snk_pots_process_terminal(snk_pots_obj * obj);
 
     snk_pots_cfg * snk_pots_cfg_construct(void);
 

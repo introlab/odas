@@ -76,17 +76,20 @@ card 3: Array [ReSpeaker Microphone Array], device 0: USB Audio [USB Audio]
   Subdevice #0: subdevice #0
 ```
 
-In this case, the soundcard ID is 3, and the device ID is 0. Open the file config/respeaker.ios, and set the soundcard ID and device ID:
+In this case, the soundcard ID is 3, and the device ID is 0. Open the file config/respeaker.cfg, and set in the section "raw" the soundcard ID and device ID:
 
 ```
-#ReSpeaker Device, 16bits.
-raw: { type = "soundcard"; card = 3; device = 0; format = "bin16"; }
+interface: {
+    type = "soundcard";
+    card = 3;
+    device = 0;
+}
 ```
 
 To run ODAS with ReSpeaker, and type in the following command:
 
 ```
-bin/odascore -c config/respeaker.cfg -i config/respeaker.ios
+bin/odascore -c config/respeaker.cfg
 ```
 
 You should get the following output:
@@ -128,17 +131,20 @@ card 3: UAC20 [XMOS Microphone Array UAC2.0], device 0: USB Audio [USB Audio]
   Subdevice #0: subdevice #0
 ```
 
-In this case, the soundcard ID is 3, and the device ID is 0. Open the file config/xmos.ios, and set the soundcard ID and device ID:
+In this case, the soundcard ID is 3, and the device ID is 0. Open the file config/xmos.cfg, and set in the section "raw" the soundcard ID and device ID:
 
 ```
-#XMOS Device, 32bits.
-raw: { type = "soundcard"; card = 3; device = 0; format = "bin32"; }
+interface: {
+    type = "soundcard";
+    card = 3;
+    device = 0;
+}
 ```
 
 To run ODAS with XMOS, and type in the following command:
 
 ```
-bin/odascore -c config/xmos.cfg -i config/xmos.ios
+bin/odascore -c config/xmos.cfg
 ```
 
 You should get the following output:

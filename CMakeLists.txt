@@ -42,7 +42,6 @@ set(SRC
     src/signal/beampattern.c
     src/signal/coherence.c
     src/signal/delta.c
-    src/signal/env.c
     src/signal/frame.c
     src/signal/freq.c
     src/signal/gain.c
@@ -72,7 +71,6 @@ set(SRC
     src/system/hop2hop.c
     src/system/hop2frame.c
     src/system/frame2freq.c
-    src/system/freq2env.c
     src/system/freq2freq.c
     src/system/freq2frame.c
     src/system/freq2xcorr.c
@@ -83,7 +81,6 @@ set(SRC
     src/system/mixture2mixture.c
     src/system/particle2coherence.c
     src/system/particle2particle.c
-    src/system/steer2env.c
     src/system/steer2freq.c
     src/system/track2gain.c
     src/system/track2steer.c
@@ -97,12 +94,10 @@ set(SRC
     src/utils/pcm.c
     src/utils/random.c
 
-    src/aconnector/acon_envs.c
     src/aconnector/acon_hops.c
     src/aconnector/acon_pots.c
     src/aconnector/acon_spectra.c
     src/aconnector/acon_tracks.c
-    src/amessage/amsg_envs.c
     src/amessage/amsg_hops.c
     src/amessage/amsg_pots.c
     src/amessage/amsg_spectra.c
@@ -112,7 +107,6 @@ set(SRC
     src/amodule/amod_mapping.c
     src/amodule/amod_resample.c
     src/amodule/amod_ssl.c
-    src/amodule/amod_sspf.c
     src/amodule/amod_sss.c
     src/amodule/amod_sst.c
     src/amodule/amod_stft.c
@@ -121,25 +115,20 @@ set(SRC
     src/asink/asnk_spectra.c
     src/asink/asnk_tracks.c
     src/asource/asrc_hops.c  
-    src/asource/asrc_spectra.c
     
-    src/connector/con_envs.c
     src/connector/con_hops.c
     src/connector/con_pots.c
     src/connector/con_spectra.c
     src/connector/con_tracks.c
-    src/message/msg_envs.c
     src/message/msg_hops.c
     src/message/msg_pots.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
-    src/message/msg_xcorrs.c
     src/module/mod_gain.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
     src/module/mod_resample.c
     src/module/mod_ssl.c
-    src/module/mod_sspf.c
     src/module/mod_sss.c
     src/module/mod_sst.c
     src/module/mod_stft.c
@@ -147,11 +136,7 @@ set(SRC
     src/sink/snk_pots.c
     src/sink/snk_spectra.c
     src/sink/snk_tracks.c
-    src/sink/snk_xcorrs.c
     src/source/src_hops.c
-    src/source/src_pots.c
-    src/source/src_spectra.c
-    src/source/src_tracks.c
 
 )
 
@@ -178,17 +163,6 @@ add_executable(odascore
 target_link_libraries(odascore
     odas
 )
-
-#add_executable(server
-#    demo/server.c
-#)
-
-#add_executable(debug
-#    demo/debug.c
-#)
-#target_link_libraries(debug
-#    odas
-#)
 
 install(TARGETS odas DESTINATION lib)
 

@@ -55,6 +55,8 @@
 
     int snk_hops_process(snk_hops_obj * obj);
 
+    int snk_hops_process_blackhole(snk_hops_obj * obj);
+
     int snk_hops_process_file(snk_hops_obj * obj);
 
     int snk_hops_process_socket(snk_hops_obj * obj);

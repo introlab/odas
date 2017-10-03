@@ -16,7 +16,7 @@
 
         switch (obj->format->type) {
             
-            case format_float: break;
+            case format_binary_float: break;
             default:
 
                 printf("Invalid format.\n");
@@ -159,7 +159,7 @@
 
                     switch (obj->format->type) {
                         
-                        case format_float:
+                        case format_binary_float:
 
                             fwrite(&sampleReal, sizeof(float), 1, obj->fp);
                             fwrite(&sampleImag, sizeof(float), 1, obj->fp);
