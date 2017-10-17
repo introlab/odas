@@ -292,7 +292,7 @@
             // +------------------------------------------------------+                 
             
                 snk_tracks_cfg_destroy(cfgs->snk_tracks_sst_config);
-/*
+
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -307,8 +307,8 @@
             // | Message                                              |
             // +------------------------------------------------------+  
 
-                msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_seps_config);
-                msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_pfs_config);
+                msg_spectra_cfg_destroy(cfgs->msg_spectra_seps_config);
+                msg_spectra_cfg_destroy(cfgs->msg_spectra_pfs_config);
 
         // +----------------------------------------------------------+
         // | ISTFT                                                    |
@@ -352,7 +352,7 @@
 
                 snk_hops_cfg_destroy(cfgs->snk_hops_seps_rs_config);
                 snk_hops_cfg_destroy(cfgs->snk_hops_pfs_rs_config);
-*/
+
         free((void *) cfgs);
 
     }

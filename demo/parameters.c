@@ -974,6 +974,8 @@
                 exit(EXIT_FAILURE);
             }
 
+            free((void *) tmpStr1);
+
             tmpStr1 = parameters_lookup_string(fileConfig, "sss.mode_pf");
 
             if (strcmp(tmpStr1, "ms") == 0) {
@@ -1092,6 +1094,12 @@
         // +----------------------------------------------------------+
 
             cfg->gainMin = parameters_lookup_float(fileConfig, "general.gainMin");
+
+        // +----------------------------------------------------------+
+        // | Epsilon                                                  |
+        // +----------------------------------------------------------+
+
+            cfg->epsilon = parameters_lookup_float(fileConfig, "general.epsilon");
 
         return cfg;      
 

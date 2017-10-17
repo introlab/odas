@@ -208,9 +208,6 @@
 
         unsigned int iSample;
         unsigned int iChannel;
-        signed char sampleChar;
-        signed short sampleShort;
-        signed int sampleInt;
         float sample;
         unsigned int nBytes;
         int rtnValue;

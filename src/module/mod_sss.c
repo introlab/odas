@@ -120,6 +120,29 @@
 
     void mod_sss_destroy(mod_sss_obj * obj) {
 
+        beampatterns_destroy(obj->beampatterns_mics);
+        beampatterns_destroy(obj->beampatterns_spatialfilter);
+        steers_destroy(obj->steers);
+        gains_destroy(obj->gains);
+        masks_destroy(obj->masks);
+        track2gain_destroy(obj->track2gain);
+        gain2mask_destroy(obj->gain2mask);
+        track2steer_destroy(obj->track2steer);
+
+        if (obj->steer2demixing_ds != NULL) {
+            steer2demixing_ds_destroy(obj->steer2demixing_ds);
+        }
+        if (obj->steer2demixing_gss != NULL) {
+            steer2demixing_gss_destroy(obj->steer2demixing_gss);
+        }
+        if (obj->steer2demixing_mvdr != NULL) {
+            steer2demixing_mvdr_destroy(obj->steer2demixing_mvdr);
+        }
+
+        demixings_destroy(obj->demixingsPrev);
+        demixings_destroy(obj->demixingsNow);
+        demixing2freq_destroy(obj->demixing2freq);
+
         free((void *) obj);
 
     }
@@ -233,7 +256,7 @@
                                   obj->in1->freqs, 
                                   obj->out1->freqs);
 
-            msg_spectra_zero(obj->out2);
+            freqs_zero(obj->out2->freqs);
 
             obj->out1->timeStamp = obj->in1->timeStamp;
             obj->out2->timeStamp = obj->in1->timeStamp;

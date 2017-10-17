@@ -38,15 +38,15 @@
         con_spectra_obj * con_spectra_pfs_object;
 
         mod_istft_obj * mod_istft_seps_object;
-        con_hops_obj * con_hops_seps_object;
-        mod_resample_obj * mod_resample_seps_object;
-        con_hops_obj * con_hops_seps_rs_object;
-        snk_hops_obj * snk_hops_seps_rs_object;
-
         mod_istft_obj * mod_istft_pfs_object;
+        con_hops_obj * con_hops_seps_object;
         con_hops_obj * con_hops_pfs_object;
+
+        mod_resample_obj * mod_resample_seps_object;
         mod_resample_obj * mod_resample_pfs_object;
+        con_hops_obj * con_hops_seps_rs_object;
         con_hops_obj * con_hops_pfs_rs_object;
+        snk_hops_obj * snk_hops_seps_rs_object;
         snk_hops_obj * snk_hops_pfs_rs_object;
 
     } objects;   
