@@ -35,7 +35,7 @@
 
             for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-                printf("%d ",obj->array[iChannel]);
+                printf("%d ",obj->array[iSep * obj->nChannels + iChannel]);
 
             }
 

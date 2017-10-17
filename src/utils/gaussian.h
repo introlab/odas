@@ -1,5 +1,5 @@
-#ifndef __ODAS_SIGNAL_GAUSSIAN
-#define __ODAS_SIGNAL_GAUSSIAN
+#ifndef __ODAS_UTILS_GAUSSIAN
+#define __ODAS_UTILS_GAUSSIAN
 
     #include <stdlib.h>
     #include <stdio.h>

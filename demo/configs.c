@@ -73,7 +73,6 @@
 
                 cfgs->msg_spectra_mics_config = parameters_msg_spectra_mics_config(file_config);
 
-
         // +----------------------------------------------------------+
         // | SSL                                                      |
         // +----------------------------------------------------------+  
@@ -95,7 +94,6 @@
             // +------------------------------------------------------+  
 
                 cfgs->snk_pots_ssl_config = parameters_snk_pots_ssl_config(file_config);
-
 
         // +----------------------------------------------------------+
         // | SST                                                      |
@@ -119,7 +117,6 @@
 
                 cfgs->snk_tracks_sst_config = parameters_snk_tracks_sst_config(file_config);
 
-/*
         // +----------------------------------------------------------+
         // | SSS                                                      |
         // +----------------------------------------------------------+  
@@ -128,116 +125,58 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                cfgs->mod_sss_config = parameters_mod_sss_config(file_config, file_ios);
+                cfgs->mod_sss_config = parameters_mod_sss_config(file_config);
 
             // +------------------------------------------------------+
             // | Message                                              |
             // +------------------------------------------------------+  
 
-                cfgs->msg_spectra_sss_config = parameters_msg_spectra_sss_config(file_config, file_ios);
-                cfgs->msg_envs_sss_config = parameters_msg_envs_sss_config(file_config, file_ios);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+  
-
-                cfgs->snk_spectra_sss_config_count = parameters_snk_spectra_sss_count(file_config, file_ios);
-                cfgs->snk_spectra_sss_configs = (snk_spectra_cfg **) malloc(sizeof(snk_spectra_cfg *) * cfgs->snk_spectra_sss_config_count);
-
-                for (iSink = 0; iSink < cfgs->snk_spectra_sss_config_count; iSink++) {
-
-                    cfgs->snk_spectra_sss_configs[iSink] = parameters_snk_spectra_sss_config(file_config, file_ios, iSink);
-
-                }
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                cfgs->mod_sspf_config = parameters_mod_sspf_config(file_config, file_ios);
-
-            // +------------------------------------------------------+
-            // | Message                                              |
-            // +------------------------------------------------------+  
-
-                cfgs->msg_spectra_sspf_config = parameters_msg_spectra_sspf_config(file_config, file_ios);
-
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+  
-
-                cfgs->snk_spectra_sspf_config_count = parameters_snk_spectra_sspf_count(file_config, file_ios);
-                cfgs->snk_spectra_sspf_configs = (snk_spectra_cfg **) malloc(sizeof(snk_spectra_cfg *) * cfgs->snk_spectra_sspf_config_count);
-
-                for (iSink = 0; iSink < cfgs->snk_spectra_sspf_config_count; iSink++) {
-
-                    cfgs->snk_spectra_sspf_configs[iSink] = parameters_snk_spectra_sspf_config(file_config, file_ios, iSink);
-
-                }
-
+                cfgs->msg_spectra_seps_config = parameters_msg_spectra_seps_config(file_config);
+                cfgs->msg_spectra_pfs_config = parameters_msg_spectra_pfs_config(file_config);
 
         // +----------------------------------------------------------+
         // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
+        // +----------------------------------------------------------+
 
             // +------------------------------------------------------+
             // | Module                                               |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                cfgs->mod_istft_config = parameters_mod_istft_config(file_config, file_ios);
+                cfgs->mod_istft_seps_config = parameters_mod_istft_seps_config(file_config);
+                cfgs->mod_istft_pfs_config = parameters_mod_istft_pfs_config(file_config);
 
             // +------------------------------------------------------+
             // | Message                                              |
-            // +------------------------------------------------------+  
-
-                cfgs->msg_hops_istft_config = parameters_msg_hops_istft_config(file_config, file_ios);
-
             // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+  
 
-                cfgs->snk_hops_istft_config_count = parameters_snk_hops_istft_count(file_config, file_ios);
-                cfgs->snk_hops_istft_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_istft_config_count);
-
-                for (iSink = 0; iSink < cfgs->snk_hops_istft_config_count; iSink++) {
-
-                    cfgs->snk_hops_istft_configs[iSink] = parameters_snk_hops_istft_config(file_config, file_ios, iSink);
-
-                }
+                cfgs->msg_hops_seps_config = parameters_msg_hops_seps_config(file_config);
+                cfgs->msg_hops_pfs_config = parameters_msg_hops_pfs_config(file_config);
 
         // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
+        // | Resample                                                 |
+        // +----------------------------------------------------------+
 
             // +------------------------------------------------------+
             // | Module                                               |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                cfgs->mod_gain_config = parameters_mod_gain_config(file_config, file_ios);
+                cfgs->mod_resample_seps_config = parameters_mod_resample_seps_config(file_config);
+                cfgs->mod_resample_pfs_config = parameters_mod_resample_pfs_config(file_config);
 
             // +------------------------------------------------------+
             // | Message                                              |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                cfgs->msg_hops_gain_config = parameters_msg_hops_gain_config(file_config, file_ios);
+                cfgs->msg_hops_seps_rs_config = parameters_msg_hops_seps_rs_config(file_config);
+                cfgs->msg_hops_pfs_rs_config = parameters_msg_hops_pfs_rs_config(file_config);            
 
             // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+  
+            // | Sink                                                 |
+            // +------------------------------------------------------+
 
-                cfgs->snk_hops_gain_config_count = parameters_snk_hops_gain_count(file_config, file_ios);
-                cfgs->snk_hops_gain_configs = (snk_hops_cfg **) malloc(sizeof(snk_hops_cfg *) * cfgs->snk_hops_gain_config_count);
+                cfgs->snk_hops_seps_rs_config = parameters_snk_hops_seps_rs_config(file_config);
+                cfgs->snk_hops_pfs_rs_config = parameters_snk_hops_pfs_rs_config(file_config);
 
-                for (iSink = 0; iSink < cfgs->snk_hops_gain_config_count; iSink++) {
-
-                    cfgs->snk_hops_gain_configs[iSink] = parameters_snk_hops_gain_config(file_config, file_ios, iSink);
-
-                }
-*/
         return cfgs;
 
     }
@@ -279,7 +218,7 @@
                 msg_hops_cfg_destroy(cfgs->msg_hops_mics_map_config);
                             
         // +----------------------------------------------------------+
-        // | Mapping                                                  |
+        // | Resample                                                 |
         // +----------------------------------------------------------+  
 
             // +------------------------------------------------------+
@@ -368,104 +307,51 @@
             // | Message                                              |
             // +------------------------------------------------------+  
 
-                msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_config);
-                msg_envs_cfg_destroy(cfgs->msg_envs_sss_config);
-                            
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                 
-            
-                for (iSink = 0; iSink < cfgs->snk_spectra_sss_config_count; iSink++) {
-
-                    snk_spectra_cfg_destroy(cfgs->snk_spectra_sss_configs[iSink]);
-
-                }
-
-                free((void *) cfgs->snk_spectra_sss_configs);
-
-        // +----------------------------------------------------------+
-        // | SSPF                                                     |
-        // +----------------------------------------------------------+  
-
-            // +------------------------------------------------------+
-            // | Module                                               |
-            // +------------------------------------------------------+  
-
-                mod_sspf_cfg_destroy(cfgs->mod_sspf_config);
-                
-            // +------------------------------------------------------+
-            // | Message                                              |
-            // +------------------------------------------------------+  
-
-                msg_spectra_cfg_destroy(cfgs->msg_spectra_sspf_config);
-                            
-            // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                 
-            
-                for (iSink = 0; iSink < cfgs->snk_spectra_sspf_config_count; iSink++) {
-
-                    snk_spectra_cfg_destroy(cfgs->snk_spectra_sspf_configs[iSink]);
-
-                }
-                
-                free((void *) cfgs->snk_spectra_sspf_configs);
+                msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_seps_config);
+                msg_spectra_cfg_destroy(cfgs->msg_spectra_sss_pfs_config);
 
         // +----------------------------------------------------------+
         // | ISTFT                                                    |
-        // +----------------------------------------------------------+  
+        // +----------------------------------------------------------+
 
             // +------------------------------------------------------+
             // | Module                                               |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                mod_istft_cfg_destroy(cfgs->mod_istft_config);
-                
+                mod_istft_cfg_destroy(cfgs->mod_istft_seps_config);
+                mod_istft_cfg_destroy(cfgs->mod_istft_pfs_config);
+
             // +------------------------------------------------------+
             // | Message                                              |
-            // +------------------------------------------------------+  
-
-                msg_hops_cfg_destroy(cfgs->msg_hops_istft_config);
-                            
             // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+                 
-            
-                for (iSink = 0; iSink < cfgs->snk_hops_istft_config_count; iSink++) {
 
-                    snk_hops_cfg_destroy(cfgs->snk_hops_istft_configs[iSink]);
-
-                }
-                
-                free((void *) cfgs->snk_hops_istft_configs);
+                msg_hops_cfg_destroy(cfgs->msg_hops_seps_config);
+                msg_hops_cfg_destroy(cfgs->msg_hops_pfs_config);
 
         // +----------------------------------------------------------+
-        // | Gain                                                     |
-        // +----------------------------------------------------------+  
+        // | Resample                                                 |
+        // +----------------------------------------------------------+
 
             // +------------------------------------------------------+
             // | Module                                               |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                mod_gain_cfg_destroy(cfgs->mod_gain_config);
+                mod_resample_cfg_destroy(cfgs->mod_resample_seps_config);
+                mod_resample_cfg_destroy(cfgs->mod_resample_pfs_config);
 
             // +------------------------------------------------------+
             // | Message                                              |
-            // +------------------------------------------------------+  
+            // +------------------------------------------------------+
 
-                msg_hops_cfg_destroy(cfgs->msg_hops_gain_config);
+                msg_hops_cfg_destroy(cfgs->msg_hops_seps_rs_config);
+                msg_hops_cfg_destroy(cfgs->msg_hops_pfs_rs_config);
 
             // +------------------------------------------------------+
-            // | Sinks                                                |
-            // +------------------------------------------------------+  
+            // | Sink                                                 |
+            // +------------------------------------------------------+
 
-                for (iSink = 0; iSink < cfgs->snk_hops_gain_config_count; iSink++) {
-
-                    snk_hops_cfg_destroy(cfgs->snk_hops_gain_configs[iSink]);
-
-                }
-
-                free((void *) cfgs->snk_hops_gain_configs);
+                snk_hops_cfg_destroy(cfgs->snk_hops_seps_rs_config);
+                snk_hops_cfg_destroy(cfgs->snk_hops_pfs_rs_config);
 */
         free((void *) cfgs);
 

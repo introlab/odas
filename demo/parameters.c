@@ -941,4 +941,550 @@
 
     }
 
-    
+    mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig) {
+
+        mod_sss_cfg * cfg;
+
+        unsigned int nChannels;
+        unsigned int iChannel;
+        unsigned int iSample;
+
+        char * tmpStr1;
+        char * tmpLabel;
+
+        cfg = mod_sss_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Mode                                                     |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "sss.mode_sep");
+
+            if (strcmp(tmpStr1, "dds") == 0) {
+                cfg->mode_sep = 'd';
+            }
+            else if (strcmp(tmpStr1, "dgss") == 0) {
+                cfg->mode_sep = 'g';
+            }
+            else if (strcmp(tmpStr1, "dmvdr") == 0) {
+                cfg->mode_sep = 'm';
+            }            
+            else {
+                printf("sss.mode_sep: Invalid separation method.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "sss.mode_pf");
+
+            if (strcmp(tmpStr1, "ms") == 0) {
+                cfg->mode_pf = 'm';
+            }
+            else {
+                printf("sss.mode_pf: Invalid post-filtering method.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            free((void *) tmpStr1);
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            nChannels = parameters_count(fileConfig, "general.mics");
+
+            cfg->mics = mics_construct_zero(nChannels);
+
+            for (iChannel = 0; iChannel < nChannels; iChannel++) {
+
+                // +--------------------------------------------------+
+                // | Mu                                               |
+                // +--------------------------------------------------+
+
+                    for (iSample = 0; iSample < 3; iSample++) {
+
+                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                        sprintf(tmpLabel, "general.mics.[%u].mu.[%u]", iChannel, iSample);
+                        cfg->mics->mu[iChannel * 3 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
+                        free((void *) tmpLabel);
+
+                    }
+
+                // +--------------------------------------------------+
+                // | Sigma2                                           |
+                // +--------------------------------------------------+
+
+                    for (iSample = 0; iSample < 9; iSample++) {
+
+                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                        sprintf(tmpLabel, "general.mics.[%u].sigma2.[%u]", iChannel, iSample);
+                        cfg->mics->sigma2[iChannel * 9 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
+                        free((void *) tmpLabel);
+
+                    }            
+
+                // +--------------------------------------------------+
+                // | Direction                                        |
+                // +--------------------------------------------------+
+
+                    for (iSample = 0; iSample < 3; iSample++) {
+
+                        tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                        sprintf(tmpLabel, "general.mics.[%u].direction.[%u]", iChannel, iSample);
+                        cfg->mics->direction[iChannel * 3 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
+                        free((void *) tmpLabel);
+
+                    } 
+
+                // +--------------------------------------------------+
+                // | Angle                                            |
+                // +--------------------------------------------------+
+
+                    tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                    sprintf(tmpLabel, "general.mics.[%u].angle.[%u]", iChannel, 0);
+                    cfg->mics->thetaAllPass[iChannel] = parameters_lookup_float(fileConfig, tmpLabel);
+                    free((void *) tmpLabel);
+
+                    tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                    sprintf(tmpLabel, "general.mics.[%u].angle.[%u]", iChannel, 1);
+                    cfg->mics->thetaNoPass[iChannel] = parameters_lookup_float(fileConfig, tmpLabel);
+                    free((void *) tmpLabel);
+
+            }
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->samplerate = samplerate_construct_zero();
+
+            cfg->samplerate->mu = parameters_lookup_int(fileConfig, "general.samplerate.mu");
+            cfg->samplerate->sigma2 = parameters_lookup_float(fileConfig, "general.samplerate.sigma2");
+
+        // +----------------------------------------------------------+
+        // | Sound speed                                              |
+        // +----------------------------------------------------------+
+
+            cfg->soundspeed = soundspeed_construct_zero();
+
+            cfg->soundspeed->mu = parameters_lookup_float(fileConfig, "general.speedofsound.mu");
+            cfg->soundspeed->sigma2 = parameters_lookup_float(fileConfig, "general.speedofsound.sigma2");
+
+        // +----------------------------------------------------------+
+        // | Spatial filter                                           |
+        // +----------------------------------------------------------+
+
+            cfg->spatialfilter = spatialfilter_construct_zero();
+
+            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
+            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
+            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
+            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
+            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
+
+        // +----------------------------------------------------------+
+        // | Number of thetas                                         |
+        // +----------------------------------------------------------+
+
+            cfg->nThetas = parameters_lookup_int(fileConfig, "general.nThetas");
+
+        // +----------------------------------------------------------+
+        // | Number of thetas                                         |
+        // +----------------------------------------------------------+
+
+            cfg->gainMin = parameters_lookup_float(fileConfig, "general.gainMin");
+
+        return cfg;      
+
+    }
+
+    msg_spectra_cfg * parameters_msg_spectra_seps_config(const char * fileConfig) {
+
+        msg_spectra_cfg * cfg;
+
+        unsigned int halfFrameSize;
+        unsigned int nChannels;
+        unsigned int fS;
+
+        cfg = msg_spectra_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    msg_spectra_cfg * parameters_msg_spectra_pfs_config(const char * fileConfig) {
+
+        msg_spectra_cfg * cfg;
+
+        unsigned int halfFrameSize;
+        unsigned int nChannels;
+        unsigned int fS;
+
+        cfg = msg_spectra_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }    
+
+    mod_istft_cfg * parameters_mod_istft_seps_config(const char * fileConfig) {
+
+        mod_istft_cfg * cfg;
+
+        cfg = mod_istft_cfg_construct();
+
+        return cfg;
+
+    }
+
+    mod_istft_cfg * parameters_mod_istft_pfs_config(const char * fileConfig) {
+
+        mod_istft_cfg * cfg;
+
+        cfg = mod_istft_cfg_construct();
+
+        return cfg;
+
+    }
+
+    msg_hops_cfg * parameters_msg_hops_seps_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "general.size.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    msg_hops_cfg * parameters_msg_hops_pfs_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "general.size.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    mod_resample_cfg * parameters_mod_resample_seps_config(const char * fileConfig) {
+
+        mod_resample_cfg * cfg;
+
+        unsigned int tmpInt1;
+        unsigned int tmpInt2;
+
+        cfg = mod_resample_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rates                                             |
+        // +----------------------------------------------------------+
+
+            tmpInt1 = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+            tmpInt2 = parameters_lookup_int(fileConfig, "sss.separated.fS");              
+
+            cfg->fSin = tmpInt1;
+            cfg->fSout = tmpInt2;
+
+        return cfg;
+
+    }
+
+    mod_resample_cfg * parameters_mod_resample_pfs_config(const char * fileConfig) {
+
+        mod_resample_cfg * cfg;
+
+        unsigned int tmpInt1;
+        unsigned int tmpInt2;
+
+        cfg = mod_resample_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rates                                             |
+        // +----------------------------------------------------------+
+
+            tmpInt1 = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+            tmpInt2 = parameters_lookup_int(fileConfig, "sss.postfiltered.fS");              
+
+            cfg->fSin = tmpInt1;
+            cfg->fSout = tmpInt2;
+
+        return cfg;
+
+    }    
+
+    msg_hops_cfg * parameters_msg_hops_seps_rs_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.separated.fS");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "sss.separated.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    msg_hops_cfg * parameters_msg_hops_pfs_rs_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.postfiltered.fS");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "sss.postfiltered.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }    
+
+    snk_hops_cfg * parameters_snk_hops_seps_rs_config(const char * fileConfig) {
+
+        snk_hops_cfg * cfg;
+        unsigned int tmpInt1;
+        char * tmpStr1;
+        char * tmpStr2;
+
+        cfg = snk_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.separated.fS");
+
+
+        // +----------------------------------------------------------+
+        // | Format                                                   |
+        // +----------------------------------------------------------+
+
+            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
+
+            if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
+                cfg->format = format_construct_binary_int(tmpInt1);
+            }
+            else {
+                printf("raw.nBits: Invalid number of bits\n");
+                exit(EXIT_FAILURE);
+            }    
+
+        // +----------------------------------------------------------+
+        // | Type                                                     |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "sss.separated.interface.type");
+
+            if (strcmp(tmpStr1, "blackhole") == 0) {
+
+                cfg->interface = interface_construct_blackhole();
+
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "sss.separated.interface.path");
+                cfg->interface = interface_construct_file(tmpStr2);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "socket") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "sss.separated.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "sss.separated.interface.port");
+
+                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }
+            else {
+
+                printf("sss.separated.interface.type: Invalid type\n");
+                exit(EXIT_FAILURE);
+
+            }
+
+            free((void *) tmpStr1);
+
+        return cfg;
+
+    }
+
+    snk_hops_cfg * parameters_snk_hops_pfs_rs_config(const char * fileConfig) {
+
+        snk_hops_cfg * cfg;
+        unsigned int tmpInt1;
+        char * tmpStr1;
+        char * tmpStr2;
+
+        cfg = snk_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.postfiltered.fS");
+
+
+        // +----------------------------------------------------------+
+        // | Format                                                   |
+        // +----------------------------------------------------------+
+
+            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
+
+            if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
+                cfg->format = format_construct_binary_int(tmpInt1);
+            }
+            else {
+                printf("raw.nBits: Invalid number of bits\n");
+                exit(EXIT_FAILURE);
+            }    
+
+        // +----------------------------------------------------------+
+        // | Type                                                     |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "sss.postfiltered.interface.type");
+
+            if (strcmp(tmpStr1, "blackhole") == 0) {
+
+                cfg->interface = interface_construct_blackhole();
+
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "sss.postfiltered.interface.path");
+                cfg->interface = interface_construct_file(tmpStr2);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "socket") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "sss.postfiltered.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "sss.postfiltered.interface.port");
+
+                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }
+            else {
+
+                printf("sss.postfiltered.interface.type: Invalid type\n");
+                exit(EXIT_FAILURE);
+
+            }
+
+            free((void *) tmpStr1);
+
+        return cfg;
+
+    }

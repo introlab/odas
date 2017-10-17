@@ -46,4 +46,34 @@
 
     snk_tracks_cfg * parameters_snk_tracks_sst_config(const char * fileConfig);
 
+
+    mod_sss_cfg * parameters_mod_sss_config(const char * fileConfig);
+
+    msg_spectra_cfg * parameters_msg_spectra_seps_config(const char * fileConfig);
+
+    msg_spectra_cfg * parameters_msg_spectra_pfs_config(const char * fileConfig);
+
+
+    mod_istft_cfg * parameters_mod_istft_seps_config(const char * fileConfig);
+
+    mod_istft_cfg * parameters_mod_istft_pfs_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_seps_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_pfs_config(const char * fileConfig);
+    
+
+    mod_resample_cfg * parameters_mod_resample_seps_config(const char * fileConfig);
+
+    mod_resample_cfg * parameters_mod_resample_pfs_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_seps_rs_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_pfs_rs_config(const char * fileConfig);
+
+    snk_hops_cfg * parameters_snk_hops_seps_rs_config(const char * fileConfig);
+
+    snk_hops_cfg * parameters_snk_hops_pfs_rs_config(const char * fileConfig);
+
+
 #endif

@@ -11,19 +11,9 @@
 
         obj->nRows = nRows;
         obj->nCols = nCols;
-        obj->array = (float **) malloc(sizeof(float *) * nRows);
+        obj->array = (float *) malloc(sizeof(float) * nRows * nCols);
 
-        for (iRow = 0; iRow < nRows; iRow++) {
-        	
-        	obj->array[iRow] = (float *) malloc(sizeof(float) * nCols);
-
-            for (iCol = 0; iCol < nCols; iCol++) {
-
-                obj->array[iRow][iCol] = 0.0f;
-
-            }
-
-        }
+        memset(obj->array, 0x00, sizeof(float) * nRows * nCols);
 
         return obj;
 
@@ -40,19 +30,9 @@
 
         obj->nRows = matrix->nRows;
         obj->nCols = matrix->nCols;
-        obj->array = (float **) malloc(sizeof(float *) * matrix->nRows);
+        obj->array = (float *) malloc(sizeof(float) * matrix->nRows * matrix->nCols);
 
-        for (iRow = 0; iRow < matrix->nRows; iRow++) {
-
-            obj->array[iRow] = (float *) malloc(sizeof(float) * matrix->nCols);
-
-            for (iCol = 0; iCol < matrix->nCols; iCol++) {
-
-                obj->array[iRow][iCol]  = matrix->array[iRow][iCol];
-
-            }
-
-        }
+        memcpy(obj->array, matrix->array, sizeof(float) * matrix->nRows * matrix->nCols);
 
         return obj;
 
@@ -63,15 +43,7 @@
         unsigned int iRow;
         unsigned int iCol;
 
-        for (iRow = 0; iRow < obj->nRows; iRow++) {
-
-            for (iCol = 0; iCol < obj->nCols; iCol++) {
-
-                obj->array[iRow][iCol] = 0.0f;
-
-            }
-
-        }    
+        memset(obj->array, 0x00, sizeof(float) * obj->nRows * obj->nCols);
 
     }
 
@@ -80,29 +52,11 @@
         unsigned int iRow;
         unsigned int iCol;
 
-        for (iRow = 0; iRow < matrix->nRows; iRow++) {
-
-            obj->array[iRow] = (float *) malloc(sizeof(float) * matrix->nCols);
-
-            for (iCol = 0; iCol < matrix->nCols; iCol++) {
-
-                obj->array[iRow][iCol]  = matrix->array[iRow][iCol];
-
-            }
-
-        }
+        memcpy(obj->array, matrix->array, sizeof(float) * matrix->nRows * matrix->nCols);
 
     }
 
     void matrix_destroy(matrix_obj * obj) {
-
-        unsigned int iRow;
-
-        for (iRow = 0; iRow < obj->nRows; iRow++) {
-
-            free((void *) obj->array[iRow]);
-
-        }
 
         free((void *) obj->array);
         free((void *) obj);
@@ -118,7 +72,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                obj->array[iRow][iCol] = src->array[iCol][iRow];
+                obj->array[iRow*obj->nCols+iCol] = src->array[iCol*src->nCols+iRow];
 
             }
 
@@ -135,7 +89,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                obj->array[iRow][iCol] = src1->array[iRow][iCol] + src2->array[iRow][iCol];
+                obj->array[iRow*obj->nCols+iCol] = src1->array[iRow*src1->nCols+iCol] + src2->array[iRow*src2->nCols+iCol];
 
             }
 
@@ -152,7 +106,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                obj->array[iRow][iCol] = src1->array[iRow][iCol] - src2->array[iRow][iCol];
+                obj->array[iRow*obj->nCols+iCol] = src1->array[iRow*src1->nCols+iCol] - src2->array[iRow*src2->nCols+iCol];
 
             }
 
@@ -170,11 +124,11 @@
 
             for (iCol = 0; iCol < src2->nCols; iCol++) {
 
-                obj->array[iRow][iCol] = 0.0f;
+                obj->array[iRow*obj->nCols+iCol] = 0.0f;
 
                 for (iElement = 0; iElement < src1->nCols; iElement++) {
 
-                    obj->array[iRow][iCol] += (src1->array[iRow][iElement] * src2->array[iElement][iCol]);
+                    obj->array[iRow*obj->nCols+iCol] += (src1->array[iRow*src1->nCols+iElement] * src2->array[iElement*src2->nCols+iCol]);
 
                 }
 
@@ -191,43 +145,43 @@
 
         if ((src->nRows == 2) && (src->nCols == 2)) {
 
-            a00 = src->array[0][0];
-            a01 = src->array[0][1];
-            a10 = src->array[1][0];
-            a11 = src->array[1][1];
+            a00 = src->array[0*src->nRows+0];
+            a01 = src->array[0*src->nRows+1];
+            a10 = src->array[1*src->nRows+0];
+            a11 = src->array[1*src->nRows+1];
 
             det = a00*a11 - a01*a10;
 
-            obj->array[0][0] = +a11 / det;
-            obj->array[0][1] = -a01 / det;
-            obj->array[1][0] = -a10 / det;
-            obj->array[1][1] = +a00 / det;
+            obj->array[0*obj->nRows+0] = +a11 / det;
+            obj->array[0*obj->nRows+1] = -a01 / det;
+            obj->array[1*obj->nRows+0] = -a10 / det;
+            obj->array[1*obj->nRows+1] = +a00 / det;
 
         }
 
         if ((src->nRows == 3) && (src->nCols == 3)) {
 
-            a00 = src->array[0][0];
-            a01 = src->array[0][1];
-            a02 = src->array[0][2];
-            a10 = src->array[1][0];
-            a11 = src->array[1][1];
-            a12 = src->array[1][2];
-            a20 = src->array[2][0];
-            a21 = src->array[2][1];
-            a22 = src->array[2][2];
+            a00 = src->array[0*src->nRows+0];
+            a01 = src->array[0*src->nRows+1];
+            a02 = src->array[0*src->nRows+2];
+            a10 = src->array[1*src->nRows+0];
+            a11 = src->array[1*src->nRows+1];
+            a12 = src->array[1*src->nRows+2];
+            a20 = src->array[2*src->nRows+0];
+            a21 = src->array[2*src->nRows+1];
+            a22 = src->array[2*src->nRows+2];
 
             det = a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20;
 
-            obj->array[0][0] = +(a11*a22 - a12*a21) / det;
-            obj->array[0][1] = -(a01*a22 - a02*a21) / det;
-            obj->array[0][2] = +(a01*a12 - a02*a11) / det;
-            obj->array[1][0] = -(a10*a22 - a12*a20) / det;
-            obj->array[1][1] = +(a00*a22 - a02*a20) / det;
-            obj->array[1][2] = -(a00*a12 - a02*a10) / det;
-            obj->array[2][0] = +(a10*a21 - a11*a20) / det;
-            obj->array[2][1] = -(a00*a21 - a01*a20) / det;
-            obj->array[2][2] = +(a00*a11 - a01*a10) / det;
+            obj->array[0*obj->nRows+0] = +(a11*a22 - a12*a21) / det;
+            obj->array[0*obj->nRows+1] = -(a01*a22 - a02*a21) / det;
+            obj->array[0*obj->nRows+2] = +(a01*a12 - a02*a11) / det;
+            obj->array[1*obj->nRows+0] = -(a10*a22 - a12*a20) / det;
+            obj->array[1*obj->nRows+1] = +(a00*a22 - a02*a20) / det;
+            obj->array[1*obj->nRows+2] = -(a00*a12 - a02*a10) / det;
+            obj->array[2*obj->nRows+0] = +(a10*a21 - a11*a20) / det;
+            obj->array[2*obj->nRows+1] = -(a00*a21 - a01*a20) / det;
+            obj->array[2*obj->nRows+2] = +(a00*a11 - a01*a10) / det;
 
         }
 
@@ -242,10 +196,10 @@
 
         if ((obj->nRows == 3) && (obj->nCols == 3)) {
 
-            a00 = obj->array[0][0];
-            a01 = obj->array[0][1];
-            a10 = obj->array[1][0];
-            a11 = obj->array[1][1];
+            a00 = obj->array[0*obj->nRows+0];
+            a01 = obj->array[0*obj->nRows+1];
+            a10 = obj->array[1*obj->nRows+0];
+            a11 = obj->array[1*obj->nRows+1];
 
             det = a00*a11 - a01*a10;
 
@@ -253,15 +207,15 @@
 
         if ((obj->nRows == 3) && (obj->nCols == 3)) {
 
-            a00 = obj->array[0][0];
-            a01 = obj->array[0][1];
-            a02 = obj->array[0][2];
-            a10 = obj->array[1][0];
-            a11 = obj->array[1][1];
-            a12 = obj->array[1][2];
-            a20 = obj->array[2][0];
-            a21 = obj->array[2][1];
-            a22 = obj->array[2][2];
+            a00 = obj->array[0*obj->nRows+0];
+            a01 = obj->array[0*obj->nRows+1];
+            a02 = obj->array[0*obj->nRows+2];
+            a10 = obj->array[1*obj->nRows+0];
+            a11 = obj->array[1*obj->nRows+1];
+            a12 = obj->array[1*obj->nRows+2];
+            a20 = obj->array[2*obj->nRows+0];
+            a21 = obj->array[2*obj->nRows+1];
+            a22 = obj->array[2*obj->nRows+2];
 
             det = a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20;        
 
@@ -280,7 +234,7 @@
 
             for (iCol = 0; iCol < src->nCols; iCol++) {
 
-                obj->array[iRow][iCol] = scale * src->array[iRow][iCol];
+                obj->array[iRow*obj->nCols+iCol] = scale * src->array[iRow*src->nCols+iCol];
 
             }
 
@@ -297,7 +251,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                printf("%+1.5f ",obj->array[iRow][iCol]);
+                printf("%+1.5f ",obj->array[iRow*obj->nCols+iCol]);
 
             }
 

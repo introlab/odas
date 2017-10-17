@@ -42,6 +42,7 @@ set(SRC
     src/signal/beampattern.c
     src/signal/coherence.c
     src/signal/delta.c
+    src/signal/demixing.c
     src/signal/frame.c
     src/signal/freq.c
     src/signal/gain.c
@@ -68,6 +69,7 @@ set(SRC
     src/signal/window.c
     src/signal/xcorr.c
 
+    src/system/demixing2freq.c
     src/system/hop2hop.c
     src/system/hop2frame.c
     src/system/frame2freq.c
@@ -81,15 +83,18 @@ set(SRC
     src/system/mixture2mixture.c
     src/system/particle2coherence.c
     src/system/particle2particle.c
-    src/system/steer2freq.c
+    src/system/steer2demixing.c
     src/system/track2gain.c
     src/system/track2steer.c
     src/system/xcorr2aimg.c
     src/system/xcorr2xcorr.c
 
+    src/utils/cmatrix.c
     src/utils/fft.c
     src/utils/fifo.c
     src/utils/gaussian.c
+    src/utils/gaussjordan.c
+    src/utils/inverse.c
     src/utils/matrix.c
     src/utils/pcm.c
     src/utils/random.c
@@ -161,6 +166,13 @@ add_executable(odascore
     demo/threads.c
 )
 target_link_libraries(odascore
+    odas
+)
+
+add_executable(debug
+    demo/debug.c
+)
+target_link_libraries(debug
     odas
 )
 

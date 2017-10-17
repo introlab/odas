@@ -29,6 +29,22 @@
         prf->con_tracks_sst_prf = 0.0f;
         prf->snk_tracks_sst_prf = 0.0f;
 
+        prf->mod_sss_prf = 0.0f;
+        prf->con_spectra_seps_prf = 0.0f;
+        prf->con_spectra_pfs_prf = 0.0f;        
+
+        prf->mod_istft_seps_prf = 0.0f;;
+        prf->mod_istft_pfs_prf = 0.0f;;
+        prf->con_hops_seps_prf = 0.0f;
+        prf->con_hops_pfs_prf = 0.0f;
+
+        prf->mod_resample_seps_prf = 0.0f;
+        prf->mod_resample_pfs_prf = 0.0f;
+        prf->con_hops_seps_rs_prf = 0.0f;
+        prf->con_hops_pfs_rs_prf = 0.0f;
+        prf->snk_hops_seps_rs_prf = 0.0f;
+        prf->snk_hops_pfs_rs_prf = 0.0f;
+
         return prf;
 
     }
@@ -47,20 +63,33 @@
         source = prf->src_hops_mics_prf;
 
         sink = prf->snk_pots_ssl_prf +
-               prf->snk_tracks_sst_prf;
+               prf->snk_tracks_sst_prf + 
+               prf->snk_hops_seps_rs_prf +
+               prf->snk_hops_pfs_rs_prf;
 
         module = prf->mod_mapping_mics_prf + 
                  prf->mod_resample_mics_prf +
                  prf->mod_stft_mics_prf +
                  prf->mod_ssl_prf +
-                 prf->mod_sst_prf;
+                 prf->mod_sst_prf +
+                 prf->mod_sss_prf +
+                 prf->mod_istft_seps_prf +
+                 prf->mod_istft_pfs_prf +
+                 prf->mod_resample_seps_prf +
+                 prf->mod_resample_pfs_prf;
 
         connector = prf->con_hops_mics_raw_prf +
                     prf->con_hops_mics_map_prf +
                     prf->con_hops_mics_rs_prf +
                     prf->con_spectra_mics_prf +
                     prf->con_pots_ssl_prf +
-                    prf->con_tracks_sst_prf;
+                    prf->con_tracks_sst_prf +
+                    prf->con_spectra_seps_prf +
+                    prf->con_spectra_pfs_prf +
+                    prf->con_hops_seps_prf +
+                    prf->con_hops_pfs_prf +
+                    prf->con_hops_seps_rs_prf +
+                    prf->con_hops_pfs_rs_prf;
 
         total = source + sink + module + connector;                    
 
@@ -75,7 +104,7 @@
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_mics_map_prf,roundf(10000.0f * prf->con_hops_mics_map_prf / prf->duration) / 100.0f);
         printf("| + Resample                                 |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_resample_mics_prf,roundf(10000.0f * prf->mod_resample_mics_prf / prf->duration) / 100.0f);
-        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_mics_rs_prf,roundf(10000.0f * prf->con_hops_mics_rs_prf / prf->duration));
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_mics_rs_prf,roundf(10000.0f * prf->con_hops_mics_rs_prf / prf->duration) / 100.0f);
         printf("| + STFT                                     |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_stft_mics_prf,roundf(10000.0f * prf->mod_stft_mics_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_spectra_mics_prf,roundf(10000.0f * prf->con_spectra_mics_prf / prf->duration) / 100.0f);
@@ -86,7 +115,17 @@
         printf("| + SST                                      |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sst_prf,roundf(10000.0f * prf->mod_sst_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_tracks_sst_prf,roundf(10000.0f * prf->con_tracks_sst_prf / prf->duration) / 100.0f);
-        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_tracks_sst_prf,roundf(10000.0f * prf->snk_tracks_sst_prf / prf->duration) / 100.0f);         
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_tracks_sst_prf,roundf(10000.0f * prf->snk_tracks_sst_prf / prf->duration) / 100.0f);       
+        printf("| + SSS                                      |\n");
+        printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sss_prf,roundf(10000.0f * prf->mod_sss_prf / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf),roundf(10000.0f * (prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf) / 100.0f));
+        printf("| + ISTFT                                    |\n");
+        printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",(prf->mod_istft_seps_prf+prf->mod_istft_pfs_prf),roundf(10000.0f * (prf->mod_istft_seps_prf+prf->mod_istft_pfs_prf) / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_hops_seps_prf+prf->con_hops_pfs_prf),roundf(10000.0f * (prf->con_hops_seps_prf+prf->con_hops_pfs_prf) / prf->duration) / 100.0f);
+        printf("| + Resample                                 |\n");
+        printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",(prf->mod_resample_seps_prf+prf->mod_resample_pfs_prf),roundf(10000.0f * (prf->mod_resample_seps_prf+prf->mod_resample_pfs_prf) / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_hops_seps_rs_prf+prf->con_hops_pfs_rs_prf),roundf(10000.0f * (prf->con_hops_seps_rs_prf+prf->con_hops_pfs_rs_prf) / prf->duration) / 100.0f);
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",(prf->snk_hops_seps_rs_prf+prf->snk_hops_pfs_rs_prf),roundf(10000.0f * (prf->snk_hops_seps_rs_prf+prf->snk_hops_pfs_rs_prf) / prf->duration) / 100.0f);
         printf("+--------------------------------------------+\n");
         printf("| + TOTAL.............. %07.3f (%06.2f%%)    |\n",total,roundf(10000.0f * total / prf->duration) / 100.0f);
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",module,roundf(10000.0f * module / prf->duration) / 100.0f);

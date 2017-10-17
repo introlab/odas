@@ -29,6 +29,22 @@
         float con_tracks_sst_prf;
         float snk_tracks_sst_prf;
 
+        float mod_sss_prf;
+        float con_spectra_seps_prf;
+        float con_spectra_pfs_prf;
+
+        float mod_istft_seps_prf;
+        float mod_istft_pfs_prf;
+        float con_hops_seps_prf;
+        float con_hops_pfs_prf;
+
+        float mod_resample_seps_prf;
+        float mod_resample_pfs_prf;
+        float con_hops_seps_rs_prf;
+        float con_hops_pfs_rs_prf;
+        float snk_hops_seps_rs_prf;
+        float snk_hops_pfs_rs_prf;
+
     } profiler;
 
     profiler * profiler_construct(void);

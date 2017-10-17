@@ -42,7 +42,7 @@
 
     }
 
-    void track2steer_process_demixing(track2steer_obj * obj, const tracks_obj * tracks, const gains_obj * gains, const masks_obj * masks, steers_obj * steers) {
+    void track2steer_process(track2steer_obj * obj, const tracks_obj * tracks, const gains_obj * gains, const masks_obj * masks, steers_obj * steers) {
 
         unsigned int iSep;
         unsigned int iBin;
@@ -51,11 +51,10 @@
         float dist;
         float delay;
         float gain;
-        float gainTotal;
         char mask;
         
-        float Wreal;
-        float Wimag;
+        float Areal;
+        float Aimag;
 
         unsigned int iSampleSC;
         unsigned int iSampleBC;        
@@ -63,22 +62,6 @@
         for (iSep = 0; iSep < obj->nSeps; iSep++) {
 
             if (tracks->ids[iSep] != 0) {
-
-                gainTotal = 0.0f;
-
-                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                    iSampleSC = iSep * obj->nChannels + iChannel;
-                    mask = masks->array[iSampleSC];
-
-                    if (mask == 1) {
-
-                        gain = gains->array[iSampleSC];
-                        gainTotal += gain * gain;
-
-                    }
-
-                }
 
                 for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
@@ -93,17 +76,17 @@
 
                         delay = -1.0f * obj->speed * dist;
 
-                        gain = gains->array[iSampleSC] / gainTotal;
+                        gain = gains->array[iSampleSC];
 
                         for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
                             iSampleBC = iBin * obj->nChannels + iChannel;
 
-                            Wreal = gain * cosf(obj->factor[iBin] * -1.0f * delay);
-                            Wimag = gain * sinf(obj->factor[iBin] * -1.0f * delay);
+                            Areal = gain * cosf(obj->factor[iBin] * delay);
+                            Aimag = gain * sinf(obj->factor[iBin] * delay);
 
-                            steers->array[iSep][iSampleBC * 2 + 0] = Wreal;
-                            steers->array[iSep][iSampleBC * 2 + 1] = Wimag;
+                            steers->array[iSep][iSampleBC * 2 + 0] = Areal;
+                            steers->array[iSep][iSampleBC * 2 + 1] = Aimag;
 
                         }
 

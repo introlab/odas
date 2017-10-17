@@ -24,10 +24,10 @@
                                                                     cfgs->msg_hops_mics_raw_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
+                // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->msg_hops_mics_raw_object = msg_hops_construct(cfgs->msg_hops_mics_raw_config);
+                    objs->con_hops_mics_raw_object = con_hops_construct(1, cfgs->msg_hops_mics_raw_config);
 
             // +------------------------------------------------------+
             // | Mapping                                              |
@@ -41,10 +41,10 @@
                                                                           cfgs->msg_hops_mics_map_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
+                // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->msg_hops_mics_map_object = msg_hops_construct(cfgs->msg_hops_mics_map_config);
+                    objs->con_hops_mics_map_object = con_hops_construct(1, cfgs->msg_hops_mics_map_config);
 
             // +------------------------------------------------------+
             // | Resample                                             |
@@ -59,10 +59,10 @@
                                                                             cfgs->msg_hops_mics_rs_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
+                // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->msg_hops_mics_rs_object = msg_hops_construct(cfgs->msg_hops_mics_rs_config);
+                    objs->con_hops_mics_rs_object = con_hops_construct(1, cfgs->msg_hops_mics_rs_config);                    
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -77,10 +77,10 @@
                                                                     cfgs->msg_spectra_mics_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
+                // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->msg_spectra_mics_object = msg_spectra_construct(cfgs->msg_spectra_mics_config);
+                    objs->con_spectra_mics_object = con_spectra_construct(2, cfgs->msg_spectra_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -95,18 +95,17 @@
                                                              cfgs->msg_pots_ssl_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    objs->msg_pots_ssl_object = msg_pots_construct(cfgs->msg_pots_ssl_config);
-
-                // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
 
                     objs->snk_pots_ssl_object = snk_pots_construct(cfgs->snk_pots_ssl_config, 
                                                                    cfgs->msg_pots_ssl_config);
 
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+ 
+
+                objs->con_pots_ssl_object = con_pots_construct(2, cfgs->msg_pots_ssl_config);
 
             // +------------------------------------------------------+
             // | SST                                                  |
@@ -122,33 +121,98 @@
                                                              cfgs->msg_tracks_sst_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    objs->msg_tracks_sst_object = msg_tracks_construct(cfgs->msg_tracks_sst_config);
-
-                // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
 
                     objs->snk_tracks_sst_object = snk_tracks_construct(cfgs->snk_tracks_sst_config, 
                                                                        cfgs->msg_tracks_sst_config);
 
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                    
+
+                    objs->con_tracks_sst_object = con_tracks_construct(2, cfgs->msg_tracks_sst_config);
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_sss_object = mod_sss_construct(cfgs->mod_sss_config, 
+                                                             cfgs->msg_tracks_sst_config, 
+                                                             cfgs->msg_spectra_mics_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                    
+
+                    objs->con_spectra_seps_object = con_spectra_construct(1, cfgs->msg_spectra_seps_config);
+                    objs->con_spectra_pfs_object = con_spectra_construct(1, cfgs->msg_spectra_pfs_config);
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_istft_seps_object = mod_istft_construct(cfgs->mod_istft_seps_config, 
+                                                                      cfgs->msg_spectra_seps_config, 
+                                                                      cfgs->msg_hops_seps_config);
+
+                    objs->mod_istft_pfs_object = mod_istft_construct(cfgs->mod_istft_pfs_config, 
+                                                                     cfgs->msg_spectra_pfs_config, 
+                                                                     cfgs->msg_hops_pfs_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                     
+
+                    objs->con_hops_seps_object = con_hops_construct(1, cfgs->msg_hops_seps_config);
+                    objs->con_hops_pfs_object = con_hops_construct(1, cfgs->msg_hops_pfs_config);
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_resample_seps_object = mod_resample_construct(cfgs->mod_resample_seps_config, 
+                                                                            cfgs->msg_hops_seps_config, 
+                                                                            cfgs->msg_hops_seps_rs_config);
+
+                    objs->mod_resample_pfs_object = mod_resample_construct(cfgs->mod_resample_pfs_config, 
+                                                                           cfgs->msg_hops_pfs_config, 
+                                                                           cfgs->msg_hops_pfs_rs_config);       
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->con_hops_seps_rs_object = con_hops_construct(1, cfgs->msg_hops_seps_rs_config);
+
+                    objs->con_hops_pfs_rs_object = con_hops_construct(1, cfgs->msg_hops_pfs_rs_config);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                     
+
+                    objs->snk_hops_seps_rs_object = snk_hops_construct(cfgs->snk_hops_seps_rs_config, 
+                                                                       cfgs->msg_hops_seps_rs_config);
+
+                    objs->snk_hops_pfs_rs_object = snk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
+                                                                      cfgs->msg_hops_pfs_rs_config);
+
+
         // +----------------------------------------------------------+
         // | Connect                                                  |
-        // +----------------------------------------------------------+  
-
-            objs->con_hops_mics_raw_object = con_hops_construct(1, cfgs->msg_hops_mics_raw_config);
-
-            objs->con_hops_mics_map_object = con_hops_construct(1, cfgs->msg_hops_mics_map_config);
-
-            objs->con_hops_mics_rs_object = con_hops_construct(1, cfgs->msg_hops_mics_rs_config);
-
-            objs->con_spectra_mics_object = con_spectra_construct(1, cfgs->msg_spectra_mics_config);
-
-            objs->con_pots_ssl_object = con_pots_construct(2, cfgs->msg_pots_ssl_config);
-
-            objs->con_tracks_sst_object = con_tracks_construct(1, cfgs->msg_tracks_sst_config);
+        // +----------------------------------------------------------+              
 
             // +------------------------------------------------------+
             // | Raw                                                  |
@@ -233,7 +297,63 @@
                 // +--------------------------------------------------+  
 
                     snk_tracks_connect(objs->snk_tracks_sst_object,
-                                       objs->con_tracks_sst_object->outs[0]);
+                                       objs->con_tracks_sst_object->outs[1]);
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_sss_connect(objs->mod_sss_object,
+                                    objs->con_spectra_mics_object->outs[1],
+                                    objs->con_tracks_sst_object->outs[0],
+                                    objs->con_spectra_seps_object->in,
+                                    objs->con_spectra_pfs_object->in);
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+                      
+
+                    mod_istft_connect(objs->mod_istft_seps_object,
+                                      objs->con_spectra_seps_object->outs[0],
+                                      objs->con_hops_seps_object->in);
+
+                    mod_istft_connect(objs->mod_istft_pfs_object,
+                                      objs->con_spectra_pfs_object->outs[0],
+                                      objs->con_hops_pfs_object->in);
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_resample_connect(objs->mod_resample_seps_object,
+                                         objs->con_hops_seps_object->outs[0],
+                                         objs->con_hops_seps_rs_object->in);
+
+                    mod_resample_connect(objs->mod_resample_pfs_object,
+                                         objs->con_hops_pfs_object->outs[0],
+                                         objs->con_hops_pfs_rs_object->in);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    snk_hops_connect(objs->snk_hops_seps_rs_object,
+                                     objs->con_hops_seps_rs_object->outs[0]);
+
+                    snk_hops_connect(objs->snk_hops_pfs_rs_object,
+                                     objs->con_hops_pfs_rs_object->outs[0]);
 
         return objs;
 
@@ -258,12 +378,6 @@
                     src_hops_destroy(objs->src_hops_mics_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_hops_destroy(objs->msg_hops_mics_raw_object);
-
-                // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
@@ -280,16 +394,10 @@
                     mod_mapping_destroy(objs->mod_mapping_mics_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_hops_destroy(objs->msg_hops_mics_map_object);                  
-
-                // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    con_hops_destroy(objs->con_hops_mics_map_object);             
+                    con_hops_destroy(objs->con_hops_mics_map_object);
 
             // +------------------------------------------------------+
             // | Resample                                             |
@@ -300,18 +408,12 @@
                 // +--------------------------------------------------+  
 
                     mod_resample_destroy(objs->mod_resample_mics_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_hops_destroy(objs->msg_hops_mics_rs_object);
-                    
+                                       
                 // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    con_hops_destroy(objs->con_hops_mics_rs_object);    
+                    con_hops_destroy(objs->con_hops_mics_rs_object);
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -322,18 +424,12 @@
                 // +--------------------------------------------------+  
 
                     mod_stft_destroy(objs->mod_stft_mics_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_spectra_destroy(objs->msg_spectra_mics_object);
-                    
+                                        
                 // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    con_spectra_destroy(objs->con_spectra_mics_object);   
+                    con_spectra_destroy(objs->con_spectra_mics_object);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -344,13 +440,7 @@
                 // +--------------------------------------------------+  
 
                     mod_ssl_destroy(objs->mod_ssl_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_pots_destroy(objs->msg_pots_ssl_object);
-                    
+                                       
                 // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
@@ -361,7 +451,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    con_pots_destroy(objs->con_pots_ssl_object);   
+                    con_pots_destroy(objs->con_pots_ssl_object);
 
             // +------------------------------------------------------+
             // | SST                                                  |
@@ -372,13 +462,7 @@
                 // +--------------------------------------------------+  
 
                     mod_sst_destroy(objs->mod_sst_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    msg_tracks_destroy(objs->msg_tracks_sst_object);
-                    
+                                        
                 // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
@@ -389,7 +473,67 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    con_tracks_destroy(objs->con_tracks_sst_object); 
+                    con_tracks_destroy(objs->con_tracks_sst_object);
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_sss_destroy(objs->mod_sss_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_spectra_destroy(objs->con_spectra_seps_object);
+                    con_spectra_destroy(objs->con_spectra_pfs_object);                    
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+                      
+
+                    mod_istft_destroy(objs->mod_istft_seps_object);
+                    mod_istft_destroy(objs->mod_istft_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_hops_destroy(objs->con_hops_seps_object);
+                    con_hops_destroy(objs->con_hops_pfs_object);                     
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_resample_destroy(objs->mod_resample_seps_object);
+                    mod_resample_destroy(objs->mod_resample_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_hops_destroy(objs->con_hops_seps_rs_object);
+                    con_hops_destroy(objs->con_hops_pfs_rs_object);                     
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    snk_hops_destroy(objs->snk_hops_seps_rs_object);
+                    snk_hops_destroy(objs->snk_hops_pfs_rs_object);
 
         free((void *) objs);
 
@@ -420,11 +564,10 @@
                                                                       cfgs->msg_hops_mics_raw_config);
                 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
+                // | Connector                                        |
+                // +--------------------------------------------------+
 
-                    objs->amsg_hops_mics_raw_object = amsg_hops_construct(objs->nMessages, 
-                                                                          cfgs->msg_hops_mics_raw_config);
+                    objs->acon_hops_mics_raw_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_raw_config);  
 
             // +------------------------------------------------------+
             // | Mapping                                              |
@@ -438,11 +581,10 @@
                                                                             cfgs->msg_hops_mics_map_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
+                // | Connector                                        |
+                // +--------------------------------------------------+
 
-                    objs->amsg_hops_mics_map_object = amsg_hops_construct(objs->nMessages, 
-                                                                          cfgs->msg_hops_mics_map_config);
+                    objs->acon_hops_mics_map_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_map_config);
 
             // +------------------------------------------------------+
             // | Resample                                             |
@@ -457,11 +599,10 @@
                                                                               cfgs->msg_hops_mics_rs_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
+                // | Connector                                        |
+                // +--------------------------------------------------+
 
-                    objs->amsg_hops_mics_rs_object = amsg_hops_construct(objs->nMessages, 
-                                                                         cfgs->msg_hops_mics_rs_config);
+                    objs->acon_hops_mics_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_rs_config);
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -476,11 +617,10 @@
                                                                       cfgs->msg_spectra_mics_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    objs->amsg_spectra_mics_object = amsg_spectra_construct(objs->nMessages, 
-                                                                            cfgs->msg_spectra_mics_config);
+                // | Connector                                        |
+                // +--------------------------------------------------+
+                    
+                    objs->acon_spectra_mics_object = acon_spectra_construct(2, objs->nMessages, cfgs->msg_spectra_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -495,18 +635,17 @@
                                                                cfgs->msg_pots_ssl_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    objs->amsg_pots_ssl_object = amsg_pots_construct(objs->nMessages, 
-                                                                     cfgs->msg_pots_ssl_config);
-
-                // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
 
                     objs->asnk_pots_ssl_object = asnk_pots_construct(cfgs->snk_pots_ssl_config, 
                                                                      cfgs->msg_pots_ssl_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+
+
+                    objs->acon_pots_ssl_object = acon_pots_construct(2, objs->nMessages, cfgs->msg_pots_ssl_config);
 
             // +------------------------------------------------------+
             // | SST                                                  |
@@ -522,34 +661,97 @@
                                                                cfgs->msg_tracks_sst_config);
 
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    objs->amsg_tracks_sst_object = amsg_tracks_construct(objs->nMessages, 
-                                                                         cfgs->msg_tracks_sst_config);
-
-                // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
 
                     objs->asnk_tracks_sst_object = asnk_tracks_construct(cfgs->snk_tracks_sst_config, 
                                                                          cfgs->msg_tracks_sst_config);
 
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+
+
+                    objs->acon_tracks_sst_object = acon_tracks_construct(2, objs->nMessages, cfgs->msg_tracks_sst_config);
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_sss_object = amod_sss_construct(cfgs->mod_sss_config, 
+                                                               cfgs->msg_tracks_sst_config, 
+                                                               cfgs->msg_spectra_mics_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                    
+
+                    objs->acon_spectra_seps_object = acon_spectra_construct(1, objs->nMessages, cfgs->msg_spectra_seps_config);
+                    objs->acon_spectra_pfs_object = acon_spectra_construct(1, objs->nMessages, cfgs->msg_spectra_pfs_config);
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_istft_seps_object = amod_istft_construct(cfgs->mod_istft_seps_config, 
+                                                                        cfgs->msg_spectra_seps_config, 
+                                                                        cfgs->msg_hops_seps_config);
+
+                    objs->amod_istft_pfs_object = amod_istft_construct(cfgs->mod_istft_pfs_config, 
+                                                                       cfgs->msg_spectra_pfs_config, 
+                                                                       cfgs->msg_hops_pfs_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                     
+
+                    objs->acon_hops_seps_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_seps_config);
+                    objs->acon_hops_pfs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_pfs_config);
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_resample_seps_object = amod_resample_construct(cfgs->mod_resample_seps_config, 
+                                                                              cfgs->msg_hops_seps_config, 
+                                                                              cfgs->msg_hops_seps_rs_config);
+
+                    objs->amod_resample_pfs_object = amod_resample_construct(cfgs->mod_resample_pfs_config, 
+                                                                             cfgs->msg_hops_pfs_config, 
+                                                                             cfgs->msg_hops_pfs_rs_config);       
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->acon_hops_seps_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_seps_rs_config);
+
+                    objs->acon_hops_pfs_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_pfs_rs_config);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                     
+
+                    objs->asnk_hops_seps_rs_object = asnk_hops_construct(cfgs->snk_hops_seps_rs_config, 
+                                                                         cfgs->msg_hops_seps_rs_config);
+
+                    objs->asnk_hops_pfs_rs_object = asnk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
+                                                                        cfgs->msg_hops_pfs_rs_config);
+
         // +----------------------------------------------------------+
         // | Connect                                                  |
         // +----------------------------------------------------------+  
-
-            objs->acon_hops_mics_raw_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_raw_config);
-
-            objs->acon_hops_mics_map_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_map_config);
-
-            objs->acon_hops_mics_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_rs_config);
-
-            objs->acon_spectra_mics_object = acon_spectra_construct(1, objs->nMessages, cfgs->msg_spectra_mics_config);
-
-            objs->acon_pots_ssl_object = acon_pots_construct(2, objs->nMessages, cfgs->msg_pots_ssl_config);
-
-            objs->acon_tracks_sst_object = acon_tracks_construct(1, objs->nMessages, cfgs->msg_tracks_sst_config);
 
             // +------------------------------------------------------+
             // | Raw                                                  |
@@ -634,7 +836,63 @@
                 // +--------------------------------------------------+  
 
                     asnk_tracks_connect(objs->asnk_tracks_sst_object,
-                                        objs->acon_tracks_sst_object->outs[0]);
+                                        objs->acon_tracks_sst_object->outs[1]);
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_sss_connect(objs->amod_sss_object,
+                                     objs->acon_spectra_mics_object->outs[1],
+                                     objs->acon_tracks_sst_object->outs[0],
+                                     objs->acon_spectra_seps_object->in,
+                                     objs->acon_spectra_pfs_object->in);
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+                      
+
+                    amod_istft_connect(objs->amod_istft_seps_object,
+                                       objs->acon_spectra_seps_object->outs[0],
+                                       objs->acon_hops_seps_object->in);
+
+                    amod_istft_connect(objs->amod_istft_pfs_object,
+                                       objs->acon_spectra_pfs_object->outs[0],
+                                       objs->acon_hops_pfs_object->in);
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_resample_connect(objs->amod_resample_seps_object,
+                                          objs->acon_hops_seps_object->outs[0],
+                                          objs->acon_hops_seps_rs_object->in);
+
+                    amod_resample_connect(objs->amod_resample_pfs_object,
+                                          objs->acon_hops_pfs_object->outs[0],
+                                          objs->acon_hops_pfs_rs_object->in);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    asnk_hops_connect(objs->asnk_hops_seps_rs_object,
+                                      objs->acon_hops_seps_rs_object->outs[0]);
+
+                    asnk_hops_connect(objs->asnk_hops_pfs_rs_object,
+                                      objs->acon_hops_pfs_rs_object->outs[0]);
 
         return objs;
 
@@ -659,12 +917,6 @@
                     asrc_hops_destroy(objs->asrc_hops_mics_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_hops_destroy(objs->amsg_hops_mics_raw_object);
-                    
-                // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
@@ -679,12 +931,6 @@
                 // +--------------------------------------------------+  
 
                     amod_mapping_destroy(objs->amod_mapping_mics_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_hops_destroy(objs->amsg_hops_mics_map_object);
                     
                 // +--------------------------------------------------+
                 // | Connector                                        |
@@ -703,12 +949,6 @@
                     amod_resample_destroy(objs->amod_resample_mics_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_hops_destroy(objs->amsg_hops_mics_rs_object);
-                    
-                // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
@@ -725,12 +965,6 @@
                     amod_stft_destroy(objs->amod_stft_mics_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_spectra_destroy(objs->amsg_spectra_mics_object);
-                    
-                // +--------------------------------------------------+
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
@@ -745,12 +979,6 @@
                 // +--------------------------------------------------+  
 
                     amod_ssl_destroy(objs->amod_ssl_object);
-                    
-                // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_pots_destroy(objs->amsg_pots_ssl_object);
                     
                 // +--------------------------------------------------+
                 // | Sinks                                            |
@@ -775,12 +1003,6 @@
                     amod_sst_destroy(objs->amod_sst_object);
                     
                 // +--------------------------------------------------+
-                // | Message                                          |
-                // +--------------------------------------------------+  
-
-                    amsg_tracks_destroy(objs->amsg_tracks_sst_object);
-                    
-                // +--------------------------------------------------+
                 // | Sinks                                            |
                 // +--------------------------------------------------+  
 
@@ -791,6 +1013,66 @@
                 // +--------------------------------------------------+  
 
                     acon_tracks_destroy(objs->acon_tracks_sst_object);  
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_sss_destroy(objs->amod_sss_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_spectra_destroy(objs->acon_spectra_seps_object);
+                    acon_spectra_destroy(objs->acon_spectra_pfs_object);                    
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+                      
+
+                    amod_istft_destroy(objs->amod_istft_seps_object);
+                    amod_istft_destroy(objs->amod_istft_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_hops_destroy(objs->acon_hops_seps_object);
+                    acon_hops_destroy(objs->acon_hops_pfs_object);                     
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_resample_destroy(objs->amod_resample_seps_object);
+                    amod_resample_destroy(objs->amod_resample_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_hops_destroy(objs->acon_hops_seps_rs_object);
+                    acon_hops_destroy(objs->acon_hops_pfs_rs_object);                     
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    asnk_hops_destroy(objs->asnk_hops_seps_rs_object);
+                    asnk_hops_destroy(objs->asnk_hops_pfs_rs_object);
 
         free((void *) objs);
 

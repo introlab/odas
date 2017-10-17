@@ -28,6 +28,22 @@
         msg_tracks_cfg * msg_tracks_sst_config;
         snk_tracks_cfg * snk_tracks_sst_config;
 
+        mod_sss_cfg * mod_sss_config;
+        msg_spectra_cfg * msg_spectra_seps_config;
+        msg_spectra_cfg * msg_spectra_pfs_config;
+
+        mod_istft_cfg * mod_istft_seps_config;
+        mod_istft_cfg * mod_istft_pfs_config;
+        msg_hops_cfg * msg_hops_seps_config;
+        msg_hops_cfg * msg_hops_pfs_config;
+
+        mod_resample_cfg * mod_resample_seps_config;
+        mod_resample_cfg * mod_resample_pfs_config;
+        msg_hops_cfg * msg_hops_seps_rs_config;
+        msg_hops_cfg * msg_hops_pfs_rs_config;
+        snk_hops_cfg * snk_hops_seps_rs_config;
+        snk_hops_cfg * snk_hops_pfs_rs_config;
+
     } configs;
 
     configs * configs_construct(const char * file_config);

@@ -1,11 +1,11 @@
     
-    #include "steer2freq.h"
+    #include "demixing2freq.h"
 
-    steer2freq_obj * steer2freq_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize) {
+    demixing2freq_obj * demixing2freq_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize) {
 
-        steer2freq_obj * obj;
+        demixing2freq_obj * obj;
 
-        obj = (steer2freq_obj *) malloc(sizeof(steer2freq_obj));
+        obj = (demixing2freq_obj *) malloc(sizeof(demixing2freq_obj));
 
         obj->nSeps = nSeps;
         obj->nChannels = nChannels;
@@ -15,13 +15,13 @@
 
     }
 
-    void steer2freq_destroy(steer2freq_obj * obj) {
+    void demixing2freq_destroy(demixing2freq_obj * obj) {
 
         free((void *) obj);
 
     }
 
-    void steer2freq_process(steer2freq_obj * obj, const tracks_obj * tracks, const steers_obj * demixing, const masks_obj * masks, const freqs_obj * freqsChannel, freqs_obj * freqsSeparated) {
+    void demixing2freq_process(demixing2freq_obj * obj, const tracks_obj * tracks, const demixings_obj * demixings, const masks_obj * masks, const freqs_obj * freqsChannel, freqs_obj * freqsSeparated) {
 
         unsigned int iSep;
         unsigned int iChannel;
@@ -48,7 +48,7 @@
 
                     iSampleSC = iSep * obj->nChannels + iChannel;
 
-                    if (masks->array[iSampleSC] == 1) {
+                    if (masks->array[iSampleSC] == 1) {                       
 
                         for (iBin = 0; iBin < obj->halfFrameSize; iBin++)                 {
 
@@ -58,8 +58,8 @@
                             Xreal = freqsChannel->array[iChannel][iSampleB * 2 + 0];
                             Ximag = freqsChannel->array[iChannel][iSampleB * 2 + 1];
 
-                            Wreal = demixing->array[iSep][iSampleBC * 2 + 0];
-                            Wimag = demixing->array[iSep][iSampleBC * 2 + 1];
+                            Wreal = demixings->array[iSep][iSampleBC * 2 + 0];
+                            Wimag = demixings->array[iSep][iSampleBC * 2 + 1];
 
                             Yreal = Wreal * Xreal - Wimag * Ximag;
                             Yimag = Wreal * Ximag + Wimag * Xreal;

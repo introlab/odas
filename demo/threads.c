@@ -113,6 +113,66 @@
 
                 thread_start(aobjs->acon_tracks_sst_object->thread);
 
+        // +----------------------------------------------------------+
+        // | SSS                                                      |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_start(aobjs->amod_sss_object->thread);
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+                     
+
+                thread_start(aobjs->acon_spectra_seps_object->thread);
+                thread_start(aobjs->acon_spectra_pfs_object->thread);
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_start(aobjs->amod_istft_seps_object->thread);
+                thread_start(aobjs->amod_istft_pfs_object->thread);
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+  
+
+                thread_start(aobjs->acon_hops_seps_object->thread);
+                thread_start(aobjs->acon_hops_pfs_object->thread);
+
+        // +------------------------------------------------------+
+        // | Resample                                             |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->amod_resample_seps_object->thread);
+                thread_start(aobjs->amod_resample_pfs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sinks                                            |
+            // +--------------------------------------------------+                     
+
+                thread_start(aobjs->asnk_hops_seps_rs_object->thread);
+                thread_start(aobjs->asnk_hops_pfs_rs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->acon_hops_seps_rs_object->thread);
+                thread_start(aobjs->acon_hops_pfs_rs_object->thread);
+
     }
 
     void threads_multiple_stop(aobjects * aobjs) {
@@ -245,6 +305,66 @@
 
                 thread_join(aobjs->acon_tracks_sst_object->thread);
 
+        // +----------------------------------------------------------+
+        // | SSS                                                      |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->amod_sss_object->thread);               
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->acon_spectra_seps_object->thread);
+                thread_join(aobjs->acon_spectra_pfs_object->thread);
+
+        // +----------------------------------------------------------+
+        // | ISTFT                                                    |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->amod_istft_seps_object->thread);
+                thread_join(aobjs->amod_istft_pfs_object->thread);
+
+            // +------------------------------------------------------+
+            // | Connector                                            |
+            // +------------------------------------------------------+  
+
+                thread_join(aobjs->acon_hops_seps_object->thread);
+                thread_join(aobjs->acon_hops_pfs_object->thread);
+
+        // +------------------------------------------------------+
+        // | Resample                                             |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->amod_resample_seps_object->thread);
+                thread_join(aobjs->amod_resample_pfs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sinks                                            |
+            // +--------------------------------------------------+                     
+
+                thread_join(aobjs->asnk_hops_seps_rs_object->thread);
+                thread_join(aobjs->asnk_hops_pfs_rs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->acon_hops_seps_rs_object->thread);
+                thread_join(aobjs->acon_hops_pfs_rs_object->thread);
+
     }
 
     void threads_single_open(objects * objs) {
@@ -281,6 +401,17 @@
 
                 snk_tracks_open(objs->snk_tracks_sst_object);
 
+        // +----------------------------------------------------------+
+        // | Resample                                                 |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                snk_hops_open(objs->snk_hops_seps_rs_object);
+                snk_hops_open(objs->snk_hops_pfs_rs_object);
+
     }
 
     void threads_single_close(objects * objs) {
@@ -316,6 +447,17 @@
             // +------------------------------------------------------+                      
 
                 snk_tracks_close(objs->snk_tracks_sst_object);
+
+        // +----------------------------------------------------------+
+        // | Resample                                                 |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                snk_hops_close(objs->snk_hops_seps_rs_object);
+                snk_hops_close(objs->snk_hops_pfs_rs_object);                
 
     }
 
@@ -507,6 +649,160 @@
                     snk_tracks_process(objs->snk_tracks_sst_object);
                     end = clock();
                     prf->snk_tracks_sst_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                                                   
+
+            // +------------------------------------------------------+
+            // | SSS                                                  |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_sss_process(objs->mod_sss_object);
+                    end = clock();
+                    prf->mod_sss_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+                     
+
+                    begin = clock();
+                    con_spectra_process(objs->con_spectra_seps_object);
+                    end = clock();
+                    prf->con_spectra_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);  
+
+                    begin = clock();
+                    con_spectra_process(objs->con_spectra_pfs_object);
+                    end = clock();
+                    prf->con_spectra_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                      
+
+            // +------------------------------------------------------+
+            // | ISTFT                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_istft_process(objs->mod_istft_seps_object);
+                    end = clock();
+                    prf->mod_istft_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);      
+
+                    begin = clock();
+                    mod_istft_process(objs->mod_istft_pfs_object);
+                    end = clock();
+                    prf->mod_istft_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);      
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    con_hops_process(objs->con_hops_seps_object);
+                    end = clock();
+                    prf->con_hops_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);      
+
+                    begin = clock();
+                    con_hops_process(objs->con_hops_pfs_object);
+                    end = clock();
+                    prf->con_hops_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);     
+
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_resample_process_push(objs->mod_resample_seps_object);
+                    end = clock();
+                    prf->mod_resample_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    begin = clock();
+                    mod_resample_process_push(objs->mod_resample_pfs_object);
+                    end = clock();
+                    prf->mod_resample_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+            // +------------------------------------------------------+
+            // | SECTION III                                          |
+            // +------------------------------------------------------+
+
+                while(1) {
+
+                    // +----------------------------------------------+
+                    // | Module                                       |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        rtnResample = mod_resample_process_pop(objs->mod_resample_seps_object);
+                        end = clock();
+                        prf->mod_resample_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                        // If there is no frames to process, stop
+                        if (rtnResample == -1) {
+                            break;
+                        }
+
+                    // +----------------------------------------------+
+                    // | Connector                                    |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        con_hops_process(objs->con_hops_seps_rs_object);
+                        end = clock();
+                        prf->con_hops_seps_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    // +----------------------------------------------+
+                    // | Sink                                         |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        snk_hops_process(objs->snk_hops_seps_rs_object);
+                        end = clock();
+                        prf->snk_hops_seps_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    }
+
+
+                while(1) {
+
+                    // +----------------------------------------------+
+                    // | Module                                       |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        rtnResample = mod_resample_process_pop(objs->mod_resample_pfs_object);
+                        end = clock();
+                        prf->mod_resample_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                        // If there is no frames to process, stop
+                        if (rtnResample == -1) {
+                            break;
+                        }
+
+                    // +----------------------------------------------+
+                    // | Connector                                    |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        con_hops_process(objs->con_hops_pfs_rs_object);
+                        end = clock();
+                        prf->con_hops_pfs_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    // +----------------------------------------------+
+                    // | Sink                                         |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        snk_hops_process(objs->snk_hops_pfs_rs_object);
+                        end = clock();
+                        prf->snk_hops_pfs_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    }
 
             }
 

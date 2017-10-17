@@ -1,13 +1,15 @@
-#ifndef __ODAS_SIGNAL_MATRIX
-#define __ODAS_SIGNAL_MATRIX
+#ifndef __ODAS_UTILS_MATRIX
+#define __ODAS_UTILS_MATRIX
 
     #include <stdlib.h>
     #include <stdio.h>
+    #include <string.h>
+    #include <math.h>
 
     //! Matrix
     typedef struct matrix_obj {
 
-        float ** array;                         ///< Array of elements in the matrix.
+        float * array;                          ///< Array of elements in the matrix.
         unsigned int nRows;                     ///< Number of rows.
         unsigned int nCols;                     ///< Number of columns.
 

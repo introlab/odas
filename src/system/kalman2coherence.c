@@ -10,14 +10,14 @@
         obj->epsilon = epsilon;
 
         obj->H = matrix_construct_zero(3,6);
-        obj->H->array[0][0] = 1.0f;
-        obj->H->array[1][1] = 1.0f;
-        obj->H->array[2][2] = 1.0f;
+        obj->H->array[0*obj->H->nCols+0] = 1.0f;
+        obj->H->array[1*obj->H->nCols+1] = 1.0f;
+        obj->H->array[2*obj->H->nCols+2] = 1.0f;
         
         obj->Ht = matrix_construct_zero(6,3);
-        obj->Ht->array[0][0] = 1.0f;
-        obj->Ht->array[1][1] = 1.0f;
-        obj->Ht->array[2][2] = 1.0f;
+        obj->Ht->array[0*obj->Ht->nCols+0] = 1.0f;
+        obj->Ht->array[1*obj->Ht->nCols+1] = 1.0f;
+        obj->Ht->array[2*obj->Ht->nCols+2] = 1.0f;
 
         obj->mu_t = matrix_construct_zero(3,1);
         obj->mu_t_t = matrix_construct_zero(1,3);
@@ -48,13 +48,13 @@
         
         obj->sigma_t_inv_mu_t_sigma_s_inv_mu_s = matrix_construct_zero(3,1);
 
-        obj->sigma_s->array[0][0] = sigmaR*sigmaR;
-        obj->sigma_s->array[1][1] = sigmaR*sigmaR;
-        obj->sigma_s->array[2][2] = sigmaR*sigmaR;
+        obj->sigma_s->array[0*obj->sigma_s->nCols+0] = sigmaR*sigmaR;
+        obj->sigma_s->array[1*obj->sigma_s->nCols+1] = sigmaR*sigmaR;
+        obj->sigma_s->array[2*obj->sigma_s->nCols+2] = sigmaR*sigmaR;
 
-        obj->sigma_epsilon->array[0][0] = epsilon;
-        obj->sigma_epsilon->array[1][1] = epsilon;
-        obj->sigma_epsilon->array[2][2] = epsilon;
+        obj->sigma_epsilon->array[0*obj->sigma_epsilon->nCols+0] = epsilon;
+        obj->sigma_epsilon->array[1*obj->sigma_epsilon->nCols+1] = epsilon;
+        obj->sigma_epsilon->array[2*obj->sigma_epsilon->nCols+2] = epsilon;
 
         matrix_inv(obj->sigma_s_inv, obj->sigma_s);
 
@@ -123,14 +123,14 @@
 
         // Compute B3
         matrix_mul(obj->mu_t_t_sigma_t_inv_mu_t, obj->mu_t_t, obj->sigma_t_inv_mu_t);
-        B3 = obj->mu_t_t_sigma_t_inv_mu_t->array[0][0];
+        B3 = obj->mu_t_t_sigma_t_inv_mu_t->array[0*(obj->mu_t_t_sigma_t_inv_mu_t->nCols)+0];
 
         for (iPot = 0; iPot < pots->nPots; iPot++) {
 
             // Compute mu_s
-            obj->mu_s->array[0][0] = pots->array[iPot*4+0];
-            obj->mu_s->array[1][0] = pots->array[iPot*4+1];
-            obj->mu_s->array[2][0] = pots->array[iPot*4+2];
+            obj->mu_s->array[0*(obj->mu_s->nCols)+0] = pots->array[iPot*4+0];
+            obj->mu_s->array[1*(obj->mu_s->nCols)+0] = pots->array[iPot*4+1];
+            obj->mu_s->array[2*(obj->mu_s->nCols)+0] = pots->array[iPot*4+2];
             matrix_transpose(obj->mu_s_t, obj->mu_s);    
            
             // Compute sigma_st^-1
@@ -155,11 +155,11 @@
             // Compute B2
             matrix_mul(obj->sigma_st_inv_mu_st, obj->sigma_st_inv, obj->mu_st);
             matrix_mul(obj->mu_st_t_sigma_st_inv_mu_st, obj->mu_st_t, obj->sigma_st_inv_mu_st);
-            B2 = obj->mu_st_t_sigma_st_inv_mu_st->array[0][0];
+            B2 = obj->mu_st_t_sigma_st_inv_mu_st->array[0*(obj->mu_st_t_sigma_st_inv_mu_st->nCols)+0];
 
             // Compute B4
             matrix_mul(obj->mu_s_t_sigma_s_inv_mu_s, obj->mu_s_t, obj->sigma_s_inv_mu_s);
-            B4 = obj->mu_s_t_sigma_s_inv_mu_s->array[0][0];
+            B4 = obj->mu_s_t_sigma_s_inv_mu_s->array[0*(obj->mu_s_t_sigma_s_inv_mu_s->nCols)+0];
 
             // Compute weight
             weight = expf(0.5f * (B1+B2-B3-B4));

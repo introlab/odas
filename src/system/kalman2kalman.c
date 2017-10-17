@@ -19,41 +19,41 @@
         obj->Ht = matrix_construct_zero(6,3);
         obj->R = matrix_construct_zero(3,3);
 
-        obj->F->array[0][0] = 1.0f;
-        obj->F->array[0][3] = deltaT;
-        obj->F->array[1][1] = 1.0f;
-        obj->F->array[1][4] = deltaT;
-        obj->F->array[2][2] = 1.0f;
-        obj->F->array[2][5] = deltaT;
-        obj->F->array[3][3] = 1.0f;
-        obj->F->array[4][4] = 1.0f;
-        obj->F->array[5][5] = 1.0f;
+        obj->F->array[0*(obj->F->nCols)+0] = 1.0f;
+        obj->F->array[0*(obj->F->nCols)+3] = deltaT;
+        obj->F->array[1*(obj->F->nCols)+1] = 1.0f;
+        obj->F->array[1*(obj->F->nCols)+4] = deltaT;
+        obj->F->array[2*(obj->F->nCols)+2] = 1.0f;
+        obj->F->array[2*(obj->F->nCols)+5] = deltaT;
+        obj->F->array[3*(obj->F->nCols)+3] = 1.0f;
+        obj->F->array[4*(obj->F->nCols)+4] = 1.0f;
+        obj->F->array[5*(obj->F->nCols)+5] = 1.0f;
 
-        obj->Ft->array[0][0] = 1.0f;
-        obj->Ft->array[3][0] = deltaT;
-        obj->Ft->array[1][1] = 1.0f;
-        obj->Ft->array[4][1] = deltaT;
-        obj->Ft->array[2][2] = 1.0f;
-        obj->Ft->array[5][2] = deltaT;
-        obj->Ft->array[3][3] = 1.0f;
-        obj->Ft->array[4][4] = 1.0f;
-        obj->Ft->array[5][5] = 1.0f;
+        obj->Ft->array[0*(obj->Ft->nCols)+0] = 1.0f;
+        obj->Ft->array[3*(obj->Ft->nCols)+0] = deltaT;
+        obj->Ft->array[1*(obj->Ft->nCols)+1] = 1.0f;
+        obj->Ft->array[4*(obj->Ft->nCols)+1] = deltaT;
+        obj->Ft->array[2*(obj->Ft->nCols)+2] = 1.0f;
+        obj->Ft->array[5*(obj->Ft->nCols)+2] = deltaT;
+        obj->Ft->array[3*(obj->Ft->nCols)+3] = 1.0f;
+        obj->Ft->array[4*(obj->Ft->nCols)+4] = 1.0f;
+        obj->Ft->array[5*(obj->Ft->nCols)+5] = 1.0f;
 
-        obj->Q->array[3][3] = sigmaQ*sigmaQ;
-        obj->Q->array[4][4] = sigmaQ*sigmaQ;
-        obj->Q->array[5][5] = sigmaQ*sigmaQ;
+        obj->Q->array[3*(obj->Q->nCols)+3] = sigmaQ*sigmaQ;
+        obj->Q->array[4*(obj->Q->nCols)+4] = sigmaQ*sigmaQ;
+        obj->Q->array[5*(obj->Q->nCols)+5] = sigmaQ*sigmaQ;
 
-        obj->H->array[0][0] = 1.0f;
-        obj->H->array[1][1] = 1.0f;
-        obj->H->array[2][2] = 1.0f;
+        obj->H->array[0*(obj->H->nCols)+0] = 1.0f;
+        obj->H->array[1*(obj->H->nCols)+1] = 1.0f;
+        obj->H->array[2*(obj->H->nCols)+2] = 1.0f;
 
-        obj->Ht->array[0][0] = 1.0f;
-        obj->Ht->array[1][1] = 1.0f;
-        obj->Ht->array[2][2] = 1.0f;
+        obj->Ht->array[0*(obj->Ht->nCols)+0] = 1.0f;
+        obj->Ht->array[1*(obj->Ht->nCols)+1] = 1.0f;
+        obj->Ht->array[2*(obj->Ht->nCols)+2] = 1.0f;
 
-        obj->R->array[0][0] = sigmaR*sigmaR;
-        obj->R->array[1][1] = sigmaR*sigmaR;
-        obj->R->array[2][2] = sigmaR*sigmaR;
+        obj->R->array[0*(obj->R->nCols)+0] = sigmaR*sigmaR;
+        obj->R->array[1*(obj->R->nCols)+1] = sigmaR*sigmaR;
+        obj->R->array[2*(obj->R->nCols)+2] = sigmaR*sigmaR;
 
         obj->FP = matrix_construct_zero(6,6);
         obj->FPFt = matrix_construct_zero(6,6);
@@ -113,16 +113,16 @@
         matrix_copy_zero(kalman->P_llm1);
         matrix_copy_zero(kalman->P_lm1lm1);
 
-        kalman->P_lm1lm1->array[0][0] = obj->sigmaQ * obj->sigmaQ;
-        kalman->P_lm1lm1->array[1][1] = obj->sigmaQ * obj->sigmaQ;
-        kalman->P_lm1lm1->array[2][2] = obj->sigmaQ * obj->sigmaQ;
-        kalman->P_lm1lm1->array[3][3] = obj->sigmaQ * obj->sigmaQ;
-        kalman->P_lm1lm1->array[4][4] = obj->sigmaQ * obj->sigmaQ;
-        kalman->P_lm1lm1->array[5][5] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[0*(kalman->P_lm1lm1->nCols)+0] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[1*(kalman->P_lm1lm1->nCols)+1] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[2*(kalman->P_lm1lm1->nCols)+2] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[3*(kalman->P_lm1lm1->nCols)+3] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[4*(kalman->P_lm1lm1->nCols)+4] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[5*(kalman->P_lm1lm1->nCols)+5] = obj->sigmaQ * obj->sigmaQ;
 
-        kalman->x_lm1lm1->array[0][0] = pots->array[iPot * 4 + 0];
-        kalman->x_lm1lm1->array[1][0] = pots->array[iPot * 4 + 1];
-        kalman->x_lm1lm1->array[2][0] = pots->array[iPot * 4 + 2];
+        kalman->x_lm1lm1->array[0*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 0];
+        kalman->x_lm1lm1->array[1*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 1];
+        kalman->x_lm1lm1->array[2*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 2];
 
     }
 
@@ -137,23 +137,23 @@
         matrix_mul(obj->FPFt, obj->FP, obj->Ft);
         matrix_add(kalman->P_llm1, obj->FPFt, obj->Q);
 
-        xx = kalman->x_llm1->array[0][0];
-        xy = kalman->x_llm1->array[1][0];
-        xz = kalman->x_llm1->array[2][0];
-        vx = kalman->x_llm1->array[3][0];
-        vy = kalman->x_llm1->array[4][0];
-        vz = kalman->x_llm1->array[5][0];
+        xx = kalman->x_llm1->array[0*(kalman->x_llm1->nCols)+0];
+        xy = kalman->x_llm1->array[1*(kalman->x_llm1->nCols)+0];
+        xz = kalman->x_llm1->array[2*(kalman->x_llm1->nCols)+0];
+        vx = kalman->x_llm1->array[3*(kalman->x_llm1->nCols)+0];
+        vy = kalman->x_llm1->array[4*(kalman->x_llm1->nCols)+0];
+        vz = kalman->x_llm1->array[5*(kalman->x_llm1->nCols)+0];
 
         norm2 = xx*xx + xy*xy + xz*xz;
         norm = sqrtf(norm2);
         proj = xx*vx + xy*vy + xz*vz;
 
-        kalman->x_llm1->array[0][0] = xx / (norm + obj->epsilon);
-        kalman->x_llm1->array[1][0] = xy / (norm + obj->epsilon);
-        kalman->x_llm1->array[2][0] = xz / (norm + obj->epsilon);
-        kalman->x_llm1->array[3][0] = vx - xx * proj / (norm2 + obj->epsilon);
-        kalman->x_llm1->array[4][0] = vy - xy * proj / (norm2 + obj->epsilon);
-        kalman->x_llm1->array[5][0] = vz - xz * proj / (norm2 + obj->epsilon);
+        kalman->x_llm1->array[0*(kalman->x_llm1->nCols)+0] = xx / (norm + obj->epsilon);
+        kalman->x_llm1->array[1*(kalman->x_llm1->nCols)+0] = xy / (norm + obj->epsilon);
+        kalman->x_llm1->array[2*(kalman->x_llm1->nCols)+0] = xz / (norm + obj->epsilon);
+        kalman->x_llm1->array[3*(kalman->x_llm1->nCols)+0] = vx - xx * proj / (norm2 + obj->epsilon);
+        kalman->x_llm1->array[4*(kalman->x_llm1->nCols)+0] = vy - xy * proj / (norm2 + obj->epsilon);
+        kalman->x_llm1->array[5*(kalman->x_llm1->nCols)+0] = vz - xz * proj / (norm2 + obj->epsilon);
 
     }
 
@@ -178,9 +178,9 @@
 
         }
 
-        obj->z->array[0][0] = pots->array[maxIndex * 4 + 0];
-        obj->z->array[1][0] = pots->array[maxIndex * 4 + 1];
-        obj->z->array[2][0] = pots->array[maxIndex * 4 + 2];
+        obj->z->array[0*(obj->z->nCols)+0] = pots->array[maxIndex * 4 + 0];
+        obj->z->array[1*(obj->z->nCols)+0] = pots->array[maxIndex * 4 + 1];
+        obj->z->array[2*(obj->z->nCols)+0] = pots->array[maxIndex * 4 + 2];
 
         // Compute K
         matrix_mul(obj->HP, obj->H, kalman->P_llm1);
@@ -209,8 +209,8 @@
 
     void kalman2kalman_estimate(kalman2kalman_obj * obj, const kalman_obj * kalman, float * x, float * y, float * z) {
 
-        *x = kalman->x_lm1lm1->array[0][0];
-        *y = kalman->x_lm1lm1->array[1][0];
-        *z = kalman->x_lm1lm1->array[2][0];
+        *x = kalman->x_lm1lm1->array[0*(kalman->x_lm1lm1->nCols)+0];
+        *y = kalman->x_lm1lm1->array[1*(kalman->x_lm1lm1->nCols)+0];
+        *z = kalman->x_lm1lm1->array[2*(kalman->x_lm1lm1->nCols)+0];
 
     }

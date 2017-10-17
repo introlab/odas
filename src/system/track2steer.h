@@ -29,6 +29,6 @@
 
     void track2steer_destroy(track2steer_obj * obj);
 
-    void track2steer_process_demixing(track2steer_obj * obj, const tracks_obj * tracks, const gains_obj * gains, const masks_obj * masks, steers_obj * steers);    
+    void track2steer_process(track2steer_obj * obj, const tracks_obj * tracks, const gains_obj * gains, const masks_obj * masks, steers_obj * steers);    
 
 #endif
