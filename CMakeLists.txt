@@ -105,10 +105,12 @@ set(SRC
     src/utils/pcm.c
     src/utils/random.c
 
+    src/aconnector/acon_categories.c
     src/aconnector/acon_hops.c
     src/aconnector/acon_pots.c
     src/aconnector/acon_spectra.c
     src/aconnector/acon_tracks.c
+    src/amessage/amsg_categories.c
     src/amessage/amsg_hops.c
     src/amessage/amsg_pots.c
     src/amessage/amsg_spectra.c
@@ -120,16 +122,19 @@ set(SRC
     src/amodule/amod_sss.c
     src/amodule/amod_sst.c
     src/amodule/amod_stft.c
+    src/asink/asnk_categories.c
     src/asink/asnk_hops.c    
     src/asink/asnk_pots.c
     src/asink/asnk_spectra.c
     src/asink/asnk_tracks.c
     src/asource/asrc_hops.c  
     
+    src/connector/con_categories.c
     src/connector/con_hops.c
     src/connector/con_pots.c
     src/connector/con_spectra.c
     src/connector/con_tracks.c
+    src/message/msg_categories.c
     src/message/msg_hops.c
     src/message/msg_pots.c
     src/message/msg_spectra.c
@@ -141,6 +146,7 @@ set(SRC
     src/module/mod_sss.c
     src/module/mod_sst.c
     src/module/mod_stft.c
+    src/sink/snk_categories.c
     src/sink/snk_hops.c
     src/sink/snk_pots.c
     src/sink/snk_spectra.c
