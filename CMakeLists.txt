@@ -36,10 +36,12 @@ set(SRC
     src/init/space.c
     src/init/windowing.c
 
+    src/signal/acorr.c
     src/signal/aimg.c
     src/signal/area.c
     src/signal/assignation.c
     src/signal/beampattern.c
+    src/signal/category.c
     src/signal/coherence.c
     src/signal/delta.c
     src/signal/demixing.c
@@ -54,6 +56,7 @@ set(SRC
     src/signal/mixture.c
     src/signal/pair.c
     src/signal/particle.c
+    src/signal/pitch.c
     src/signal/point.c
     src/signal/postprob.c
     src/signal/pot.c
@@ -69,10 +72,12 @@ set(SRC
     src/signal/window.c
     src/signal/xcorr.c
 
+    src/system/acorr2pitch.c
     src/system/demixing2freq.c
     src/system/hop2hop.c
     src/system/hop2frame.c
     src/system/frame2freq.c
+    src/system/freq2acorr.c
     src/system/freq2freq.c
     src/system/freq2frame.c
     src/system/freq2xcorr.c
@@ -83,6 +88,7 @@ set(SRC
     src/system/mixture2mixture.c
     src/system/particle2coherence.c
     src/system/particle2particle.c
+    src/system/pitch2category.c
     src/system/steer2demixing.c
     src/system/track2gain.c
     src/system/track2steer.c
@@ -107,7 +113,6 @@ set(SRC
     src/amessage/amsg_pots.c
     src/amessage/amsg_spectra.c
     src/amessage/amsg_tracks.c
-    src/amodule/amod_gain.c
     src/amodule/amod_istft.c
     src/amodule/amod_mapping.c
     src/amodule/amod_resample.c
@@ -129,7 +134,6 @@ set(SRC
     src/message/msg_pots.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
-    src/module/mod_gain.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
     src/module/mod_resample.c
