@@ -57,6 +57,8 @@
         pitches_destroy(obj->pitches);
         pitch2category_destroy(obj->pitch2category);
 
+        free((void *) obj);
+
     }
 
     int mod_classify_process(mod_classify_obj * obj) {

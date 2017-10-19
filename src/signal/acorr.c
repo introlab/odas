@@ -36,6 +36,8 @@
 
         free((void *) obj->array);
 
+        free((void *) obj);
+
     }
 
     void acorrs_copy(acorrs_obj * dest, const acorrs_obj * src) {

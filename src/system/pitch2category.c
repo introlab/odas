@@ -47,7 +47,6 @@
 
     void pitch2category_destroy(pitch2category_obj * obj) {
 
-        free((void *) obj->rs);
         free((void *) obj->tausNow);
         free((void *) obj->tausPrev);
         free((void *) obj->deltaTausNow);

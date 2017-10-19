@@ -391,6 +391,12 @@
 
                 msg_categories_cfg_destroy(cfgs->msg_categories_config);
 
+            // +------------------------------------------------------+
+            // | Sink                                                 |
+            // +------------------------------------------------------+
+
+                snk_categories_cfg_destroy(cfgs->snk_categories_config);
+
         free((void *) cfgs);
 
     }
