@@ -1550,6 +1550,12 @@
 
             cfg->phiMin = parameters_lookup_float(fileConfig, "classify.phiMin");
 
+        // +----------------------------------------------------------+
+        // | r0                                                       |
+        // +----------------------------------------------------------+           
+
+            cfg->r0 = parameters_lookup_float(fileConfig, "classify.r0");
+
         return cfg;
 
     }

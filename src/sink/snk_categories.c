@@ -214,7 +214,70 @@
 
     int snk_categories_process_terminal(snk_categories_obj * obj) {
 
+        int rtnValue;
+        unsigned int iChannel;
 
+        if (obj->in->timeStamp != 0) {
+
+            switch(obj->format->type) {
+
+                case format_text_json:
+
+                    printf("{\n");
+                    printf("    \"timeStamp\": %llu,\n",obj->in->timeStamp);
+                    printf("    \"src\": [\n");
+
+                    for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+                        switch(obj->in->categories->array[iChannel]) {
+
+                            case 0x01:
+
+                                printf("        { \"category\": \"speech\" }");
+
+                            break;
+
+                            case 0x02:
+
+                                printf("        { \"category\": \"nonspeech\" }");
+
+                            break;
+
+                            default:
+
+                                printf("        { \"category\": \"undefined\" }");
+
+                            break;
+
+                        }
+
+                        if (iChannel != (obj->nChannels - 1)) {
+
+                            printf(",");
+
+                        }
+
+                        printf("\n");
+
+                    }
+                    
+                    printf("    ]\n");
+                    printf("}\n");
+
+                    rtnValue = 0;
+
+                break;               
+
+            }
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;        
 
     }
 
