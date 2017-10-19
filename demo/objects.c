@@ -172,7 +172,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+                     
 
-                    objs->con_hops_seps_object = con_hops_construct(1, cfgs->msg_hops_seps_config);
+                    objs->con_hops_seps_object = con_hops_construct(2, cfgs->msg_hops_seps_config);
                     objs->con_hops_pfs_object = con_hops_construct(1, cfgs->msg_hops_pfs_config);
 
             // +------------------------------------------------------+
@@ -209,6 +209,30 @@
                     objs->snk_hops_pfs_rs_object = snk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
                                                                       cfgs->msg_hops_pfs_rs_config);
 
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_classify_object = mod_classify_construct(cfgs->mod_classify_config,
+                                                                       cfgs->msg_hops_seps_config,
+                                                                       cfgs->msg_categories_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->con_categories_object = con_categories_construct(1, cfgs->msg_categories_config);
+                
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    objs->snk_categories_object = snk_categories_construct(cfgs->snk_categories_config,
+                                                                           cfgs->msg_categories_config);
 
         // +----------------------------------------------------------+
         // | Connect                                                  |
@@ -354,6 +378,25 @@
 
                     snk_hops_connect(objs->snk_hops_pfs_rs_object,
                                      objs->con_hops_pfs_rs_object->outs[0]);
+
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_classify_connect(objs->mod_classify_object,
+                                         objs->con_hops_seps_object->outs[1],
+                                         objs->con_categories_object->in);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+  
+
+                    snk_categories_connect(objs->snk_categories_object,
+                                           objs->con_categories_object->outs[0]);
 
         return objs;
 
@@ -535,6 +578,28 @@
                     snk_hops_destroy(objs->snk_hops_seps_rs_object);
                     snk_hops_destroy(objs->snk_hops_pfs_rs_object);
 
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_classify_destroy(objs->mod_classify_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_categories_destroy(objs->con_categories_object);
+                
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    snk_categories_destroy(objs->snk_categories_object);
+
         free((void *) objs);
 
     }
@@ -712,7 +777,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+                     
 
-                    objs->acon_hops_seps_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_seps_config);
+                    objs->acon_hops_seps_object = acon_hops_construct(2, objs->nMessages, cfgs->msg_hops_seps_config);
                     objs->acon_hops_pfs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_pfs_config);
 
             // +------------------------------------------------------+
@@ -748,6 +813,31 @@
 
                     objs->asnk_hops_pfs_rs_object = asnk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
                                                                         cfgs->msg_hops_pfs_rs_config);
+
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_classify_object = amod_classify_construct(cfgs->mod_classify_config,
+                                                                         cfgs->msg_hops_seps_config,
+                                                                         cfgs->msg_categories_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->acon_categories_object = acon_categories_construct(1, objs->nMessages, cfgs->msg_categories_config);
+                
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    objs->asnk_categories_object = asnk_categories_construct(cfgs->snk_categories_config,
+                                                                             cfgs->msg_categories_config);
 
         // +----------------------------------------------------------+
         // | Connect                                                  |
@@ -893,6 +983,25 @@
 
                     asnk_hops_connect(objs->asnk_hops_pfs_rs_object,
                                       objs->acon_hops_pfs_rs_object->outs[0]);
+
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_classify_connect(objs->amod_classify_object,
+                                          objs->acon_hops_seps_object->outs[1],
+                                          objs->acon_categories_object->in);
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+  
+
+                    asnk_categories_connect(objs->asnk_categories_object,
+                                            objs->acon_categories_object->outs[0]);
 
         return objs;
 
@@ -1073,6 +1182,28 @@
 
                     asnk_hops_destroy(objs->asnk_hops_seps_rs_object);
                     asnk_hops_destroy(objs->asnk_hops_pfs_rs_object);
+
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_classify_destroy(objs->amod_classify_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_categories_destroy(objs->acon_categories_object);
+                
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    asnk_categories_destroy(objs->asnk_categories_object);
 
         free((void *) objs);
 

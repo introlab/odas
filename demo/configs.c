@@ -177,6 +177,28 @@
                 cfgs->snk_hops_seps_rs_config = parameters_snk_hops_seps_rs_config(file_config);
                 cfgs->snk_hops_pfs_rs_config = parameters_snk_hops_pfs_rs_config(file_config);
 
+        // +----------------------------------------------------------+
+        // | Classify                                                 |
+        // +----------------------------------------------------------+
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+
+
+                cfgs->mod_classify_config = parameters_mod_classify_config(file_config);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+
+
+                cfgs->msg_categories_config = parameters_msg_categories_config(file_config);
+
+            // +------------------------------------------------------+
+            // | Sink                                                 |
+            // +------------------------------------------------------+
+
+                cfgs->snk_categories_config = parameters_snk_categories_config(file_config);
+
         return cfgs;
 
     }
@@ -352,6 +374,22 @@
 
                 snk_hops_cfg_destroy(cfgs->snk_hops_seps_rs_config);
                 snk_hops_cfg_destroy(cfgs->snk_hops_pfs_rs_config);
+
+        // +----------------------------------------------------------+
+        // | Classify                                                 |
+        // +----------------------------------------------------------+
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+
+
+                mod_classify_cfg_destroy(cfgs->mod_classify_config);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+
+
+                msg_categories_cfg_destroy(cfgs->msg_categories_config);
 
         free((void *) cfgs);
 

@@ -11,7 +11,8 @@
         obj->halfFrameSize = halfFrameSize;
         obj->frameSize = (halfFrameSize-1)*2;
 
-        obj->array = (float *) malloc(sizeof(float) * obj->frameSize);
+        obj->arrayIn = (float *) malloc(sizeof(float) * obj->halfFrameSize * 2);
+        obj->arrayOut = (float *) malloc(sizeof(float) * obj->frameSize);
 
         obj->fft = fft_construct(obj->frameSize);
 
@@ -21,7 +22,8 @@
 
     void freq2acorr_destroy(freq2acorr_obj * obj) {
 
-        free((void *) obj->array);
+        free((void *) obj->arrayIn);
+        free((void *) obj->arrayOut);
         fft_destroy(obj->fft);
         free((void *) obj);
 
@@ -30,12 +32,27 @@
     void freq2acorr_process(freq2acorr_obj * obj, const freqs_obj * freqs, acorrs_obj * acorrs) {
 
         unsigned int iSignal;
+        unsigned int iBin;
+
+        float Yreal;
+        float Yimag;
 
         for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
 
-            fft_c2r(obj->fft, freqs->array[iSignal], obj->array);
+            memset(obj->arrayIn, 0x00, sizeof(float) * obj->halfFrameSize * 2);
 
-            memcpy(acorrs->array[iSignal], obj->array, sizeof(float) * obj->halfFrameSize);
+            for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                Yreal = freqs->array[iSignal][iBin * 2 + 0];
+                Yimag = freqs->array[iSignal][iBin * 2 + 1];
+
+                obj->arrayIn[iBin * 2 + 0] = Yreal * Yreal + Yimag * Yimag;
+
+            }
+
+            fft_c2r(obj->fft, obj->arrayIn, obj->arrayOut);
+
+            memcpy(acorrs->array[iSignal], obj->arrayOut, sizeof(float) * obj->halfFrameSize);
 
         }
 

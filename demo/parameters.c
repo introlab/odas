@@ -1122,7 +1122,7 @@
             cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
 
         // +----------------------------------------------------------+
-        // | Hop size                                                 |
+        // | Half frame size                                          |
         // +----------------------------------------------------------+
 
             cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
@@ -1154,7 +1154,7 @@
             cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
 
         // +----------------------------------------------------------+
-        // | Hop size                                                 |
+        // | Half frame size                                          |
         // +----------------------------------------------------------+
 
             cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
@@ -1437,7 +1437,6 @@
 
             cfg->fS = parameters_lookup_int(fileConfig, "sss.postfiltered.fS");
 
-
         // +----------------------------------------------------------+
         // | Format                                                   |
         // +----------------------------------------------------------+
@@ -1487,6 +1486,157 @@
             else {
 
                 printf("sss.postfiltered.interface.type: Invalid type\n");
+                exit(EXIT_FAILURE);
+
+            }
+
+            free((void *) tmpStr1);
+
+        return cfg;
+
+    }
+
+    mod_classify_cfg * parameters_mod_classify_config(const char * fileConfig) {
+
+        mod_classify_cfg * cfg;
+
+        cfg = mod_classify_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Frame size                                               |
+        // +----------------------------------------------------------+
+
+            cfg->frameSize = parameters_lookup_int(fileConfig, "classify.frameSize");
+
+        // +----------------------------------------------------------+
+        // | Window size                                              |
+        // +----------------------------------------------------------+
+
+            cfg->winSize = parameters_lookup_int(fileConfig, "classify.winSize");
+
+        // +----------------------------------------------------------+
+        // | tauMin                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->tauMin = parameters_lookup_int(fileConfig, "classify.tauMin");
+
+        // +----------------------------------------------------------+
+        // | tauMax                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->tauMax = parameters_lookup_int(fileConfig, "classify.tauMax");
+
+        // +----------------------------------------------------------+
+        // | deltaTauMax                                              |
+        // +----------------------------------------------------------+
+
+            cfg->deltaTauMax = parameters_lookup_int(fileConfig, "classify.deltaTauMax");
+
+        // +----------------------------------------------------------+
+        // | alpha                                                    |
+        // +----------------------------------------------------------+
+
+            cfg->alpha = parameters_lookup_float(fileConfig, "classify.alpha");
+
+        // +----------------------------------------------------------+
+        // | gamma                                                    |
+        // +----------------------------------------------------------+
+
+            cfg->gamma = parameters_lookup_float(fileConfig, "classify.gamma");
+
+        // +----------------------------------------------------------+
+        // | phiMin                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->phiMin = parameters_lookup_float(fileConfig, "classify.phiMin");
+
+        return cfg;
+
+    }
+
+    msg_categories_cfg * parameters_msg_categories_config(const char * fileConfig) {
+
+        msg_categories_cfg * cfg;
+
+        cfg = msg_categories_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");        
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");  
+
+        return cfg;
+
+    }
+
+    snk_categories_cfg * parameters_snk_categories_config(const char * fileConfig) {
+
+        snk_categories_cfg * cfg;
+        unsigned int tmpInt1;
+        char * tmpStr1;
+        char * tmpStr2;
+
+        cfg = snk_categories_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");
+
+        // +----------------------------------------------------------+
+        // | Format                                                   |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "classify.category.format");
+
+            if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
+            else { printf("classify.category.format: Invalid format\n"); exit(EXIT_FAILURE); }
+
+            free((void *) tmpStr1);       
+
+        // +----------------------------------------------------------+
+        // | Type                                                     |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "classify.category.interface.type");
+
+            if (strcmp(tmpStr1, "blackhole") == 0) {
+
+                cfg->interface = interface_construct_blackhole();
+
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "classify.category.interface.path");
+                cfg->interface = interface_construct_file(tmpStr2);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "socket") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "classify.category.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "classify.category.interface.port");
+
+                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }
+            else {
+
+                printf("classify.category.interface.type: Invalid type\n");
                 exit(EXIT_FAILURE);
 
             }

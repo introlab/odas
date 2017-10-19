@@ -35,6 +35,7 @@
         float maxValue;
         unsigned int maxIndex;
         char isPeak;
+        char peakFound;
 
         unsigned int peakPrev;
         unsigned int peakNow;
@@ -45,17 +46,20 @@
 
         for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
 
+            maxValue = -INFINITY;
+            peakFound = 0x00;
+
             for (iBin = obj->winSize; iBin < (obj->halfFrameSize - obj->winSize); iBin++) {
 
                 peakValue = acorrs->array[iSignal][iBin];
                 isPeak = 0x01;
 
-                for (iWin = -1 * (obj->winSize); iWin <= obj->winSize; iWin++) {
+                for (iWin = -1 * ((signed int) (obj->winSize)); iWin <= ((signed int) (obj->winSize)); iWin++) {
 
                     iSample = iBin + iWin;
                     nextValue = acorrs->array[iSignal][iSample];
 
-                    if (peakValue <= nextValue) {
+                    if ((iWin != 0) && (peakValue <= nextValue)) {
 
                         isPeak = 0x00;
                         break;
@@ -71,20 +75,31 @@
                         maxValue = peakValue;
                         maxIndex = iBin;
 
+                        peakFound = 0x01;
+
                     }
 
                 }
 
             }
 
-            peakPrev = maxIndex - 1;
-            peakNow = maxIndex;
-            peakNext = maxIndex + 1;
-            RPrev = acorrs->array[iSignal][peakPrev];
-            RNow = acorrs->array[iSignal][peakNow];
-            RNext = acorrs->array[iSignal][peakNext];
+            if (peakFound == 0x01) {
 
-            pitches->array[iSignal] = ((float) peakNow) + ((RPrev - RNext) / (2*RPrev - 4*RNow + 2*RNext));
+                peakPrev = maxIndex - 1;
+                peakNow = maxIndex;
+                peakNext = maxIndex + 1;
+                RPrev = acorrs->array[iSignal][peakPrev];
+                RNow = acorrs->array[iSignal][peakNow];
+                RNext = acorrs->array[iSignal][peakNext];
+
+                pitches->array[iSignal] = ((float) peakNow) + ((RPrev - RNext) / (2*RPrev - 4*RNow + 2*RNext));
+
+            }
+            else {
+
+                pitches->array[iSignal] = 0.0f;
+
+            }
 
         }
 

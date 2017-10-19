@@ -4,14 +4,14 @@
     #include "../signal/acorr.h"
     #include "../signal/pitch.h"
 
+    #include <math.h>
+
     typedef struct acorr2pitch_obj {
 
         unsigned int nSignals;
         unsigned int halfFrameSize;
         unsigned int frameSize;
         unsigned int winSize;
-        unsigned int minBin;
-        unsigned int maxBin;
 
     } acorr2pitch_obj;
 

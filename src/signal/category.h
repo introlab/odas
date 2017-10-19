@@ -16,6 +16,10 @@
 
     void categories_destroy(categories_obj * obj);
 
+    void categories_copy(categories_obj * dest, const categories_obj * src);
+
+    void categories_zero(categories_obj * obj);
+
     void categories_printf(const categories_obj * obj);
 
 #endif

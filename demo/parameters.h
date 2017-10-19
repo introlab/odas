@@ -76,4 +76,10 @@
     snk_hops_cfg * parameters_snk_hops_pfs_rs_config(const char * fileConfig);
 
 
+    mod_classify_cfg * parameters_mod_classify_config(const char * fileConfig);
+
+    msg_categories_cfg * parameters_msg_categories_config(const char * fileConfig);
+
+    snk_categories_cfg * parameters_snk_categories_config(const char * fileConfig);
+
 #endif

@@ -49,6 +49,10 @@
         snk_hops_obj * snk_hops_seps_rs_object;
         snk_hops_obj * snk_hops_pfs_rs_object;
 
+        mod_classify_obj * mod_classify_object;
+        con_categories_obj * con_categories_object;
+        snk_categories_obj * snk_categories_object;
+
     } objects;   
 
     typedef struct aobjects {
@@ -94,6 +98,10 @@
         acon_hops_obj * acon_hops_pfs_rs_object;
         asnk_hops_obj * asnk_hops_seps_rs_object;
         asnk_hops_obj * asnk_hops_pfs_rs_object;
+
+        amod_classify_obj * amod_classify_object;
+        acon_categories_obj * acon_categories_object;
+        asnk_categories_obj * asnk_categories_object;
 
     } aobjects;
  

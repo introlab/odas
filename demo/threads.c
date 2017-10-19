@@ -173,6 +173,28 @@
                 thread_start(aobjs->acon_hops_seps_rs_object->thread);
                 thread_start(aobjs->acon_hops_pfs_rs_object->thread);
 
+        // +------------------------------------------------------+
+        // | Classify                                             |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->amod_classify_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sink                                             |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->asnk_categories_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->acon_categories_object->thread);
+
     }
 
     void threads_multiple_stop(aobjects * aobjs) {
@@ -365,6 +387,29 @@
                 thread_join(aobjs->acon_hops_seps_rs_object->thread);
                 thread_join(aobjs->acon_hops_pfs_rs_object->thread);
 
+        // +------------------------------------------------------+
+        // | Classify                                             |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->amod_classify_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sink                                             |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->asnk_categories_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->acon_categories_object->thread);
+
+
     }
 
     void threads_single_open(objects * objs) {
@@ -412,6 +457,16 @@
                 snk_hops_open(objs->snk_hops_seps_rs_object);
                 snk_hops_open(objs->snk_hops_pfs_rs_object);
 
+        // +----------------------------------------------------------+
+        // | Classify                                                 |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                snk_categories_open(objs->snk_categories_object);
+
     }
 
     void threads_single_close(objects * objs) {
@@ -458,6 +513,16 @@
 
                 snk_hops_close(objs->snk_hops_seps_rs_object);
                 snk_hops_close(objs->snk_hops_pfs_rs_object);                
+
+        // +----------------------------------------------------------+
+        // | Classify                                                 |
+        // +----------------------------------------------------------+  
+
+            // +------------------------------------------------------+
+            // | Sinks                                                |
+            // +------------------------------------------------------+                      
+
+                snk_categories_close(objs->snk_categories_object);
 
     }
 
@@ -803,6 +868,37 @@
                         prf->snk_hops_pfs_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     }
+
+            // +------------------------------------------------------+
+            // | Classify                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    mod_classify_process(objs->mod_classify_object);
+                    end = clock();
+                    prf->mod_classify_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);      
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    begin = clock();
+                    con_categories_process(objs->con_categories_object);
+                    end = clock();
+                    prf->con_categories_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);      
+
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+ 
+
+                    begin = clock();
+                    snk_categories_process(objs->snk_categories_object);
+                    end = clock();
+                    prf->snk_categories_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
             }
 

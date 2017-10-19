@@ -22,6 +22,18 @@
 
     }
 
+    void categories_copy(categories_obj * dest, const categories_obj * src) {
+
+        memcpy(dest->array, src->array, sizeof(char) * src->nSignals);
+
+    }
+
+    void categories_zero(categories_obj * obj) {
+
+        memset(obj->array, 0x00, sizeof(char) * obj->nSignals);
+
+    }
+
     void categories_printf(const categories_obj * obj) {
 
         unsigned int iSignal;

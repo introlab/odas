@@ -15,7 +15,8 @@
         unsigned int halfFrameSize;
         unsigned int frameSize;
 
-        float * array;
+        float * arrayIn;
+        float * arrayOut;
 
         fft_obj * fft;
 

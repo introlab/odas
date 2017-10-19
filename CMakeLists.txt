@@ -115,6 +115,7 @@ set(SRC
     src/amessage/amsg_pots.c
     src/amessage/amsg_spectra.c
     src/amessage/amsg_tracks.c
+    src/amodule/amod_classify.c
     src/amodule/amod_istft.c
     src/amodule/amod_mapping.c
     src/amodule/amod_resample.c
@@ -139,6 +140,7 @@ set(SRC
     src/message/msg_pots.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
+    src/module/mod_classify.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
     src/module/mod_resample.c

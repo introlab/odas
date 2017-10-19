@@ -44,6 +44,10 @@
         snk_hops_cfg * snk_hops_seps_rs_config;
         snk_hops_cfg * snk_hops_pfs_rs_config;
 
+        mod_classify_cfg * mod_classify_config;
+        msg_categories_cfg * msg_categories_config;
+        snk_categories_cfg * snk_categories_config;
+
     } configs;
 
     configs * configs_construct(const char * file_config);
