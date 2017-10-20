@@ -375,7 +375,27 @@
 
     int mod_sss_process_mspf(mod_sss_obj * obj) {
 
-        // Empty
+        int rtnValue;
+
+        if (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) {
+
+            printf("Time stamp mismatch.\n");
+            exit(EXIT_FAILURE);
+
+        }
+
+        if (msg_spectra_isZero(obj->in1) == 0) {
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;  
 
     }
 
