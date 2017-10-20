@@ -1367,7 +1367,7 @@
         // | Format                                                   |
         // +----------------------------------------------------------+
 
-            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
+            tmpInt1 = parameters_lookup_int(fileConfig, "sss.separated.nBits");
 
             if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
                 cfg->format = format_construct_binary_int(tmpInt1);
@@ -1441,7 +1441,7 @@
         // | Format                                                   |
         // +----------------------------------------------------------+
 
-            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
+            tmpInt1 = parameters_lookup_int(fileConfig, "sss.postfiltered.nBits");
 
             if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
                 cfg->format = format_construct_binary_int(tmpInt1);
