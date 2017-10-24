@@ -181,7 +181,7 @@ target_link_libraries(odas
 )
 
 add_executable(odascore
-    demo/main.c
+    demo/client.c
     demo/configs.c
     demo/objects.c
     demo/parameters.c
