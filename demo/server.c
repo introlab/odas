@@ -68,6 +68,7 @@
 
         message = (char *) malloc(sizeof(char) * nBytes);
 
+        printf("Receiving data........... "); fflush(stdout);
         while( (messageSize = recv(connection_id, message, nBytes, 0)) > 0) {
 
             message[messageSize] = 0x00;
@@ -75,7 +76,10 @@
             fwrite(message, messageSize, sizeof(char), fp);
 
         }
+        printf("[OK]\n");
 
+        printf("Closing file............. "); fflush(stdout);
         fclose(fp);
+        printf("[OK]\n");
 
     }
