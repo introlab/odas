@@ -4,6 +4,10 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include <unistd.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -23,9 +27,9 @@
 
         FILE * fp;
 
-        //struct sockaddr_in sserver;
-        //char * smessage;
-        //int sid;
+        struct sockaddr_in sserver;
+        char * smessage;
+        int sid;
 
         char bytes[4];
 

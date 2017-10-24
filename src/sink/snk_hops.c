@@ -33,6 +33,9 @@
 
         }
 
+        obj->smessage = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
+        memset(obj->smessage, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
+
         obj->in = (msg_hops_obj *) NULL;
 
         return obj;
@@ -43,6 +46,7 @@
 
         format_destroy(obj->format);
         interface_destroy(obj->interface);
+        free((void *) obj->smessage);
 
         free((void *) obj);
 
@@ -78,8 +82,18 @@
 
             case interface_socket:
 
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                obj->sserver.sin_family = AF_INET;
+                obj->sserver.sin_port = htons(obj->interface->port);
+                inet_aton(obj->interface->ip, &(obj->sserver.sin_addr));
+
+                obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+
+                if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
+
+                    printf("Cannot connect to server\n");
+                    exit(EXIT_FAILURE);
+
+                }
 
             break;
 
@@ -119,8 +133,7 @@
 
             case interface_socket:
 
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                close(obj->sid);
 
             break;
 
@@ -250,8 +263,55 @@
 
     int snk_hops_process_socket(snk_hops_obj * obj) {
 
-        printf("Not implemented\n");
-        exit(EXIT_FAILURE);
+        unsigned int iChannel;
+        unsigned int iSample;
+        float sample;
+        unsigned int nBytes;
+        unsigned int nBytesTotal;
+        int rtnValue;
+
+        if (obj->in->timeStamp != 0) {
+
+            switch (obj->format->type) {
+
+                case format_binary_int08: nBytes = 1; break;
+                case format_binary_int16: nBytes = 2; break;
+                case format_binary_int24: nBytes = 3; break;
+                case format_binary_int32: nBytes = 4; break;
+
+            }
+
+            nBytesTotal = 0;
+
+            for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+                    nBytesTotal += nBytes;
+
+                    sample = obj->in->hops->array[iChannel][iSample];
+                    pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                    memcpy(&(obj->smessage[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+                }
+
+            }
+
+            if (send(obj->sid, obj->smessage, nBytesTotal, 0) < 0) {
+                printf("Could not send message.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
 
     }
 

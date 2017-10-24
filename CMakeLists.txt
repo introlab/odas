@@ -45,6 +45,7 @@ set(SRC
     src/signal/coherence.c
     src/signal/delta.c
     src/signal/demixing.c
+    src/signal/env.c
     src/signal/frame.c
     src/signal/freq.c
     src/signal/gain.c
@@ -74,10 +75,12 @@ set(SRC
 
     src/system/acorr2pitch.c
     src/system/demixing2freq.c
+    src/system/env2env.c
     src/system/hop2hop.c
     src/system/hop2frame.c
     src/system/frame2freq.c
     src/system/freq2acorr.c
+    src/system/freq2env.c
     src/system/freq2freq.c
     src/system/freq2frame.c
     src/system/freq2xcorr.c
@@ -133,11 +136,13 @@ set(SRC
     src/connector/con_categories.c
     src/connector/con_hops.c
     src/connector/con_pots.c
+    src/connector/con_powers.c
     src/connector/con_spectra.c
     src/connector/con_tracks.c
     src/message/msg_categories.c
     src/message/msg_hops.c
     src/message/msg_pots.c
+    src/message/msg_powers.c
     src/message/msg_spectra.c
     src/message/msg_tracks.c
     src/module/mod_classify.c
@@ -185,6 +190,13 @@ add_executable(debug
     demo/debug.c
 )
 target_link_libraries(debug
+    odas
+)
+
+add_executable(server
+    demo/server.c
+)
+target_link_libraries(server
     odas
 )
 

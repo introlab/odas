@@ -4,6 +4,8 @@
     #include <sys/socket.h>
     #include <netinet/in.h>
     #include <arpa/inet.h>
+    #include <signal.h>
+    #include <getopt.h>
 
     int main(int argc, char* argv[])
     {
@@ -14,40 +16,66 @@
         char * message;
         int messageSize;
 
-        if (argc != 2) {
+        int c;
+        unsigned int portNumber;
+        char * fileName;
+        FILE * fp;
 
-            printf("Expecting one argument\n");
-            exit(EXIT_FAILURE);
+        const unsigned int nBytes = 10240;
+
+        while ((c = getopt(argc,argv, "p:o:")) != -1) {
+
+            switch(c) {
+
+                case 'p':
+
+                    portNumber = atoi(optarg);
+
+                break;
+
+                case 'o':
+
+                    fileName = (char *) malloc(sizeof(char) * (strlen(optarg)+1));
+                    strcpy(fileName, optarg);   
+
+                break;
+
+            }
+
         }
 
         server_id = socket(AF_INET, SOCK_STREAM, 0);
 
         server_address.sin_family = AF_INET;
         server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-        server_address.sin_port = htons(atoi(argv[1]));
+        server_address.sin_port = htons(portNumber);
 
-        printf("Binding socket... ");  fflush(stdout);
+        printf("Opening file............. "); fflush(stdout);
+        fp = fopen(fileName, "wb");
+        printf("[OK]\n");
+
+        printf("Binding socket........... ");  fflush(stdout);
         bind(server_id, (struct sockaddr *) &server_address, sizeof(server_address));
         printf("[OK]\n");
 
-        printf("Listening socket... ");  fflush(stdout);
+        printf("Listening socket......... ");  fflush(stdout);
         listen(server_id, 1);
         printf("[OK]\n");
 
-        printf("Waiting for connection..."); fflush(stdout);
+        printf("Waiting for connection... "); fflush(stdout);
         connection_id = accept(server_id, (struct sockaddr*) NULL, NULL);
         printf("[OK]\n");
 
-        message = (char *) malloc(sizeof(char) * 1024 * 10);
+        message = (char *) malloc(sizeof(char) * nBytes);
 
-        while( (messageSize = recv(connection_id, message, 1024 * 10, 0)) > 0) {
+        while( (messageSize = recv(connection_id, message, nBytes, 0)) > 0) {
 
             message[messageSize] = 0x00;
 
-            printf("Received (%u): %s\n",messageSize,message);
+            fwrite(message, messageSize, sizeof(char), fp);
 
         }
 
-        printf("messageSize = %d\n",messageSize);
+        fclose(fp);
 
     }
