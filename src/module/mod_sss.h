@@ -8,6 +8,7 @@
 
     #include "../init/directivity.h"
 
+    #include "../message/msg_powers.h"
     #include "../message/msg_spectra.h"
     #include "../message/msg_tracks.h"
 
@@ -54,7 +55,8 @@
         demixing2freq_obj * demixing2freq;
 
         msg_spectra_obj * in1;
-        msg_tracks_obj * in2;
+        msg_powers_obj * in2;
+        msg_tracks_obj * in3;
         msg_spectra_obj * out1;
         msg_spectra_obj * out2;
 
@@ -91,7 +93,7 @@
 
     int mod_sss_process_mspf(mod_sss_obj * obj);
 
-    void mod_sss_connect(mod_sss_obj * obj, msg_spectra_obj * in1, msg_tracks_obj * in2, msg_spectra_obj * out1, msg_spectra_obj * out2);
+    void mod_sss_connect(mod_sss_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_tracks_obj * in3, msg_spectra_obj * out1, msg_spectra_obj * out2);
 
     void mod_sss_disconnect(mod_sss_obj * obj);
 

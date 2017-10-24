@@ -2,6 +2,7 @@
 #define __ODAS_AMODULE_SSS
 
     #include "../module/mod_sss.h"
+    #include "../amessage/amsg_powers.h"
     #include "../amessage/amsg_tracks.h"
     #include "../amessage/amsg_spectra.h"
     #include "../general/thread.h"
@@ -10,7 +11,8 @@
 
         mod_sss_obj * mod_sss;
         amsg_spectra_obj * in1;
-        amsg_tracks_obj * in2;
+        amsg_powers_obj * in2;
+        amsg_tracks_obj * in3;
         amsg_spectra_obj * out1;
         amsg_spectra_obj * out2;
         thread_obj * thread;    
@@ -21,7 +23,7 @@
 
     void amod_sss_destroy(amod_sss_obj * obj);
 
-    void amod_sss_connect(amod_sss_obj * obj, amsg_spectra_obj * in1, amsg_tracks_obj * in2, amsg_spectra_obj * out1, amsg_spectra_obj * out2);
+    void amod_sss_connect(amod_sss_obj * obj, amsg_spectra_obj * in1, amsg_powers_obj * in2, amsg_tracks_obj * in3, amsg_spectra_obj * out1, amsg_spectra_obj * out2);
 
     void amod_sss_disconnect(amod_sss_obj * obj);
 

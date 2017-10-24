@@ -115,7 +115,8 @@
 
 
         obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_tracks_obj *) NULL;
+        obj->in2 = (msg_powers_obj *) NULL;
+        obj->in3 = (msg_tracks_obj *) NULL;
         obj->out1 = (msg_spectra_obj *) NULL;
         obj->out2 = (msg_spectra_obj *) NULL;
 
@@ -220,7 +221,8 @@
 
         int rtnValue;
 
-        if (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) {
+        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -232,7 +234,7 @@
             track2gain_process(obj->track2gain, 
                                obj->beampatterns_mics, 
                                obj->beampatterns_spatialfilter, 
-                               obj->in2->tracks,
+                               obj->in3->tracks,
                                obj->gains);
 
             gain2mask_process(obj->gain2mask, 
@@ -240,7 +242,7 @@
                               obj->masks);
 
             track2steer_process(obj->track2steer, 
-                                obj->in2->tracks,
+                                obj->in3->tracks,
                                 obj->gains,
                                 obj->masks,
                                 obj->steers);
@@ -249,13 +251,13 @@
                            obj->demixingsNow);
 
             steer2demixing_ds_process(obj->steer2demixing_ds, 
-                                      obj->in2->tracks,
+                                      obj->in3->tracks,
                                       obj->steers, 
                                       obj->masks, 
                                       obj->demixingsNow);
 
             demixing2freq_process(obj->demixing2freq, 
-                                  obj->in2->tracks,
+                                  obj->in3->tracks,
                                   obj->demixingsNow, 
                                   obj->masks, 
                                   obj->in1->freqs, 
@@ -286,7 +288,8 @@
 
         int rtnValue;
 
-        if (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) {
+        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -298,7 +301,7 @@
             track2gain_process(obj->track2gain, 
                                obj->beampatterns_mics, 
                                obj->beampatterns_spatialfilter, 
-                               obj->in2->tracks,
+                               obj->in3->tracks,
                                obj->gains);
 
             gain2mask_process(obj->gain2mask, 
@@ -306,7 +309,7 @@
                               obj->masks);
 
             track2steer_process(obj->track2steer, 
-                                obj->in2->tracks,
+                                obj->in3->tracks,
                                 obj->gains,
                                 obj->masks,
                                 obj->steers);
@@ -315,7 +318,7 @@
                            obj->demixingsNow);
 
             demixing2freq_process(obj->demixing2freq, 
-                                  obj->in2->tracks,
+                                  obj->in3->tracks,
                                   obj->demixingsNow, 
                                   obj->masks, 
                                   obj->in1->freqs, 
@@ -339,7 +342,8 @@
 
         int rtnValue;
 
-        if (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) {
+        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -351,7 +355,7 @@
             track2gain_process(obj->track2gain, 
                                obj->beampatterns_mics, 
                                obj->beampatterns_spatialfilter, 
-                               obj->in2->tracks,
+                               obj->in3->tracks,
                                obj->gains);
 
             gain2mask_process(obj->gain2mask, 
@@ -359,7 +363,7 @@
                               obj->masks);
 
             track2steer_process(obj->track2steer, 
-                                obj->in2->tracks,
+                                obj->in3->tracks,
                                 obj->gains,
                                 obj->masks,
                                 obj->steers);
@@ -382,7 +386,8 @@
 
         int rtnValue;
 
-        if (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) {
+        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -404,10 +409,11 @@
 
     }
 
-    void mod_sss_connect(mod_sss_obj * obj, msg_spectra_obj * in1, msg_tracks_obj * in2, msg_spectra_obj * out1, msg_spectra_obj * out2) {
+    void mod_sss_connect(mod_sss_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_tracks_obj * in3, msg_spectra_obj * out1, msg_spectra_obj * out2) {
 
         obj->in1 = in1;
         obj->in2 = in2;
+        obj->in3 = in3;
         obj->out1 = out1;
         obj->out2 = out2;
 
@@ -416,7 +422,8 @@
     void mod_sss_disconnect(mod_sss_obj * obj) {
 
         obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_tracks_obj *) NULL;
+        obj->in2 = (msg_powers_obj *) NULL;
+        obj->in3 = (msg_tracks_obj *) NULL;
         obj->out1 = (msg_spectra_obj *) NULL;
         obj->out2 = (msg_spectra_obj *) NULL;
 
