@@ -80,7 +80,25 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->con_spectra_mics_object = con_spectra_construct(2, cfgs->msg_spectra_mics_config);
+                    objs->con_spectra_mics_object = con_spectra_construct(3, cfgs->msg_spectra_mics_config);
+
+            // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_noise_mics_object = mod_noise_construct(cfgs->mod_noise_mics_config, 
+                                                                      cfgs->msg_spectra_mics_config, 
+                                                                      cfgs->msg_powers_mics_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->con_powers_mics_object = con_powers_construct(1, cfgs->msg_powers_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -286,6 +304,18 @@
                                      objs->con_spectra_mics_object->in);
 
             // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_noise_connect(objs->mod_noise_mics_object,
+                                      objs->con_spectra_mics_object->outs[0],
+                                      objs->con_powers_mics_object->in);
+
+            // +------------------------------------------------------+
             // | SSL                                                  |
             // +------------------------------------------------------+  
 
@@ -294,7 +324,8 @@
                 // +--------------------------------------------------+  
 
                     mod_ssl_connect(objs->mod_ssl_object, 
-                                    objs->con_spectra_mics_object->outs[0], 
+                                    objs->con_spectra_mics_object->outs[1], 
+                                    objs->con_powers_mics_object->outs[0],
                                     objs->con_pots_ssl_object->in);
 
                 // +--------------------------------------------------+
@@ -332,7 +363,7 @@
                 // +--------------------------------------------------+  
 
                     mod_sss_connect(objs->mod_sss_object,
-                                    objs->con_spectra_mics_object->outs[1],
+                                    objs->con_spectra_mics_object->outs[2],
                                     objs->con_tracks_sst_object->outs[0],
                                     objs->con_spectra_seps_object->in,
                                     objs->con_spectra_pfs_object->in);
@@ -473,6 +504,22 @@
                 // +--------------------------------------------------+  
 
                     con_spectra_destroy(objs->con_spectra_mics_object);
+
+            // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_noise_destroy(objs->mod_noise_mics_object);
+                                        
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_powers_destroy(objs->con_powers_mics_object);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -685,7 +732,25 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+
                     
-                    objs->acon_spectra_mics_object = acon_spectra_construct(2, objs->nMessages, cfgs->msg_spectra_mics_config);
+                    objs->acon_spectra_mics_object = acon_spectra_construct(3, objs->nMessages, cfgs->msg_spectra_mics_config);
+
+            // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_noise_mics_object = amod_noise_construct(cfgs->mod_noise_mics_config, 
+                                                                        cfgs->msg_spectra_mics_config, 
+                                                                        cfgs->msg_powers_mics_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+
+                    
+                    objs->acon_powers_mics_object = acon_powers_construct(1, objs->nMessages, cfgs->msg_powers_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -891,6 +956,18 @@
                                       objs->acon_spectra_mics_object->in);
 
             // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_noise_connect(objs->amod_noise_mics_object,
+                                       objs->acon_spectra_mics_object->outs[0],
+                                       objs->acon_powers_mics_object->in);
+
+            // +------------------------------------------------------+
             // | SSL                                                  |
             // +------------------------------------------------------+  
 
@@ -899,7 +976,8 @@
                 // +--------------------------------------------------+  
 
                     amod_ssl_connect(objs->amod_ssl_object, 
-                                     objs->acon_spectra_mics_object->outs[0], 
+                                     objs->acon_spectra_mics_object->outs[1], 
+                                     objs->acon_powers_mics_object->outs[0],
                                      objs->acon_pots_ssl_object->in);
 
                 // +--------------------------------------------------+
@@ -937,7 +1015,7 @@
                 // +--------------------------------------------------+  
 
                     amod_sss_connect(objs->amod_sss_object,
-                                     objs->acon_spectra_mics_object->outs[1],
+                                     objs->acon_spectra_mics_object->outs[2],
                                      objs->acon_tracks_sst_object->outs[0],
                                      objs->acon_spectra_seps_object->in,
                                      objs->acon_spectra_pfs_object->in);
@@ -1078,6 +1156,22 @@
                 // +--------------------------------------------------+  
 
                     acon_spectra_destroy(objs->acon_spectra_mics_object);   
+
+            // +------------------------------------------------------+
+            // | Noise                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_noise_destroy(objs->amod_noise_mics_object);
+                    
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_powers_destroy(objs->acon_powers_mics_object);  
 
             // +------------------------------------------------------+
             // | SSL                                                  |

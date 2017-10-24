@@ -212,6 +212,9 @@
 
         obj->id = 0;
 
+        obj->in = (msg_pots_obj *) NULL;
+        obj->out = (msg_tracks_obj *) NULL;
+
         return obj;
 
     }

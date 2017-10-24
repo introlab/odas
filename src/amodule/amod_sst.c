@@ -8,6 +8,7 @@
         obj = (amod_sst_obj *) malloc(sizeof(amod_sst_obj));
 
         obj->mod_sst = mod_sst_construct(mod_sst_config, mod_ssl_config, msg_pots_config, msg_tracks_config);
+        
         obj->in = (amsg_pots_obj *) NULL;
         obj->out = (amsg_tracks_obj *) NULL;
 

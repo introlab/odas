@@ -41,6 +41,9 @@
                                                             mod_classify_config->phiMin, 
                                                             mod_classify_config->r0);
 
+        obj->in = (msg_hops_obj *) NULL;
+        obj->out = (msg_categories_obj *) NULL;
+
         return obj;
 
     }

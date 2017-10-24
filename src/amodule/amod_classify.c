@@ -8,6 +8,7 @@
         obj = (amod_classify_obj *) malloc(sizeof(amod_classify_obj));
 
         obj->mod_classify = mod_classify_construct(mod_classify_config, msg_hops_config, msg_categories_config);
+        
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_categories_obj *) NULL;        
 

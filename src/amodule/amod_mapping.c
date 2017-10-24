@@ -8,6 +8,7 @@
         obj = (amod_mapping_obj *) malloc(sizeof(amod_mapping_obj));
 
         obj->mod_mapping = mod_mapping_construct(mod_mapping_config, msg_hops_config);
+        
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
 

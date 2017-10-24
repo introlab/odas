@@ -82,6 +82,10 @@
 
         obj->pots = pots_construct_zero(msg_pots_config->nPots);
 
+        obj->in1 = (msg_spectra_obj *) NULL;
+        obj->in2 = (msg_powers_obj *) NULL;
+        obj->out = (msg_pots_obj *) NULL;
+
         return obj;
 
     }
@@ -131,10 +135,15 @@
         float maxValue;
         unsigned int maxIndex;
 
-        if (msg_spectra_isZero(obj->in) == 0) {
+        if (obj->in1->timeStamp != obj->in2->timeStamp) {
+            printf("Time stamp mismatch.\n");
+            exit(EXIT_FAILURE);
+        }
+
+        if (msg_spectra_isZero(obj->in1) == 0) {
 
             freq2freq_process_phasor(obj->freq2freq, 
-                                     obj->in->freqs, 
+                                     obj->in1->freqs, 
                                      obj->phasors);
 
             freq2freq_process_product(obj->freq2freq, 
@@ -208,7 +217,7 @@
             
             memcpy(obj->out->pots->array, obj->pots->array, sizeof(float) * obj->pots->nPots * 4);
 
-            obj->out->timeStamp = obj->in->timeStamp;
+            obj->out->timeStamp = obj->in1->timeStamp;
 
             rtnValue = 0;
 
@@ -225,16 +234,18 @@
 
     }
 
-    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in, msg_pots_obj * out) {
+    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_pots_obj * out) {
 
-        obj->in = in;
+        obj->in1 = in1;
+        obj->in2 = in2;
         obj->out = out;
 
     }
 
     void mod_ssl_disconnect(mod_ssl_obj * obj) {
 
-        obj->in = (msg_spectra_obj *) NULL;
+        obj->in1 = (msg_spectra_obj *) NULL;
+        obj->in2 = (msg_powers_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
 
     }

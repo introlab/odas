@@ -393,6 +393,78 @@
 
     }
 
+    mod_noise_cfg * parameters_mod_noise_mics_config(const char * fileConfig) {
+
+        mod_noise_cfg * cfg;
+
+        cfg = mod_noise_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Hanning window size                                      |
+        // +----------------------------------------------------------+
+
+            cfg->bSize = parameters_lookup_int(fileConfig, "sne.b");
+
+        // +----------------------------------------------------------+
+        // | alphaS                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->alphaS = parameters_lookup_float(fileConfig, "sne.alphaS");
+
+        // +----------------------------------------------------------+
+        // | Number of frames                                         |
+        // +----------------------------------------------------------+
+
+            cfg->L = parameters_lookup_int(fileConfig, "sne.L");
+
+        // +----------------------------------------------------------+
+        // | delta                                                    |
+        // +----------------------------------------------------------+
+
+            cfg->delta = parameters_lookup_float(fileConfig, "sne.delta");
+
+        // +----------------------------------------------------------+
+        // | alphaD                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->alphaD = parameters_lookup_float(fileConfig, "sne.alphaD");            
+
+        return cfg;
+
+    }
+
+    msg_powers_cfg * parameters_msg_powers_mics_config(const char * fileConfig) {
+
+        msg_powers_cfg * cfg;
+
+        unsigned int halfFrameSize;
+        unsigned int nChannels;
+        unsigned int fS;
+
+        cfg = msg_powers_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->halfFrameSize = parameters_lookup_int(fileConfig, "general.size.frameSize") / 2 + 1;
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "mapping.map");
+
+        return cfg;
+
+    }
+
     mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig) {
 
         mod_ssl_cfg * cfg;

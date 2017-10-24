@@ -21,6 +21,9 @@
         float mod_stft_mics_prf;
         float con_spectra_mics_prf;
 
+        float mod_noise_mics_prf;
+        float con_powers_mics_prf;
+
         float mod_ssl_prf;
         float con_pots_ssl_prf;
         float snk_pots_ssl_prf;

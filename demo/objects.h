@@ -10,20 +10,19 @@
     typedef struct objects {
 
         src_hops_obj * src_hops_mics_object;
-        snk_hops_obj * snk_hops_mics_raw_object;                
         con_hops_obj * con_hops_mics_raw_object; 
 
         mod_mapping_obj * mod_mapping_mics_object;
-        snk_hops_obj * snk_hops_mics_map_object;
         con_hops_obj * con_hops_mics_map_object;              
 
         mod_resample_obj * mod_resample_mics_object;
-        snk_hops_obj * snk_hops_mics_rs_object;
         con_hops_obj * con_hops_mics_rs_object;
 
         mod_stft_obj * mod_stft_mics_object;
-        snk_spectra_obj * snk_spectra_mics_object;
         con_spectra_obj * con_spectra_mics_object;
+
+        mod_noise_obj * mod_noise_mics_object;
+        con_powers_obj * con_powers_mics_object;
 
         mod_ssl_obj * mod_ssl_object;
         snk_pots_obj * snk_pots_ssl_object;
@@ -60,20 +59,19 @@
         unsigned int nMessages;
 
         asrc_hops_obj * asrc_hops_mics_object;
-        asnk_hops_obj * asnk_hops_mics_raw_object;
         acon_hops_obj * acon_hops_mics_raw_object; 
 
         amod_mapping_obj * amod_mapping_mics_object;
-        asnk_hops_obj * asnk_hops_mics_map_objects;
         acon_hops_obj * acon_hops_mics_map_object;              
 
         amod_resample_obj * amod_resample_mics_object;
-        asnk_hops_obj * asnk_hops_mics_rs_object;
         acon_hops_obj * acon_hops_mics_rs_object;
 
         amod_stft_obj * amod_stft_mics_object;
-        asnk_spectra_obj * asnk_spectra_mics_object;
         acon_spectra_obj * acon_spectra_mics_object;
+
+        amod_noise_obj * amod_noise_mics_object;
+        acon_powers_obj * acon_powers_mics_object;
 
         amod_ssl_obj * amod_ssl_object;
         asnk_pots_obj * asnk_pots_ssl_object;

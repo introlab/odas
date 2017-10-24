@@ -8,6 +8,7 @@
         obj = (amod_istft_obj *) malloc(sizeof(amod_istft_obj));
 
         obj->mod_istft = mod_istft_construct(mod_istft_config, msg_spectra_config, msg_hops_config);
+        
         obj->in = (amsg_spectra_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;        
 

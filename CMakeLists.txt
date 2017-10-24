@@ -111,16 +111,19 @@ set(SRC
     src/aconnector/acon_categories.c
     src/aconnector/acon_hops.c
     src/aconnector/acon_pots.c
+    src/aconnector/acon_powers.c
     src/aconnector/acon_spectra.c
     src/aconnector/acon_tracks.c
     src/amessage/amsg_categories.c
     src/amessage/amsg_hops.c
     src/amessage/amsg_pots.c
+    src/amessage/amsg_powers.c
     src/amessage/amsg_spectra.c
     src/amessage/amsg_tracks.c
     src/amodule/amod_classify.c
     src/amodule/amod_istft.c
     src/amodule/amod_mapping.c
+    src/amodule/amod_noise.c
     src/amodule/amod_resample.c
     src/amodule/amod_ssl.c
     src/amodule/amod_sss.c
@@ -129,6 +132,7 @@ set(SRC
     src/asink/asnk_categories.c
     src/asink/asnk_hops.c    
     src/asink/asnk_pots.c
+    src/asink/asnk_powers.c
     src/asink/asnk_spectra.c
     src/asink/asnk_tracks.c
     src/asource/asrc_hops.c  
@@ -148,6 +152,7 @@ set(SRC
     src/module/mod_classify.c
     src/module/mod_istft.c
     src/module/mod_mapping.c
+    src/module/mod_noise.c
     src/module/mod_resample.c
     src/module/mod_ssl.c
     src/module/mod_sss.c
@@ -156,6 +161,7 @@ set(SRC
     src/sink/snk_categories.c
     src/sink/snk_hops.c
     src/sink/snk_pots.c
+    src/sink/snk_powers.c
     src/sink/snk_spectra.c
     src/sink/snk_tracks.c
     src/source/src_hops.c

@@ -21,6 +21,7 @@
     #include "../init/scanning.h"
 
     #include "../message/msg_spectra.h"
+    #include "../message/msg_powers.h"
     #include "../message/msg_pots.h"
 
 
@@ -53,7 +54,8 @@
 
         pots_obj * pots;
 
-        msg_spectra_obj * in;
+        msg_spectra_obj * in1;
+        msg_powers_obj * in2;
         msg_pots_obj * out;
 
     } mod_ssl_obj;
@@ -84,7 +86,7 @@
 
     int mod_ssl_process(mod_ssl_obj * obj);
 
-    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in, msg_pots_obj * out);
+    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_pots_obj * out);
 
     void mod_ssl_disconnect(mod_ssl_obj * obj);
 

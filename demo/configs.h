@@ -20,6 +20,9 @@
         mod_stft_cfg * mod_stft_mics_config;
         msg_spectra_cfg * msg_spectra_mics_config;
 
+        mod_noise_cfg * mod_noise_mics_config;
+        msg_powers_cfg * msg_powers_mics_config;
+
         mod_ssl_cfg * mod_ssl_config;
         msg_pots_cfg * msg_pots_ssl_config;
         snk_pots_cfg * snk_pots_ssl_config;

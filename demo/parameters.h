@@ -33,6 +33,11 @@
     msg_spectra_cfg * parameters_msg_spectra_mics_config(const char * fileConfig);
 
 
+    mod_noise_cfg * parameters_mod_noise_mics_config(const char * fileConfig);
+
+    msg_powers_cfg * parameters_msg_powers_mics_config(const char * fileConfig);
+
+
     mod_ssl_cfg * parameters_mod_ssl_config(const char * fileConfig);
 
     msg_pots_cfg * parameters_msg_pots_ssl_config(const char * fileConfig);

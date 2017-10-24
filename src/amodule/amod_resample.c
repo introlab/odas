@@ -8,6 +8,7 @@
         obj = (amod_resample_obj *) malloc(sizeof(amod_resample_obj));
 
         obj->mod_resample = mod_resample_construct(mod_resample_config, msg_hops_in_config, msg_hops_out_config);
+        
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
 

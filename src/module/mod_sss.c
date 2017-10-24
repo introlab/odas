@@ -114,6 +114,11 @@
                                                           msg_spectra_config->halfFrameSize);
 
 
+        obj->in1 = (msg_spectra_obj *) NULL;
+        obj->in2 = (msg_tracks_obj *) NULL;
+        obj->out1 = (msg_spectra_obj *) NULL;
+        obj->out2 = (msg_spectra_obj *) NULL;
+
         return obj;
 
     }
