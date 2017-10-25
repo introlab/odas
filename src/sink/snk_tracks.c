@@ -15,22 +15,20 @@
         obj->format = format_clone(snk_tracks_config->format);
         obj->interface = interface_clone(snk_tracks_config->interface);
 
-        switch (obj->format->type) {
+        if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)))) {
             
-            case format_text_json: break;
-            case format_binary_float: break;
-            default:
-
-                printf("Invalid format.\n");
-                exit(EXIT_FAILURE);
-
-            break;
+            printf("Sink tracks: Invalid interface and/or format.\n");
+            exit(EXIT_FAILURE);
 
         }
 
         obj->fp = (FILE *) NULL;
 
-        obj->smessage = (char *) malloc(sizeof(char) * (1024 + 1024 * msg_tracks_config->nTracks));
+        obj->buffer = (char *) malloc(sizeof(char) * 1024);
+        memset(obj->buffer, 0x00, sizeof(char) * 1024);
+        obj->bufferSize = 0;
 
         obj->in = (msg_tracks_obj *) NULL;
 
@@ -40,7 +38,7 @@
 
     void snk_tracks_destroy(snk_tracks_obj * obj) {
 
-        free((void *) obj->smessage);
+        free((void *) obj->buffer);
 
         format_destroy(obj->format);
         interface_destroy(obj->interface);
@@ -61,49 +59,37 @@
 
     }
 
-    int snk_tracks_open(snk_tracks_obj * obj) {
+    void snk_tracks_open(snk_tracks_obj * obj) {
 
         switch(obj->interface->type) {
 
             case interface_blackhole:
 
-                // Empty
+                snk_tracks_open_interface_blackhole(obj);
 
             break;
 
             case interface_file:
 
-                obj->fp = fopen(obj->interface->fileName, "wb");
+                snk_tracks_open_interface_file(obj);
 
             break;
 
             case interface_socket:
 
-                memset(&(obj->sclient), 0x00, sizeof(struct sockaddr_in));
-
-                obj->sclient.sin_family = AF_INET;
-                obj->sclient.sin_addr.s_addr = inet_addr(obj->interface->ip);
-                obj->sclient.sin_port = htons(obj->interface->port);
-                obj->sid = socket(AF_INET, SOCK_STREAM, 0);
-
-                if ( (connect(obj->sid, (struct sockaddr *) &(obj->sclient), sizeof(obj->sclient))) < 0 ) {
-
-                    printf("Cannot connect to server\n");
-                    exit(EXIT_FAILURE);
-
-                }   
+                snk_tracks_open_interface_socket(obj);
 
             break;
 
             case interface_terminal:
 
-                // (Empty)
+                snk_tracks_open_interface_terminal(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink tracks: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;           
@@ -112,42 +98,102 @@
 
     }
 
-    int snk_tracks_close(snk_tracks_obj * obj) {
+    void snk_tracks_open_interface_blackhole(snk_tracks_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_tracks_open_interface_file(snk_tracks_obj * obj) {
+
+        obj->fp = fopen(obj->interface->fileName, "wb");
+
+    }
+
+    void snk_tracks_open_interface_socket(snk_tracks_obj * obj) {
+
+        memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
+
+        obj->sserver.sin_family = AF_INET;
+        obj->sserver.sin_addr.s_addr = inet_addr(obj->interface->ip);
+        obj->sserver.sin_port = htons(obj->interface->port);
+        obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+
+        if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
+
+            printf("Sink tracks: Cannot connect to server\n");
+            exit(EXIT_FAILURE);
+
+        }   
+
+    }
+
+    void snk_tracks_open_interface_terminal(snk_tracks_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_tracks_close(snk_tracks_obj * obj) {
 
         switch(obj->interface->type) {
 
             case interface_blackhole:
 
-                // Empty
+                snk_tracks_close_interface_blackhole(obj);
 
             break;
 
             case interface_file:
 
-                fclose(obj->fp);
+                snk_tracks_close_interface_file(obj);
 
             break;
 
             case interface_socket:
 
-                close(obj->sid);
+                snk_tracks_close_interface_socket(obj);
 
             break;
 
             case interface_terminal:
 
-                // Empty
+                snk_tracks_close_interface_terminal(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink tracks: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;
 
         }
+
+    }
+
+    void snk_tracks_close_interface_blackhole(snk_tracks_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_tracks_close_interface_file(snk_tracks_obj * obj) {
+
+        fclose(obj->fp);
+
+    }
+
+    void snk_tracks_close_interface_socket(snk_tracks_obj * obj) {
+
+        close(obj->sid);
+
+    }
+
+    void snk_tracks_close_interface_terminal(snk_tracks_obj * obj) {
+
+        // Empty
 
     }
 
@@ -155,110 +201,57 @@
 
         int rtnValue;
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                rtnValue = snk_tracks_process_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                rtnValue = snk_tracks_process_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                rtnValue = snk_tracks_process_socket(obj);
-
-            break;
-
-            case interface_terminal:
-
-                rtnValue = snk_tracks_process_terminal(obj);
-
-            break;
-
-            default:
-
-                printf("Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        return rtnValue;
-
-    }
-
-    int snk_tracks_process_blackhole(snk_tracks_obj * obj) {
-
-        int rtnValue;
-
-        if (obj->in->timeStamp != 0) {
-
-            rtnValue = 0;
-
-        }
-        else {
-
-            rtnValue = -1;
-
-        }
-
-        return rtnValue;          
-
-    }
-
-    int snk_tracks_process_file(snk_tracks_obj * obj) {
-
-        int rtnValue;
-        unsigned int iTrack;
-
         if (obj->in->timeStamp != 0) {
 
             switch(obj->format->type) {
 
-                case format_binary_float:
+                case format_text_json:
 
-                    fwrite(obj->in->tracks->ids, sizeof(unsigned long long), obj->in->tracks->nTracks, obj->fp);
-                    fwrite(obj->in->tracks->array, sizeof(float), 3 * obj->in->tracks->nTracks, obj->fp);
+                    snk_tracks_process_format_text_json(obj);
 
                 break;
 
-                case format_text_json:
+                default:
 
-                    fprintf(obj->fp,"{\n");
-                    fprintf(obj->fp,"    \"timeStamp\": %llu,\n",obj->in->timeStamp);
-                    fprintf(obj->fp,"    \"src\": [\n");
+                    printf("Sink tracks: Invalid format type.\n");
+                    exit(EXIT_FAILURE);
 
-                    for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
+                break;                
 
-                        fprintf(obj->fp,"        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }", 
-                                obj->in->tracks->ids[iTrack],
-                                obj->in->tracks->array[iTrack*3+0], 
-                                obj->in->tracks->array[iTrack*3+1], 
-                                obj->in->tracks->array[iTrack*3+2]);
+            }
 
-                        if (iTrack != (obj->nTracks - 1)) {
+            switch(obj->interface->type) {
 
-                            fprintf(obj->fp,",");
+                case interface_blackhole:
 
-                        }
+                    snk_tracks_process_interface_blackhole(obj);
 
-                        fprintf(obj->fp,"\n");
+                break;
 
-                    }
-                    
-                    fprintf(obj->fp,"    ]\n");
-                    fprintf(obj->fp,"}\n");
+                case interface_file:
 
-                    rtnValue = 0;
+                    snk_tracks_process_interface_file(obj);
 
-                break;     
+                break;
+
+                case interface_socket:
+
+                    snk_tracks_process_interface_socket(obj);
+
+                break;
+
+                case interface_terminal:
+
+                    snk_tracks_process_interface_terminal(obj);
+
+                break;
+
+                default:
+
+                    printf("Sink tracks: Invalid interface type.\n");
+                    exit(EXIT_FAILURE);
+
+                break;
 
             }
 
@@ -275,114 +268,66 @@
 
     }
 
-    int snk_tracks_process_socket(snk_tracks_obj * obj) {
+    void snk_tracks_process_interface_blackhole(snk_tracks_obj * obj) {
 
-        int rtnValue;
-        unsigned int iTrack;
-
-        if (obj->in->timeStamp != 0) {
-
-            switch(obj->format->type) {
-
-                case format_text_json:
-
-                    obj->smessage[0] = 0x00;
-
-                    sprintf(obj->smessage,"%s{\n",obj->smessage);
-                    sprintf(obj->smessage,"%s    \"timeStamp\": %llu,\n",obj->smessage,obj->in->timeStamp);
-                    sprintf(obj->smessage,"%s    \"src\": [\n",obj->smessage);
-
-                    for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
-
-                        sprintf(obj->smessage,"%s        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }", obj->smessage, 
-                                obj->in->tracks->ids[iTrack],
-                                obj->in->tracks->array[iTrack*3+0], 
-                                obj->in->tracks->array[iTrack*3+1], 
-                                obj->in->tracks->array[iTrack*3+2]);
-
-                        if (iTrack != (obj->nTracks - 1)) {
-
-                            sprintf(obj->smessage,"%s,",obj->smessage);
-
-                        }
-
-                        sprintf(obj->smessage,"%s\n",obj->smessage);
-
-                    }
-                    
-                    sprintf(obj->smessage,"%s    ]\n",obj->smessage);
-                    sprintf(obj->smessage,"%s}\n",obj->smessage);
-
-                    if (send(obj->sid, obj->smessage, strlen(obj->smessage), 0) < 0) {
-                        printf("Could not send message.\n");
-                        exit(EXIT_FAILURE);
-                    }
-
-                    rtnValue = 0;
-
-                break;               
-
-            }
-
-        }
-        else {
-
-            rtnValue = -1;
-
-        }
-
-        return rtnValue;
+        // Empty
 
     }
 
-    int snk_tracks_process_terminal(snk_tracks_obj * obj) {
+    void snk_tracks_process_interface_file(snk_tracks_obj * obj) {
 
-        int rtnValue;
+        fwrite(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
+
+    }
+
+    void snk_tracks_process_interface_socket(snk_tracks_obj * obj) {
+
+        if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
+            printf("Sink tracks: Could not send message.\n");
+            exit(EXIT_FAILURE);
+        }  
+
+    }
+
+    void snk_tracks_process_interface_terminal(snk_tracks_obj * obj) {
+
+        printf("%s",obj->buffer);
+
+    }
+
+    void snk_tracks_process_format_text_json(snk_tracks_obj * obj) {
+
         unsigned int iTrack;
 
-        if (obj->in->timeStamp != 0) {
+        obj->buffer[0] = 0x00;
 
-            switch(obj->format->type) {
+        sprintf(obj->buffer,"%s{\n",obj->buffer);
+        sprintf(obj->buffer,"%s    \"timeStamp\": %llu,\n",obj->buffer,obj->in->timeStamp);
+        sprintf(obj->buffer,"%s    \"src\": [\n",obj->buffer);
 
-                case format_text_json:
+        for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
-                    printf("{\n");
-                    printf("    \"timeStamp\": %llu,\n",obj->in->timeStamp);
-                    printf("    \"src\": [\n");
+            sprintf(obj->buffer,"%s        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }", 
+                    obj->buffer,
+                    obj->in->tracks->ids[iTrack],
+                    obj->in->tracks->array[iTrack*3+0], 
+                    obj->in->tracks->array[iTrack*3+1], 
+                    obj->in->tracks->array[iTrack*3+2]);
 
-                    for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
+            if (iTrack != (obj->nTracks - 1)) {
 
-                        printf("        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f }",
-                                obj->in->tracks->ids[iTrack],
-                                obj->in->tracks->array[iTrack*3+0], obj->in->tracks->array[iTrack*3+1], obj->in->tracks->array[iTrack*3+2]);
-
-                        if (iTrack != (obj->nTracks - 1)) {
-
-                            printf(",");
-
-                        }
-
-                        printf("\n");
-
-                    }
-                    
-                    printf("    ]\n");
-                    printf("}\n");
-
-                    rtnValue = 0;
-
-                break;               
+                sprintf(obj->buffer,"%s,",obj->buffer);
 
             }
 
-        }
-        else {
-
-            rtnValue = -1;
+            sprintf(obj->buffer,"%s\n",obj->buffer);
 
         }
+        
+        sprintf(obj->buffer,"%s    ]\n",obj->buffer);
+        sprintf(obj->buffer,"%s}\n",obj->buffer);
 
-        return rtnValue;        
+        obj->bufferSize = strlen(obj->buffer);
 
     }
 

@@ -10,6 +10,8 @@
     int main(int argc, char* argv[])
     {
 
+        char verbose = 0x00;
+
         int server_id;
         struct sockaddr_in server_address;
         int connection_id;
@@ -23,15 +25,28 @@
 
         const unsigned int nBytes = 10240;
 
-        while ((c = getopt(argc,argv, "p:o:")) != -1) {
+        while ((c = getopt(argc,argv, "p:o:hv")) != -1) {
 
             switch(c) {
 
-                case 'p':
+                case 'h':
 
-                    portNumber = atoi(optarg);
+                    printf("+----------------------------------------------------+\n");
+                    printf("|        ODAS (Open embeddeD Audition System)        |\n");
+                    printf("+----------------------------------------------------+\n");
+                    printf("| Author:      Francois Grondin                      |\n");
+                    printf("| Email:       francois.grondin2@usherbrooke.ca      |\n");
+                    printf("| Website:     introlab.3it.usherbrooke.ca           |\n");
+                    printf("| Repository:  github.com/introlab/odas              |\n");
+                    printf("| Version:     1.0                                   |\n");
+                    printf("+----------------------------------------------------+\n");        
+                    printf("| -h       Help                                      |\n");
+                    printf("| -o       Output file                               |\n");
+                    printf("| -p       Port number                               |\n");
+                    printf("| -v       Verbose                                   |\n");
+                    printf("+----------------------------------------------------+\n");
 
-                break;
+                    exit(EXIT_SUCCESS);                     
 
                 case 'o':
 
@@ -39,6 +54,13 @@
                     strcpy(fileName, optarg);   
 
                 break;
+
+                case 'p':
+
+                    portNumber = atoi(optarg);
+
+                break;
+
 
             }
 

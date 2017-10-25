@@ -105,6 +105,7 @@
                         printf("| Author:      Francois Grondin                      |\n");
                         printf("| Email:       francois.grondin2@usherbrooke.ca      |\n");
                         printf("| Website:     introlab.3it.usherbrooke.ca           |\n");
+                        printf("| Repository:  github.com/introlab/odas              |\n");
                         printf("| Version:     1.0                                   |\n");
                         printf("+----------------------------------------------------+\n");        
                         printf("| -c       Configuration file (.cfg)                 |\n");

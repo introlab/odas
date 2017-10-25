@@ -4,6 +4,10 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include <unistd.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -20,11 +24,13 @@
         format_obj * format;
         interface_obj * interface;
 
+        char * buffer;
+        unsigned int bufferSize;
+
         FILE * fp;
 
-        //struct sockaddr_in sserver;
-        //char * smessage;
-        //int sid;
+        struct sockaddr_in sserver;
+        int sid;
 
         msg_categories_obj * in;
 
@@ -46,19 +52,39 @@
 
     void snk_categories_disconnect(snk_categories_obj * obj);
 
-    int snk_categories_open(snk_categories_obj * obj);
+    void snk_categories_open(snk_categories_obj * obj);
 
-    int snk_categories_close(snk_categories_obj * obj);
+    void snk_categories_open_interface_blackhole(snk_categories_obj * obj);
+
+    void snk_categories_open_interface_file(snk_categories_obj * obj);
+
+    void snk_categories_open_interface_socket(snk_categories_obj * obj);
+
+    void snk_categories_open_interface_terminal(snk_categories_obj * obj);
+
+    void snk_categories_close(snk_categories_obj * obj);
+
+    void snk_categories_close_interface_blackhole(snk_categories_obj * obj);
+
+    void snk_categories_close_interface_file(snk_categories_obj * obj);
+
+    void snk_categories_close_interface_socket(snk_categories_obj * obj);
+
+    void snk_categories_close_interface_terminal(snk_categories_obj * obj);
 
     int snk_categories_process(snk_categories_obj * obj);
 
-    int snk_categories_process_blackhole(snk_categories_obj * obj);
+    void snk_categories_process_interface_blackhole(snk_categories_obj * obj);
 
-    int snk_categories_process_file(snk_categories_obj * obj);
+    void snk_categories_process_interface_file(snk_categories_obj * obj);
 
-    int snk_categories_process_socket(snk_categories_obj * obj);
+    void snk_categories_process_interface_socket(snk_categories_obj * obj);
 
-    int snk_categories_process_terminal(snk_categories_obj * obj);
+    void snk_categories_process_interface_terminal(snk_categories_obj * obj);
+
+    void snk_categories_process_format_text_json(snk_categories_obj * obj);
+
+    void snk_categories_process_format_undefined(snk_categories_obj * obj);
 
     snk_categories_cfg * snk_categories_cfg_construct(void);
 

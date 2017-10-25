@@ -42,15 +42,19 @@
 
     void snk_spectra_disconnect(snk_spectra_obj * obj);
 
-    int snk_spectra_open(snk_spectra_obj * obj);
+    void snk_spectra_open(snk_spectra_obj * obj);
 
-    int snk_spectra_close(snk_spectra_obj * obj);
+    void snk_spectra_open_interface_blackhole(snk_spectra_obj * obj);
+
+    void snk_spectra_close(snk_spectra_obj * obj);
+
+    void snk_spectra_close_interface_blackhole(snk_spectra_obj * obj);
 
     int snk_spectra_process(snk_spectra_obj * obj);
 
-    int snk_spectra_process_file(snk_spectra_obj * obj);
+    void snk_spectra_process_interface_blackhole(snk_spectra_obj * obj);
 
-    int snk_spectra_process_socket(snk_spectra_obj * obj);
+    void snk_spectra_process_format_undefined(snk_spectra_obj * obj);
 
     snk_spectra_cfg * snk_spectra_cfg_construct(void);
 

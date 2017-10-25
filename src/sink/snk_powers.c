@@ -14,15 +14,10 @@
         obj->format = format_clone(snk_powers_config->format);
         obj->interface = interface_clone(snk_powers_config->interface);
 
-        switch (obj->format->type) {
+        if (!((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined))) {
             
-            case format_binary_float: break;
-            default:
-
-                printf("Invalid format.\n");
-                exit(EXIT_FAILURE);
-
-            break;
+            printf("Sink powers: Invalid interface and/or format.\n");
+            exit(EXIT_FAILURE);
 
         }
 
@@ -53,59 +48,57 @@
 
     }
 
-    int snk_powers_open(snk_powers_obj * obj) {
+    void snk_powers_open(snk_powers_obj * obj) {
 
         switch(obj->interface->type) {
 
-            case interface_file:
+            case interface_blackhole:
 
-                obj->fp = fopen(obj->interface->fileName, "wb");
-
-            break;
-
-            case interface_socket:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_powers_open_interface_blackhole(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink powers: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
-            break;           
+            break;
 
         }
 
     }
 
-    int snk_powers_close(snk_powers_obj * obj) {
+    void snk_powers_open_interface_blackhole(snk_powers_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_powers_close(snk_powers_obj * obj) {
 
         switch(obj->interface->type) {
 
-            case interface_file:
+            case interface_blackhole:
 
-                fclose(obj->fp);
-
-            break;
-
-            case interface_socket:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_powers_close_interface_blackhole(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink powers: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;
 
         }
+
+    }
+
+    void snk_powers_close_interface_blackhole(snk_powers_obj * obj) {
+
+        // Empty
 
     }
 
@@ -113,59 +106,39 @@
 
         int rtnValue;
 
-        switch(obj->interface->type) {
-
-            case interface_file:
-
-                rtnValue = snk_powers_process_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                rtnValue = snk_powers_process_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        return rtnValue;
-
-    }
-
-    int snk_powers_process_file(snk_powers_obj * obj) {
-
-        unsigned int iSample;
-        unsigned int iChannel;
-        float samplePower;
-        int rtnValue;
-
         if (obj->in->timeStamp != 0) {
 
-            for (iSample = 0; iSample < obj->halfFrameSize; iSample++) {
-                
-                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            switch(obj->format->type) {
 
-                    samplePower = obj->in->envs->array[iChannel][iSample];
+                case format_undefined:
 
-                    switch (obj->format->type) {
-                        
-                        case format_binary_float:
+                    snk_powers_process_format_undefined(obj);
 
-                            fwrite(&samplePower, sizeof(float), 1, obj->fp);
+                break;
 
-                        break;
+                default:
 
-                    }
+                    printf("Sink powers: Invalid format type.\n");
+                    exit(EXIT_FAILURE);
 
-                }
+                break;                
+
+            }
+
+            switch(obj->interface->type) {
+
+                case interface_blackhole:
+
+                    snk_powers_process_interface_blackhole(obj);
+
+                break;
+
+                default:
+
+                    printf("Sink powers: Invalid interface type.\n");
+                    exit(EXIT_FAILURE);
+
+                break;
 
             }
 
@@ -182,10 +155,15 @@
 
     }
 
-    int snk_powers_process_socket(snk_powers_obj * obj) {
+    void snk_powers_process_interface_blackhole(snk_powers_obj * obj) {
 
-        printf("Not implemented\n");
-        exit(EXIT_FAILURE);
+        // Empty
+
+    }
+
+    void snk_powers_process_format_undefined(snk_powers_obj * obj) {
+
+        // Empty
 
     }
 

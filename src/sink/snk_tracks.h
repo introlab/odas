@@ -23,10 +23,12 @@
         format_obj * format;
         interface_obj * interface;
 
+        char * buffer;
+        unsigned int bufferSize;
+
         FILE * fp;
 
-        char * smessage;
-        struct sockaddr_in sclient;
+        struct sockaddr_in sserver;
         int sid;
 
         msg_tracks_obj * in;
@@ -49,19 +51,37 @@
 
     void snk_tracks_disconnect(snk_tracks_obj * obj);
 
-    int snk_tracks_open(snk_tracks_obj * obj);
+    void snk_tracks_open(snk_tracks_obj * obj);
 
-    int snk_tracks_close(snk_tracks_obj * obj);
+    void snk_tracks_open_interface_blackhole(snk_tracks_obj * obj);
+
+    void snk_tracks_open_interface_file(snk_tracks_obj * obj);
+
+    void snk_tracks_open_interface_socket(snk_tracks_obj * obj);
+
+    void snk_tracks_open_interface_terminal(snk_tracks_obj * obj);
+
+    void snk_tracks_close(snk_tracks_obj * obj);
+
+    void snk_tracks_close_interface_blackhole(snk_tracks_obj * obj);
+
+    void snk_tracks_close_interface_file(snk_tracks_obj * obj);
+
+    void snk_tracks_close_interface_socket(snk_tracks_obj * obj);
+
+    void snk_tracks_close_interface_terminal(snk_tracks_obj * obj);
 
     int snk_tracks_process(snk_tracks_obj * obj);
 
-    int snk_tracks_process_blackhole(snk_tracks_obj * obj);
+    void snk_tracks_process_interface_blackhole(snk_tracks_obj * obj);
 
-    int snk_tracks_process_file(snk_tracks_obj * obj);
+    void snk_tracks_process_interface_file(snk_tracks_obj * obj);
 
-    int snk_tracks_process_socket(snk_tracks_obj * obj);
+    void snk_tracks_process_interface_socket(snk_tracks_obj * obj);
 
-    int snk_tracks_process_terminal(snk_tracks_obj * obj);
+    void snk_tracks_process_interface_terminal(snk_tracks_obj * obj);
+
+    void snk_tracks_process_format_text_json(snk_tracks_obj * obj);
 
     snk_tracks_cfg * snk_tracks_cfg_construct(void);
 

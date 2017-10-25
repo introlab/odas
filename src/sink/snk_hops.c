@@ -18,23 +18,24 @@
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
-        switch (obj->format->type) {
+        if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int16)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int24)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int32)) ||
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int08)) ||
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int16)) ||
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int24)) ||
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int32)))) {
             
-            case format_binary_int08: break;
-            case format_binary_int16: break;
-            case format_binary_int24: break;
-            case format_binary_int32: break;
-            default:
-
-                printf("Invalid format.\n");
-                exit(EXIT_FAILURE);
-
-            break;
+            printf("Sink hops: Invalid interface and/or format.\n");
+            exit(EXIT_FAILURE);
 
         }
 
-        obj->smessage = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
-        memset(obj->smessage, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
+        obj->buffer = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
+        memset(obj->buffer, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
+        obj->bufferSize = 0;
 
         obj->in = (msg_hops_obj *) NULL;
 
@@ -46,7 +47,7 @@
 
         format_destroy(obj->format);
         interface_destroy(obj->interface);
-        free((void *) obj->smessage);
+        free((void *) obj->buffer);
 
         free((void *) obj);
 
@@ -64,49 +65,31 @@
 
     }
 
-    int snk_hops_open(snk_hops_obj * obj) {
+    void snk_hops_open(snk_hops_obj * obj) {
 
         switch(obj->interface->type) {
 
             case interface_blackhole:
 
-                // Empty
+                snk_hops_open_interface_blackhole(obj);
 
             break;
 
             case interface_file:
 
-                obj->fp = fopen(obj->interface->fileName, "wb");
+                snk_hops_open_interface_file(obj);
 
             break;
 
             case interface_socket:
 
-                obj->sserver.sin_family = AF_INET;
-                obj->sserver.sin_port = htons(obj->interface->port);
-                inet_aton(obj->interface->ip, &(obj->sserver.sin_addr));
-
-                obj->sid = socket(AF_INET, SOCK_STREAM, 0);
-
-                if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
-
-                    printf("Cannot connect to server\n");
-                    exit(EXIT_FAILURE);
-
-                }
-
-            break;
-
-            case interface_soundcard:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_hops_open_interface_socket(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink hops: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;           
@@ -115,43 +98,84 @@
 
     }
 
-    int snk_hops_close(snk_hops_obj * obj) {
+    void snk_hops_open_interface_blackhole(snk_hops_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_hops_open_interface_file(snk_hops_obj * obj) {
+
+        obj->fp = fopen(obj->interface->fileName, "wb");
+
+    }
+
+    void snk_hops_open_interface_socket(snk_hops_obj * obj) {
+
+        memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
+
+        obj->sserver.sin_family = AF_INET;
+        obj->sserver.sin_addr.s_addr = inet_addr(obj->interface->ip);
+        obj->sserver.sin_port = htons(obj->interface->port);
+        obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+
+        if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
+
+            printf("Sink hops: Cannot connect to server\n");
+            exit(EXIT_FAILURE);
+
+        }          
+
+    }
+
+    void snk_hops_close(snk_hops_obj * obj) {
 
         switch(obj->interface->type) {
 
             case interface_blackhole:
 
-                // Empty
+                snk_hops_close_interface_blackhole(obj);
 
             break;
 
             case interface_file:
 
-                fclose(obj->fp);
+                snk_hops_close_interface_file(obj);
 
             break;
 
             case interface_socket:
 
-                close(obj->sid);
-
-            break;
-
-            case interface_soundcard:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_hops_close_interface_socket(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink hops: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;
 
         }
+
+    }
+
+    void snk_hops_close_interface_blackhole(snk_hops_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_hops_close_interface_file(snk_hops_obj * obj) {
+
+        fclose(obj->fp);
+
+    }
+
+    void snk_hops_close_interface_socket(snk_hops_obj * obj) {
+
+        close(obj->sid);
 
     }
 
@@ -159,92 +183,69 @@
 
         int rtnValue;
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                rtnValue = snk_hops_process_blackhole(obj);
-
-            break;  
-
-            case interface_file:
-
-                rtnValue = snk_hops_process_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                rtnValue = snk_hops_process_socket(obj);
-
-            break;
-
-            case interface_soundcard:
-
-                rtnValue = snk_hops_process_soundcard(obj);
-
-            break;
-
-            default:
-
-                printf("Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        return rtnValue;
-
-    }
-
-    int snk_hops_process_blackhole(snk_hops_obj * obj) {
-
-        int rtnValue;
-
         if (obj->in->timeStamp != 0) {
 
-            rtnValue = 0;
+            switch(obj->format->type) {
 
-        }
-        else {
+                case format_binary_int08:
 
-            rtnValue = -1;
+                    snk_hops_process_format_binary_int08(obj);
 
-        }
+                break;
 
-        return rtnValue;
+                case format_binary_int16:
 
-    }
+                    snk_hops_process_format_binary_int16(obj);                
 
-    int snk_hops_process_file(snk_hops_obj * obj) {
+                break;
 
-        unsigned int iSample;
-        unsigned int iChannel;
-        float sample;
-        unsigned int nBytes;
-        int rtnValue;
+                case format_binary_int24:
 
-        if (obj->in->timeStamp != 0) {
+                    snk_hops_process_format_binary_int24(obj);
 
-            switch (obj->format->type) {
+                break;
 
-                case format_binary_int08: nBytes = 1; break;
-                case format_binary_int16: nBytes = 2; break;
-                case format_binary_int24: nBytes = 3; break;
-                case format_binary_int32: nBytes = 4; break;
+                case format_binary_int32:
+
+                    snk_hops_process_format_binary_int32(obj);
+
+                break;
+
+                default:
+
+                    printf("Sink hops: Invalid format type.\n");
+                    exit(EXIT_FAILURE);
+
+                break;
 
             }
 
-            for (iSample = 0; iSample < obj->hopSize; iSample++) {
-                
-                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            switch(obj->interface->type) {
 
-                    sample = obj->in->hops->array[iChannel][iSample];
-                    pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                    fwrite(&(obj->bytes[4-nBytes]), sizeof(char), nBytes, obj->fp);
+                case interface_blackhole:
 
-                }
+                    snk_hops_process_interface_blackhole(obj);
+
+                break;  
+
+                case interface_file:
+
+                    snk_hops_process_interface_file(obj);
+
+                break;
+
+                case interface_socket:
+
+                    snk_hops_process_interface_socket(obj);
+
+                break;
+
+                default:
+
+                    printf("Sink hops: Invalid interface type.\n");
+                    exit(EXIT_FAILURE);
+
+                break;
 
             }
 
@@ -261,64 +262,147 @@
 
     }
 
-    int snk_hops_process_socket(snk_hops_obj * obj) {
+    void snk_hops_process_interface_blackhole(snk_hops_obj * obj) {
+
+        // Emtpy
+
+    }
+
+    void snk_hops_process_interface_file(snk_hops_obj * obj) {
+
+        fwrite(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
+
+    }
+
+    void snk_hops_process_interface_socket(snk_hops_obj * obj) {
+
+        if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
+            printf("Sink hops: Could not send message.\n");
+            exit(EXIT_FAILURE);
+        }
+
+    }
+
+    void snk_hops_process_format_binary_int08(snk_hops_obj * obj) {
 
         unsigned int iChannel;
         unsigned int iSample;
         float sample;
         unsigned int nBytes;
         unsigned int nBytesTotal;
-        int rtnValue;
 
-        if (obj->in->timeStamp != 0) {
+        nBytes = 1;
+        nBytesTotal = 0;
 
-            switch (obj->format->type) {
+        for (iSample = 0; iSample < obj->hopSize; iSample++) {
 
-                case format_binary_int08: nBytes = 1; break;
-                case format_binary_int16: nBytes = 2; break;
-                case format_binary_int24: nBytes = 3; break;
-                case format_binary_int32: nBytes = 4; break;
+            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-            }
+                nBytesTotal += nBytes;
 
-            nBytesTotal = 0;
-
-            for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                    nBytesTotal += nBytes;
-
-                    sample = obj->in->hops->array[iChannel][iSample];
-                    pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                    memcpy(&(obj->smessage[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                }
+                sample = obj->in->hops->array[iChannel][iSample];
+                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
 
             }
-
-            if (send(obj->sid, obj->smessage, nBytesTotal, 0) < 0) {
-                printf("Could not send message.\n");
-                exit(EXIT_FAILURE);
-            }
-
-            rtnValue = 0;
-
-        }
-        else {
-
-            rtnValue = -1;
 
         }
 
-        return rtnValue;
+        obj->bufferSize = nBytesTotal;
 
     }
 
-    int snk_hops_process_soundcard(snk_hops_obj * obj) {
+    void snk_hops_process_format_binary_int16(snk_hops_obj * obj) {
 
-        printf("Not implemented\n");
-        exit(EXIT_FAILURE);
+        unsigned int iChannel;
+        unsigned int iSample;
+        float sample;
+        unsigned int nBytes;
+        unsigned int nBytesTotal;
+
+        nBytes = 2;
+        nBytesTotal = 0;
+
+        for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+                nBytesTotal += nBytes;
+
+                sample = obj->in->hops->array[iChannel][iSample];
+                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+            }
+
+        }
+
+        obj->bufferSize = nBytesTotal;
+
+    }
+
+    void snk_hops_process_format_binary_int24(snk_hops_obj * obj) {
+
+        unsigned int iChannel;
+        unsigned int iSample;
+        float sample;
+        unsigned int nBytes;
+        unsigned int nBytesTotal;
+
+        nBytes = 3;
+        nBytesTotal = 0;
+
+        for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+                nBytesTotal += nBytes;
+
+                sample = obj->in->hops->array[iChannel][iSample];
+                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+            }
+
+        }
+
+        obj->bufferSize = nBytesTotal;
+
+    }    
+
+    void snk_hops_process_format_binary_int32(snk_hops_obj * obj) {
+
+        unsigned int iChannel;
+        unsigned int iSample;
+        float sample;
+        unsigned int nBytes;
+        unsigned int nBytesTotal;
+
+        nBytes = 4;
+        nBytesTotal = 0;
+
+        for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+                nBytesTotal += nBytes;
+
+                sample = obj->in->hops->array[iChannel][iSample];
+                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
+                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+            }
+
+        }
+
+        obj->bufferSize = nBytesTotal;
+
+    }
+
+    void snk_hops_process_format_undefined(snk_hops_obj * obj) {
+
+        obj->buffer[0] = 0x00;
+        obj->bufferSize = 0;
 
     }
 

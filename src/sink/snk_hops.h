@@ -25,10 +25,12 @@
         format_obj * format;
         interface_obj * interface;
 
+        char * buffer;
+        unsigned int bufferSize;
+
         FILE * fp;
 
         struct sockaddr_in sserver;
-        char * smessage;
         int sid;
 
         char bytes[4];
@@ -53,19 +55,39 @@
 
     void snk_hops_disconnect(snk_hops_obj * obj);
 
-    int snk_hops_open(snk_hops_obj * obj);
+    void snk_hops_open(snk_hops_obj * obj);
 
-    int snk_hops_close(snk_hops_obj * obj);
+    void snk_hops_open_interface_blackhole(snk_hops_obj * obj);
+
+    void snk_hops_open_interface_file(snk_hops_obj * obj);
+
+    void snk_hops_open_interface_socket(snk_hops_obj * obj);
+
+    void snk_hops_close(snk_hops_obj * obj);
+
+    void snk_hops_close_interface_blackhole(snk_hops_obj * obj);
+
+    void snk_hops_close_interface_file(snk_hops_obj * obj);
+
+    void snk_hops_close_interface_socket(snk_hops_obj * obj);
 
     int snk_hops_process(snk_hops_obj * obj);
 
-    int snk_hops_process_blackhole(snk_hops_obj * obj);
+    void snk_hops_process_interface_blackhole(snk_hops_obj * obj);
 
-    int snk_hops_process_file(snk_hops_obj * obj);
+    void snk_hops_process_interface_file(snk_hops_obj * obj);
 
-    int snk_hops_process_socket(snk_hops_obj * obj);
+    void snk_hops_process_interface_socket(snk_hops_obj * obj);
 
-    int snk_hops_process_soundcard(snk_hops_obj * obj);
+    void snk_hops_process_format_binary_int08(snk_hops_obj * obj);
+
+    void snk_hops_process_format_binary_int16(snk_hops_obj * obj);
+
+    void snk_hops_process_format_binary_int24(snk_hops_obj * obj);
+
+    void snk_hops_process_format_binary_int32(snk_hops_obj * obj);
+
+    void snk_hops_process_format_undefined(snk_hops_obj * obj);
 
     snk_hops_cfg * snk_hops_cfg_construct(void);
 

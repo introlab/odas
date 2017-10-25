@@ -53,59 +53,57 @@
 
     }
 
-    int snk_spectra_open(snk_spectra_obj * obj) {
+    void snk_spectra_open(snk_spectra_obj * obj) {
 
         switch(obj->interface->type) {
 
-            case interface_file:
+            case interface_blackhole:
 
-                obj->fp = fopen(obj->interface->fileName, "wb");
-
-            break;
-
-            case interface_socket:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_spectra_open_interface_blackhole(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink spectra: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
-            break;           
+            break;
 
         }
 
     }
 
-    int snk_spectra_close(snk_spectra_obj * obj) {
+    void snk_spectra_open_interface_blackhole(snk_spectra_obj * obj) {
+
+        // Empty
+
+    }
+
+    void snk_spectra_close(snk_spectra_obj * obj) {
 
         switch(obj->interface->type) {
 
-            case interface_file:
+            case interface_blackhole:
 
-                fclose(obj->fp);
-
-            break;
-
-            case interface_socket:
-
-                printf("Not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                snk_spectra_close_interface_blackhole(obj);
 
             break;
 
             default:
 
-                printf("Invalid interface type.\n");
+                printf("Sink spectra: Invalid interface type.\n");
                 exit(EXIT_FAILURE);
 
             break;
 
         }
+
+    }
+
+    void snk_spectra_close_interface_blackhole(snk_spectra_obj * obj) {
+
+        // Empty
 
     }
 
@@ -113,62 +111,39 @@
 
         int rtnValue;
 
-        switch(obj->interface->type) {
-
-            case interface_file:
-
-                rtnValue = snk_spectra_process_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                rtnValue = snk_spectra_process_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        return rtnValue;
-
-    }
-
-    int snk_spectra_process_file(snk_spectra_obj * obj) {
-
-        unsigned int iSample;
-        unsigned int iChannel;
-        float sampleReal;
-        float sampleImag;
-        int rtnValue;
-
         if (obj->in->timeStamp != 0) {
 
-            for (iSample = 0; iSample < obj->halfFrameSize; iSample++) {
-                
-                for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            switch(obj->format->type) {
 
-                    sampleReal = obj->in->freqs->array[iChannel][iSample*2+0];
-                    sampleImag = obj->in->freqs->array[iChannel][iSample*2+1];
+                case format_undefined:
 
-                    switch (obj->format->type) {
-                        
-                        case format_binary_float:
+                    snk_spectra_process_format_undefined(obj);
 
-                            fwrite(&sampleReal, sizeof(float), 1, obj->fp);
-                            fwrite(&sampleImag, sizeof(float), 1, obj->fp);
+                break;
 
-                        break;
+                default:
 
-                    }
+                    printf("Sink spectra: Invalid format type.\n");
+                    exit(EXIT_FAILURE);
 
-                }
+                break;                
+
+            }
+
+            switch(obj->interface->type) {
+
+                case interface_blackhole:
+
+                    snk_spectra_process_interface_blackhole(obj);
+
+                break;
+
+                default:
+
+                    printf("Sink spectra: Invalid interface type.\n");
+                    exit(EXIT_FAILURE);
+
+                break;
 
             }
 
@@ -185,10 +160,15 @@
 
     }
 
-    int snk_spectra_process_socket(snk_spectra_obj * obj) {
+    void snk_spectra_process_interface_blackhole(snk_spectra_obj * obj) {
 
-        printf("Not implemented\n");
-        exit(EXIT_FAILURE);
+        // Empty
+
+    }
+
+    void snk_spectra_process_format_undefined(snk_spectra_obj * obj) {
+
+        // Empty
 
     }
 

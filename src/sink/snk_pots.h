@@ -23,10 +23,12 @@
         format_obj * format;
         interface_obj * interface;
 
+        char * buffer;
+        unsigned int bufferSize;
+
         FILE * fp;
 
-        char * smessage;
-        struct sockaddr_in sclient;
+        struct sockaddr_in sserver;
         int sid;
 
         msg_pots_obj * in;
@@ -49,19 +51,39 @@
 
     void snk_pots_disconnect(snk_pots_obj * obj);
 
-    int snk_pots_open(snk_pots_obj * obj);
+    void snk_pots_open(snk_pots_obj * obj);
 
-    int snk_pots_close(snk_pots_obj * obj);
+    void snk_pots_open_interface_blackhole(snk_pots_obj * obj);
+
+    void snk_pots_open_interface_file(snk_pots_obj * obj);
+
+    void snk_pots_open_interface_socket(snk_pots_obj * obj);
+
+    void snk_pots_open_interface_terminal(snk_pots_obj * obj);
+
+    void snk_pots_close(snk_pots_obj * obj);
+
+    void snk_pots_close_interface_blackhole(snk_pots_obj * obj);
+
+    void snk_pots_close_interface_file(snk_pots_obj * obj);
+
+    void snk_pots_close_interface_socket(snk_pots_obj * obj);
+
+    void snk_pots_close_interface_terminal(snk_pots_obj * obj);
 
     int snk_pots_process(snk_pots_obj * obj);
 
-    int snk_pots_process_blackhole(snk_pots_obj * obj);
+    void snk_pots_process_interface_blackhole(snk_pots_obj * obj);
 
-    int snk_pots_process_file(snk_pots_obj * obj);
+    void snk_pots_process_interface_file(snk_pots_obj * obj);
 
-    int snk_pots_process_socket(snk_pots_obj * obj);
+    void snk_pots_process_interface_socket(snk_pots_obj * obj);
 
-    int snk_pots_process_terminal(snk_pots_obj * obj);
+    void snk_pots_process_interface_terminal(snk_pots_obj * obj);
+
+    void snk_pots_process_format_binary_float(snk_pots_obj * obj);
+
+    void snk_pots_process_format_text_json(snk_pots_obj * obj);
 
     snk_pots_cfg * snk_pots_cfg_construct(void);
 
