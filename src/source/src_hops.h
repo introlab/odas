@@ -27,6 +27,8 @@
         snd_pcm_t * ch;
 
         char * buffer;
+        unsigned int bufferSize;
+
         char bytes[4];
 
         msg_hops_obj * out;
@@ -50,27 +52,29 @@
 
     void src_hops_open(src_hops_obj * obj);
 
-    void src_hops_open_file(src_hops_obj * obj);
+    void src_hops_open_interface_file(src_hops_obj * obj);
 
-    void src_hops_open_socket(src_hops_obj * obj);
-
-    void src_hops_open_soundcard(src_hops_obj * obj);
+    void src_hops_open_interface_soundcard(src_hops_obj * obj);
 
     void src_hops_close(src_hops_obj * obj);
 
-    void src_hops_close_file(src_hops_obj * obj);
+    void src_hops_close_interface_file(src_hops_obj * obj);
 
-    void src_hops_close_socket(src_hops_obj * obj);
-
-    void src_hops_close_soundcard(src_hops_obj * obj);
+    void src_hops_close_interface_soundcard(src_hops_obj * obj);
 
     int src_hops_process(src_hops_obj * obj);
 
-    int src_hops_process_file(src_hops_obj * obj);
+    int src_hops_process_interface_file(src_hops_obj * obj);
 
-    int src_hops_process_socket(src_hops_obj * obj);
+    int src_hops_process_interface_soundcard(src_hops_obj * obj);
 
-    int src_hops_process_soundcard(src_hops_obj * obj);
+    void src_hops_process_format_binary_int08(src_hops_obj * obj);
+
+    void src_hops_process_format_binary_int16(src_hops_obj * obj);
+
+    void src_hops_process_format_binary_int24(src_hops_obj * obj);
+
+    void src_hops_process_format_binary_int32(src_hops_obj * obj);
 
     src_hops_cfg * src_hops_cfg_construct(void);
 
