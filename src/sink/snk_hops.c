@@ -211,6 +211,12 @@
 
                 break;
 
+                case format_undefined:
+
+                    snk_hops_process_format_undefined(obj);
+
+                break;
+
                 default:
 
                     printf("Sink hops: Invalid format type.\n");

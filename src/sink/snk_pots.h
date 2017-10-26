@@ -85,6 +85,8 @@
 
     void snk_pots_process_format_text_json(snk_pots_obj * obj);
 
+    void snk_pots_process_format_undefined(snk_pots_obj * obj);
+
     snk_pots_cfg * snk_pots_cfg_construct(void);
 
     void snk_pots_cfg_destroy(snk_pots_cfg * snk_pots_config);

@@ -13,6 +13,18 @@
 
     }
 
+    format_obj * format_construct_undefined() {
+
+        format_obj * obj;
+
+        obj = (format_obj *) malloc(sizeof(format_obj));
+
+        obj->type = format_undefined;
+
+        return obj;        
+        
+    }
+
     format_obj * format_construct_binary_int(const unsigned int nBits) {
 
         format_obj * obj;

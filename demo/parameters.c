@@ -166,7 +166,7 @@
             }
 
         // +----------------------------------------------------------+
-        // | Type                                                     |
+        // | Interface                                                |
         // +----------------------------------------------------------+
 
             tmpStr1 = parameters_lookup_string(fileConfig, "raw.interface.type");
@@ -689,12 +689,13 @@
 
             if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
             else if (strcmp(tmpStr1, "binary") == 0) { cfg->format = format_construct_binary_float(); }
+            else if (strcmp(tmpStr1, "undefined") == 0) { cfg->format = format_construct_undefined(); }
             else { printf("ssl.potential.format: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
         // +----------------------------------------------------------+
-        // | Type                                                     |
+        // | Interface                                                |
         // +----------------------------------------------------------+
 
             tmpStr1 = parameters_lookup_string(fileConfig, "ssl.potential.interface.type");
@@ -963,12 +964,13 @@
 
             if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
             else if (strcmp(tmpStr1, "binary") == 0) { cfg->format = format_construct_binary_float(); }
+            else if (strcmp(tmpStr1, "undefined") == 0) { cfg->format = format_construct_undefined(); }            
             else { printf("sst.tracked.format: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       
 
         // +----------------------------------------------------------+
-        // | Type                                                     |
+        // | Interface                                                |
         // +----------------------------------------------------------+
 
             tmpStr1 = parameters_lookup_string(fileConfig, "sst.tracked.interface.type");
@@ -1450,7 +1452,7 @@
             }    
 
         // +----------------------------------------------------------+
-        // | Type                                                     |
+        // | Interface                                                |
         // +----------------------------------------------------------+
 
             tmpStr1 = parameters_lookup_string(fileConfig, "sss.separated.interface.type");
@@ -1458,6 +1460,7 @@
             if (strcmp(tmpStr1, "blackhole") == 0) {
 
                 cfg->interface = interface_construct_blackhole();
+                cfg->format = format_construct_undefined();
 
             }
             else if (strcmp(tmpStr1, "file") == 0) { 
@@ -1532,6 +1535,7 @@
             if (strcmp(tmpStr1, "blackhole") == 0) {
 
                 cfg->interface = interface_construct_blackhole();
+                cfg->format = format_construct_undefined();
 
             }
             else if (strcmp(tmpStr1, "file") == 0) { 
@@ -1676,6 +1680,7 @@
             tmpStr1 = parameters_lookup_string(fileConfig, "classify.category.format");
 
             if (strcmp(tmpStr1, "json") == 0) { cfg->format = format_construct_text_json(); }
+            else if (strcmp(tmpStr1, "undefined") == 0) { cfg->format = format_construct_undefined(); }                       
             else { printf("classify.category.format: Invalid format\n"); exit(EXIT_FAILURE); }
 
             free((void *) tmpStr1);       

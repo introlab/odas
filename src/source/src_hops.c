@@ -245,6 +245,41 @@
 
         int rtnValue;
 
+        switch(obj->format->type) {
+
+            case format_binary_int08:
+
+                src_hops_process_format_binary_int08(obj);
+
+            break;
+
+            case format_binary_int16:
+
+                src_hops_process_format_binary_int16(obj);                
+
+            break;
+
+            case format_binary_int24:
+
+                src_hops_process_format_binary_int24(obj);
+
+            break;
+
+            case format_binary_int32:
+
+                src_hops_process_format_binary_int32(obj);
+
+            break;
+
+            default:
+
+                printf("Source hops: Invalid format type.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+
+        }
+
         switch(obj->interface->type) {
 
             case interface_file:
@@ -277,12 +312,12 @@
 
     int src_hops_process_interface_file(src_hops_obj * obj) {
 
-        unsigned int nSamples;
+        unsigned int nBytesTotal;
         int rtnValue;
 
-        nSamples = fread(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
+        nBytesTotal = fread(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
 
-        if (nSamples == (obj->nChannels * obj->hopSize)) {
+        if (nBytesTotal == obj->bufferSize) {
             
             rtnValue = 0;    
 

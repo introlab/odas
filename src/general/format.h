@@ -24,6 +24,8 @@
 
     format_obj * format_construct();
 
+    format_obj * format_construct_undefined();
+
     format_obj * format_construct_binary_int(const unsigned int nBits);
 
     format_obj * format_construct_binary_float();    

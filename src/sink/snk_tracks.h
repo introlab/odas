@@ -83,6 +83,8 @@
 
     void snk_tracks_process_format_text_json(snk_tracks_obj * obj);
 
+    void snk_tracks_process_format_undefined(snk_tracks_obj * obj);
+
     snk_tracks_cfg * snk_tracks_cfg_construct(void);
 
     void snk_tracks_cfg_destroy(snk_tracks_cfg * snk_tracks_config);

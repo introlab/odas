@@ -218,6 +218,12 @@
 
                 break;
 
+                case format_undefined:                
+
+                    snk_pots_process_format_undefined(obj);
+
+                break;
+
                 default:
 
                     printf("Sink pots: Invalid format type.\n");
@@ -338,6 +344,13 @@
         sprintf(obj->buffer,"%s}\n",obj->buffer);        
 
         obj->bufferSize = strlen(obj->buffer);
+
+    }
+
+    void snk_pots_process_format_undefined(snk_pots_obj * obj) {
+
+        obj->buffer[0] = 0x00;
+        obj->bufferSize = 0;        
 
     }
 
