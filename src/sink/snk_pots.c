@@ -18,7 +18,8 @@
         if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_float)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
-              ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)))) {
+              ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)) ||
+              ((obj->interface->type == interface_terminal) && (obj->format->type == format_text_json)))) {
             
             printf("Sink pots: Invalid interface and/or format.\n");
             exit(EXIT_FAILURE);
