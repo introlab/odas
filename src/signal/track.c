@@ -12,6 +12,8 @@
         memset(obj->array, 0x00, sizeof(float) * 3 * nTracks);
         obj->ids = (unsigned long long *) malloc(sizeof(unsigned long long) * nTracks);
         memset(obj->ids, 0x00, sizeof(unsigned long long) * nTracks);
+        obj->activity = (float *) malloc(sizeof(float) * nTracks);
+        memset(obj->activity, 0x00, sizeof(float) * nTracks);
 
         return obj;
 
@@ -21,6 +23,7 @@
 
         free((void *) obj->array);
         free((void *) obj->ids);
+        free((void *) obj->activity);
         free((void *) obj);
 
     }
@@ -36,6 +39,8 @@
         memcpy(clone->array, obj->array, sizeof(float) * 3 * obj->nTracks);
         clone->ids = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracks);
         memcpy(clone->ids, obj->ids, sizeof(unsigned long long) * obj->nTracks);
+        clone->activity = (float *) malloc(sizeof(float) * obj->nTracks);
+        memcpy(clone->activity, obj->activity, sizeof(float) * obj->nTracks);
 
         return clone;
 
@@ -46,6 +51,7 @@
         dest->nTracks = src->nTracks;
         memcpy(dest->array, src->array, sizeof(float) * 3 * src->nTracks);
         memcpy(dest->ids, src->ids, sizeof(unsigned long long) * src->nTracks);
+        memcpy(dest->activity, src->activity, sizeof(float) * src->nTracks);
 
     }
 
@@ -54,6 +60,7 @@
         obj->nTracks = 0;
         memset(obj->array, 0x00, sizeof(float) * 3 * obj->nTracks);
         memset(obj->ids, 0x00, sizeof(unsigned long long) * obj->nTracks);
+        memset(obj->activity, 0x00, sizeof(float) * obj->nTracks);
 
     }
 
@@ -63,11 +70,12 @@
 
         for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
-            printf("(%04llu): %+1.3f %+1.3f %+1.3f\n",
+            printf("(%04llu): %+1.3f %+1.3f %+1.3f - %1.3f\n",
                    obj->ids[iTrack],
                    obj->array[iTrack * 3 + 0],
                    obj->array[iTrack * 3 + 1],
-                   obj->array[iTrack * 3 + 2]);
+                   obj->array[iTrack * 3 + 2],
+                   obj->activity[iTrack]);
             
         }
 

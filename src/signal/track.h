@@ -10,6 +10,7 @@
         unsigned int nTracks;
         unsigned long long * ids;
         float * array;
+        float * activity;
         
     } tracks_obj;
 

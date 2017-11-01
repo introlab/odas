@@ -55,6 +55,8 @@
 
         mixture2mixture_obj * mixture2mixture;
         
+        float * sourceActivities;
+
         float theta_new;
         unsigned int N_prob;
         float theta_prob;

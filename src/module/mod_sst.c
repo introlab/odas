@@ -48,6 +48,9 @@
         obj->particles = (particles_obj **) malloc(sizeof(particles_obj *) * obj->nTracksMax);
         memset(obj->particles, 0x00, sizeof(particles_obj *) * obj->nTracksMax);
         
+        obj->sourceActivities = (float *) malloc(sizeof(float) * obj->nTracksMax);
+        memset(obj->sourceActivities, 0x00, sizeof(float) * obj->nTracksMax);
+
         obj->theta_new = mod_sst_config->theta_new;
         obj->N_prob = mod_sst_config->N_prob;
         obj->theta_prob = mod_sst_config->theta_prob;
@@ -258,6 +261,8 @@
 
         free((void *) obj->kalmans);
         free((void *) obj->particles);
+
+        free((void *) obj->sourceActivities);
 
         free((void *) obj->N_inactive);
         free((void *) obj->n_prob);
@@ -600,12 +605,14 @@
             // Activity
 
             iTrack = 0;
+            memset(obj->sourceActivities, 0x00, sizeof(float) * obj->nTracksMax);
 
             for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
                 if (obj->ids[iTrackMax] != 0) {
 
                     sourceActivity = obj->postprobs[obj->nTracks]->arrayTrackTotal[iTrack];
+                    obj->sourceActivities[iTrackMax] = sourceActivity;
 
                     // Update counters
                     
@@ -843,6 +850,7 @@
                         obj->out->tracks->array[iTrackMax * 3 + 1] = y;
                         obj->out->tracks->array[iTrackMax * 3 + 2] = z;
                         obj->out->tracks->ids[iTrackMax] = obj->ids[iTrackMax];
+                        obj->out->tracks->activity[iTrackMax] = obj->sourceActivities[iTrackMax];
 
                     }
 
