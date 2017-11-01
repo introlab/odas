@@ -221,7 +221,7 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
             (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
@@ -288,7 +288,7 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
             (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
@@ -342,7 +342,7 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
             (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");
@@ -386,7 +386,7 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in2)) ||
+        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
             (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
 
             printf("Time stamp mismatch.\n");

@@ -36,19 +36,19 @@
                                          mod_ssl_config->gainMin,
                                          mod_ssl_config->interpRate);      
 
-        obj->freq2freq = freq2freq_construct_zero(obj->halfFrameSize, 
-                                                  obj->halfFrameSizeInterp,
-                                                  0,
-                                                  mod_ssl_config->epsilon,
-                                                  0.0f,
-                                                  0.0f,
-                                                  0.0f);   
+        obj->freq2freq_phasor = freq2freq_phasor_construct_zero(obj->halfFrameSize,
+                                                                mod_ssl_config->epsilon);
 
         obj->phasors = freqs_construct_zero(mod_ssl_config->mics->nChannels, 
                                             msg_spectra_config->halfFrameSize);
 
+        obj->freq2freq_product = freq2freq_product_construct_zero(obj->halfFrameSize);
+
         obj->products = freqs_construct_zero(mod_ssl_config->mics->nPairs, 
                                              msg_spectra_config->halfFrameSize);
+
+        obj->freq2freq_interpolate = freq2freq_interpolate_construct_zero(obj->halfFrameSize,
+                                                                          obj->halfFrameSizeInterp);
 
         obj->productsInterp = freqs_construct_zero(mod_ssl_config->mics->nPairs,
                                                    obj->halfFrameSizeInterp);
@@ -82,9 +82,10 @@
 
         obj->pots = pots_construct_zero(msg_pots_config->nPots);
 
-        obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_powers_obj *) NULL;
+        obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
+
+        //obj->tmpFile = fopen("weights.bin","wb");
 
         return obj;
 
@@ -95,9 +96,13 @@
         unsigned int iLevel;
         unsigned int iPot;
 
+        //fclose(obj->tmpFile);
+
         scans_destroy(obj->scans);
 
-        freq2freq_destroy(obj->freq2freq);
+        freq2freq_phasor_destroy(obj->freq2freq_phasor);
+        freq2freq_product_destroy(obj->freq2freq_product);
+        freq2freq_interpolate_destroy(obj->freq2freq_interpolate);
         freqs_destroy(obj->phasors);
         freqs_destroy(obj->products);
         freqs_destroy(obj->productsInterp);
@@ -135,24 +140,19 @@
         float maxValue;
         unsigned int maxIndex;
 
-        if (obj->in1->timeStamp != obj->in2->timeStamp) {
-            printf("Time stamp mismatch.\n");
-            exit(EXIT_FAILURE);
-        }
+        if (msg_spectra_isZero(obj->in) == 0) {
 
-        if (msg_spectra_isZero(obj->in1) == 0) {
-
-            freq2freq_process_phasor(obj->freq2freq, 
-                                     obj->in1->freqs, 
+            freq2freq_phasor_process(obj->freq2freq_phasor, 
+                                     obj->in->freqs, 
                                      obj->phasors);
 
-            freq2freq_process_product(obj->freq2freq, 
+            freq2freq_product_process(obj->freq2freq_product, 
                                       obj->phasors, 
                                       obj->phasors,
                                       obj->scans->pairs,
                                       obj->products);        
 
-            freq2freq_process_interpolate(obj->freq2freq,
+            freq2freq_interpolate_process(obj->freq2freq_interpolate,
                                           obj->products,
                                           obj->productsInterp);
 
@@ -217,7 +217,7 @@
             
             memcpy(obj->out->pots->array, obj->pots->array, sizeof(float) * obj->pots->nPots * 4);
 
-            obj->out->timeStamp = obj->in1->timeStamp;
+            obj->out->timeStamp = obj->in->timeStamp;
 
             rtnValue = 0;
 
@@ -234,18 +234,16 @@
 
     }
 
-    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_pots_obj * out) {
+    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in, msg_pots_obj * out) {
 
-        obj->in1 = in1;
-        obj->in2 = in2;
+        obj->in = in;
         obj->out = out;
 
     }
 
     void mod_ssl_disconnect(mod_ssl_obj * obj) {
 
-        obj->in1 = (msg_spectra_obj *) NULL;
-        obj->in2 = (msg_powers_obj *) NULL;
+        obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
 
     }

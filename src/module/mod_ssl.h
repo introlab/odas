@@ -10,9 +10,12 @@
     #include "../general/spatialfilter.h"
 
     #include "../signal/aimg.h"   
+    #include "../signal/env.h"
     #include "../signal/freq.h"
     #include "../signal/xcorr.h"
     
+    #include "../system/env2env.h"
+    #include "../system/freq2env.h"
     #include "../system/freq2freq.h"
     #include "../system/freq2xcorr.h"
     #include "../system/xcorr2aimg.h"
@@ -44,8 +47,11 @@
         freqs_obj * productsInterp;
         xcorrs_obj * xcorrs;
         xcorrs_obj * xcorrsMax;
-        
-        freq2freq_obj * freq2freq;
+       
+        freq2env_obj * freq2env;
+        freq2freq_phasor_obj * freq2freq_phasor;
+        freq2freq_product_obj * freq2freq_product;
+        freq2freq_interpolate_obj * freq2freq_interpolate;
         freq2xcorr_obj * freq2xcorr;
         xcorr2xcorr_obj * xcorr2xcorr;
         
@@ -54,8 +60,7 @@
 
         pots_obj * pots;
 
-        msg_spectra_obj * in1;
-        msg_powers_obj * in2;
+        msg_spectra_obj * in;
         msg_pots_obj * out;
 
     } mod_ssl_obj;
@@ -86,7 +91,7 @@
 
     int mod_ssl_process(mod_ssl_obj * obj);
 
-    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_pots_obj * out);
+    void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in, msg_pots_obj * out);
 
     void mod_ssl_disconnect(mod_ssl_obj * obj);
 

@@ -1,32 +1,26 @@
     
     #include "freq2freq.h"
 
-    freq2freq_obj * freq2freq_construct_zero(const unsigned int halfFrameSize, const unsigned int halfFrameSizeInterp, const unsigned int lowPassCut, const float epsilon, const float alpha, const float beta, const float Ginterf) {
+    freq2freq_phasor_obj * freq2freq_phasor_construct_zero(const unsigned int halfFrameSize, const float epsilon) {
 
-        freq2freq_obj * obj;
+        freq2freq_phasor_obj * obj;
 
-        obj = (freq2freq_obj *) malloc(sizeof(freq2freq_obj));
+        obj = (freq2freq_phasor_obj *) malloc(sizeof(freq2freq_phasor_obj));
 
         obj->halfFrameSize = halfFrameSize;
-        obj->halfFrameSizeInterp = halfFrameSizeInterp;
-        obj->lowPassCut = lowPassCut;
         obj->epsilon = epsilon;
-
-        obj->alpha = alpha;
-        obj->beta = beta;
-        obj->Ginterf = Ginterf;
 
         return obj;
 
     }
 
-    void freq2freq_destroy(freq2freq_obj * obj) {
+    void freq2freq_phasor_destroy(freq2freq_phasor_obj * obj) {
 
         free((void *) obj);
 
     }
 
-    void freq2freq_process_phasor(freq2freq_obj * obj, const freqs_obj * freqs, freqs_obj * phasors) {
+    void freq2freq_phasor_process(freq2freq_phasor_obj * obj, const freqs_obj * freqs, freqs_obj * phasors) {
 
         unsigned int iSignal, iSample;
         float real, imag;
@@ -45,11 +39,73 @@
 
             }
 
-        }
+        }        
 
     }
 
-    void freq2freq_process_product(freq2freq_obj * obj, const freqs_obj * freqs1, const freqs_obj * freqs2, const pairs_obj * pairs, freqs_obj * freqs12) {
+    freq2freq_weightedphasor_obj * freq2freq_weightedphasor_construct_zero(const unsigned int halfFrameSize, const float epsilon) {
+
+        freq2freq_weightedphasor_obj * obj;
+
+        obj = (freq2freq_weightedphasor_obj *) malloc(sizeof(freq2freq_weightedphasor_obj));
+
+        obj->halfFrameSize = halfFrameSize;
+        obj->epsilon = epsilon;
+
+        return obj;        
+
+    }
+
+    void freq2freq_weightedphasor_destroy(freq2freq_weightedphasor_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void freq2freq_weightedphasor_process(freq2freq_weightedphasor_obj * obj, const freqs_obj * freqs, const envs_obj * weights, freqs_obj * weightedphasors) {
+
+        unsigned int iSignal, iSample;
+        float real, imag;
+        float magnitude;        
+        float weight;
+
+        for (iSignal = 0; iSignal < freqs->nSignals; iSignal++) {
+
+            for (iSample = 0; iSample < freqs->halfFrameSize; iSample++) {
+
+                real = freqs->array[iSignal][iSample * 2 + 0];
+                imag = freqs->array[iSignal][iSample * 2 + 1];
+                magnitude = sqrtf(real*real+imag*imag) + obj->epsilon;
+                weight = weights->array[iSignal][iSample];
+
+                weightedphasors->array[iSignal][iSample * 2 + 0] = weight * real / magnitude;
+                weightedphasors->array[iSignal][iSample * 2 + 1] = weight * imag / magnitude;
+
+            }
+
+        }          
+
+    }
+
+    freq2freq_product_obj * freq2freq_product_construct_zero(const unsigned int halfFrameSize) {
+
+        freq2freq_product_obj * obj;
+
+        obj = (freq2freq_product_obj *) malloc(sizeof(freq2freq_product_obj));
+
+        obj->halfFrameSize = halfFrameSize;
+
+        return obj;
+
+    }
+
+    void freq2freq_product_destroy(freq2freq_product_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void freq2freq_product_process(freq2freq_product_obj * obj, const freqs_obj * freqs1, const freqs_obj * freqs2, const pairs_obj * pairs, freqs_obj * freqs12) {
 
         unsigned int iSignal1, iSignal2, iSignal12, iSample;
         float real1, imag1;
@@ -85,7 +141,26 @@
 
     }
 
-    void freq2freq_process_lowpass(freq2freq_obj * obj, const freqs_obj * freqsAllPass, freqs_obj * freqsLowPass) {
+    freq2freq_lowpass_obj * freq2freq_lowpass_construct_zero(const unsigned int halfFrameSize, const unsigned int lowPassCut) {
+
+        freq2freq_lowpass_obj * obj;
+
+        obj = (freq2freq_lowpass_obj *) malloc(sizeof(freq2freq_lowpass_obj));
+
+        obj->halfFrameSize = halfFrameSize;
+        obj->lowPassCut = lowPassCut;
+
+        return obj;
+
+    }
+
+    void  freq2freq_lowpass_destroy(freq2freq_lowpass_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void freq2freq_lowpass_process(freq2freq_lowpass_obj * obj, const freqs_obj * freqsAllPass, freqs_obj * freqsLowPass) {
 
         unsigned int iSignal;
 
@@ -95,11 +170,30 @@
 
             memcpy(freqsLowPass->array[iSignal], freqsAllPass->array[iSignal], sizeof(float) * 2 * obj->lowPassCut);               
 
-        }
+        }        
 
     }
 
-    void freq2freq_process_interpolate(freq2freq_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp) {
+    freq2freq_interpolate_obj * freq2freq_interpolate_construct_zero(const unsigned int halfFrameSize, const unsigned int halfFrameSizeInterp) {
+
+        freq2freq_interpolate_obj * obj;
+
+        obj = (freq2freq_interpolate_obj *) malloc(sizeof(freq2freq_interpolate_obj));
+
+        obj->halfFrameSize = halfFrameSize;
+        obj->halfFrameSizeInterp = halfFrameSizeInterp;
+
+        return obj;
+
+    }
+
+    void freq2freq_interpolate_destroy(freq2freq_interpolate_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void freq2freq_interpolate_process(freq2freq_interpolate_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp) {
 
         unsigned int iSignal;
 
@@ -108,6 +202,7 @@
             memset(freqsInterp->array[iSignal], 0x00, sizeof(float) * 2 * obj->halfFrameSizeInterp);
             memcpy(freqsInterp->array[iSignal], freqs->array[iSignal], sizeof(float) * 2 * obj->halfFrameSize);
 
-        }
+        }        
 
     }
+

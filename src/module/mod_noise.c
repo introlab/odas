@@ -46,7 +46,9 @@
                              obj->envs);
 
             env2env_mcra_process(obj->env2env_mcra,
+                                 NULL,
                                  obj->envs,
+                                 NULL,
                                  obj->out->envs);
 
             obj->out->timeStamp = obj->in->timeStamp;

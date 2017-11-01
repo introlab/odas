@@ -304,11 +304,11 @@
 
             for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-                nBytesTotal += nBytes;
-
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
                 memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+                nBytesTotal += nBytes;
 
             }
 
@@ -333,11 +333,12 @@
 
             for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-                nBytesTotal += nBytes;
-
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
                 memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+                nBytesTotal += nBytes;
+
 
             }
 
@@ -362,11 +363,11 @@
 
             for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-                nBytesTotal += nBytes;
-
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
                 memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+                nBytesTotal += nBytes;
 
             }
 
@@ -391,11 +392,11 @@
 
             for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-                nBytesTotal += nBytes;
-
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
                 memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+
+                nBytesTotal += nBytes;
 
             }
 

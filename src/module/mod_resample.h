@@ -42,7 +42,7 @@
         frames_obj * framesAnalysis; 
         frame2freq_obj * frame2freq;
         freqs_obj * freqsAnalysis;
-        freq2freq_obj * freq2freq;
+        freq2freq_lowpass_obj * freq2freq_lowpass;
         freqs_obj * freqsSynthesis;
         freq2frame_obj * freq2frame;
         frames_obj * framesSynthesis;
