@@ -36,6 +36,7 @@
 
         float Yreal;
         float Yimag;
+        float Ypwr;
 
         for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
 
@@ -45,8 +46,10 @@
 
                 Yreal = freqs->array[iSignal][iBin * 2 + 0];
                 Yimag = freqs->array[iSignal][iBin * 2 + 1];
+                Ypwr = Yreal * Yreal + Yimag * Yimag;
 
-                obj->arrayIn[iBin * 2 + 0] = Yreal * Yreal + Yimag * Yimag;
+                obj->arrayIn[iBin * 2 + 0] = Ypwr;
+                obj->arrayIn[iBin * 2 + 1] = 0.0f;
 
             }
 

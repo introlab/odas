@@ -2,8 +2,10 @@
 #define __ODAS_MODULE_CLASSIFY
 
     #include <stdlib.h>
+    #include <stdio.h>
 
     #include "../message/msg_hops.h"
+    #include "../message/msg_tracks.h"
     #include "../message/msg_categories.h"
 
     #include "../signal/acorr.h"
@@ -32,7 +34,8 @@
         acorr2pitch_obj * acorr2pitch;
         pitch2category_obj * pitch2category;
 
-        msg_hops_obj * in;
+        msg_hops_obj * in1;
+        msg_tracks_obj * in2;
         msg_categories_obj * out;
 
     } mod_classify_obj;
@@ -52,13 +55,13 @@
 
     } mod_classify_cfg;
 
-    mod_classify_obj * mod_classify_construct(const mod_classify_cfg * mod_classify_config, const msg_hops_cfg * msg_hops_config, const msg_categories_cfg * msg_categories_config);
+    mod_classify_obj * mod_classify_construct(const mod_classify_cfg * mod_classify_config, const msg_hops_cfg * msg_hops_config, const msg_tracks_cfg * msg_tracks_config, const msg_categories_cfg * msg_categories_config);
 
     void mod_classify_destroy(mod_classify_obj * obj);
 
     int mod_classify_process(mod_classify_obj * obj);
 
-    void mod_classify_connect(mod_classify_obj * obj, msg_hops_obj * in, msg_categories_obj * out);
+    void mod_classify_connect(mod_classify_obj * obj, msg_hops_obj * in1, msg_tracks_obj * in2, msg_categories_obj * out);
 
     void mod_classify_disconnect(mod_classify_obj * obj);
 

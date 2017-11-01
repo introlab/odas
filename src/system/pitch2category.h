@@ -8,6 +8,7 @@
 
     #include "../signal/category.h"
     #include "../signal/pitch.h"
+    #include "../signal/track.h"
     
     typedef struct pitch2category_obj {
 
@@ -29,6 +30,7 @@
         float * phisPrev;
         float * vs;
         float * rs;
+        char * categories;
 
     } pitch2category_obj;
 
@@ -36,6 +38,6 @@
 
     void pitch2category_destroy(pitch2category_obj * obj);
 
-    void pitch2category_process(pitch2category_obj * obj, const pitches_obj * pitches, categories_obj * categories);
+    void pitch2category_process(pitch2category_obj * obj, const pitches_obj * pitches, const tracks_obj * tracks, categories_obj * categories);
 
 #endif

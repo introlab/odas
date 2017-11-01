@@ -320,7 +320,7 @@
 
                 break;
 
-                case 0x02:
+                case 0x00:
 
                     sprintf(obj->buffer,"%s        { \"category\": \"nonspeech\" }",obj->buffer);
 

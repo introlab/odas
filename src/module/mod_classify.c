@@ -1,7 +1,7 @@
     
     #include "mod_classify.h"
 
-    mod_classify_obj * mod_classify_construct(const mod_classify_cfg * mod_classify_config, const msg_hops_cfg * msg_hops_config, const msg_categories_cfg * msg_categories_config) {
+        mod_classify_obj * mod_classify_construct(const mod_classify_cfg * mod_classify_config, const msg_hops_cfg * msg_hops_config, const msg_tracks_cfg * msg_tracks_config, const msg_categories_cfg * msg_categories_config) {
 
         mod_classify_obj * obj;
 
@@ -41,7 +41,8 @@
                                                             mod_classify_config->phiMin, 
                                                             mod_classify_config->r0);
 
-        obj->in = (msg_hops_obj *) NULL;
+        obj->in1 = (msg_hops_obj *) NULL;
+        obj->in2 = (msg_tracks_obj *) NULL;
         obj->out = (msg_categories_obj *) NULL;
 
         return obj;
@@ -68,16 +69,20 @@
 
         int rtnValue;
 
-        if (msg_hops_isZero(obj->in) == 0) {
+        if (obj->in1->timeStamp != obj->in2->timeStamp) {
+            printf("Time stamp mismatch.\n");
+            exit(EXIT_FAILURE);
+        }
 
-            hop2frame_process(obj->hop2frame, obj->in->hops, obj->frames);
+        if (msg_hops_isZero(obj->in1) == 0) {
+
+            hop2frame_process(obj->hop2frame, obj->in1->hops, obj->frames);
             frame2freq_process(obj->frame2freq, obj->frames, obj->freqs);
             freq2acorr_process(obj->freq2acorr, obj->freqs, obj->acorrs);
             acorr2pitch_process(obj->acorr2pitch, obj->acorrs, obj->pitches);
-            pitches_printf(obj->pitches);
-            pitch2category_process(obj->pitch2category, obj->pitches, obj->out->categories);
+            pitch2category_process(obj->pitch2category, obj->pitches, obj->in2->tracks, obj->out->categories);
 
-            obj->out->timeStamp = obj->in->timeStamp;
+            obj->out->timeStamp = obj->in1->timeStamp;
 
             rtnValue = 0;
 
@@ -94,16 +99,18 @@
 
     }
 
-    void mod_classify_connect(mod_classify_obj * obj, msg_hops_obj * in, msg_categories_obj * out) {
+    void mod_classify_connect(mod_classify_obj * obj, msg_hops_obj * in1, msg_tracks_obj * in2, msg_categories_obj * out) {
 
-        obj->in = in;
+        obj->in1 = in1;
+        obj->in2 = in2;
         obj->out = out;
 
     }
 
     void mod_classify_disconnect(mod_classify_obj * obj) {
 
-        obj->in = (msg_hops_obj *) NULL;
+        obj->in1 = (msg_hops_obj *) NULL;
+        obj->in2 = (msg_tracks_obj *) NULL;
         obj->out = (msg_categories_obj *) NULL;
 
     }

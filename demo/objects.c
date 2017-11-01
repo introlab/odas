@@ -149,7 +149,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+                    
 
-                    objs->con_tracks_sst_object = con_tracks_construct(2, cfgs->msg_tracks_sst_config);
+                    objs->con_tracks_sst_object = con_tracks_construct(3, cfgs->msg_tracks_sst_config);
 
             // +------------------------------------------------------+
             // | SSS                                                  |
@@ -237,6 +237,7 @@
 
                     objs->mod_classify_object = mod_classify_construct(cfgs->mod_classify_config,
                                                                        cfgs->msg_hops_seps_config,
+                                                                       cfgs->msg_tracks_sst_config,
                                                                        cfgs->msg_categories_config);
 
                 // +--------------------------------------------------+
@@ -351,7 +352,7 @@
                 // +--------------------------------------------------+  
 
                     snk_tracks_connect(objs->snk_tracks_sst_object,
-                                       objs->con_tracks_sst_object->outs[1]);
+                                       objs->con_tracks_sst_object->outs[2]);
 
             // +------------------------------------------------------+
             // | SSS                                                  |
@@ -420,6 +421,7 @@
 
                     mod_classify_connect(objs->mod_classify_object,
                                          objs->con_hops_seps_object->outs[1],
+                                         objs->con_tracks_sst_object->outs[1],
                                          objs->con_categories_object->in);
 
                 // +--------------------------------------------------+
@@ -801,7 +803,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+
 
-                    objs->acon_tracks_sst_object = acon_tracks_construct(2, objs->nMessages, cfgs->msg_tracks_sst_config);
+                    objs->acon_tracks_sst_object = acon_tracks_construct(3, objs->nMessages, cfgs->msg_tracks_sst_config);
 
             // +------------------------------------------------------+
             // | SSS                                                  |
@@ -889,6 +891,7 @@
 
                     objs->amod_classify_object = amod_classify_construct(cfgs->mod_classify_config,
                                                                          cfgs->msg_hops_seps_config,
+                                                                         cfgs->msg_tracks_sst_config,
                                                                          cfgs->msg_categories_config);
 
                 // +--------------------------------------------------+
@@ -1003,7 +1006,7 @@
                 // +--------------------------------------------------+  
 
                     asnk_tracks_connect(objs->asnk_tracks_sst_object,
-                                        objs->acon_tracks_sst_object->outs[1]);
+                                        objs->acon_tracks_sst_object->outs[2]);
 
             // +------------------------------------------------------+
             // | SSS                                                  |
@@ -1072,6 +1075,7 @@
 
                     amod_classify_connect(objs->amod_classify_object,
                                           objs->acon_hops_seps_object->outs[1],
+                                          objs->acon_tracks_sst_object->outs[1],
                                           objs->acon_categories_object->in);
 
                 // +--------------------------------------------------+
