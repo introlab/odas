@@ -74,6 +74,7 @@ set(SRC
     src/signal/xcorr.c
 
     src/system/acorr2pitch.c
+    src/system/demixing2env.c
     src/system/demixing2freq.c
     src/system/env2env.c
     src/system/hop2hop.c
@@ -107,6 +108,7 @@ set(SRC
     src/utils/matrix.c
     src/utils/pcm.c
     src/utils/random.c
+    src/utils/transcendental.c
 
     src/aconnector/acon_categories.c
     src/aconnector/acon_hops.c

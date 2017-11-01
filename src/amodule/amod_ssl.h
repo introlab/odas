@@ -10,8 +10,7 @@
     typedef struct amod_ssl_obj {
 
         mod_ssl_obj * mod_ssl;
-        amsg_spectra_obj * in1;
-        amsg_powers_obj * in2;
+        amsg_spectra_obj * in;
         amsg_pots_obj * out;
         thread_obj * thread;    
 
@@ -21,7 +20,7 @@
 
     void amod_ssl_destroy(amod_ssl_obj * obj);
 
-    void amod_ssl_connect(amod_ssl_obj * obj, amsg_spectra_obj * in1, amsg_powers_obj * in2, amsg_pots_obj * out);
+    void amod_ssl_connect(amod_ssl_obj * obj, amsg_spectra_obj * in, amsg_pots_obj * out);
 
     void amod_ssl_disconnect(amod_ssl_obj * obj);
 

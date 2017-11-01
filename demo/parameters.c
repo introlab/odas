@@ -475,6 +475,7 @@
         unsigned int iLevel;
 
         char * tmpLabel;
+        char * tmpString;
 
         cfg = mod_ssl_cfg_construct();
 

@@ -74,6 +74,7 @@
             frame2freq_process(obj->frame2freq, obj->frames, obj->freqs);
             freq2acorr_process(obj->freq2acorr, obj->freqs, obj->acorrs);
             acorr2pitch_process(obj->acorr2pitch, obj->acorrs, obj->pitches);
+            pitches_printf(obj->pitches);
             pitch2category_process(obj->pitch2category, obj->pitches, obj->out->categories);
 
             obj->out->timeStamp = obj->in->timeStamp;

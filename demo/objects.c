@@ -98,7 +98,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->con_powers_mics_object = con_powers_construct(2, cfgs->msg_powers_mics_config);
+                    objs->con_powers_mics_object = con_powers_construct(1, cfgs->msg_powers_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -325,7 +325,6 @@
 
                     mod_ssl_connect(objs->mod_ssl_object, 
                                     objs->con_spectra_mics_object->outs[1], 
-                                    objs->con_powers_mics_object->outs[0],
                                     objs->con_pots_ssl_object->in);
 
                 // +--------------------------------------------------+
@@ -364,7 +363,7 @@
 
                     mod_sss_connect(objs->mod_sss_object,
                                     objs->con_spectra_mics_object->outs[2],
-                                    objs->con_powers_mics_object->outs[1],
+                                    objs->con_powers_mics_object->outs[0],
                                     objs->con_tracks_sst_object->outs[0],
                                     objs->con_spectra_seps_object->in,
                                     objs->con_spectra_pfs_object->in);
@@ -751,7 +750,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+
                     
-                    objs->acon_powers_mics_object = acon_powers_construct(2, objs->nMessages, cfgs->msg_powers_mics_config);
+                    objs->acon_powers_mics_object = acon_powers_construct(1, objs->nMessages, cfgs->msg_powers_mics_config);
 
             // +------------------------------------------------------+
             // | SSL                                                  |
@@ -978,7 +977,6 @@
 
                     amod_ssl_connect(objs->amod_ssl_object, 
                                      objs->acon_spectra_mics_object->outs[1], 
-                                     objs->acon_powers_mics_object->outs[0],
                                      objs->acon_pots_ssl_object->in);
 
                 // +--------------------------------------------------+
@@ -1017,7 +1015,7 @@
 
                     amod_sss_connect(objs->amod_sss_object,
                                      objs->acon_spectra_mics_object->outs[2],
-                                     objs->acon_powers_mics_object->outs[1],
+                                     objs->acon_powers_mics_object->outs[0],
                                      objs->acon_tracks_sst_object->outs[0],
                                      objs->acon_spectra_seps_object->in,
                                      objs->acon_spectra_pfs_object->in);
