@@ -1176,6 +1176,96 @@
 
             cfg->epsilon = parameters_lookup_float(fileConfig, "general.epsilon");
 
+        // +----------------------------------------------------------+
+        // | Hanning window size                                      |
+        // +----------------------------------------------------------+
+
+            cfg->bSize = parameters_lookup_int(fileConfig, "sne.b");
+
+        // +----------------------------------------------------------+
+        // | alphaS                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->alphaS = parameters_lookup_float(fileConfig, "sne.alphaS");
+
+        // +----------------------------------------------------------+
+        // | Number of frames                                         |
+        // +----------------------------------------------------------+
+
+            cfg->L = parameters_lookup_int(fileConfig, "sne.L");
+
+        // +----------------------------------------------------------+
+        // | delta                                                    |
+        // +----------------------------------------------------------+
+
+            cfg->delta = parameters_lookup_float(fileConfig, "sne.delta");
+
+        // +----------------------------------------------------------+
+        // | alphaD                                                   |
+        // +----------------------------------------------------------+
+
+            cfg->alphaD = parameters_lookup_float(fileConfig, "sne.alphaD");  
+
+        // +----------------------------------------------------------+
+        // | eta                                                      |
+        // +----------------------------------------------------------+
+
+            cfg->eta = parameters_lookup_float(fileConfig, "sss.ms.eta");
+
+        // +----------------------------------------------------------+
+        // | alphaZ                                                |
+        // +----------------------------------------------------------+
+
+            cfg->alphaZ = parameters_lookup_float(fileConfig, "sss.ms.alphaZ");
+
+        // +----------------------------------------------------------+
+        // | alphaPmin                                                |
+        // +----------------------------------------------------------+
+
+            cfg->alphaPmin = parameters_lookup_float(fileConfig, "sss.ms.alphaPmin");
+
+        // +----------------------------------------------------------+
+        // | thetaWin                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->thetaWin = parameters_lookup_float(fileConfig, "sss.ms.thetaWin");
+
+        // +----------------------------------------------------------+
+        // | alphaWin                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->alphaWin = parameters_lookup_float(fileConfig, "sss.ms.alphaWin");
+
+        // +----------------------------------------------------------+
+        // | maxAbsenceProb                                           |
+        // +----------------------------------------------------------+
+
+            cfg->maxAbsenceProb = parameters_lookup_float(fileConfig, "sss.ms.maxAbsenceProb");
+
+        // +----------------------------------------------------------+
+        // | Gmin                                                     |
+        // +----------------------------------------------------------+
+
+            cfg->Gmin = parameters_lookup_float(fileConfig, "sss.ms.Gmin");
+
+        // +----------------------------------------------------------+
+        // | winSizeLocal                                             |
+        // +----------------------------------------------------------+
+
+            cfg->winSizeLocal = parameters_lookup_int(fileConfig, "sss.ms.winSizeLocal");
+
+        // +----------------------------------------------------------+
+        // | winSizeGlobal                                            |
+        // +----------------------------------------------------------+
+
+            cfg->winSizeGlobal = parameters_lookup_int(fileConfig, "sss.ms.winSizeGlobal");
+
+        // +----------------------------------------------------------+
+        // | winSizeFrame                                             |
+        // +----------------------------------------------------------+
+
+            cfg->winSizeFrame = parameters_lookup_int(fileConfig, "sss.ms.winSizeFrame");
+
         return cfg;      
 
     }

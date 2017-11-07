@@ -16,8 +16,13 @@
     #include "../signal/steer.h"
     #include "../signal/gain.h"
     #include "../signal/demixing.h"
+    #include "../signal/env.h"
 
+    #include "../system/demixing2env.h"
     #include "../system/demixing2freq.h"
+    #include "../system/env2env.h"
+    #include "../system/freq2env.h"
+    #include "../system/freq2freq.h"
     #include "../system/gain2mask.h"
     #include "../system/track2steer.h"
     #include "../system/track2gain.h"
@@ -54,11 +59,31 @@
 
         demixing2freq_obj * demixing2freq;
 
+        freq2env_obj * freq2env;
+        envs_obj * noisys;
+        demixing2env_obj * demixing2env;
+        envs_obj * noisesEst;
+        env2env_mcra_obj * env2env_mcra;
+        envs_obj * noisesSep;
+        env2env_interf_obj * env2env_interf;
+        envs_obj * interfs;
+        env2env_gainspeech_obj * env2env_gainspeech;
+        envs_obj * gainspeeches;
+        envs_obj * snrs;
+        envs_obj * vs;
+        env2env_probspeech_obj * env2env_probspeech;
+        envs_obj * probspeeches;
+        env2env_gainall_obj * env2env_gainall;
+        envs_obj * gainalls;
+        freq2freq_gain_obj * freq2freq_gain;
+
         msg_spectra_obj * in1;
         msg_powers_obj * in2;
         msg_tracks_obj * in3;
         msg_spectra_obj * out1;
         msg_spectra_obj * out2;
+
+        FILE * tmpFp;
 
     } mod_sss_obj;
 
@@ -75,7 +100,24 @@
         mics_obj * mics;
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed;
-        spatialfilter_obj * spatialfilter;        
+        spatialfilter_obj * spatialfilter;    
+
+        unsigned int bSize;
+        float alphaS;
+        unsigned int L;
+        float delta;
+        float alphaD;
+
+        float eta;
+        float alphaZ;
+        float alphaPmin;
+        float thetaWin;
+        float alphaWin;
+        float maxAbsenceProb;
+        float Gmin;
+        unsigned int winSizeLocal;
+        unsigned int winSizeGlobal;
+        unsigned int winSizeFrame;
 
     } mod_sss_cfg;
 

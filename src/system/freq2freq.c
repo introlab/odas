@@ -206,3 +206,51 @@
 
     }
 
+    freq2freq_gain_obj * freq2freq_gain_construct_zero(const unsigned int halfFrameSize) {
+
+        freq2freq_gain_obj * obj;
+
+        obj = (freq2freq_gain_obj *) malloc(sizeof(freq2freq_gain_obj));
+
+        obj->halfFrameSize = halfFrameSize;
+
+        return obj;
+
+    }
+
+    void freq2freq_gain_destroy(freq2freq_gain_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void freq2freq_gain_process(freq2freq_gain_obj * obj, const freqs_obj * freqsIn, const envs_obj * envsIn, freqs_obj * freqsOut) {
+
+        unsigned int iSignal;
+        unsigned int iSample;
+
+        float xReal;
+        float xImag;
+        float g;
+        float yReal;
+        float yImag;
+
+        for (iSignal = 0; iSignal < freqsIn->nSignals; iSignal++) {
+
+            for (iSample = 0; iSample < obj->halfFrameSize; iSample++) {
+
+                xReal = freqsIn->array[iSignal][iSample*2+0];
+                xImag = freqsIn->array[iSignal][iSample*2+1];
+                g = envsIn->array[iSignal][iSample];
+
+                yReal = g * xReal;
+                yImag = g * xImag;
+
+                freqsOut->array[iSignal][iSample*2+0] = yReal;
+                freqsOut->array[iSignal][iSample*2+1] = yImag;
+
+            }
+
+        }
+
+    }

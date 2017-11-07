@@ -33,6 +33,8 @@
         envs_destroy(obj->envs);
         env2env_mcra_destroy(obj->env2env_mcra);
 
+        free((void *) obj);
+
     }
 
     int mod_noise_process(mod_noise_obj * obj) {

@@ -43,6 +43,12 @@
 
     } freq2freq_interpolate_obj;
 
+    typedef struct freq2freq_gain_obj {
+
+        unsigned int halfFrameSize;
+
+    } freq2freq_gain_obj;
+
     freq2freq_phasor_obj * freq2freq_phasor_construct_zero(const unsigned int halfFrameSize, const float epsilon);
 
     void freq2freq_phasor_destroy(freq2freq_phasor_obj * obj);
@@ -72,5 +78,11 @@
     void freq2freq_interpolate_destroy(freq2freq_interpolate_obj * obj);
 
     void freq2freq_interpolate_process(freq2freq_interpolate_obj * obj, const freqs_obj * freqs, const freqs_obj * freqsInterp);
+
+    freq2freq_gain_obj * freq2freq_gain_construct_zero(const unsigned int halfFrameSize);
+
+    void freq2freq_gain_destroy(freq2freq_gain_obj * obj);
+
+    void freq2freq_gain_process(freq2freq_gain_obj * obj, const freqs_obj * freqsIn, const envs_obj * envsIn, freqs_obj * freqsOut);
 
 #endif

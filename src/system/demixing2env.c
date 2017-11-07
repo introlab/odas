@@ -41,7 +41,7 @@
 
             if (tracks->ids[iSep] != 0) {
 
-                memset(envsSeparated->array[iSep], 0x00, sizeof(float) * obj->halfFrameSize * 2);
+                memset(envsSeparated->array[iSep], 0x00, sizeof(float) * obj->halfFrameSize);
 
                 for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
@@ -49,7 +49,7 @@
 
                     if (masks->array[iSampleSC] == 1) {                       
 
-                        for (iBin = 0; iBin < obj->halfFrameSize; iBin++)                 {
+                        for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
                             iSampleBC = iBin * obj->nChannels + iChannel;
                             iSampleB = iBin;
@@ -65,7 +65,7 @@
                             envsSeparated->array[iSep][iSampleB] += Y2;
 
                         }
-
+                        
                     }
 
                 }

@@ -23,11 +23,13 @@
         obj->array = (float *) malloc(sizeof(float) * nElements);
         memset(obj->array, 0x00, sizeof(float) * nElements);
 
+        obj->nElements = nElements;
+
         v = 0.0f;
 
         for (iElement = 0; iElement < nElements; iElement++) {
 
-            if (v > 9.5f) {
+            if (v <= 9.5f) {
 
                 intPart = floorf(2.0f * v);
                 fracPart = 2.0f * v - intPart;
@@ -36,8 +38,12 @@
 
             }
             else {
+
                 g = 1.0f;
+                
             }
+
+            obj->array[iElement] = g;
 
             v += obj->interval;
 
@@ -58,7 +64,7 @@
 
         signed int iElement;
 
-        iElement = ((unsigned int) floorf(value / obj->interval)) + 1;
+        iElement = ((signed int) floorf(value / obj->interval)) + 1;
 
         if (iElement < 0) {
             iElement = 0;

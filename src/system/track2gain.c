@@ -102,7 +102,7 @@
 
                     gains->array[iSep * obj->nChannels + iChannel] = gainMic * gainFilter;
 
-                }        
+                }  
 
             }
             else {

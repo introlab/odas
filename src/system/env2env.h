@@ -21,8 +21,8 @@
         float delta;
         float alphaD;
 
+        unsigned long long * idsPrev;
         unsigned int * l;
-        char * first;
 
         float * b;
         float ** S;
@@ -57,6 +57,10 @@
         unsigned int halfFrameSize;
 
         float eta;
+        float alphaZ;
+
+        float ** Zs;
+        float ** ZsPrev;
 
     } env2env_interf_obj;
 
@@ -120,7 +124,30 @@
         float ** xiSmoothedGlobal;
         float ** xiSmoothedFrame;
 
+        float ** zetaLocal;
+        float ** zetaLocalPrev;
+        float ** zetaGlobal;
+        float ** zetaGlobalPrev;
+        float ** zetaFrame;
+        float ** zetaFramePrev;
+
+        float ** PLocal;
+        float ** PGlobal;
+        float ** PFrame;
+
+        float ** q;
+        float ** p;
+
     } env2env_probspeech_obj;
+
+    typedef struct env2env_gainall_obj {
+
+        unsigned int nChannels;
+        unsigned int halfFrameSize;
+
+        float Gmin;
+
+    } env2env_gainall_obj;
 
     env2env_mcra_obj * env2env_mcra_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const unsigned int bSize, const float alphaS, const unsigned int L, const float delta, const float alphaD);
 
@@ -134,7 +161,7 @@
 
     void env2env_weight_process(env2env_weight_obj * obj, const tracks_obj * tracks, const envs_obj * noisys, const envs_obj * noises, envs_obj * weights);
 
-    env2env_interf_obj * env2env_interf_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float eta);
+    env2env_interf_obj * env2env_interf_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float eta, const float alphaZ);
 
     void env2env_interf_destroy(env2env_interf_obj * obj);
 
@@ -144,12 +171,18 @@
 
     void env2env_gainspeech_destroy(env2env_gainspeech_obj * obj);
 
-    void env2env_gainspeech_process(env2env_gainspeech_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * noises, envs_obj * gains, envs_obj * snrs);
+    void env2env_gainspeech_process(env2env_gainspeech_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * noises, envs_obj * gains, envs_obj * snrs, envs_obj * vs);
 
     env2env_probspeech_obj * env2env_probspeech_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float theta, const float alpha, const float maxAbsenceProb, const float Gmin, const unsigned int winSizeLocal, const unsigned int winSizeGlobal, const unsigned int winSizeFrame);
 
     void env2env_probspeech_destroy(env2env_probspeech_obj * obj);
 
-    void env2env_probspeech_process(env2env_probspeech_obj * obj, const envs_obj * snrs, envs_obj * probspeechs);
+    void env2env_probspeech_process(env2env_probspeech_obj * obj, const tracks_obj * tracks, const envs_obj * snrs, const envs_obj * vs, envs_obj * probspeechs);
+
+    env2env_gainall_obj * env2env_gainall_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float Gmin);
+
+    void env2env_gainall_destroy(env2env_gainall_obj * obj);
+
+    void env2env_gainall_process(env2env_gainall_obj * obj, const tracks_obj * tracks, const envs_obj * gainspeeches, const envs_obj * probspeeches, envs_obj * gainalls);
 
 #endif

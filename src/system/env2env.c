@@ -19,10 +19,10 @@
         obj->delta = delta;
         obj->alphaD = alphaD;
 
+        obj->idsPrev = (unsigned long long *) malloc(sizeof(unsigned long long) * nChannels);
+        memset(obj->idsPrev, 0x00, sizeof(unsigned long long) * nChannels);
         obj->l = (unsigned int *) malloc(sizeof(unsigned int) * nChannels);
         memset(obj->l, 0x00, sizeof(unsigned int) * nChannels);
-        obj->first = (char *) malloc(sizeof(char) * nChannels);
-        memset(obj->first, 0x00, sizeof(char) * nChannels);
 
         obj->b = (float *) malloc(sizeof(float) * bSize);
         for (n = 0; n < obj->bSize; n++) {
@@ -72,8 +72,8 @@
 
     void env2env_mcra_destroy(env2env_mcra_obj * obj) {
 
+        free((void *) obj->idsPrev);
         free((void *) obj->l);
-        free((void *) obj->first);
         free((void *) obj->b);
 
         free((void *) obj->Sf);
@@ -95,7 +95,7 @@
         unsigned int iChannel;
         unsigned int iBin;
         signed int iSample;
-        unsigned int iBinWrapped;
+        signed int iBinWrapped;
         float sample;
 
         char doProcess;
@@ -107,16 +107,28 @@
 
                 if (tracks->ids[iChannel] != 0) {
 
-                    doProcess = 0x01;
-                    doReset = 0x00;
+                    if (obj->idsPrev[iChannel] != 0) {
+
+                        doProcess = 0x01;
+                        doReset = 0x00;
+
+                    }
+                    else {
+
+                        doProcess = 0x01;
+                        doReset = 0x01;
+
+                    }
 
                 }
                 else {
 
                     doProcess = 0x00;
-                    doReset = 0x01;
+                    doReset = 0x00;
 
                 }
+
+                obj->idsPrev[iChannel] = tracks->ids[iChannel];
 
             }
             else {
@@ -142,8 +154,6 @@
                     memcpy(obj->lambdaD[iChannel], estNoises->array[iChannel], sizeof(float) * obj->halfFrameSize);
                     memcpy(obj->lambdaDnext[iChannel], estNoises->array[iChannel], sizeof(float) * obj->halfFrameSize);
 
-                    obj->first[iChannel] = 0x00;
-
                 }
                 else {
 
@@ -156,8 +166,6 @@
                     memset(obj->StmpPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
                     memset(obj->lambdaD[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
                     memset(obj->lambdaDnext[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-
-                    obj->first[iChannel] = 0x01;
 
                 }
 
@@ -177,7 +185,15 @@
 
                     for (iSample = 0; iSample < obj->bSize; iSample++) {
 
-                        iBinWrapped = (unsigned int) abs(((signed int) iBin) + iSample - ((obj->bSize-1)/2));
+                        iBinWrapped = ((signed int) iBin) + iSample - ((signed int) ((obj->bSize-1)/2));
+
+                        if (iBinWrapped < 0) {
+                            iBinWrapped = -1 * iBinWrapped;
+                        }
+                        if (iBinWrapped >= ((signed int) obj->halfFrameSize)) {
+                            iBinWrapped = 2*(obj->halfFrameSize-1) - iBinWrapped;
+                        }
+
                         sample += obj->b[iSample] * noisys->array[iChannel][iBinWrapped];
 
                     }
@@ -254,7 +270,6 @@
                     // Reset frame counter
 
                     obj->l[iChannel] = 0;
-                    obj->first[iChannel] = 0x00;
 
                 }
 
@@ -267,29 +282,16 @@
                 // lambdaD_l+1[k] = lambdaD_l[k]                                    otherwise
                 //
 
-                if (obj->first[iChannel] = 0x00) {
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
-                    for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
-
-                        if ((obj->S[iChannel][iBin] < (obj->Smin[iChannel][iBin] * obj->delta)) || (obj->lambdaD[iChannel][iBin] > obj->S[iChannel][iBin])) {
-
-                            obj->lambdaDnext[iChannel][iBin] = (1.0f - obj->alphaD) * obj->lambdaD[iChannel][iBin] + obj->alphaD * obj->S[iChannel][iBin];
-
-                        }
-
-                    }
-
-                }
-                else {
-
-                    for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+                    if ((obj->S[iChannel][iBin] < (obj->Smin[iChannel][iBin] * obj->delta)) || (obj->lambdaD[iChannel][iBin] > obj->S[iChannel][iBin])) {
 
                         obj->lambdaDnext[iChannel][iBin] = (1.0f - obj->alphaD) * obj->lambdaD[iChannel][iBin] + obj->alphaD * obj->S[iChannel][iBin];
-                        obj->StmpPrev[iChannel][iBin] = obj->lambdaDnext[iChannel][iBin];
 
                     }
 
                 }
+
 
                 // Copy to output
 
@@ -423,21 +425,44 @@
 
     }
 
-    env2env_interf_obj * env2env_interf_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float eta) {
+    env2env_interf_obj * env2env_interf_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float eta, const float alphaZ) {
 
         env2env_interf_obj * obj;
+        unsigned int iChannel;
 
         obj = (env2env_interf_obj *) malloc(sizeof(env2env_interf_obj));
 
         obj->nChannels = nChannels;
         obj->halfFrameSize = halfFrameSize;
         obj->eta = eta;
+        obj->alphaZ = alphaZ;
+
+        obj->Zs = (float **) malloc(sizeof(float *) * nChannels);
+        obj->ZsPrev = (float **) malloc(sizeof(float *) * nChannels);
+
+        for (iChannel = 0; iChannel < nChannels; iChannel++) {
+
+            obj->Zs[iChannel] = (float *) malloc(sizeof(float) * halfFrameSize);
+            memset(obj->Zs[iChannel], 0x00, sizeof(float) * halfFrameSize);
+            obj->ZsPrev[iChannel] = (float *) malloc(sizeof(float) * halfFrameSize);
+            memset(obj->ZsPrev[iChannel], 0x00, sizeof(float) * halfFrameSize);
+
+        }
 
         return obj;
 
     }
 
     void env2env_interf_destroy(env2env_interf_obj * obj) {
+
+        unsigned int iChannel;
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            
+            free((void *) obj->Zs[iChannel]);
+            free((void *) obj->ZsPrev[iChannel]);
+
+        }
 
         free((void *) obj);
 
@@ -447,7 +472,30 @@
 
         unsigned int iChannel1;
         unsigned int iChannel2;
+        unsigned int iChannel;
         unsigned int iBin;
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            if (tracks->ids[iChannel] != 0) {
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    obj->Zs[iChannel][iBin] = (1.0f - obj->alphaZ) * obj->ZsPrev[iChannel][iBin] + obj->alphaZ * seps->array[iChannel][iBin];
+
+                }
+
+                memcpy(obj->ZsPrev[iChannel], obj->Zs[iChannel], sizeof(float)*obj->halfFrameSize);
+
+            }
+            else {
+
+                memset(obj->Zs[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->ZsPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            }
+
+        }
 
         for (iChannel1 = 0; iChannel1 < obj->nChannels; iChannel1++) {
 
@@ -463,7 +511,7 @@
 
                             for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
-                                interfs->array[iChannel1][iBin] += seps->array[iChannel2][iBin] * obj->eta;
+                                interfs->array[iChannel1][iBin] += obj->Zs[iChannel2][iBin] * obj->eta;
 
                             }
 
@@ -478,6 +526,11 @@
                     interfs->array[iChannel1][iBin] += noises->array[iChannel1][iBin];
 
                 }                
+
+            }
+            else {
+
+                memset(interfs->array[iChannel1], 0x00, sizeof(float) * obj->halfFrameSize);
 
             }
 
@@ -551,26 +604,17 @@
 
     }
 
-    void env2env_gainspeech_process(env2env_gainspeech_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * noises, envs_obj * gains, envs_obj * snrs) {
+    void env2env_gainspeech_process(env2env_gainspeech_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * noises, envs_obj * gains, envs_obj * snrs, envs_obj * vs) {
 
         unsigned int iChannel;
         unsigned int iBin;
-        float xi_plus_1;
+        float xi_over_xi_plus_1;
         float max_gamma_minus_1_vs_0;
         float GH1_2;
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
             if (tracks->ids[iChannel] != 0) {
-
-                memset(obj->gamma[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-                memset(obj->alphaP[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-                memset(obj->xi[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-                memset(obj->GH1[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-                memset(obj->v[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
-
-            }
-            else {
 
                 //
                 // gamma_l[k] = |Y_l(k)|^2 / (lambda_l[k] + epsilon)
@@ -583,14 +627,18 @@
                 }
 
                 //
-                // alphaP_l[k] = (xi_l-1[k] / (xi_l-1[k] + 1)^2) + alphaPmin
+                // alphaP_l[k] = min{(xi_l-1[k] / (xi_l-1[k] + 1))^2 + alphaPmin, 1.0}
                 //
 
                 for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
-                    xi_plus_1 = obj->xi[iChannel][iBin] + 1;
+                    xi_over_xi_plus_1 = obj->xi[iChannel][iBin] / (obj->xi[iChannel][iBin] + 1.0f);
 
-                    obj->alphaP[iChannel][iBin] = obj->xi[iChannel][iBin] / (xi_plus_1*xi_plus_1) + obj->alphaPmin;
+                    obj->alphaP[iChannel][iBin] = xi_over_xi_plus_1 * xi_over_xi_plus_1 + obj->alphaPmin;
+
+                    if (obj->alphaP[iChannel][iBin] > 1.0f) {
+                        obj->alphaP[iChannel][iBin] = 1.0f;
+                    }
 
                 }
 
@@ -600,7 +648,7 @@
 
                 for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
-                    if ((obj->gamma[iChannel][iBin] - 1.0f) > 0.0f) {
+                    if ((obj->gamma[iChannel][iBin] - 1.0f) < 0.0f) {
                         max_gamma_minus_1_vs_0 = 0.0f;
                     }
                     else {
@@ -624,16 +672,37 @@
                 }
 
                 //
-                // GH1_l[k] = fcn(v_l[k])
+                // GH1_l[k] = (xi_l[k] / (xi_l[k] + 1)) * fcn(v_l[k])
                 //
 
                 for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
 
-                    obj->GH1[iChannel][iBin] = transcendental_process(obj->transcendental, obj->v[iChannel][iBin]);
+                    obj->GH1[iChannel][iBin] = (obj->xi[iChannel][iBin] / (obj->xi[iChannel][iBin] + 1.0f)) * transcendental_process(obj->transcendental, obj->v[iChannel][iBin]);
+
+                    if (obj->GH1[iChannel][iBin] > 1.0f) {
+                        obj->GH1[iChannel][iBin] = 1.0f;
+                    }
 
                 }
 
+                memcpy(gains->array[iChannel],obj->GH1[iChannel],sizeof(float) * obj->halfFrameSize);
+                memcpy(snrs->array[iChannel],obj->xi[iChannel],sizeof(float) * obj->halfFrameSize);
+                memcpy(vs->array[iChannel],obj->v[iChannel],sizeof(float) * obj->halfFrameSize);
+
             }
+            else {
+
+                memset(obj->gamma[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->alphaP[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->xi[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->GH1[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->v[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+                memset(gains->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(snrs->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(vs->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            }            
 
         }
 
@@ -644,6 +713,9 @@
         env2env_probspeech_obj * obj;
         unsigned int iSample;
         unsigned int iChannel;
+        signed int iSampleShifted;
+        unsigned int iSampleWrapped;
+        float total;
 
         obj = (env2env_probspeech_obj *) malloc(sizeof(env2env_probspeech_obj));
 
@@ -671,8 +743,13 @@
             obj->winLocal[0] = 1.0f;
         }
         else {
+            total = 0.0f;
             for ( iSample = 0; iSample < winSizeLocal; iSample++ ) {
-                obj->winLocal[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) iSample ) / ( (float) ( winSizeLocal - 1 ) ) ) );
+                obj->winLocal[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) (iSample+1) ) / ( (float) ( (winSizeLocal+2) - 1 ) ) ) );
+                total += obj->winLocal[iSample];
+            }
+            for ( iSample = 0; iSample < winSizeLocal; iSample++ ) {
+                obj->winLocal[iSample] /= total;
             }
         }
 
@@ -680,18 +757,29 @@
             obj->winGlobal[0] = 1.0f;
         }
         else {
+            total = 0.0f;
             for ( iSample = 0; iSample < winSizeGlobal; iSample++ ) {
-                obj->winGlobal[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) iSample ) / ( (float) ( winSizeGlobal - 1 ) ) ) );
+                obj->winGlobal[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) (iSample+1) ) / ( (float) ( (winSizeGlobal+2) - 1 ) ) ) );
+                total += obj->winGlobal[iSample];
             }
+            for ( iSample = 0; iSample < winSizeGlobal; iSample++ ) {
+                obj->winGlobal[iSample] /= total;
+                
+            }            
         }
 
         if ( winSizeFrame == 1 ) {
             obj->winFrame[0] = 1.0f;
         }
         else {
+            total = 0.0f;
             for ( iSample = 0; iSample < winSizeFrame; iSample++ ) {
-                obj->winFrame[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) iSample ) / ( (float) ( winSizeFrame - 1 ) ) ) );
+                obj->winFrame[iSample] = 0.5f * ( 1.0f - cosf( 2 * M_PI * ( (float) (iSample+1) ) / ( (float) ( (winSizeFrame+2) - 1 ) ) ) );
+                total += obj->winFrame[iSample];
             }
+            for ( iSample = 0; iSample < winSizeFrame; iSample++ ) {
+                obj->winFrame[iSample] /= total;
+            }                 
         }        
 
         obj->winLocalShifted = (float *) malloc(sizeof(float) * obj->frameSize);
@@ -701,21 +789,50 @@
         obj->winFrameShifted = (float *) malloc(sizeof(float) * obj->frameSize);
         memset(obj->winFrameShifted, 0x00, sizeof(float) * obj->frameSize);
 
-        obj->winLocalShifted[0] = obj->winLocal[0];
-        for (iSample = 1; iSample < obj->winSizeLocal; iSample++) {          
-            obj->winLocalShifted[iSample] = obj->winLocal[iSample];
-            obj->winLocalShifted[obj->frameSize-iSample] = obj->winLocal[iSample];
+        for (iSample = 0; iSample < obj->winSizeLocal; iSample++) {      
+
+            iSampleShifted = iSample - (obj->winSizeLocal / 2);
+
+            if (iSampleShifted < 0) {
+                iSampleWrapped = (unsigned int) (iSampleShifted + obj->frameSize);
+            }
+            else {
+                iSampleWrapped = (unsigned int) (iSampleShifted);   
+            }
+
+            obj->winLocalShifted[iSampleWrapped] = obj->winLocal[iSample];
+
         }
-        obj->winGlobalShifted[0] = obj->winGlobal[0];
-        for (iSample = 1; iSample < obj->winSizeGlobal; iSample++) {          
-            obj->winGlobalShifted[iSample] = obj->winGlobal[iSample];
-            obj->winGlobalShifted[obj->frameSize-iSample] = obj->winGlobal[iSample];
-        }
-        obj->winFrameShifted[0] = obj->winFrame[0];
-        for (iSample = 1; iSample < obj->winSizeFrame; iSample++) {          
-            obj->winFrameShifted[iSample] = obj->winFrame[iSample];
-            obj->winFrameShifted[obj->frameSize-iSample] = obj->winFrame[iSample];
-        }
+
+        for (iSample = 0; iSample < obj->winSizeGlobal; iSample++) {      
+
+            iSampleShifted = iSample - (obj->winSizeGlobal / 2);
+
+            if (iSampleShifted < 0) {
+                iSampleWrapped = (unsigned int) (iSampleShifted + obj->frameSize);
+            }
+            else {
+                iSampleWrapped = (unsigned int) (iSampleShifted);   
+            }
+
+            obj->winGlobalShifted[iSampleWrapped] = obj->winGlobal[iSample];
+
+        }        
+
+        for (iSample = 0; iSample < obj->winSizeFrame; iSample++) {      
+
+            iSampleShifted = iSample - (obj->winSizeFrame / 2);
+
+            if (iSampleShifted < 0) {
+                iSampleWrapped = (unsigned int) (iSampleShifted + obj->frameSize);
+            }
+            else {
+                iSampleWrapped = (unsigned int) (iSampleShifted);   
+            }
+
+            obj->winFrameShifted[iSampleWrapped] = obj->winFrame[iSample];
+
+        }                
 
         obj->winLocalShiftedFreq = (float *) malloc(sizeof(float) * obj->halfFrameSize * 2);
         memset(obj->winLocalShiftedFreq, 0x00, sizeof(float) * obj->halfFrameSize * 2);
@@ -740,6 +857,20 @@
         obj->xiSmoothedLocal = (float **) malloc(sizeof(float *) * nChannels);
         obj->xiSmoothedGlobal = (float **) malloc(sizeof(float *) * nChannels);
         obj->xiSmoothedFrame = (float **) malloc(sizeof(float *) * nChannels);
+
+        obj->zetaLocal = (float **) malloc(sizeof(float *) * nChannels);
+        obj->zetaLocalPrev = (float **) malloc(sizeof(float *) * nChannels);
+        obj->zetaGlobal = (float **) malloc(sizeof(float *) * nChannels);
+        obj->zetaGlobalPrev = (float **) malloc(sizeof(float *) * nChannels);
+        obj->zetaFrame = (float **) malloc(sizeof(float *) * nChannels);
+        obj->zetaFramePrev = (float **) malloc(sizeof(float *) * nChannels);
+
+        obj->PLocal = (float **) malloc(sizeof(float *) * nChannels);
+        obj->PGlobal = (float **) malloc(sizeof(float *) * nChannels);
+        obj->PFrame = (float **) malloc(sizeof(float *) * nChannels);
+
+        obj->q = (float **) malloc(sizeof(float *) * nChannels);
+        obj->p = (float **) malloc(sizeof(float *) * nChannels);
 
         for (iChannel = 0; iChannel < nChannels; iChannel++) {
 
@@ -766,6 +897,31 @@
             memset(obj->xiSmoothedGlobalTime[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
             obj->xiSmoothedFrame[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
             memset(obj->xiSmoothedFrameTime[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            obj->zetaLocal[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaLocal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->zetaLocalPrev[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaLocalPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->zetaGlobal[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaGlobal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->zetaGlobalPrev[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaGlobalPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->zetaFrame[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaFrame[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->zetaFramePrev[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->zetaFramePrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            obj->PLocal[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->PLocal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->PGlobal[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->PGlobal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->PFrame[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->PFrame[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            obj->q[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->q[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+            obj->p[iChannel] = (float *) malloc(sizeof(float) * obj->halfFrameSize);
+            memset(obj->p[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
 
         }
 
@@ -806,6 +962,20 @@
             free((void *) obj->xiSmoothedGlobal[iChannel]);
             free((void *) obj->xiSmoothedFrame[iChannel]);
 
+            free((void *) obj->zetaLocal[iChannel]);
+            free((void *) obj->zetaLocalPrev[iChannel]);
+            free((void *) obj->zetaGlobal[iChannel]);
+            free((void *) obj->zetaGlobalPrev[iChannel]);
+            free((void *) obj->zetaFrame[iChannel]);
+            free((void *) obj->zetaFramePrev[iChannel]);
+
+            free((void *) obj->PLocal[iChannel]);
+            free((void *) obj->PGlobal[iChannel]);
+            free((void *) obj->PFrame[iChannel]);
+
+            free((void *) obj->q[iChannel]);
+            free((void *) obj->p[iChannel]);
+
         }
 
         free((void *) obj->xiTime);
@@ -821,9 +991,23 @@
         free((void *) obj->xiSmoothedGlobal);
         free((void *) obj->xiSmoothedFrame);
 
+        free((void *) obj->zetaLocal);
+        free((void *) obj->zetaLocalPrev);
+        free((void *) obj->zetaGlobal);
+        free((void *) obj->zetaGlobalPrev);
+        free((void *) obj->zetaFrame);
+        free((void *) obj->zetaFramePrev);
+
+        free((void *) obj->PLocal);
+        free((void *) obj->PGlobal);
+        free((void *) obj->PFrame);
+
+        free((void *) obj->q);
+        free((void *) obj->p);
+
     }
 
-    void env2env_probspeech_process(env2env_probspeech_obj * obj, const envs_obj * snrs, envs_obj * probspeechs) {
+    void env2env_probspeech_process(env2env_probspeech_obj * obj, const tracks_obj * tracks, const envs_obj * snrs, const envs_obj * vs, envs_obj * probspeechs) {
 
         unsigned int iChannel;
         unsigned int iBin;
@@ -844,62 +1028,215 @@
         float hFramexiReal;
         float hFramexiImag;
 
-        //
-        // Circular convolution with local, global and frame windows
-        //
+        float theta_zeta;
+        float PLocalGlobalFrame;
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-            obj->xiTime[iChannel][0] = snrs->array[iChannel][0];
-            obj->xiTime[iChannel][obj->halfFrameSize-1] = snrs->array[iChannel][obj->halfFrameSize-1];
+            if (tracks->ids[iChannel] != 0) {
 
-            for (iBin = 1; iBin < (obj->halfFrameSize-1); iBin++) {
+                //
+                // Circular convolution with local, global and frame windows
+                //
 
-                obj->xiTime[iChannel][iBin] = snrs->array[iChannel][iBin];
-                obj->xiTime[iChannel][obj->frameSize-iBin] = snrs->array[iChannel][iBin];
+                obj->xiTime[iChannel][0] = snrs->array[iChannel][0];
+                obj->xiTime[iChannel][obj->halfFrameSize-1] = snrs->array[iChannel][obj->halfFrameSize-1];
+
+                for (iBin = 1; iBin < (obj->halfFrameSize-1); iBin++) {
+
+                    obj->xiTime[iChannel][iBin] = snrs->array[iChannel][iBin];
+                    obj->xiTime[iChannel][obj->frameSize-iBin] = snrs->array[iChannel][iBin];
+
+                }
+
+                fft_r2c(obj->fft, obj->xiTime[iChannel], obj->xiFreq[iChannel]);
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    hLocalReal = obj->winLocalShiftedFreq[iBin*2+0];
+                    hLocalImag = obj->winLocalShiftedFreq[iBin*2+1];
+                    hGlobalReal = obj->winGlobalShiftedFreq[iBin*2+0];
+                    hGlobalImag = obj->winGlobalShiftedFreq[iBin*2+1];
+                    hFrameReal = obj->winFrameShiftedFreq[iBin*2+0];
+                    hFrameImag = obj->winFrameShiftedFreq[iBin*2+1];
+                    xiReal = obj->xiFreq[iChannel][iBin*2+0];
+                    xiImag = obj->xiFreq[iChannel][iBin*2+1];
+
+                    hLocalxiReal = hLocalReal * xiReal - hLocalImag * xiImag;
+                    hLocalxiImag = hLocalReal * xiImag + hLocalImag * xiReal;
+                    hGlobalxiReal = hGlobalReal * xiReal - hGlobalImag * xiImag;
+                    hGlobalxiImag = hGlobalReal * xiImag + hGlobalImag * xiReal;
+                    hFramexiReal = hFrameReal * xiReal - hFrameImag * xiImag;
+                    hFramexiImag = hFrameReal * xiImag + hFrameImag * xiReal;
+
+                    obj->xiSmoothedLocalFreq[iChannel][iBin*2+0] = hLocalxiReal;
+                    obj->xiSmoothedLocalFreq[iChannel][iBin*2+1] = hLocalxiImag;
+                    obj->xiSmoothedGlobalFreq[iChannel][iBin*2+0] = hGlobalxiReal;
+                    obj->xiSmoothedGlobalFreq[iChannel][iBin*2+1] = hGlobalxiImag;
+                    obj->xiSmoothedFrameFreq[iChannel][iBin*2+0] = hFramexiReal;
+                    obj->xiSmoothedFrameFreq[iChannel][iBin*2+1] = hFramexiImag;
+
+                }
+
+                fft_c2r(obj->fft, obj->xiSmoothedLocalFreq[iChannel], obj->xiSmoothedLocalTime[iChannel]);
+                fft_c2r(obj->fft, obj->xiSmoothedGlobalFreq[iChannel], obj->xiSmoothedGlobalTime[iChannel]);
+                fft_c2r(obj->fft, obj->xiSmoothedFrameFreq[iChannel], obj->xiSmoothedFrameTime[iChannel]);
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    obj->xiSmoothedLocal[iChannel][iBin] = obj->xiSmoothedLocalTime[iChannel][iBin];
+                    obj->xiSmoothedGlobal[iChannel][iBin] = obj->xiSmoothedGlobalTime[iChannel][iBin];
+                    obj->xiSmoothedFrame[iChannel][iBin] = obj->xiSmoothedFrameTime[iChannel][iBin];
+
+                }    
+
+                //
+                // zeta_l(k) = (1 - alpha) * zeta_l-1(k) + alpha * xiSmoothed_l(k)
+                //
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    obj->zetaLocal[iChannel][iBin] = (1.0f - obj->alpha) * obj->zetaLocalPrev[iChannel][iBin] + obj->alpha * obj->xiSmoothedLocal[iChannel][iBin];
+                    obj->zetaGlobal[iChannel][iBin] = (1.0f - obj->alpha) * obj->zetaGlobalPrev[iChannel][iBin] + obj->alpha * obj->xiSmoothedGlobal[iChannel][iBin];
+                    obj->zetaFrame[iChannel][iBin] = (1.0f - obj->alpha) * obj->zetaFramePrev[iChannel][iBin] + obj->alpha * obj->xiSmoothedFrame[iChannel][iBin];
+
+                }        
+
+                memcpy(obj->zetaLocalPrev[iChannel], obj->zetaLocal[iChannel], sizeof(float) * obj->halfFrameSize);
+                memcpy(obj->zetaGlobalPrev[iChannel], obj->zetaGlobal[iChannel], sizeof(float) * obj->halfFrameSize);
+                memcpy(obj->zetaFramePrev[iChannel], obj->zetaFrame[iChannel], sizeof(float) * obj->halfFrameSize);
+
+                //
+                // P_l(k) = 1 / (1 + (theta/zeta_l(k))^2)
+                //
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    theta_zeta = obj->theta/obj->zetaLocal[iChannel][iBin];
+                    obj->PLocal[iChannel][iBin] = 1.0f / (1.0f + (theta_zeta*theta_zeta));
+
+                    theta_zeta = obj->theta/obj->zetaGlobal[iChannel][iBin];
+                    obj->PGlobal[iChannel][iBin] = 1.0f / (1.0f + (theta_zeta*theta_zeta));
+
+                    theta_zeta = obj->theta/obj->zetaFrame[iChannel][iBin];
+                    obj->PFrame[iChannel][iBin] = 1.0f / (1.0f + (theta_zeta*theta_zeta));
+
+                }
+
+                //
+                // q_l(k) = min(1-Plocal_l(k)*Pglobal_l(k)*Pframe_l(k))
+                //
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    PLocalGlobalFrame = obj->PLocal[iChannel][iBin] * obj->PGlobal[iChannel][iBin] * obj->PFrame[iChannel][iBin];
+
+                    if ((1.0f - PLocalGlobalFrame) > 0.9f) {
+                        obj->q[iChannel][iBin] = 0.9;
+                    }
+                    else {
+                        obj->q[iChannel][iBin] = 1.0f - PLocalGlobalFrame;
+                    }
+
+                }
+
+                //
+                // p_l(k) = (1 + (q_l(k) / (1 - q_l(k)) * (1 + xi_l(k)) * exp(-v_l(k)))
+                //
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    obj->p[iChannel][iBin] = 1.0f / (1.0f + (obj->q[iChannel][iBin] / (1.0f - obj->q[iChannel][iBin])) * (1.0f + snrs->array[iChannel][iBin]) * expf(-1.0f * vs->array[iChannel][iBin]));
+
+                }
+
+                memcpy(probspeechs->array[iChannel],obj->p[iChannel],sizeof(float) * obj->halfFrameSize);
 
             }
+            else {
 
-            fft_r2c(obj->fft, obj->xiTime[iChannel], obj->xiFreq[iChannel]);
+                memset(obj->xiTime[iChannel], 0x00, sizeof(float) * obj->frameSize);
+                memset(obj->xiFreq[iChannel], 0x00, sizeof(float) * obj->halfFrameSize * 2);
 
-            for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+                memset(obj->xiSmoothedLocalFreq[iChannel], 0x00, sizeof(float) * obj->halfFrameSize * 2);
+                memset(obj->xiSmoothedGlobalFreq[iChannel], 0x00, sizeof(float) * obj->halfFrameSize * 2);
+                memset(obj->xiSmoothedFrameFreq[iChannel], 0x00, sizeof(float) * obj->halfFrameSize * 2);
+                memset(obj->xiSmoothedLocalTime[iChannel], 0x00, sizeof(float) * obj->frameSize);
+                memset(obj->xiSmoothedGlobalTime[iChannel], 0x00, sizeof(float) * obj->frameSize);
+                memset(obj->xiSmoothedFrameTime[iChannel], 0x00, sizeof(float) * obj->frameSize);
+                memset(obj->xiSmoothedLocalTime[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->xiSmoothedGlobalTime[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->xiSmoothedFrameTime[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
 
-                hLocalReal = obj->winLocalShiftedFreq[iBin*2+0];
-                hLocalImag = obj->winLocalShiftedFreq[iBin*2+1];
-                hGlobalReal = obj->winGlobalShiftedFreq[iBin*2+0];
-                hGlobalImag = obj->winGlobalShiftedFreq[iBin*2+1];
-                hFrameReal = obj->winFrameShiftedFreq[iBin*2+0];
-                hFrameImag = obj->winFrameShiftedFreq[iBin*2+1];
-                xiReal = obj->xiFreq[iChannel][iBin*2+0];
-                xiImag = obj->xiFreq[iChannel][iBin*2+1];
+                memset(obj->zetaLocal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->zetaLocalPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->zetaGlobal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->zetaGlobalPrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->zetaFrame[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->zetaFramePrev[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
 
-                hLocalxiReal = hLocalReal * xiReal - hLocalImag * xiImag;
-                hLocalxiImag = hLocalReal * xiImag + hLocalImag * xiReal;
-                hGlobalxiReal = hGlobalReal * xiReal - hGlobalImag * xiImag;
-                hGlobalxiImag = hGlobalReal * xiImag + hGlobalImag * xiReal;
-                hFramexiReal = hFrameReal * xiReal - hFrameImag * xiImag;
-                hFramexiImag = hFrameReal * xiImag + hFrameImag * xiReal;
+                memset(obj->PLocal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->PGlobal[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->PFrame[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
 
-                obj->xiSmoothedLocalFreq[iChannel][iBin*2+0] = hLocalxiReal;
-                obj->xiSmoothedLocalFreq[iChannel][iBin*2+1] = hLocalxiImag;
-                obj->xiSmoothedGlobalFreq[iChannel][iBin*2+0] = hGlobalxiReal;
-                obj->xiSmoothedGlobalFreq[iChannel][iBin*2+1] = hGlobalxiImag;
-                obj->xiSmoothedFrameFreq[iChannel][iBin*2+0] = hFramexiReal;
-                obj->xiSmoothedFrameFreq[iChannel][iBin*2+1] = hFramexiImag;
+                memset(obj->q[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+                memset(obj->p[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);                
+
+                memset(probspeechs->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
 
             }
+            
+        }
 
-            fft_c2r(obj->fft, obj->xiSmoothedLocalFreq[iChannel], obj->xiSmoothedLocalTime[iChannel]);
-            fft_c2r(obj->fft, obj->xiSmoothedGlobalFreq[iChannel], obj->xiSmoothedGlobalTime[iChannel]);
-            fft_c2r(obj->fft, obj->xiSmoothedFrameFreq[iChannel], obj->xiSmoothedFrameTime[iChannel]);
+    }
 
-            for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+    env2env_gainall_obj * env2env_gainall_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const float Gmin) {
 
-                obj->xiSmoothedLocal[iChannel][iBin] = obj->xiSmoothedLocalTime[iChannel][iBin];
-                obj->xiSmoothedGlobal[iChannel][iBin] = obj->xiSmoothedGlobalTime[iChannel][iBin];
-                obj->xiSmoothedFrame[iChannel][iBin] = obj->xiSmoothedFrameTime[iChannel][iBin];
+        env2env_gainall_obj * obj;
 
-            }            
+        obj = (env2env_gainall_obj *) malloc(sizeof(env2env_gainall_obj));
+
+        obj->nChannels = nChannels;
+        obj->halfFrameSize = halfFrameSize;
+        obj->Gmin = Gmin;
+
+        return obj;
+
+    }
+
+    void env2env_gainall_destroy(env2env_gainall_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void env2env_gainall_process(env2env_gainall_obj * obj, const tracks_obj * tracks, const envs_obj * gainspeeches, const envs_obj * probspeeches, envs_obj * gainalls) {
+
+        unsigned int iChannel;
+        unsigned int iBin;
+
+        float expr1;
+        float expr2;
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            if (tracks->ids[iChannel] != 0) {
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    expr1 = powf(gainspeeches->array[iChannel][iBin], probspeeches->array[iChannel][iBin]);
+                    expr2 = powf(obj->Gmin, (1.0f - probspeeches->array[iChannel][iBin]));
+
+                    gainalls->array[iChannel][iBin] = expr1 * expr2;
+
+                }
+
+            }
+            else {
+
+                memset(gainalls->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            }
 
         }
 

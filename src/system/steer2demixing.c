@@ -92,7 +92,7 @@
                             Aimag = steers->array[iSep][iSampleBC * 2 + 1];
 
                             Wreal = Areal / obj->gains2[iBin];
-                            Wimag = Aimag / obj->gains2[iBin];
+                            Wimag = -1.0f * Aimag / obj->gains2[iBin];
 
                             demixings->array[iSep][iSampleBC * 2 + 0] = Wreal;
                             demixings->array[iSep][iSampleBC * 2 + 1] = Wimag;
