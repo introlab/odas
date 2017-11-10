@@ -104,6 +104,11 @@
 
         obj->fp = fopen(obj->interface->fileName, "rb");
 
+        if (obj->fp == NULL) {
+            printf("Cannot open file %s\n",obj->interface->fileName);
+            exit(EXIT_FAILURE);
+        }
+
     }
 
     void src_hops_open_interface_soundcard(src_hops_obj * obj) {

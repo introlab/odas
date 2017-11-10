@@ -37,6 +37,8 @@
 
     void cmatrix_scale(cmatrix_obj * obj, const cmatrix_obj * src, const float scale);
 
+    void cmatrix_zero(cmatrix_obj * obj);
+
     void cmatrix_printf(const cmatrix_obj * obj);
 
 #endif

@@ -21,6 +21,8 @@
 
     void demixings_copy(demixings_obj * dest, const demixings_obj * src);
 
+    void demixings_zero(demixings_obj * obj);
+
     void demixings_printf(const demixings_obj * obj);
 
 #endif

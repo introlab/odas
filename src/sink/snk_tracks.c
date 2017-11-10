@@ -112,6 +112,11 @@
 
         obj->fp = fopen(obj->interface->fileName, "wb");
 
+        if (obj->fp == NULL) {
+            printf("Cannot open file %s\n",obj->interface->fileName);
+            exit(EXIT_FAILURE);
+        }
+
     }
 
     void snk_tracks_open_interface_socket(snk_tracks_obj * obj) {

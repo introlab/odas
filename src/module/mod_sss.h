@@ -46,6 +46,9 @@
         gains_obj * gains;
         masks_obj * masks;
 
+        tracks_obj * tracksPrev;
+        tracks_obj * tracksNow;
+
         track2gain_obj * track2gain;
         gain2mask_obj * gain2mask;
         track2steer_obj * track2steer;
@@ -102,22 +105,25 @@
         soundspeed_obj * soundspeed;
         spatialfilter_obj * spatialfilter;    
 
-        unsigned int bSize;
-        float alphaS;
-        unsigned int L;
-        float delta;
-        float alphaD;
+        float sep_gss_lambda;
+        float sep_gss_mu;
 
-        float eta;
-        float alphaZ;
-        float alphaPmin;
-        float thetaWin;
-        float alphaWin;
-        float maxAbsenceProb;
-        float Gmin;
-        unsigned int winSizeLocal;
-        unsigned int winSizeGlobal;
-        unsigned int winSizeFrame;
+        unsigned int pf_multi_bSize;
+        float pf_multi_alphaS;
+        unsigned int pf_multi_L;
+        float pf_multi_delta;
+        float pf_multi_alphaD;
+
+        float pf_multi_eta;
+        float pf_multi_alphaZ;
+        float pf_multi_alphaPmin;
+        float pf_multi_thetaWin;
+        float pf_multi_alphaWin;
+        float pf_multi_maxAbsenceProb;
+        float pf_multi_Gmin;
+        unsigned int pf_multi_winSizeLocal;
+        unsigned int pf_multi_winSizeGlobal;
+        unsigned int pf_multi_winSizeFrame;
 
     } mod_sss_cfg;
 

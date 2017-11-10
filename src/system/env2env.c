@@ -72,9 +72,25 @@
 
     void env2env_mcra_destroy(env2env_mcra_obj * obj) {
 
+        unsigned iChannel;
+
         free((void *) obj->idsPrev);
         free((void *) obj->l);
         free((void *) obj->b);
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            free((void *) obj->Sf[iChannel]);
+            free((void *) obj->S[iChannel]);
+            free((void *) obj->SPrev[iChannel]);
+            free((void *) obj->Smin[iChannel]);
+            free((void *) obj->SminPrev[iChannel]);
+            free((void *) obj->Stmp[iChannel]);
+            free((void *) obj->StmpPrev[iChannel]);
+            free((void *) obj->lambdaD[iChannel]);
+            free((void *) obj->lambdaDnext[iChannel]);
+
+        }
 
         free((void *) obj->Sf);
         free((void *) obj->S);
@@ -463,6 +479,9 @@
             free((void *) obj->ZsPrev[iChannel]);
 
         }
+
+        free((void *) obj->Zs);
+        free((void *) obj->ZsPrev);
 
         free((void *) obj);
 
@@ -1004,6 +1023,8 @@
 
         free((void *) obj->q);
         free((void *) obj->p);
+
+        free((void *) obj);
 
     }
 

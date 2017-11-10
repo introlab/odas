@@ -50,6 +50,16 @@
 
     }
 
+    void demixings_zero(demixings_obj * obj) {
+
+        unsigned int iSep;
+
+        for (iSep = 0; iSep < obj->nSeps; iSep++) {
+            memset(obj->array[iSep], 0x00, obj->halfFrameSize * obj->nChannels * 2 * sizeof(float));
+        }
+
+    }
+
     void demixings_printf(const demixings_obj * obj) {
 
         unsigned int iBin;

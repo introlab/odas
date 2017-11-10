@@ -108,6 +108,11 @@
 
         obj->fp = fopen(obj->interface->fileName, "wb");
 
+        if (obj->fp == NULL) {
+            printf("Cannot open file %s\n",obj->interface->fileName);
+            exit(EXIT_FAILURE);
+        }
+
     }
 
     void snk_hops_open_interface_socket(snk_hops_obj * obj) {

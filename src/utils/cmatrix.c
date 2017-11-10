@@ -13,6 +13,9 @@
         obj->real = (float *) malloc(sizeof(float) * nRows * nCols);
         obj->imag = (float *) malloc(sizeof(float) * nRows * nCols);
 
+        memset(obj->real, 0x00, sizeof(float) * nRows * nCols);
+        memset(obj->imag, 0x00, sizeof(float) * nRows * nCols);
+
         return obj;
 
     }
@@ -25,6 +28,9 @@
 
         obj->nRows = cmatrix->nRows;
         obj->nCols = cmatrix->nCols;
+
+        obj->real = (float *) malloc(sizeof(float) * obj->nRows * obj->nCols);
+        obj->imag = (float *) malloc(sizeof(float) * obj->nRows * obj->nCols);
 
         memcpy(obj->real, cmatrix->real, sizeof(float) * cmatrix->nRows * cmatrix->nCols);
         memcpy(obj->imag, cmatrix->imag, sizeof(float) * cmatrix->nRows * cmatrix->nCols);
@@ -100,7 +106,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                obj->real[iRow * obj->nRows + iCol] = src1->real[iRow * obj->nRows + iCol] + src2->real[iRow * obj->nRows + iCol];
+                obj->real[iRow * obj->nCols + iCol] = src1->real[iRow * obj->nCols + iCol] + src2->real[iRow * obj->nCols + iCol];
 
             }
 
@@ -117,7 +123,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                obj->real[iRow * obj->nRows + iCol] = src1->real[iRow * obj->nRows + iCol] - src2->real[iRow * obj->nRows + iCol];
+                obj->real[iRow * obj->nCols + iCol] = src1->real[iRow * obj->nCols + iCol] - src2->real[iRow * obj->nCols + iCol];
 
             }
 
@@ -139,21 +145,21 @@
 
             for (iCol = 0; iCol < src2->nCols; iCol++) {
 
-                obj->real[iRow*obj->nRows+iCol] = 0.0f;
-                obj->imag[iRow*obj->nRows+iCol] = 0.0f;
+                obj->real[iRow*obj->nCols+iCol] = 0.0f;
+                obj->imag[iRow*obj->nCols+iCol] = 0.0f;
 
                 for (iElement = 0; iElement < src1->nCols; iElement++) {
 
-                    real1 = src1->real[iRow*obj->nRows+iElement];
-                    imag1 = src1->imag[iRow*obj->nRows+iElement];
-                    real2 = src2->real[iElement*obj->nRows+iCol];
-                    imag2 = src2->imag[iElement*obj->nRows+iCol];
+                    real1 = src1->real[iRow*src1->nCols+iElement];
+                    imag1 = src1->imag[iRow*src1->nCols+iElement];
+                    real2 = src2->real[iElement*src2->nCols+iCol];
+                    imag2 = src2->imag[iElement*src2->nCols+iCol];
 
                     real12 = real1 * real2 - imag1 * imag2;
                     imag12 = real1 * imag2 + imag1 * real2;
 
-                    obj->real[iRow*obj->nRows+iCol] += real12;
-                    obj->imag[iRow*obj->nRows+iCol] += imag12;
+                    obj->real[iRow*obj->nCols+iCol] += real12;
+                    obj->imag[iRow*obj->nCols+iCol] += imag12;
 
                 }
 
@@ -172,12 +178,19 @@
 
             for (iCol = 0; iCol < src->nCols; iCol++) {
 
-                obj->real[iRow * obj->nRows + iCol] = scale * src->real[iRow * obj->nRows + iCol];
-                obj->imag[iRow * obj->nRows + iCol] = scale * src->imag[iRow * obj->nRows + iCol];
+                obj->real[iRow * obj->nCols + iCol] = scale * src->real[iRow * obj->nCols + iCol];
+                obj->imag[iRow * obj->nCols + iCol] = scale * src->imag[iRow * obj->nCols + iCol];
 
             }
 
         }
+
+    }
+
+    void cmatrix_zero(cmatrix_obj * obj) {
+
+        memset(obj->real, 0x00, sizeof(float) * obj->nRows * obj->nCols);
+        memset(obj->imag, 0x00, sizeof(float) * obj->nRows * obj->nCols);
 
     }
 
@@ -190,7 +203,7 @@
 
             for (iCol = 0; iCol < obj->nCols; iCol++) {
 
-                printf("(%+1.5f + %+1.5fj) ",obj->real[iRow*obj->nRows+iCol],obj->imag[iRow*obj->nRows+iCol]);
+                printf("(%+1.5f + %+1.5fj) ",obj->real[iRow*obj->nCols+iCol],obj->imag[iRow*obj->nCols+iCol]);
 
             }
 

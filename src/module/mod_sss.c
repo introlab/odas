@@ -33,6 +33,10 @@
                 obj->masks = masks_construct_zero(msg_tracks_config->nTracks, 
                                                   msg_spectra_config->nChannels);
 
+                obj->tracksPrev = tracks_construct_zero(msg_tracks_config->nTracks);
+
+                obj->tracksNow = tracks_construct_zero(msg_tracks_config->nTracks);
+
                 obj->track2gain = track2gain_construct_zero(msg_tracks_config->nTracks,
                                                             msg_spectra_config->nChannels,
                                                             mod_sss_config->mics->direction,
@@ -73,8 +77,62 @@
 
             case 'g':
 
-                printf("GSS not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                obj->beampatterns_mics = directivity_beampattern_mics(mod_sss_config->mics, 
+                                                                      mod_sss_config->nThetas);
+
+                obj->beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sss_config->spatialfilter, 
+                                                                                        mod_sss_config->nThetas);
+
+                obj->steers = steers_construct_zero(msg_spectra_config->halfFrameSize, 
+                                                    msg_tracks_config->nTracks, 
+                                                    msg_spectra_config->nChannels);
+
+                obj->gains = gains_construct_zero(msg_tracks_config->nTracks,
+                                                  msg_spectra_config->nChannels);
+
+                obj->masks = masks_construct_zero(msg_tracks_config->nTracks, 
+                                                  msg_spectra_config->nChannels);
+
+                obj->tracksPrev = tracks_construct_zero(msg_tracks_config->nTracks);
+
+                obj->tracksNow = tracks_construct_zero(msg_tracks_config->nTracks);
+
+                obj->track2gain = track2gain_construct_zero(msg_tracks_config->nTracks,
+                                                            msg_spectra_config->nChannels,
+                                                            mod_sss_config->mics->direction,
+                                                            mod_sss_config->spatialfilter->direction);
+
+                obj->gain2mask = gain2mask_construct_zero(msg_tracks_config->nTracks,
+                                                          msg_spectra_config->nChannels,
+                                                          mod_sss_config->gainMin);
+
+                obj->track2steer = track2steer_construct_zero(msg_tracks_config->nTracks, 
+                                                              msg_spectra_config->nChannels, 
+                                                              msg_spectra_config->halfFrameSize, 
+                                                              mod_sss_config->soundspeed->mu,
+                                                              mod_sss_config->samplerate->mu,
+                                                              mod_sss_config->mics->mu);
+
+                obj->steer2demixing_ds = (steer2demixing_ds_obj *) NULL;
+                obj->steer2demixing_gss = steer2demixing_gss_construct_zero(msg_tracks_config->nTracks, 
+                                                                            msg_spectra_config->nChannels, 
+                                                                            msg_spectra_config->halfFrameSize, 
+                                                                            mod_sss_config->sep_gss_mu, 
+                                                                            mod_sss_config->sep_gss_lambda,
+                                                                            mod_sss_config->epsilon);
+                obj->steer2demixing_mvdr = (steer2demixing_mvdr_obj *) NULL;
+
+                obj->demixingsPrev = demixings_construct_zero(msg_spectra_config->halfFrameSize, 
+                                                              msg_tracks_config->nTracks, 
+                                                              msg_spectra_config->nChannels);
+
+                obj->demixingsNow = demixings_construct_zero(msg_spectra_config->halfFrameSize, 
+                                                             msg_tracks_config->nTracks, 
+                                                             msg_spectra_config->nChannels);
+
+                obj->demixing2freq = demixing2freq_construct_zero(msg_tracks_config->nTracks,
+                                                                  msg_spectra_config->nChannels,
+                                                                  msg_spectra_config->halfFrameSize);                
 
             break;
 
@@ -112,26 +170,26 @@
 
                 obj->env2env_mcra = env2env_mcra_construct_zero(msg_tracks_config->nTracks, 
                                                                 msg_spectra_config->halfFrameSize,
-                                                                mod_sss_config->bSize, 
-                                                                mod_sss_config->alphaS, 
-                                                                mod_sss_config->L, 
-                                                                mod_sss_config->delta, 
-                                                                mod_sss_config->alphaD);
+                                                                mod_sss_config->pf_multi_bSize, 
+                                                                mod_sss_config->pf_multi_alphaS, 
+                                                                mod_sss_config->pf_multi_L, 
+                                                                mod_sss_config->pf_multi_delta, 
+                                                                mod_sss_config->pf_multi_alphaD);
 
                 obj->noisesSep = envs_construct_zero(msg_tracks_config->nTracks, 
                                                      msg_spectra_config->halfFrameSize);
 
                 obj->env2env_interf = env2env_interf_construct_zero(msg_tracks_config->nTracks, 
                                                                     msg_spectra_config->halfFrameSize, 
-                                                                    mod_sss_config->eta,
-                                                                    mod_sss_config->alphaZ);
+                                                                    mod_sss_config->pf_multi_eta,
+                                                                    mod_sss_config->pf_multi_alphaZ);
 
                 obj->interfs = envs_construct_zero(msg_tracks_config->nTracks,
                                                    msg_spectra_config->halfFrameSize);
 
                 obj->env2env_gainspeech = env2env_gainspeech_construct_zero(msg_tracks_config->nTracks,
                                                                             msg_spectra_config->halfFrameSize,
-                                                                            mod_sss_config->alphaPmin,
+                                                                            mod_sss_config->pf_multi_alphaPmin,
                                                                             mod_sss_config->epsilon);
 
                 obj->gainspeeches = envs_construct_zero(msg_tracks_config->nTracks,
@@ -145,20 +203,20 @@
 
                 obj->env2env_probspeech = env2env_probspeech_construct_zero(msg_tracks_config->nTracks,
                                                                             msg_spectra_config->halfFrameSize, 
-                                                                            mod_sss_config->thetaWin, 
-                                                                            mod_sss_config->alphaWin,
-                                                                            mod_sss_config->maxAbsenceProb, 
-                                                                            mod_sss_config->Gmin, 
-                                                                            mod_sss_config->winSizeLocal, 
-                                                                            mod_sss_config->winSizeGlobal, 
-                                                                            mod_sss_config->winSizeFrame);
+                                                                            mod_sss_config->pf_multi_thetaWin, 
+                                                                            mod_sss_config->pf_multi_alphaWin,
+                                                                            mod_sss_config->pf_multi_maxAbsenceProb, 
+                                                                            mod_sss_config->pf_multi_Gmin, 
+                                                                            mod_sss_config->pf_multi_winSizeLocal, 
+                                                                            mod_sss_config->pf_multi_winSizeGlobal, 
+                                                                            mod_sss_config->pf_multi_winSizeFrame);
 
                 obj->probspeeches = envs_construct_zero(msg_tracks_config->nTracks,
                                                         msg_spectra_config->halfFrameSize);
 
                 obj->env2env_gainall = env2env_gainall_construct_zero(msg_tracks_config->nTracks,
                                                                       msg_spectra_config->halfFrameSize,
-                                                                      mod_sss_config->Gmin);
+                                                                      mod_sss_config->pf_multi_Gmin);
 
                 obj->gainalls = envs_construct_zero(msg_tracks_config->nTracks,
                                                     msg_spectra_config->halfFrameSize);
@@ -197,6 +255,8 @@
                 steers_destroy(obj->steers);
                 gains_destroy(obj->gains);
                 masks_destroy(obj->masks);
+                tracks_destroy(obj->tracksPrev);
+                tracks_destroy(obj->tracksNow);
                 track2gain_destroy(obj->track2gain);
                 gain2mask_destroy(obj->gain2mask);
                 track2steer_destroy(obj->track2steer);
@@ -209,8 +269,20 @@
 
             case 'g':
 
-                printf("GSS not implemented yet.\n");
-                exit(EXIT_FAILURE);
+                beampatterns_destroy(obj->beampatterns_mics);
+                beampatterns_destroy(obj->beampatterns_spatialfilter);
+                steers_destroy(obj->steers);
+                gains_destroy(obj->gains);
+                masks_destroy(obj->masks);
+                tracks_destroy(obj->tracksPrev);
+                tracks_destroy(obj->tracksNow);
+                track2gain_destroy(obj->track2gain);
+                gain2mask_destroy(obj->gain2mask);
+                track2steer_destroy(obj->track2steer);
+                steer2demixing_gss_destroy(obj->steer2demixing_gss);
+                demixings_destroy(obj->demixingsPrev);
+                demixings_destroy(obj->demixingsNow);
+                demixing2freq_destroy(obj->demixing2freq);
 
             break;
 
@@ -345,10 +417,16 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
+            tracks_copy(obj->tracksPrev,
+                        obj->tracksNow);
+
+            tracks_copy(obj->tracksNow,
+                        obj->in3->tracks);
+
             track2gain_process(obj->track2gain, 
                                obj->beampatterns_mics, 
                                obj->beampatterns_spatialfilter, 
-                               obj->in3->tracks,
+                               obj->tracksNow,
                                obj->gains);
 
             gain2mask_process(obj->gain2mask, 
@@ -356,7 +434,7 @@
                               obj->masks);
 
             track2steer_process(obj->track2steer, 
-                                obj->in3->tracks,
+                                obj->tracksNow,
                                 obj->gains,
                                 obj->masks,
                                 obj->steers);
@@ -365,13 +443,13 @@
                            obj->demixingsNow);
 
             steer2demixing_ds_process(obj->steer2demixing_ds, 
-                                      obj->in3->tracks,
+                                      obj->tracksNow,
                                       obj->steers, 
                                       obj->masks, 
                                       obj->demixingsNow);
 
             demixing2freq_process(obj->demixing2freq, 
-                                  obj->in3->tracks,
+                                  obj->tracksNow,
                                   obj->demixingsNow, 
                                   obj->masks, 
                                   obj->in1->freqs, 
@@ -385,7 +463,6 @@
         else {
 
             msg_spectra_zero(obj->out1);
-            msg_spectra_zero(obj->out2);
 
             rtnValue = -1;
 
@@ -409,12 +486,16 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
-            
+            tracks_copy(obj->tracksPrev,
+                        obj->tracksNow);
+
+            tracks_copy(obj->tracksNow,
+                        obj->in3->tracks);
 
             track2gain_process(obj->track2gain, 
                                obj->beampatterns_mics, 
                                obj->beampatterns_spatialfilter, 
-                               obj->in3->tracks,
+                               obj->tracksNow,
                                obj->gains);
 
             gain2mask_process(obj->gain2mask, 
@@ -422,7 +503,7 @@
                               obj->masks);
 
             track2steer_process(obj->track2steer, 
-                                obj->in3->tracks,
+                                obj->tracksNow,
                                 obj->gains,
                                 obj->masks,
                                 obj->steers);
@@ -430,18 +511,30 @@
             demixings_copy(obj->demixingsPrev,
                            obj->demixingsNow);
 
+            steer2demixing_gss_process(obj->steer2demixing_gss, 
+                                       obj->tracksPrev, 
+                                       obj->tracksNow, 
+                                       obj->steers, 
+                                       obj->masks, 
+                                       obj->in1->freqs,
+                                       obj->demixingsPrev,
+                                       obj->demixingsNow);
+
             demixing2freq_process(obj->demixing2freq, 
-                                  obj->in3->tracks,
+                                  obj->tracksNow,
                                   obj->demixingsNow, 
                                   obj->masks, 
                                   obj->in1->freqs, 
                                   obj->out1->freqs);        
 
+            obj->out1->timeStamp = obj->in1->timeStamp;
+            
+            rtnValue = 0;
+
         }
         else {
 
             msg_spectra_zero(obj->out1);
-            msg_spectra_zero(obj->out2);
 
             rtnValue = -1;
 
@@ -465,27 +558,16 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
-            track2gain_process(obj->track2gain, 
-                               obj->beampatterns_mics, 
-                               obj->beampatterns_spatialfilter, 
-                               obj->in3->tracks,
-                               obj->gains);
+            freqs_zero(obj->out1->freqs);
 
-            gain2mask_process(obj->gain2mask, 
-                              obj->gains, 
-                              obj->masks);
-
-            track2steer_process(obj->track2steer, 
-                                obj->in3->tracks,
-                                obj->gains,
-                                obj->masks,
-                                obj->steers);
+            obj->out1->timeStamp = obj->in1->timeStamp;
+            
+            rtnValue = 0;
 
         }
         else {
 
             msg_spectra_zero(obj->out1);
-            msg_spectra_zero(obj->out2);
 
             rtnValue = -1;
 
@@ -563,6 +645,8 @@
 
         }
         else {
+
+            msg_spectra_zero(obj->out2);
 
             rtnValue = -1;
 
