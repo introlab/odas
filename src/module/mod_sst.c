@@ -929,7 +929,7 @@
 
             // Only if the tracking is dynamic (i.e. sources may be created automatically)
 
-            if (obj->add = 'd') {
+            if (obj->add == 'd') {
 
                 // Add sources
                 
