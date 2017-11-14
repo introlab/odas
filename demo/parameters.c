@@ -740,6 +740,91 @@
 
     }
 
+    inj_targets_cfg * parameters_inj_targets_sst_config(const char * fileConfig) {
+
+        inj_targets_cfg * cfg;
+        unsigned int iTarget;
+        unsigned int nTargets;
+        float x, y, z;        
+        char * tmpStr1;
+        char * tmpStr2;
+
+        cfg = inj_targets_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Number of targets                                        |
+        // +----------------------------------------------------------+        
+
+            nTargets = parameters_count(fileConfig, "sst.target");      
+
+            cfg->nTargets = nTargets;
+
+        // +----------------------------------------------------------+
+        // | Targets                                                  |
+        // +----------------------------------------------------------+        
+
+            cfg->targets = targets_construct_zero(nTargets);
+
+            for (iTarget = 0; iTarget < nTargets; iTarget++) {
+
+                tmpStr1 = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpStr1, "sst.target.[%u].tag",iTarget);
+                tmpStr2 = parameters_lookup_string(fileConfig, tmpStr1);
+                free((void *) tmpStr1);
+
+                tmpStr1 = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpStr1, "sst.target.[%u].x",iTarget);
+                x = parameters_lookup_float(fileConfig, tmpStr1);
+                free((void *) tmpStr1);
+
+                tmpStr1 = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpStr1, "sst.target.[%u].y",iTarget);
+                y = parameters_lookup_float(fileConfig, tmpStr1);
+                free((void *) tmpStr1);
+
+                tmpStr1 = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpStr1, "sst.target.[%u].z",iTarget);
+                z = parameters_lookup_float(fileConfig, tmpStr1);
+                free((void *) tmpStr1);                
+
+                strcpy(cfg->targets->tags[iTarget],tmpStr2);
+                cfg->targets->array[iTarget *3 + 0] = x;
+                cfg->targets->array[iTarget *3 + 1] = y;
+                cfg->targets->array[iTarget *3 + 2] = z;
+
+                free((void *) tmpStr2);
+
+            }
+
+        return cfg;
+
+    }
+
+    msg_targets_cfg * parameters_msg_targets_sst_config(const char * fileConfig) {
+
+        msg_targets_cfg * cfg;
+        unsigned int nTargets;
+
+        cfg = msg_targets_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Number of targets                                        |
+        // +----------------------------------------------------------+        
+
+            nTargets = parameters_count(fileConfig, "sst.target");      
+
+            cfg->nTargets = nTargets;
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "general.samplerate.mu");              
+
+        return cfg;
+
+    }
+
     mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig) {
 
         mod_sst_cfg * cfg;
@@ -749,8 +834,8 @@
         float weight;
         float mu;
         float sigma;
-        unsigned int iTrack;
 
+        unsigned int iTrack;
         char * tmpStr1;
 
         cfg = mod_sst_cfg_construct();
@@ -769,6 +854,25 @@
             }
             else {
                 printf("sst.mode: Invalid filter type.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            free((void *) tmpStr1);
+
+        // +----------------------------------------------------------+
+        // | Add                                                      |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "sst.add");
+
+            if (strcmp(tmpStr1, "dynamic") == 0) {
+                cfg->add = 'd';
+            }
+            else if (strcmp(tmpStr1, "static") == 0) {
+                cfg->add = 's';
+            }
+            else {
+                printf("sst.add: Invalid add type.\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -820,6 +924,7 @@
 
             cfg->sigmaR_active = sqrtf(parameters_lookup_float(fileConfig, "sst.sigmaR2_active"));
             cfg->sigmaR_prob = sqrtf(parameters_lookup_float(fileConfig, "sst.sigmaR2_prob"));
+            cfg->sigmaR_target = sqrtf(parameters_lookup_float(fileConfig, "sst.sigmaR2_target"));
 
         // +----------------------------------------------------------+
         // | GMM Active                                               |

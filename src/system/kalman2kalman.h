@@ -8,6 +8,7 @@
     #include "../signal/postprob.h"
     #include "../signal/kalman.h"
     #include "../signal/pot.h"
+    #include "../signal/target.h"
     #include "../utils/matrix.h"
 
     typedef struct kalman2kalman_obj {
@@ -48,11 +49,17 @@
 
     void kalman2kalman_destroy(kalman2kalman_obj * obj);
 
-    void kalman2kalman_init(kalman2kalman_obj * obj, const pots_obj * pots, const unsigned int iPot, kalman_obj * kalman);
+    void kalman2kalman_init_pots(kalman2kalman_obj * obj, const pots_obj * pots, const unsigned int iPot, kalman_obj * kalman);
+
+    void kalman2kalman_init_targets(kalman2kalman_obj * obj, const targets_obj * targets, const unsigned int iTarget, kalman_obj * kalman);
 
     void kalman2kalman_predict(kalman2kalman_obj * obj, kalman_obj * kalman);
 
+    void kalman2kalman_predict_static(kalman2kalman_obj * obj, kalman_obj * kalman);
+
     void kalman2kalman_update(kalman2kalman_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, kalman_obj * kalman);
+
+    void kalman2kalman_update_static(kalman2kalman_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, kalman_obj * kalman);    
 
     void kalman2kalman_estimate(kalman2kalman_obj * obj, const kalman_obj * kalman, float * x, float * y, float * z);
 

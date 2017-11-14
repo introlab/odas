@@ -9,6 +9,7 @@
 
         unsigned int nTracks;
         unsigned long long * ids;
+        char ** tags;
         float * array;
         float * activity;
         

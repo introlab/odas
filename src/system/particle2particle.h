@@ -6,6 +6,7 @@
     #include "../signal/particle.h"
     #include "../signal/postprob.h"
     #include "../signal/pot.h"
+    #include "../signal/target.h"
 
     typedef struct particle2particle_obj {
 
@@ -45,11 +46,17 @@
 
     void particle2particle_destroy(particle2particle_obj * obj);
 
-    void particle2particle_init(particle2particle_obj * obj, const pots_obj * pots, const unsigned int iPot, particles_obj * particles);
+    void particle2particle_init_pots(particle2particle_obj * obj, const pots_obj * pots, const unsigned int iPot, particles_obj * particles);
+
+    void particle2particle_init_targets(particle2particle_obj * obj, const targets_obj * targets, const unsigned int iTarget, particles_obj * particles);
 
     void particle2particle_predict(particle2particle_obj * obj, particles_obj * particles);
 
+    void particle2particle_predict_static(particle2particle_obj * obj, particles_obj * particles);
+
     void particle2particle_update(particle2particle_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, particles_obj * particles);
+
+    void particle2particle_update_static(particle2particle_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, particles_obj * particles);
 
     void particle2particle_estimate(const particle2particle_obj * obj, const particles_obj * particles, float * x, float * y, float * z);
 

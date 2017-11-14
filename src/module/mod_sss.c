@@ -407,8 +407,8 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
-            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
+        if ((obj->in1->timeStamp != obj->in2->timeStamp) ||
+            (obj->in1->timeStamp != obj->in3->timeStamp)) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -476,8 +476,8 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
-            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
+        if ((obj->in1->timeStamp != obj->in2->timeStamp) ||
+            (obj->in1->timeStamp != obj->in3->timeStamp)) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -548,8 +548,8 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
-            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
+        if ((obj->in1->timeStamp != obj->in2->timeStamp) ||
+            (obj->in1->timeStamp != obj->in3->timeStamp)) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);
@@ -581,8 +581,8 @@
 
         int rtnValue;
 
-        if ((msg_spectra_isZero(obj->in1) != msg_powers_isZero(obj->in2)) ||
-            (msg_spectra_isZero(obj->in1) != msg_tracks_isZero(obj->in3))) {
+        if ((obj->in1->timeStamp != obj->in2->timeStamp) ||
+            (obj->in1->timeStamp != obj->in3->timeStamp)) {
 
             printf("Time stamp mismatch.\n");
             exit(EXIT_FAILURE);

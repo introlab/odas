@@ -322,9 +322,10 @@
 
         for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
-            sprintf(obj->buffer,"%s        { \"id\": %llu, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"activity\": %1.3f }", 
+            sprintf(obj->buffer,"%s        { \"id\": %llu, \"tag\": %s, \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"activity\": %1.3f }", 
                     obj->buffer,
                     obj->in->tracks->ids[iTrack],
+                    obj->in->tracks->tags[iTrack],
                     obj->in->tracks->array[iTrack*3+0], 
                     obj->in->tracks->array[iTrack*3+1], 
                     obj->in->tracks->array[iTrack*3+2],

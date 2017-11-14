@@ -106,7 +106,7 @@
 
     }
 
-    void kalman2kalman_init(kalman2kalman_obj * obj, const pots_obj * pots, const unsigned int iPot, kalman_obj * kalman) {
+    void kalman2kalman_init_pots(kalman2kalman_obj * obj, const pots_obj * pots, const unsigned int iPot, kalman_obj * kalman) {
 
         matrix_copy_zero(kalman->x_llm1);
         matrix_copy_zero(kalman->x_lm1lm1);
@@ -123,6 +123,26 @@
         kalman->x_lm1lm1->array[0*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 0];
         kalman->x_lm1lm1->array[1*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 1];
         kalman->x_lm1lm1->array[2*(kalman->x_lm1lm1->nCols)+0] = pots->array[iPot * 4 + 2];
+
+    }
+
+    void kalman2kalman_init_targets(kalman2kalman_obj * obj, const targets_obj * targets, const unsigned int iTarget, kalman_obj * kalman) {
+
+        matrix_copy_zero(kalman->x_llm1);
+        matrix_copy_zero(kalman->x_lm1lm1);
+        matrix_copy_zero(kalman->P_llm1);
+        matrix_copy_zero(kalman->P_lm1lm1);
+
+        kalman->P_lm1lm1->array[0*(kalman->P_lm1lm1->nCols)+0] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[1*(kalman->P_lm1lm1->nCols)+1] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[2*(kalman->P_lm1lm1->nCols)+2] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[3*(kalman->P_lm1lm1->nCols)+3] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[4*(kalman->P_lm1lm1->nCols)+4] = obj->sigmaQ * obj->sigmaQ;
+        kalman->P_lm1lm1->array[5*(kalman->P_lm1lm1->nCols)+5] = obj->sigmaQ * obj->sigmaQ;
+
+        kalman->x_lm1lm1->array[0*(kalman->x_lm1lm1->nCols)+0] = targets->array[iTarget * 3 + 0];
+        kalman->x_lm1lm1->array[1*(kalman->x_lm1lm1->nCols)+0] = targets->array[iTarget * 3 + 1];
+        kalman->x_lm1lm1->array[2*(kalman->x_lm1lm1->nCols)+0] = targets->array[iTarget * 3 + 2];
 
     }
 
@@ -156,6 +176,13 @@
         kalman->x_llm1->array[5*(kalman->x_llm1->nCols)+0] = vz - xz * proj / (norm2 + obj->epsilon);
 
     }
+
+    void kalman2kalman_predict_static(kalman2kalman_obj * obj, kalman_obj * kalman) {
+
+        matrix_copy_matrix(kalman->x_llm1, kalman->x_lm1lm1);
+        matrix_copy_matrix(kalman->P_llm1, kalman->P_lm1lm1);
+
+    }    
 
     void kalman2kalman_update(kalman2kalman_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, kalman_obj * kalman) {
 
@@ -199,11 +226,17 @@
         matrix_scale(obj->pKz_Hx, obj->Kz_Hx, updateFactor);
         matrix_add(kalman->x_lm1lm1, kalman->x_llm1, obj->pKz_Hx);
 
-
         // Update P
         matrix_mul(obj->KHP, obj->K, obj->HP);
         matrix_scale(obj->pKHP, obj->KHP, updateFactor);
         matrix_sub(kalman->P_lm1lm1, kalman->P_llm1, obj->pKHP);
+
+    }
+
+    void kalman2kalman_update_static(kalman2kalman_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, kalman_obj * kalman) {
+
+        matrix_copy_matrix(kalman->x_lm1lm1, kalman->x_llm1);
+        matrix_copy_matrix(kalman->P_lm1lm1, kalman->P_llm1);
 
     }
 

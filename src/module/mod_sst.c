@@ -1,7 +1,7 @@
     
     #include "mod_sst.h"
 
-    mod_sst_obj * mod_sst_construct(const mod_sst_cfg * mod_sst_config, const mod_ssl_cfg * mod_ssl_config, const msg_pots_cfg * msg_pots_config, const msg_tracks_cfg * msg_tracks_config) {
+    mod_sst_obj * mod_sst_construct(const mod_sst_cfg * mod_sst_config, const mod_ssl_cfg * mod_ssl_config, const msg_pots_cfg * msg_pots_config, const msg_targets_cfg * msg_targets_config, const msg_tracks_cfg * msg_tracks_config) {
 
         mod_sst_obj * obj;
         
@@ -22,8 +22,10 @@
         obj->nPots = msg_pots_config->nPots;
         obj->nTracksMax = msg_tracks_config->nTracks;
         obj->nTracks = 0;
+        obj->nTargetsMax = msg_targets_config->nTargets;
 
         obj->mode = mod_sst_config->mode;
+        obj->add = mod_sst_config->add;
 
         obj->mixtures = (mixture_obj **) malloc(sizeof(mixture_obj *) * (obj->nTracksMax+1));
         obj->coherences = (coherences_obj **) malloc(sizeof(coherences_obj *) * (obj->nTracksMax+1));
@@ -38,10 +40,23 @@
         }
 
         obj->ids = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracksMax);
+        memset(obj->ids, 0x00, sizeof(unsigned long long) * obj->nTracksMax);
         obj->idsAdded = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracksMax);
+        memset(obj->idsAdded, 0x00, sizeof(unsigned long long) * obj->nTracksMax);
         obj->idsRemoved = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracksMax);
-                
+        memset(obj->idsRemoved, 0x00, sizeof(unsigned long long) * obj->nTracksMax);
+        
+        obj->tags = (char **) malloc(sizeof(char *) * obj->nTracksMax);
+
+        for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+            obj->tags[iTrackMax] = (char *) malloc(sizeof(char) * 256);
+            strcpy(obj->tags[iTrackMax],"");
+
+        }
+
         obj->type = (char *) malloc(sizeof(char) * obj->nTracksMax);
+        memset(obj->type, 0x00, sizeof(char) * obj->nTracksMax);
         
         obj->kalmans = (kalman_obj **) malloc(sizeof(kalman_obj *) * obj->nTracksMax); 
         memset(obj->kalmans, 0x00, sizeof(kalman_obj *) * obj->nTracksMax);
@@ -59,14 +74,13 @@
         obj->theta_inactive = mod_sst_config->theta_inactive;
 
         obj->n_prob = (unsigned int *) malloc(sizeof(unsigned int) * obj->nTracksMax);
+        memset(obj->n_prob, 0x00, sizeof(unsigned int) * obj->nTracksMax);
         obj->mean_prob = (float *) malloc(sizeof(float) * obj->nTracksMax);
+        memset(obj->mean_prob, 0x00, sizeof(float) * obj->nTracksMax);
         obj->n_inactive = (unsigned int *) malloc(sizeof(unsigned int) * obj->nTracksMax);
+        memset(obj->n_inactive, 0x00, sizeof(unsigned int) * obj->nTracksMax);
 
         for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
-
-            obj->ids[iTrackMax] = 0;
-            obj->idsAdded[iTrackMax] = 0;
-            obj->idsRemoved[iTrackMax] = 0;
 
             obj->type[iTrackMax] = 'I';
 
@@ -94,10 +108,6 @@
             }
             
             obj->N_inactive[iTrackMax] = mod_sst_config->N_inactive[iTrackMax];
-
-            obj->n_prob[iTrackMax] = 0;
-            obj->mean_prob[iTrackMax] = 0.0f;
-            obj->n_inactive[iTrackMax] = 0;
 
         }       
 
@@ -141,7 +151,12 @@
                 obj->kalman2kalman_active = kalman2kalman_construct(deltaT,
                                                                     mod_sst_config->sigmaQ,
                                                                     mod_sst_config->sigmaR_active,
-                                                                    mod_sst_config->epsilon);    
+                                                                    mod_sst_config->epsilon);   
+
+                obj->kalman2kalman_target = kalman2kalman_construct(deltaT,
+                                                                    mod_sst_config->sigmaQ,
+                                                                    mod_sst_config->sigmaR_target,
+                                                                    mod_sst_config->epsilon);
 
                 obj->kalman2coherence_prob = kalman2coherence_construct(mod_sst_config->epsilon, 
                                                                         mod_sst_config->sigmaR_prob);
@@ -149,10 +164,15 @@
                 obj->kalman2coherence_active = kalman2coherence_construct(mod_sst_config->epsilon, 
                                                                           mod_sst_config->sigmaR_active);
 
+                obj->kalman2coherence_target = kalman2coherence_construct(mod_sst_config->epsilon,
+                                                                          mod_sst_config->sigmaR_target);
+
                 obj->particle2particle_prob = NULL;
                 obj->particle2particle_active = NULL;
+                obj->particle2particle_target = NULL;
                 obj->particle2coherence_prob = NULL;
                 obj->particle2coherence_active = NULL;                
+                obj->particle2coherence_target = NULL;
 
             break;
 
@@ -160,8 +180,10 @@
 
                 obj->kalman2kalman_prob = NULL;
                 obj->kalman2kalman_active = NULL;
+                obj->kalman2kalman_target = NULL;
                 obj->kalman2coherence_prob = NULL;
                 obj->kalman2coherence_active = NULL;
+                obj->kalman2coherence_target = NULL;
 
                 obj->particle2particle_prob = particle2particle_construct(mod_sst_config->nParticles,
                                                                           deltaT,
@@ -191,11 +213,28 @@
                                                                             mod_sst_config->ac_ratio,
                                                                             (double) mod_sst_config->epsilon,
                                                                             mod_sst_config->sigmaR_active,
-                                                                            mod_sst_config->Nmin);    
+                                                                            mod_sst_config->Nmin);   
+
+                obj->particle2particle_target = particle2particle_construct(mod_sst_config->nParticles,
+                                                                            deltaT,
+                                                                            mod_sst_config->st_alpha,
+                                                                            mod_sst_config->st_beta,
+                                                                            mod_sst_config->st_ratio,
+                                                                            mod_sst_config->ve_alpha,
+                                                                            mod_sst_config->ve_beta,
+                                                                            mod_sst_config->ve_ratio,
+                                                                            mod_sst_config->ac_alpha,
+                                                                            mod_sst_config->ac_beta,
+                                                                            mod_sst_config->ac_ratio,
+                                                                            (double) mod_sst_config->epsilon,
+                                                                            mod_sst_config->sigmaR_target,
+                                                                            mod_sst_config->Nmin);  
 
                 obj->particle2coherence_prob = particle2coherence_construct(mod_sst_config->sigmaR_prob);
 
                 obj->particle2coherence_active = particle2coherence_construct(mod_sst_config->sigmaR_active);
+
+                obj->particle2coherence_target = particle2coherence_construct(mod_sst_config->sigmaR_target);
 
             break;
 
@@ -215,7 +254,8 @@
 
         obj->id = 0;
 
-        obj->in = (msg_pots_obj *) NULL;
+        obj->in1 = (msg_pots_obj *) NULL;
+        obj->in2 = (msg_targets_obj *) NULL;
         obj->out = (msg_tracks_obj *) NULL;
 
         return obj;
@@ -257,6 +297,12 @@
         free((void *) obj->ids);
         free((void *) obj->idsAdded);
         free((void *) obj->idsRemoved);
+        
+        for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+            free((void *) obj->tags[iTrackMax]);
+        }
+        free((void *) obj->tags);
+        
         free((void *) obj->type);
 
         free((void *) obj->kalmans);
@@ -275,11 +321,17 @@
         if (obj->kalman2kalman_active != NULL) {
             kalman2kalman_destroy(obj->kalman2kalman_active);
         }
+        if (obj->kalman2kalman_target != NULL) {
+            kalman2kalman_destroy(obj->kalman2kalman_target);
+        }
         if (obj->kalman2coherence_prob != NULL) {
             kalman2coherence_destroy(obj->kalman2coherence_prob);
         }
         if (obj->kalman2coherence_active != NULL) {
             kalman2coherence_destroy(obj->kalman2coherence_active);
+        }
+        if (obj->kalman2coherence_target != NULL) {
+            kalman2coherence_destroy(obj->kalman2coherence_target);
         }
         if (obj->particle2particle_prob != NULL) {
             particle2particle_destroy(obj->particle2particle_prob);
@@ -287,11 +339,17 @@
         if (obj->particle2particle_active != NULL) {
             particle2particle_destroy(obj->particle2particle_active);
         }
+        if (obj->particle2particle_target != NULL) {
+            particle2particle_destroy(obj->particle2particle_target);
+        }
         if (obj->particle2coherence_prob != NULL)  {
             particle2coherence_destroy(obj->particle2coherence_prob);
         }
-        if (obj->particle2coherence_active != NULL)  {
+        if (obj->particle2coherence_active != NULL) {
             particle2coherence_destroy(obj->particle2coherence_active);
+        }
+        if (obj->particle2coherence_target != NULL) {
+            particle2coherence_destroy(obj->particle2coherence_target);
         }
 
         mixture2mixture_destroy(obj->mixture2mixture);
@@ -305,13 +363,131 @@
         unsigned int iPot;
         unsigned int iTrackMax;
         unsigned int iTrack;
+        unsigned int iTargetMax;
         float x,y,z;
         float sourceActivity;
         int rtnValue;
+        char targetFound;
 
-        if (msg_pots_isZero(obj->in) == 0) {
+        if (obj->in1->timeStamp != obj->in2->timeStamp) {
 
-            // Count
+            printf("Time stamp mismatch.\n");
+            exit(EXIT_FAILURE);
+
+        }
+
+        if (msg_pots_isZero(obj->in1) == 0) {
+
+            // +----------------------------------------------------------------------+
+            // | Update tracked sources from target sources                           |
+            // +----------------------------------------------------------------------+
+
+            // Add sources
+
+            for (iTargetMax = 0; iTargetMax < obj->nTargetsMax; iTargetMax++) {
+
+                targetFound = 0x00;
+
+                for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+                    if (strcmp(obj->in2->targets->tags[iTargetMax],obj->tags[iTrackMax])==0) {
+                        
+                        targetFound = 0x01;
+                        break;
+
+                    }
+
+                }
+
+                if (targetFound == 0x00) {
+
+                    for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+                        if (obj->ids[iTrackMax] == 0) {
+
+                            obj->id++;
+                            obj->ids[iTrackMax] = obj->id;
+                            strcpy(obj->tags[iTrackMax],obj->in2->targets->tags[iTargetMax]);
+
+                            switch(obj->mode) {
+
+                                case 'k':
+
+                                    kalman2kalman_init_targets(obj->kalman2kalman_prob, 
+                                                               obj->in2->targets,
+                                                               iTargetMax, 
+                                                               obj->kalmans[iTrackMax]); 
+
+                                break;
+
+                                case 'p':
+
+                                    particle2particle_init_targets(obj->particle2particle_prob, 
+                                                                   obj->in2->targets,
+                                                                   iTargetMax, 
+                                                                   obj->particles[iTrackMax]);
+
+                                break;
+
+                                default:
+
+                                    printf("Invalid filter type.\n");
+                                    exit(EXIT_FAILURE);
+
+                                break;
+
+                            }
+
+                            obj->type[iTrackMax] = 'T';
+                            obj->n_prob[iTrackMax] = 0;
+                            obj->mean_prob[iTrackMax] = 0.0f;
+
+                            break;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // Remove sources
+
+            for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+                if (strcmp(obj->tags[iTrackMax],"dynamic") != 0) {
+
+                    targetFound = 0x00;
+
+                    for (iTargetMax = 0; iTargetMax < obj->nTargetsMax; iTargetMax++) {
+
+                        if (strcmp(obj->tags[iTrackMax],obj->in2->targets->tags[iTargetMax]) == 0) {
+
+                            targetFound = 0x01;
+                            break;
+
+                        }
+
+                    }
+
+                    if (targetFound == 0x00) {
+
+                        obj->ids[iTrackMax] = 0;
+                        strcpy(obj->tags[iTrackMax],"");
+                        obj->type[iTrackMax] = 'I';
+                        obj->n_prob[iTrackMax] = 0;
+                        obj->mean_prob[iTrackMax] = 0.0f;
+
+                    }
+
+                }
+
+            }
+
+            // +----------------------------------------------------------------------+
+            // | Count tracked sources                                                |
+            // +----------------------------------------------------------------------+
 
             obj->nTracks = 0;
 
@@ -325,7 +501,9 @@
 
             }
 
-            // Predict  
+            // +----------------------------------------------------------------------+
+            // | Predict                                                              |
+            // +----------------------------------------------------------------------+
 
             for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
@@ -351,9 +529,17 @@
 
                                 break;
 
+                                case 'T':
+
+                                    kalman2kalman_predict_static(obj->kalman2kalman_target,
+                                                                 obj->kalmans[iTrackMax]);
+
+                                break;
+
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Predict: Unknown state.\n");
+                                    printf("%u, %c\n",iTrackMax,obj->type[iTrackMax]);
                                     exit(EXIT_FAILURE);                        
 
                                 break;
@@ -380,9 +566,16 @@
 
                                 break;
 
+                                case 'T':
+
+                                    particle2particle_predict_static(obj->particle2particle_target,
+                                                                     obj->particles[iTrackMax]);
+
+                                break;
+
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Predict: Unknown state.\n");
                                     exit(EXIT_FAILURE);                        
 
                                 break;
@@ -404,7 +597,9 @@
 
             }
 
-            // Coherence
+            // +----------------------------------------------------------------------+
+            // | Coherence                                                            |
+            // +----------------------------------------------------------------------+
 
             iTrack = 0;
 
@@ -422,7 +617,7 @@
 
                                     kalman2coherence_process(obj->kalman2coherence_prob,
                                                              obj->kalmans[iTrackMax],
-                                                             obj->in->pots,
+                                                             obj->in1->pots,
                                                              iTrack,
                                                              obj->coherences[obj->nTracks]);
 
@@ -432,7 +627,17 @@
 
                                     kalman2coherence_process(obj->kalman2coherence_active,
                                                              obj->kalmans[iTrackMax],
-                                                             obj->in->pots,
+                                                             obj->in1->pots,
+                                                             iTrack,
+                                                             obj->coherences[obj->nTracks]);
+
+                                break;
+
+                                case 'T':
+
+                                    kalman2coherence_process(obj->kalman2coherence_target,
+                                                             obj->kalmans[iTrackMax],
+                                                             obj->in1->pots,
                                                              iTrack,
                                                              obj->coherences[obj->nTracks]);
 
@@ -440,7 +645,7 @@
 
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Coherence: Unknown state.\n");
                                     exit(EXIT_FAILURE);                            
 
                                 break;
@@ -457,7 +662,7 @@
 
                                     particle2coherence_process(obj->particle2coherence_prob,
                                                                obj->particles[iTrackMax],
-                                                               obj->in->pots,
+                                                               obj->in1->pots,
                                                                iTrack,
                                                                obj->coherences[obj->nTracks]);
 
@@ -467,15 +672,25 @@
 
                                     particle2coherence_process(obj->particle2coherence_active,
                                                                obj->particles[iTrackMax],
-                                                               obj->in->pots,
+                                                               obj->in1->pots,
                                                                iTrack,
                                                                obj->coherences[obj->nTracks]);
 
                                 break;
 
+                                case 'T':
+
+                                    particle2coherence_process(obj->particle2coherence_target,
+                                                               obj->particles[iTrackMax],
+                                                               obj->in1->pots,
+                                                               iTrack,
+                                                               obj->coherences[obj->nTracks]);                                
+
+                                break;
+
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Coherence: Unknown state.\n");
                                     exit(EXIT_FAILURE);                            
 
                                 break;                        
@@ -499,15 +714,19 @@
 
             }
 
-            // Mixture
+            // +----------------------------------------------------------------------+
+            // | Mixture                                                              |
+            // +----------------------------------------------------------------------+
 
             mixture2mixture_process(obj->mixture2mixture, 
             	                    obj->mixtures[obj->nTracks], 
-            	                    obj->in->pots, 
+            	                    obj->in1->pots, 
             	                    obj->coherences[obj->nTracks], 
             	                    obj->postprobs[obj->nTracks]);
 
-            // Update
+            // +----------------------------------------------------------------------+
+            // | Update                                                               |
+            // +----------------------------------------------------------------------+
 
             iTrack = 0;
 
@@ -526,7 +745,7 @@
                                     kalman2kalman_update(obj->kalman2kalman_prob,
                                                          obj->postprobs[obj->nTracks],
                                                          iTrack,
-                                                         obj->in->pots,
+                                                         obj->in1->pots,
                                                          obj->kalmans[iTrackMax]);
 
                                 break;
@@ -536,14 +755,24 @@
                                     kalman2kalman_update(obj->kalman2kalman_active,
                                                          obj->postprobs[obj->nTracks],
                                                          iTrack,
-                                                         obj->in->pots,
+                                                         obj->in1->pots,
                                                          obj->kalmans[iTrackMax]);
+
+                                break;
+
+                                case 'T':
+
+                                    kalman2kalman_update_static(obj->kalman2kalman_target,
+                                                                obj->postprobs[obj->nTracks],
+                                                                iTrack,
+                                                                obj->in1->pots,
+                                                                obj->kalmans[iTrackMax]);
 
                                 break;
 
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Update: Unknown state.\n");
                                     exit(EXIT_FAILURE); 
 
                                 break;
@@ -561,7 +790,7 @@
                                     particle2particle_update(obj->particle2particle_prob,
                                                              obj->postprobs[obj->nTracks],
                                                              iTrack,
-                                                             obj->in->pots,
+                                                             obj->in1->pots,
                                                              obj->particles[iTrackMax]);
 
                                 break;
@@ -571,14 +800,24 @@
                                     particle2particle_update(obj->particle2particle_active,
                                                              obj->postprobs[obj->nTracks],
                                                              iTrack,
-                                                             obj->in->pots,
+                                                             obj->in1->pots,
                                                              obj->particles[iTrackMax]);
+
+                                break;
+
+                                case 'T':
+
+                                    particle2particle_update_static(obj->particle2particle_target,
+                                                                    obj->postprobs[obj->nTracks],
+                                                                    iTrack,
+                                                                    obj->in1->pots,
+                                                                    obj->particles[iTrackMax]);
 
                                 break;
 
                                 default:
 
-                                    printf("Unknown state.\n");
+                                    printf("Update: Unknown state.\n");
                                     exit(EXIT_FAILURE);                         
 
                                 break;
@@ -602,7 +841,9 @@
 
             }
 
-            // Activity
+            // +----------------------------------------------------------------------+
+            // | Activity                                                             |
+            // +----------------------------------------------------------------------+
 
             iTrack = 0;
             memset(obj->sourceActivities, 0x00, sizeof(float) * obj->nTracksMax);
@@ -636,6 +877,12 @@
 
                         break;
 
+                        case 'T':
+
+                            // No counter to update
+
+                        break;
+
                         default:
 
                             printf("Unknown state.\n");
@@ -651,7 +898,9 @@
 
             }        
 
-            // Transitions
+            // +----------------------------------------------------------------------+
+            // | Transitions                                                          |
+            // +----------------------------------------------------------------------+
 
             iTrack = 0;
 
@@ -674,59 +923,69 @@
 
             }          
 
-            // Add source
-            
-            for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+            // +----------------------------------------------------------------------+
+            // | Update tracked sources from potential sources                        |
+            // +----------------------------------------------------------------------+
 
-                obj->idsAdded[iTrackMax] = 0;
+            // Only if the tracking is dynamic (i.e. sources may be created automatically)
 
-            }
+            if (obj->add = 'd') {
 
-            for (iPot = 0; iPot < obj->nPots; iPot++) {
+                // Add sources
+                
+                for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
-                if (obj->postprobs[obj->nTracks]->arrayNew[iPot] > obj->theta_new) {                
+                    obj->idsAdded[iTrackMax] = 0;
 
-                    for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+                }
 
-                        if (obj->ids[iTrackMax] == 0) {
+                for (iPot = 0; iPot < obj->nPots; iPot++) {
 
-                            obj->id++;
-                            obj->idsAdded[iTrackMax] = obj->id;
-                            
-                            switch(obj->mode) {
+                    if (obj->postprobs[obj->nTracks]->arrayNew[iPot] > obj->theta_new) {                
 
-                                case 'k':
+                        for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
-                                    kalman2kalman_init(obj->kalman2kalman_prob, 
-                                                       obj->in->pots,
-                                                       iPot, 
-                                                       obj->kalmans[iTrackMax]); 
+                            if (obj->ids[iTrackMax] == 0) {
 
-                                break;
+                                obj->id++;
+                                obj->idsAdded[iTrackMax] = obj->id;
+                                
+                                switch(obj->mode) {
 
-                                case 'p':
+                                    case 'k':
 
-                                    particle2particle_init(obj->particle2particle_prob, 
-                                                           obj->in->pots,
-                                                           iPot, 
-                                                           obj->particles[iTrackMax]);
+                                        kalman2kalman_init_pots(obj->kalman2kalman_prob, 
+                                                                obj->in1->pots,
+                                                                iPot, 
+                                                                obj->kalmans[iTrackMax]); 
 
-                                break;
+                                    break;
 
-                                default:
+                                    case 'p':
 
-                                    printf("Invalid filter type.\n");
-                                    exit(EXIT_FAILURE);
+                                        particle2particle_init_pots(obj->particle2particle_prob, 
+                                                                    obj->in1->pots,
+                                                                    iPot, 
+                                                                    obj->particles[iTrackMax]);
+
+                                    break;
+
+                                    default:
+
+                                        printf("Invalid filter type.\n");
+                                        exit(EXIT_FAILURE);
+
+                                    break;
+
+                                }
+
+                                obj->type[iTrackMax] = 'P';
+                                obj->n_prob[iTrackMax] = 0;
+                                obj->mean_prob[iTrackMax] = 0.0f;
 
                                 break;
 
                             }
-
-                            obj->type[iTrackMax] = 'P';
-                            obj->n_prob[iTrackMax] = 0;
-                            obj->mean_prob[iTrackMax] = 0.0f;
-
-                            break;
 
                         }
 
@@ -734,62 +993,66 @@
 
                 }
 
-            }
+                // Remove source
 
-            // Remove source
+                for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
-            for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+                    obj->idsRemoved[iTrackMax] = 0;
+                    
+                }
 
-                obj->idsRemoved[iTrackMax] = 0;
-                
-            }
+                iTrack = 0;
 
-            iTrack = 0;
+                for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
-            for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+                    if (obj->ids[iTrackMax] != 0) {
 
-                if (obj->ids[iTrackMax] != 0) {
+                        if ((obj->type[iTrackMax] == 'P') && 
+                            (obj->n_prob[iTrackMax] == obj->N_prob) && 
+                            (obj->mean_prob[iTrackMax]/((float) obj->N_prob) < obj->theta_prob)) {
 
-                    if ((obj->type[iTrackMax] == 'P') && 
-                        (obj->n_prob[iTrackMax] == obj->N_prob) && 
-                        (obj->mean_prob[iTrackMax]/((float) obj->N_prob) < obj->theta_prob)) {
+                            obj->idsRemoved[iTrackMax] = obj->ids[iTrackMax];
 
-                        obj->idsRemoved[iTrackMax] = obj->ids[iTrackMax];
+                        }
+
+                        if ((obj->type[iTrackMax] == 'A') &&
+                            (obj->n_inactive[iTrackMax] >= obj->N_inactive[obj->nTracks-1])) {
+
+                            obj->idsRemoved[iTrackMax] = obj->ids[iTrackMax];
+
+                        }
+
+                        iTrack++;
 
                     }
 
-                    if ((obj->type[iTrackMax] == 'A') &&
-                        (obj->n_inactive[iTrackMax] >= obj->N_inactive[obj->nTracks-1])) {
+                }
 
-                        obj->idsRemoved[iTrackMax] = obj->ids[iTrackMax];
+                // Update IDs
+
+                for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+                    if (obj->idsAdded[iTrackMax] != 0) {
+
+                        obj->ids[iTrackMax] = obj->idsAdded[iTrackMax];
+                        strcpy(obj->tags[iTrackMax], "dynamic");
 
                     }
 
-                    iTrack++;
+                    if (obj->idsRemoved[iTrackMax] != 0) {
+
+                        obj->ids[iTrackMax] = 0;
+                        strcpy(obj->tags[iTrackMax], "");                   
+
+                    }
 
                 }
 
             }
 
-            // Update IDs
-
-            for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
-
-                if (obj->idsAdded[iTrackMax] != 0) {
-
-                    obj->ids[iTrackMax] = obj->idsAdded[iTrackMax];
-
-                }
-
-                if (obj->idsRemoved[iTrackMax] != 0) {
-
-                    obj->ids[iTrackMax] = 0;
-
-                }
-
-            }
-
-            // Count
+            // +----------------------------------------------------------------------+
+            // | Count tracked sources                                                |
+            // +----------------------------------------------------------------------+
 
             obj->nTracks = 0;
 
@@ -803,8 +1066,9 @@
 
             }
 
-
-            // Copy in tracking
+            // +----------------------------------------------------------------------+
+            // | Copy in tracking                                                     |
+            // +----------------------------------------------------------------------+
        
             memset(obj->out->tracks->array, 0x00, sizeof(float) * obj->out->tracks->nTracks * 3);
             memset(obj->out->tracks->ids, 0x00, sizeof(unsigned long long) * obj->out->tracks->nTracks);
@@ -813,7 +1077,7 @@
 
                 if (obj->ids[iTrackMax] != 0) {
 
-                    if (obj->type[iTrackMax] == 'A') {
+                    if ((obj->type[iTrackMax] == 'A') || (obj->type[iTrackMax] == 'T')) {
 
                         switch(obj->mode) {
 
@@ -850,6 +1114,7 @@
                         obj->out->tracks->array[iTrackMax * 3 + 1] = y;
                         obj->out->tracks->array[iTrackMax * 3 + 2] = z;
                         obj->out->tracks->ids[iTrackMax] = obj->ids[iTrackMax];
+                        strcpy(obj->out->tracks->tags[iTrackMax],obj->tags[iTrackMax]);
                         obj->out->tracks->activity[iTrackMax] = obj->sourceActivities[iTrackMax];
 
                     }
@@ -858,7 +1123,7 @@
 
             }
 
-            obj->out->timeStamp = obj->in->timeStamp;
+            obj->out->timeStamp = obj->in2->timeStamp;
 
             rtnValue = 0;
 
@@ -875,16 +1140,18 @@
 
     }
 
-    void mod_sst_connect(mod_sst_obj * obj, msg_pots_obj * in, msg_tracks_obj * out) {
+    void mod_sst_connect(mod_sst_obj * obj, msg_pots_obj * in1, msg_targets_obj * in2, msg_tracks_obj * out) {
 
-        obj->in = in;
+        obj->in1 = in1;
+        obj->in2 = in2;
         obj->out = out;
 
     }
 
     void mod_sst_disconnect(mod_sst_obj * obj) {
 
-        obj->in = (msg_pots_obj *) NULL;
+        obj->in1 = (msg_pots_obj *) NULL;
+        obj->in2 = (msg_targets_obj *) NULL;
         obj->out = (msg_tracks_obj *) NULL;
 
     }

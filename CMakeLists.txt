@@ -66,6 +66,7 @@ set(SRC
     src/signal/spatialindex.c
     src/signal/spatialmask.c
     src/signal/steer.c
+    src/signal/target.c
     src/signal/tau.c
     src/signal/tdoa.c
     src/signal/track.c
@@ -115,12 +116,15 @@ set(SRC
     src/aconnector/acon_pots.c
     src/aconnector/acon_powers.c
     src/aconnector/acon_spectra.c
+    src/aconnector/acon_targets.c
     src/aconnector/acon_tracks.c
+    src/ainjector/ainj_targets.c
     src/amessage/amsg_categories.c
     src/amessage/amsg_hops.c
     src/amessage/amsg_pots.c
     src/amessage/amsg_powers.c
     src/amessage/amsg_spectra.c
+    src/amessage/amsg_targets.c
     src/amessage/amsg_tracks.c
     src/amodule/amod_classify.c
     src/amodule/amod_istft.c
@@ -144,12 +148,15 @@ set(SRC
     src/connector/con_pots.c
     src/connector/con_powers.c
     src/connector/con_spectra.c
+    src/connector/con_targets.c
     src/connector/con_tracks.c
+    src/injector/inj_targets.c
     src/message/msg_categories.c
     src/message/msg_hops.c
     src/message/msg_pots.c
     src/message/msg_powers.c
     src/message/msg_spectra.c
+    src/message/msg_targets.c
     src/message/msg_tracks.c
     src/module/mod_classify.c
     src/module/mod_istft.c

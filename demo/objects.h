@@ -28,6 +28,9 @@
         snk_pots_obj * snk_pots_ssl_object;
         con_pots_obj * con_pots_ssl_object;
 
+        inj_targets_obj * inj_targets_sst_object;
+        con_targets_obj * con_targets_sst_object;
+
         mod_sst_obj * mod_sst_object;
         snk_tracks_obj * snk_tracks_sst_object;
         con_tracks_obj * con_tracks_sst_object;
@@ -76,6 +79,9 @@
         amod_ssl_obj * amod_ssl_object;
         asnk_pots_obj * asnk_pots_ssl_object;
         acon_pots_obj * acon_pots_ssl_object;
+
+        ainj_targets_obj * ainj_targets_sst_object;
+        acon_targets_obj * acon_targets_sst_object;
 
         amod_sst_obj * amod_sst_object;
         asnk_tracks_obj * asnk_tracks_sst_object;

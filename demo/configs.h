@@ -27,6 +27,9 @@
         msg_pots_cfg * msg_pots_ssl_config;
         snk_pots_cfg * snk_pots_ssl_config;
 
+        inj_targets_cfg * inj_targets_sst_config;
+        msg_targets_cfg * msg_targets_sst_config;
+
         mod_sst_cfg * mod_sst_config;
         msg_tracks_cfg * msg_tracks_sst_config;
         snk_tracks_cfg * snk_tracks_sst_config;

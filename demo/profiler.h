@@ -28,6 +28,9 @@
         float con_pots_ssl_prf;
         float snk_pots_ssl_prf;
 
+        float inj_targets_sst_prf;
+        float con_targets_sst_prf;
+
         float mod_sst_prf;
         float con_tracks_sst_prf;
         float snk_tracks_sst_prf;

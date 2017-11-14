@@ -43,7 +43,6 @@
 
         free((void *) obj);
 
-
     }
 
     void * acon_tracks_thread(void * ptr) {

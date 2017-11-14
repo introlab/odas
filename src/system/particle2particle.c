@@ -72,7 +72,7 @@
 
     }
 
-    void particle2particle_init(particle2particle_obj * obj, const pots_obj * pots, const unsigned int iPot, particles_obj * particles) {
+    void particle2particle_init_pots(particle2particle_obj * obj, const pots_obj * pots, const unsigned int iPot, particles_obj * particles) {
 
         unsigned int iParticle;
 
@@ -90,6 +90,27 @@
             particles->state[iParticle] = (unsigned char) (obj->indexes_ratio[iParticle]);
 
         }
+
+    }
+
+    void particle2particle_init_targets(particle2particle_obj * obj, const targets_obj * targets, const unsigned int iTarget, particles_obj * particles) {
+
+        unsigned int iParticle;
+
+        random_generate(obj->rnd_ratio, obj->nParticles, obj->indexes_ratio);        
+
+        memset(particles->array, 0x00, sizeof(float) * 7 * obj->nParticles);
+
+        for (iParticle = 0; iParticle < obj->nParticles; iParticle++) {
+
+            particles->array[iParticle * 7 + 0] = targets->array[iTarget * 3 + 0];
+            particles->array[iParticle * 7 + 1] = targets->array[iTarget * 3 + 1];
+            particles->array[iParticle * 7 + 2] = targets->array[iTarget * 3 + 2];
+            particles->array[iParticle * 7 + 6] = (1.0f / ((float) obj->nParticles));
+
+            particles->state[iParticle] = (unsigned char) (obj->indexes_ratio[iParticle]);
+
+        }        
 
     }
 
@@ -114,6 +135,12 @@
             particles->array[iParticle * 7 + 2] = particles->array[iParticle * 7 + 2] + obj->deltaT * particles->array[iParticle * 7 + 5];
             
         }
+
+    }
+
+    void particle2particle_predict_static(particle2particle_obj * obj, particles_obj * particles) {
+
+        // Do nothing: keep old particles distribution
 
     }
 
@@ -233,6 +260,12 @@
             }
 
         }
+
+    }
+
+    void particle2particle_update_static(particle2particle_obj * obj, const postprobs_obj * postprobs, const unsigned int iTrack, const pots_obj * pots, particles_obj * particles) {
+
+        // Do nothing: keep old particles distribution
 
     }
 

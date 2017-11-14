@@ -45,6 +45,11 @@
     snk_pots_cfg * parameters_snk_pots_ssl_config(const char * fileConfig);
 
 
+    inj_targets_cfg * parameters_inj_targets_sst_config(const char * fileConfig);
+
+    msg_targets_cfg * parameters_msg_targets_sst_config(const char * fileConfig);
+
+
     mod_sst_cfg * parameters_mod_sst_config(const char * fileConfig);
 
     msg_tracks_cfg * parameters_msg_tracks_sst_config(const char * fileConfig);

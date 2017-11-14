@@ -62,7 +62,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->con_hops_mics_rs_object = con_hops_construct(1, cfgs->msg_hops_mics_rs_config);                    
+                    objs->con_hops_mics_rs_object = con_hops_construct(2, cfgs->msg_hops_mics_rs_config);                    
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -126,6 +126,24 @@
                 objs->con_pots_ssl_object = con_pots_construct(2, cfgs->msg_pots_ssl_config);
 
             // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+  
+
+                    objs->inj_targets_sst_object = inj_targets_construct(cfgs->inj_targets_sst_config, 
+                                                                         cfgs->msg_hops_mics_rs_config, 
+                                                                         cfgs->msg_targets_sst_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+              
+
+                    objs->con_targets_sst_object = con_targets_construct(1, cfgs->msg_targets_sst_config);
+
+            // +------------------------------------------------------+
             // | SST                                                  |
             // +------------------------------------------------------+  
 
@@ -136,6 +154,7 @@
                     objs->mod_sst_object = mod_sst_construct(cfgs->mod_sst_config, 
                                                              cfgs->mod_ssl_config, 
                                                              cfgs->msg_pots_ssl_config, 
+                                                             cfgs->msg_targets_sst_config,
                                                              cfgs->msg_tracks_sst_config);
 
                 // +--------------------------------------------------+
@@ -336,6 +355,18 @@
                                      objs->con_pots_ssl_object->outs[1]);
 
             // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+
+
+                    inj_targets_connect(objs->inj_targets_sst_object,
+                                        objs->con_hops_mics_rs_object->outs[1],
+                                        objs->con_targets_sst_object->in);
+
+            // +------------------------------------------------------+
             // | SST                                                  |
             // +------------------------------------------------------+  
 
@@ -345,6 +376,7 @@
 
                     mod_sst_connect(objs->mod_sst_object, 
                                     objs->con_pots_ssl_object->outs[0], 
+                                    objs->con_targets_sst_object->outs[0],
                                     objs->con_tracks_sst_object->in);
 
                 // +--------------------------------------------------+
@@ -546,6 +578,22 @@
                     con_pots_destroy(objs->con_pots_ssl_object);
 
             // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+ 
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+  
+
+                    inj_targets_destroy(objs->inj_targets_sst_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_targets_destroy(objs->con_targets_sst_object);
+
+            // +------------------------------------------------------+
             // | SST                                                  |
             // +------------------------------------------------------+  
 
@@ -716,7 +764,7 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+
 
-                    objs->acon_hops_mics_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_rs_config);
+                    objs->acon_hops_mics_rs_object = acon_hops_construct(2, objs->nMessages, cfgs->msg_hops_mics_rs_config);
 
             // +------------------------------------------------------+
             // | STFT                                                 |
@@ -780,6 +828,24 @@
                     objs->acon_pots_ssl_object = acon_pots_construct(2, objs->nMessages, cfgs->msg_pots_ssl_config);
 
             // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+ 
+
+                    objs->ainj_targets_sst_object = ainj_targets_construct(cfgs->inj_targets_sst_config, 
+                                                                           cfgs->msg_hops_mics_rs_config, 
+                                                                           cfgs->msg_targets_sst_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+              
+
+                    objs->acon_targets_sst_object = acon_targets_construct(1, objs->nMessages, cfgs->msg_targets_sst_config);
+
+            // +------------------------------------------------------+
             // | SST                                                  |
             // +------------------------------------------------------+  
 
@@ -790,6 +856,7 @@
                     objs->amod_sst_object = amod_sst_construct(cfgs->mod_sst_config, 
                                                                cfgs->mod_ssl_config, 
                                                                cfgs->msg_pots_ssl_config, 
+                                                               cfgs->msg_targets_sst_config,
                                                                cfgs->msg_tracks_sst_config);
 
                 // +--------------------------------------------------+
@@ -990,6 +1057,18 @@
                                       objs->acon_pots_ssl_object->outs[1]);
 
             // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+  
+
+                    ainj_targets_connect(objs->ainj_targets_sst_object,
+                                         objs->acon_hops_mics_rs_object->outs[1],
+                                         objs->acon_targets_sst_object->in);
+
+            // +------------------------------------------------------+
             // | SST                                                  |
             // +------------------------------------------------------+  
 
@@ -999,6 +1078,7 @@
 
                     amod_sst_connect(objs->amod_sst_object, 
                                      objs->acon_pots_ssl_object->outs[0], 
+                                     objs->acon_targets_sst_object->outs[0],
                                      objs->acon_tracks_sst_object->in);
 
                 // +--------------------------------------------------+
@@ -1198,6 +1278,22 @@
                 // +--------------------------------------------------+  
 
                     acon_pots_destroy(objs->acon_pots_ssl_object);   
+
+            // +------------------------------------------------------+
+            // | Target                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Injector                                         |
+                // +--------------------------------------------------+  
+
+                    ainj_targets_destroy(objs->ainj_targets_sst_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_targets_destroy(objs->acon_targets_sst_object);
 
             // +------------------------------------------------------+
             // | SST                                                  |

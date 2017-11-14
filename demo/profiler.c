@@ -28,6 +28,9 @@
         prf->con_pots_ssl_prf = 0.0f;
         prf->snk_pots_ssl_prf = 0.0f;
 
+        prf->inj_targets_sst_prf = 0.0f;
+        prf->con_targets_sst_prf = 0.0f;
+
         prf->mod_sst_prf = 0.0f;
         prf->con_tracks_sst_prf = 0.0f;
         prf->snk_tracks_sst_prf = 0.0f;
@@ -64,7 +67,7 @@
 
     void profiler_printf(const profiler * prf) {
 
-        float source, sink, module, connector;
+        float source, sink, module, injector, connector;
         float total;
 
         source = prf->src_hops_mics_prf;
@@ -88,12 +91,15 @@
                  prf->mod_resample_pfs_prf +
                  prf->mod_classify_prf;
 
+        injector = prf->inj_targets_sst_prf;
+
         connector = prf->con_hops_mics_raw_prf +
                     prf->con_hops_mics_map_prf +
                     prf->con_hops_mics_rs_prf +
                     prf->con_spectra_mics_prf +
                     prf->con_powers_mics_prf +
                     prf->con_pots_ssl_prf +
+                    prf->con_targets_sst_prf +
                     prf->con_tracks_sst_prf +
                     prf->con_spectra_seps_prf +
                     prf->con_spectra_pfs_prf +
@@ -127,6 +133,9 @@
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_ssl_prf,roundf(10000.0f * prf->mod_ssl_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_pots_ssl_prf,roundf(10000.0f * prf->con_pots_ssl_prf / prf->duration) / 100.0f);
         printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_pots_ssl_prf,roundf(10000.0f * prf->snk_pots_ssl_prf / prf->duration) / 100.0f);  
+        printf("| + Target                                   |\n");
+        printf("|    - Injector........ %07.3f (%06.2f%%)    |\n",prf->inj_targets_sst_prf,roundf(10000.0f * prf->inj_targets_sst_prf / prf->duration) / 100.0f);
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_targets_sst_prf,roundf(10000.0f * prf->con_targets_sst_prf / prf->duration) / 100.0f);
         printf("| + SST                                      |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sst_prf,roundf(10000.0f * prf->mod_sst_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_tracks_sst_prf,roundf(10000.0f * prf->con_tracks_sst_prf / prf->duration) / 100.0f);
