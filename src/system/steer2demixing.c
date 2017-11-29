@@ -1,6 +1,8 @@
     
     #include "steer2demixing.h"
 
+    int count = 0;
+
     steer2demixing_ds_obj * steer2demixing_ds_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize, const float epsilon) {
 
         steer2demixing_ds_obj * obj;
@@ -298,6 +300,8 @@
 
         }
 
+        //freqs_printf(freqs);
+
         if (nActiveSources > 0) {
 
             for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
@@ -398,7 +402,7 @@
                     }
 
                 }
-                
+
                 // 
                 // Compute Y[k] = Wn[k]X[k]
                 //
@@ -415,7 +419,7 @@
                                   obj->Y[nActiveSources-1]);
 
                 //
-                // Compute Ryy[k] = Y^H[k] Y[k]
+                // Compute Ryy[k] = Y[k] Y[k]^H
                 //
 
                 cmatrix_mul(obj->Ryy[nActiveSources-1],
@@ -454,6 +458,7 @@
                             iSampleBC = iBin * obj->nChannels + iChannel;
                             iSampleSC = iSep * obj->nChannels + iChannel;                           
                             iSampleCA = iChannel * nActiveSources + iActiveSource;
+                            iSampleAC = iActiveSource * obj->nChannels + iChannel;
 
                             if (masks->array[iSampleSC] == 1) {
 
@@ -463,8 +468,8 @@
                                 obj->A[nActiveSources-1]->real[iSampleCA] = Areal;
                                 obj->A[nActiveSources-1]->imag[iSampleCA] = Aimag;
 
-                                obj->AH[nActiveSources-1]->real[iSampleCA] = Areal;
-                                obj->AH[nActiveSources-1]->imag[iSampleCA] = -1.0f * Aimag;
+                                obj->AH[nActiveSources-1]->real[iSampleAC] = Areal;
+                                obj->AH[nActiveSources-1]->imag[iSampleAC] = -1.0f * Aimag;
 
                             }
 
@@ -538,6 +543,11 @@
 
                 cmatrix_copy_cmatrix(obj->dJ2[nActiveSources-1],
                                      obj->dJ2_2WAmIAH[nActiveSources-1]);
+
+
+                //if (iBin == 10) {
+                //    cmatrix_printf(obj->AH[nActiveSources-1]);
+                //}
 
                 //
                 // Compute ||Rxx||^2 = ||X[k]X^H[k]||^2 = (||X[k]||^2)^2
@@ -633,6 +643,12 @@
             }
 
         }
+
+                //        count++;
+
+                //if (count == 1) {
+                //    exit(EXIT_SUCCESS);
+                //}
 
     }
     
