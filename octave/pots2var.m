@@ -13,7 +13,7 @@ function pots = pots2var(filename, nPots)
 
         for iFrame = 1:1:nFrames
             
-            iStart = (iFrame-1) * 4 * nPots + 1;
+            iStart = (iFrame-1) * 4 * nPots + (iPot-1) * 4 + 1;
             iStop = iStart + 3;
             
             pots{iPot}(iFrame,:) = vector(iStart:1:iStop);            
