@@ -48,8 +48,13 @@
         float mod_resample_pfs_prf;
         float con_hops_seps_rs_prf;
         float con_hops_pfs_rs_prf;
-        float snk_hops_seps_rs_prf;
-        float snk_hops_pfs_rs_prf;
+
+        float mod_volume_seps_prf;
+        float mod_volume_pfs_prf;
+        float con_hops_seps_vol_prf;
+        float con_hops_pfs_vol_prf;
+        float snk_hops_seps_vol_prf;
+        float snk_hops_pfs_vol_prf;
 
         float mod_classify_prf;
         float con_categories_prf;

@@ -135,6 +135,7 @@ set(SRC
     src/amodule/amod_sss.c
     src/amodule/amod_sst.c
     src/amodule/amod_stft.c
+    src/amodule/amod_volume.c
     src/asink/asnk_categories.c
     src/asink/asnk_hops.c    
     src/asink/asnk_pots.c
@@ -167,6 +168,7 @@ set(SRC
     src/module/mod_sss.c
     src/module/mod_sst.c
     src/module/mod_stft.c
+    src/module/mod_volume.c
     src/sink/snk_categories.c
     src/sink/snk_hops.c
     src/sink/snk_pots.c

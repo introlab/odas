@@ -233,18 +233,38 @@
                 // +--------------------------------------------------+  
 
                     objs->con_hops_seps_rs_object = con_hops_construct(1, cfgs->msg_hops_seps_rs_config);
-
                     objs->con_hops_pfs_rs_object = con_hops_construct(1, cfgs->msg_hops_pfs_rs_config);
+
+            // +------------------------------------------------------+
+            // | Volume                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->mod_volume_seps_object = mod_volume_construct(cfgs->mod_volume_seps_config, 
+                                                                        cfgs->msg_hops_seps_vol_config);
+
+                    objs->mod_volume_pfs_object = mod_volume_construct(cfgs->mod_volume_pfs_config, 
+                                                                       cfgs->msg_hops_pfs_vol_config);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->con_hops_seps_vol_object = con_hops_construct(1, cfgs->msg_hops_seps_vol_config);
+                    objs->con_hops_pfs_vol_object = con_hops_construct(1, cfgs->msg_hops_pfs_vol_config);
 
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                     
 
-                    objs->snk_hops_seps_rs_object = snk_hops_construct(cfgs->snk_hops_seps_rs_config, 
-                                                                       cfgs->msg_hops_seps_rs_config);
+                    objs->snk_hops_seps_vol_object = snk_hops_construct(cfgs->snk_hops_seps_vol_config, 
+                                                                        cfgs->msg_hops_seps_vol_config);
 
-                    objs->snk_hops_pfs_rs_object = snk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
-                                                                      cfgs->msg_hops_pfs_rs_config);
+                    objs->snk_hops_pfs_vol_object = snk_hops_construct(cfgs->snk_hops_pfs_vol_config, 
+                                                                       cfgs->msg_hops_pfs_vol_config);
 
             // +------------------------------------------------------+
             // | Classify                                             |
@@ -433,15 +453,31 @@
                                          objs->con_hops_pfs_object->outs[0],
                                          objs->con_hops_pfs_rs_object->in);
 
+            // +------------------------------------------------------+
+            // | Volume                                               |
+            // +------------------------------------------------------+ 
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_volume_connect(objs->mod_volume_seps_object,
+                                       objs->con_hops_seps_rs_object->outs[0],
+                                       objs->con_hops_seps_vol_object->in);
+
+                    mod_volume_connect(objs->mod_volume_pfs_object,
+                                       objs->con_hops_pfs_rs_object->outs[0],
+                                       objs->con_hops_pfs_vol_object->in);
+
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                      
 
-                    snk_hops_connect(objs->snk_hops_seps_rs_object,
-                                     objs->con_hops_seps_rs_object->outs[0]);
+                    snk_hops_connect(objs->snk_hops_seps_vol_object,
+                                     objs->con_hops_seps_vol_object->outs[0]);
 
-                    snk_hops_connect(objs->snk_hops_pfs_rs_object,
-                                     objs->con_hops_pfs_rs_object->outs[0]);
+                    snk_hops_connect(objs->snk_hops_pfs_vol_object,
+                                     objs->con_hops_pfs_vol_object->outs[0]);
 
             // +------------------------------------------------------+
             // | Classify                                             |
@@ -668,12 +704,30 @@
                     con_hops_destroy(objs->con_hops_seps_rs_object);
                     con_hops_destroy(objs->con_hops_pfs_rs_object);                     
 
+            // +------------------------------------------------------+
+            // | Volume                                                |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    mod_volume_destroy(objs->mod_volume_seps_object);
+                    mod_volume_destroy(objs->mod_volume_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    con_hops_destroy(objs->con_hops_seps_vol_object);
+                    con_hops_destroy(objs->con_hops_pfs_vol_object);       
+
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                      
 
-                    snk_hops_destroy(objs->snk_hops_seps_rs_object);
-                    snk_hops_destroy(objs->snk_hops_pfs_rs_object);
+                    snk_hops_destroy(objs->snk_hops_seps_vol_object);
+                    snk_hops_destroy(objs->snk_hops_pfs_vol_object);
 
             // +------------------------------------------------------+
             // | Classify                                             |
@@ -928,7 +982,7 @@
 
                     objs->amod_resample_pfs_object = amod_resample_construct(cfgs->mod_resample_pfs_config, 
                                                                              cfgs->msg_hops_pfs_config, 
-                                                                             cfgs->msg_hops_pfs_rs_config);       
+                                                                             cfgs->msg_hops_pfs_rs_config);                                                                                   
 
                 // +--------------------------------------------------+
                 // | Connector                                        |
@@ -938,15 +992,37 @@
 
                     objs->acon_hops_pfs_rs_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_pfs_rs_config);
 
+            // +------------------------------------------------------+
+            // | Volume                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    objs->amod_volume_seps_object = amod_volume_construct(cfgs->mod_volume_seps_config, 
+                                                                          cfgs->msg_hops_seps_vol_config);
+
+                    objs->amod_volume_pfs_object = amod_volume_construct(cfgs->mod_volume_pfs_config, 
+                                                                         cfgs->msg_hops_pfs_vol_config);                                                                                   
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    objs->acon_hops_seps_vol_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_seps_vol_config);
+
+                    objs->acon_hops_pfs_vol_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_pfs_vol_config);
+
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                     
 
-                    objs->asnk_hops_seps_rs_object = asnk_hops_construct(cfgs->snk_hops_seps_rs_config, 
-                                                                         cfgs->msg_hops_seps_rs_config);
+                    objs->asnk_hops_seps_vol_object = asnk_hops_construct(cfgs->snk_hops_seps_vol_config, 
+                                                                          cfgs->msg_hops_seps_vol_config);
 
-                    objs->asnk_hops_pfs_rs_object = asnk_hops_construct(cfgs->snk_hops_pfs_rs_config, 
-                                                                        cfgs->msg_hops_pfs_rs_config);
+                    objs->asnk_hops_pfs_vol_object = asnk_hops_construct(cfgs->snk_hops_pfs_vol_config, 
+                                                                         cfgs->msg_hops_pfs_vol_config);
 
             // +------------------------------------------------------+
             // | Classify                                             |
@@ -1135,15 +1211,31 @@
                                           objs->acon_hops_pfs_object->outs[0],
                                           objs->acon_hops_pfs_rs_object->in);
 
+            // +------------------------------------------------------+
+            // | Volume                                               |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_volume_connect(objs->amod_volume_seps_object,
+                                        objs->acon_hops_seps_rs_object->outs[0],
+                                        objs->acon_hops_seps_vol_object->in);
+
+                    amod_volume_connect(objs->amod_volume_pfs_object,
+                                        objs->acon_hops_pfs_rs_object->outs[0],
+                                        objs->acon_hops_pfs_vol_object->in);
+
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                      
 
-                    asnk_hops_connect(objs->asnk_hops_seps_rs_object,
-                                      objs->acon_hops_seps_rs_object->outs[0]);
+                    asnk_hops_connect(objs->asnk_hops_seps_vol_object,
+                                      objs->acon_hops_seps_vol_object->outs[0]);
 
-                    asnk_hops_connect(objs->asnk_hops_pfs_rs_object,
-                                      objs->acon_hops_pfs_rs_object->outs[0]);
+                    asnk_hops_connect(objs->asnk_hops_pfs_vol_object,
+                                      objs->acon_hops_pfs_vol_object->outs[0]);
 
             // +------------------------------------------------------+
             // | Classify                                             |
@@ -1370,12 +1462,30 @@
                     acon_hops_destroy(objs->acon_hops_seps_rs_object);
                     acon_hops_destroy(objs->acon_hops_pfs_rs_object);                     
 
+            // +------------------------------------------------------+
+            // | Resample                                             |
+            // +------------------------------------------------------+  
+
+                // +--------------------------------------------------+
+                // | Module                                           |
+                // +--------------------------------------------------+  
+
+                    amod_volume_destroy(objs->amod_volume_seps_object);
+                    amod_volume_destroy(objs->amod_volume_pfs_object);
+
+                // +--------------------------------------------------+
+                // | Connector                                        |
+                // +--------------------------------------------------+  
+
+                    acon_hops_destroy(objs->acon_hops_seps_vol_object);
+                    acon_hops_destroy(objs->acon_hops_pfs_vol_object);  
+
                 // +--------------------------------------------------+
                 // | Sink                                             |
                 // +--------------------------------------------------+                      
 
-                    asnk_hops_destroy(objs->asnk_hops_seps_rs_object);
-                    asnk_hops_destroy(objs->asnk_hops_pfs_rs_object);
+                    asnk_hops_destroy(objs->asnk_hops_seps_vol_object);
+                    asnk_hops_destroy(objs->asnk_hops_pfs_vol_object);
 
             // +------------------------------------------------------+
             // | Classify                                             |

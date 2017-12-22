@@ -1629,7 +1629,95 @@
 
     }    
 
-    snk_hops_cfg * parameters_snk_hops_seps_rs_config(const char * fileConfig) {
+    mod_volume_cfg * parameters_mod_volume_seps_config(const char * fileConfig) {
+
+        mod_volume_cfg * cfg;
+
+        cfg = mod_volume_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+
+
+            cfg->gain = parameters_lookup_float(fileConfig, "sss.gain_sep");
+
+        return cfg;
+
+    }
+
+    mod_volume_cfg * parameters_mod_volume_pfs_config(const char * fileConfig) {
+
+        mod_volume_cfg * cfg;
+
+        cfg = mod_volume_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Gain                                                     |
+        // +----------------------------------------------------------+
+
+            cfg->gain = parameters_lookup_float(fileConfig, "sss.gain_pf");
+
+        return cfg;
+
+    }
+
+    msg_hops_cfg * parameters_msg_hops_seps_vol_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.separated.fS");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "sss.separated.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    msg_hops_cfg * parameters_msg_hops_pfs_vol_config(const char * fileConfig) {
+
+        msg_hops_cfg * cfg;
+
+        cfg = msg_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "sss.postfiltered.fS");        
+
+        // +----------------------------------------------------------+
+        // | Hop size                                                 |
+        // +----------------------------------------------------------+
+
+            cfg->hopSize = parameters_lookup_int(fileConfig, "sss.postfiltered.hopSize");
+
+        // +----------------------------------------------------------+
+        // | Number of channels                                       |
+        // +----------------------------------------------------------+
+
+            cfg->nChannels = parameters_count(fileConfig, "sst.N_inactive");
+
+        return cfg;
+
+    }
+
+    snk_hops_cfg * parameters_snk_hops_seps_vol_config(const char * fileConfig) {
 
         snk_hops_cfg * cfg;
         unsigned int tmpInt1;
@@ -1705,7 +1793,7 @@
 
     }
 
-    snk_hops_cfg * parameters_snk_hops_pfs_rs_config(const char * fileConfig) {
+    snk_hops_cfg * parameters_snk_hops_pfs_vol_config(const char * fileConfig) {
 
         snk_hops_cfg * cfg;
         unsigned int tmpInt1;

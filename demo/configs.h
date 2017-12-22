@@ -47,8 +47,13 @@
         mod_resample_cfg * mod_resample_pfs_config;
         msg_hops_cfg * msg_hops_seps_rs_config;
         msg_hops_cfg * msg_hops_pfs_rs_config;
-        snk_hops_cfg * snk_hops_seps_rs_config;
-        snk_hops_cfg * snk_hops_pfs_rs_config;
+
+        mod_volume_cfg * mod_volume_seps_config;
+        mod_volume_cfg * mod_volume_pfs_config;
+        msg_hops_cfg * msg_hops_seps_vol_config;
+        msg_hops_cfg * msg_hops_pfs_vol_config;
+        snk_hops_cfg * snk_hops_seps_vol_config;
+        snk_hops_cfg * snk_hops_pfs_vol_config;
 
         mod_classify_cfg * mod_classify_config;
         msg_categories_cfg * msg_categories_config;

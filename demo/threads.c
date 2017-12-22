@@ -192,18 +192,36 @@
                 thread_start(aobjs->amod_resample_pfs_object->thread);
 
             // +--------------------------------------------------+
-            // | Sinks                                            |
-            // +--------------------------------------------------+                     
-
-                thread_start(aobjs->asnk_hops_seps_rs_object->thread);
-                thread_start(aobjs->asnk_hops_pfs_rs_object->thread);
-
-            // +--------------------------------------------------+
             // | Connector                                        |
             // +--------------------------------------------------+  
 
                 thread_start(aobjs->acon_hops_seps_rs_object->thread);
                 thread_start(aobjs->acon_hops_pfs_rs_object->thread);
+
+        // +------------------------------------------------------+
+        // | Volume                                               |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->amod_volume_seps_object->thread);
+                thread_start(aobjs->amod_volume_pfs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sinks                                            |
+            // +--------------------------------------------------+                     
+
+                thread_start(aobjs->asnk_hops_seps_vol_object->thread);
+                thread_start(aobjs->asnk_hops_pfs_vol_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_start(aobjs->acon_hops_seps_vol_object->thread);
+                thread_start(aobjs->acon_hops_pfs_vol_object->thread);
 
         // +------------------------------------------------------+
         // | Classify                                             |
@@ -438,18 +456,36 @@
                 thread_join(aobjs->amod_resample_pfs_object->thread);
 
             // +--------------------------------------------------+
-            // | Sinks                                            |
-            // +--------------------------------------------------+                     
-
-                thread_join(aobjs->asnk_hops_seps_rs_object->thread);
-                thread_join(aobjs->asnk_hops_pfs_rs_object->thread);
-
-            // +--------------------------------------------------+
             // | Connector                                        |
             // +--------------------------------------------------+  
 
                 thread_join(aobjs->acon_hops_seps_rs_object->thread);
                 thread_join(aobjs->acon_hops_pfs_rs_object->thread);
+
+        // +------------------------------------------------------+
+        // | Volume                                               |
+        // +------------------------------------------------------+  
+
+            // +--------------------------------------------------+
+            // | Module                                           |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->amod_volume_seps_object->thread);
+                thread_join(aobjs->amod_volume_pfs_object->thread);
+
+            // +--------------------------------------------------+
+            // | Sinks                                            |
+            // +--------------------------------------------------+                     
+
+                thread_join(aobjs->asnk_hops_seps_vol_object->thread);
+                thread_join(aobjs->asnk_hops_pfs_vol_object->thread);
+
+            // +--------------------------------------------------+
+            // | Connector                                        |
+            // +--------------------------------------------------+  
+
+                thread_join(aobjs->acon_hops_seps_vol_object->thread);
+                thread_join(aobjs->acon_hops_pfs_vol_object->thread);
 
         // +------------------------------------------------------+
         // | Classify                                             |
@@ -472,7 +508,6 @@
             // +--------------------------------------------------+  
 
                 thread_join(aobjs->acon_categories_object->thread);
-
 
     }
 
@@ -511,15 +546,15 @@
                 snk_tracks_open(objs->snk_tracks_sst_object);
 
         // +----------------------------------------------------------+
-        // | Resample                                                 |
+        // | Volume                                                   |
         // +----------------------------------------------------------+  
 
             // +------------------------------------------------------+
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                snk_hops_open(objs->snk_hops_seps_rs_object);
-                snk_hops_open(objs->snk_hops_pfs_rs_object);
+                snk_hops_open(objs->snk_hops_seps_vol_object);
+                snk_hops_open(objs->snk_hops_pfs_vol_object);
 
         // +----------------------------------------------------------+
         // | Classify                                                 |
@@ -568,15 +603,15 @@
                 snk_tracks_close(objs->snk_tracks_sst_object);
 
         // +----------------------------------------------------------+
-        // | Resample                                                 |
+        // | Volume                                                   |
         // +----------------------------------------------------------+  
 
             // +------------------------------------------------------+
             // | Sinks                                                |
             // +------------------------------------------------------+                      
 
-                snk_hops_close(objs->snk_hops_seps_rs_object);
-                snk_hops_close(objs->snk_hops_pfs_rs_object);                
+                snk_hops_close(objs->snk_hops_seps_vol_object);
+                snk_hops_close(objs->snk_hops_pfs_vol_object);                
 
         // +----------------------------------------------------------+
         // | Classify                                                 |
@@ -930,13 +965,31 @@
                         prf->con_hops_seps_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     // +----------------------------------------------+
+                    // | Module                                       |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        mod_volume_process(objs->mod_volume_seps_object);
+                        end = clock();
+                        prf->mod_volume_seps_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    // +----------------------------------------------+
+                    // | Connector                                    |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        con_hops_process(objs->con_hops_seps_vol_object);
+                        end = clock();
+                        prf->con_hops_seps_vol_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);                        
+
+                    // +----------------------------------------------+
                     // | Sink                                         |
                     // +----------------------------------------------+  
 
                         begin = clock();
-                        snk_hops_process(objs->snk_hops_seps_rs_object);
+                        snk_hops_process(objs->snk_hops_seps_vol_object);
                         end = clock();
-                        prf->snk_hops_seps_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                        prf->snk_hops_seps_vol_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     }
 
@@ -967,13 +1020,31 @@
                         prf->con_hops_pfs_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     // +----------------------------------------------+
+                    // | Module                                       |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        mod_volume_process(objs->mod_volume_pfs_object);
+                        end = clock();
+                        prf->mod_volume_pfs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+
+                    // +----------------------------------------------+
+                    // | Connector                                    |
+                    // +----------------------------------------------+  
+
+                        begin = clock();
+                        con_hops_process(objs->con_hops_pfs_vol_object);
+                        end = clock();
+                        prf->con_hops_pfs_vol_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);       
+
+                    // +----------------------------------------------+
                     // | Sink                                         |
                     // +----------------------------------------------+  
 
                         begin = clock();
-                        snk_hops_process(objs->snk_hops_pfs_rs_object);
+                        snk_hops_process(objs->snk_hops_pfs_vol_object);
                         end = clock();
-                        prf->snk_hops_pfs_rs_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
+                        prf->snk_hops_pfs_vol_prf += (float) (((double) (end-begin)) / CLOCKS_PER_SEC);
 
                     }
 

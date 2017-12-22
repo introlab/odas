@@ -48,8 +48,13 @@
         mod_resample_obj * mod_resample_pfs_object;
         con_hops_obj * con_hops_seps_rs_object;
         con_hops_obj * con_hops_pfs_rs_object;
-        snk_hops_obj * snk_hops_seps_rs_object;
-        snk_hops_obj * snk_hops_pfs_rs_object;
+
+        mod_volume_obj * mod_volume_seps_object;
+        mod_volume_obj * mod_volume_pfs_object;
+        con_hops_obj * con_hops_seps_vol_object;
+        con_hops_obj * con_hops_pfs_vol_object;
+        snk_hops_obj * snk_hops_seps_vol_object;
+        snk_hops_obj * snk_hops_pfs_vol_object;
 
         mod_classify_obj * mod_classify_object;
         con_categories_obj * con_categories_object;
@@ -100,8 +105,13 @@
         amod_resample_obj * amod_resample_pfs_object;
         acon_hops_obj * acon_hops_seps_rs_object;
         acon_hops_obj * acon_hops_pfs_rs_object;
-        asnk_hops_obj * asnk_hops_seps_rs_object;
-        asnk_hops_obj * asnk_hops_pfs_rs_object;
+
+        amod_volume_obj * amod_volume_seps_object;
+        amod_volume_obj * amod_volume_pfs_object;
+        acon_hops_obj * acon_hops_seps_vol_object;
+        acon_hops_obj * acon_hops_pfs_vol_object;
+        asnk_hops_obj * asnk_hops_seps_vol_object;
+        asnk_hops_obj * asnk_hops_pfs_vol_object;
 
         amod_classify_obj * amod_classify_object;
         acon_categories_obj * acon_categories_object;

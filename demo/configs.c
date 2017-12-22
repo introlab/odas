@@ -202,12 +202,30 @@
                 cfgs->msg_hops_seps_rs_config = parameters_msg_hops_seps_rs_config(file_config);
                 cfgs->msg_hops_pfs_rs_config = parameters_msg_hops_pfs_rs_config(file_config);            
 
+        // +----------------------------------------------------------+
+        // | Volume                                                   |
+        // +----------------------------------------------------------+
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+
+
+                cfgs->mod_volume_seps_config = parameters_mod_volume_seps_config(file_config);
+                cfgs->mod_volume_pfs_config = parameters_mod_volume_pfs_config(file_config);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+
+
+                cfgs->msg_hops_seps_vol_config = parameters_msg_hops_seps_vol_config(file_config);
+                cfgs->msg_hops_pfs_vol_config = parameters_msg_hops_pfs_vol_config(file_config);         
+
             // +------------------------------------------------------+
             // | Sink                                                 |
             // +------------------------------------------------------+
 
-                cfgs->snk_hops_seps_rs_config = parameters_snk_hops_seps_rs_config(file_config);
-                cfgs->snk_hops_pfs_rs_config = parameters_snk_hops_pfs_rs_config(file_config);
+                cfgs->snk_hops_seps_vol_config = parameters_snk_hops_seps_vol_config(file_config);
+                cfgs->snk_hops_pfs_vol_config = parameters_snk_hops_pfs_vol_config(file_config);
 
         // +----------------------------------------------------------+
         // | Classify                                                 |
@@ -432,12 +450,30 @@
                 msg_hops_cfg_destroy(cfgs->msg_hops_seps_rs_config);
                 msg_hops_cfg_destroy(cfgs->msg_hops_pfs_rs_config);
 
+        // +----------------------------------------------------------+
+        // | Volume                                                   |
+        // +----------------------------------------------------------+
+
+            // +------------------------------------------------------+
+            // | Module                                               |
+            // +------------------------------------------------------+
+
+                mod_volume_cfg_destroy(cfgs->mod_volume_seps_config);
+                mod_volume_cfg_destroy(cfgs->mod_volume_pfs_config);
+
+            // +------------------------------------------------------+
+            // | Message                                              |
+            // +------------------------------------------------------+
+
+                msg_hops_cfg_destroy(cfgs->msg_hops_seps_vol_config);
+                msg_hops_cfg_destroy(cfgs->msg_hops_pfs_vol_config);
+
             // +------------------------------------------------------+
             // | Sink                                                 |
             // +------------------------------------------------------+
 
-                snk_hops_cfg_destroy(cfgs->snk_hops_seps_rs_config);
-                snk_hops_cfg_destroy(cfgs->snk_hops_pfs_rs_config);
+                snk_hops_cfg_destroy(cfgs->snk_hops_seps_vol_config);
+                snk_hops_cfg_destroy(cfgs->snk_hops_pfs_vol_config);
 
         // +----------------------------------------------------------+
         // | Classify                                                 |

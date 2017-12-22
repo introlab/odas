@@ -81,9 +81,18 @@
 
     msg_hops_cfg * parameters_msg_hops_pfs_rs_config(const char * fileConfig);
 
-    snk_hops_cfg * parameters_snk_hops_seps_rs_config(const char * fileConfig);
 
-    snk_hops_cfg * parameters_snk_hops_pfs_rs_config(const char * fileConfig);
+    mod_volume_cfg * parameters_mod_volume_seps_config(const char * fileConfig);
+
+    mod_volume_cfg * parameters_mod_volume_pfs_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_seps_vol_config(const char * fileConfig);
+
+    msg_hops_cfg * parameters_msg_hops_pfs_vol_config(const char * fileConfig);
+
+    snk_hops_cfg * parameters_snk_hops_seps_vol_config(const char * fileConfig);
+
+    snk_hops_cfg * parameters_snk_hops_pfs_vol_config(const char * fileConfig);
 
 
     mod_classify_cfg * parameters_mod_classify_config(const char * fileConfig);
