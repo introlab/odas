@@ -1262,3 +1262,63 @@
         }
 
     }
+
+    env2env_gainratio_obj * env2env_gainratio_construct_zero(const unsigned int nInitChannels, const unsigned int nChannels, const unsigned int halfFrameSize, const float Gmin, const float Gmid, const float Gslope, const float epsilon) {
+
+        env2env_gainratio_obj * obj;
+
+        obj = (env2env_gainratio_obj *) malloc(sizeof(env2env_gainratio_obj));
+
+        obj->nInitChannels = nInitChannels;
+        obj->nChannels = nChannels;
+        obj->halfFrameSize = halfFrameSize;
+        obj->Gmin = Gmin;
+        obj->Gmid = Gmid;
+        obj->Gslope = Gslope;
+        obj->epsilon = epsilon;
+
+        return obj;        
+
+    }
+
+    void env2env_gainratio_destroy(env2env_gainratio_obj * obj) {
+
+        free((void *) obj);
+
+    }
+
+    void env2env_gainratio_process(env2env_gainratio_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * diffuse, envs_obj * gainratio) {
+
+        unsigned int iChannel;
+        unsigned int iBin;
+
+        float ratio;
+        float sigmoid;
+        float gain;
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            if (tracks->ids[iChannel] != 0) {
+
+                for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                    ratio = seps->array[iChannel][iBin] / (((float) obj->nInitChannels) * diffuse->array[iChannel][iBin] + obj->epsilon);
+
+                    sigmoid = 1.0f / (1.0f + expf(-1.0f * obj->Gslope * (ratio - obj->Gmid)));
+
+                    gain = obj->Gmin + (1.0f - obj->Gmin) * sigmoid;
+
+                    gainratio->array[iChannel][iBin] = gain;
+
+                }
+
+            }
+            else {
+
+                memset(gainratio->array[iChannel], 0x00, sizeof(float) * obj->halfFrameSize);
+
+            }
+
+        }
+
+    }

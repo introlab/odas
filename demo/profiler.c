@@ -151,7 +151,7 @@
         printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_tracks_sst_prf,roundf(10000.0f * prf->snk_tracks_sst_prf / prf->duration) / 100.0f);       
         printf("| + SSS                                      |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_sss_prf,roundf(10000.0f * prf->mod_sss_prf / prf->duration) / 100.0f);
-        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf),roundf(10000.0f * (prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf) / 100.0f));
+        printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf),roundf(10000.0f * ((prf->con_spectra_seps_prf+prf->con_spectra_pfs_prf) / prf->duration) / 100.0f));
         printf("| + ISTFT                                    |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",(prf->mod_istft_seps_prf+prf->mod_istft_pfs_prf),roundf(10000.0f * (prf->mod_istft_seps_prf+prf->mod_istft_pfs_prf) / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",(prf->con_hops_seps_prf+prf->con_hops_pfs_prf),roundf(10000.0f * (prf->con_hops_seps_prf+prf->con_hops_pfs_prf) / prf->duration) / 100.0f);

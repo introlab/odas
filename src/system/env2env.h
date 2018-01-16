@@ -149,6 +149,20 @@
 
     } env2env_gainall_obj;
 
+    typedef struct env2env_gainratio_obj {
+
+        unsigned int nInitChannels;
+        unsigned int nChannels;
+        unsigned int halfFrameSize;
+
+        float Gmin;
+        float Gmid;
+        float Gslope;
+
+        float epsilon;
+
+    } env2env_gainratio_obj;
+
     env2env_mcra_obj * env2env_mcra_construct_zero(const unsigned int nChannels, const unsigned int halfFrameSize, const unsigned int bSize, const float alphaS, const unsigned int L, const float delta, const float alphaD);
 
     void env2env_mcra_destroy(env2env_mcra_obj * obj);
@@ -184,5 +198,11 @@
     void env2env_gainall_destroy(env2env_gainall_obj * obj);
 
     void env2env_gainall_process(env2env_gainall_obj * obj, const tracks_obj * tracks, const envs_obj * gainspeeches, const envs_obj * probspeeches, envs_obj * gainalls);
+
+    env2env_gainratio_obj * env2env_gainratio_construct_zero(const unsigned int nInitChannels, const unsigned int nChannels, const unsigned int halfFrameSize, const float Gmin, const float Gmid, const float Gslope, const float epsilon);
+
+    void env2env_gainratio_destroy(env2env_gainratio_obj * obj);
+
+    void env2env_gainratio_process(env2env_gainratio_obj * obj, const tracks_obj * tracks, const envs_obj * seps, const envs_obj * diffuse, envs_obj * gainratio);
 
 #endif

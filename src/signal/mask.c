@@ -24,6 +24,12 @@
 
     }
 
+    void masks_copy(masks_obj * dest, const masks_obj * src) {
+
+        memcpy(dest->array, src->array, sizeof(char) * src->nSeps * src->nChannels);
+
+    }    
+
     void masks_printf(const masks_obj * obj) {
 
         unsigned int iSep;
