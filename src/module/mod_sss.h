@@ -40,45 +40,66 @@
         char mode_sep;
         char mode_pf;
 
-        beampatterns_obj * beampatterns_mics;
-        beampatterns_obj * beampatterns_spatialfilter;
-        steers_obj * steers;
-        gains_obj * gains;
-        masks_obj * masks;
+        beampatterns_obj * sep_ds_beampatterns_mics;
+        beampatterns_obj * sep_ds_beampatterns_spatialfilter;
+        steers_obj * sep_ds_steers;
+        gains_obj * sep_ds_gains;
+        masks_obj * sep_ds_masks;
+        tracks_obj * sep_ds_tracksPrev;
+        tracks_obj * sep_ds_tracksNow;
+        track2gain_obj * sep_ds_track2gain;
+        gain2mask_obj * sep_ds_gain2mask;
+        track2steer_obj * sep_ds_track2steer;
+        steer2demixing_ds_obj * sep_ds_steer2demixing;
+        demixings_obj * sep_ds_demixingsPrev;
+        demixings_obj * sep_ds_demixingsNow;
+        demixing2freq_obj * sep_ds_demixing2freq;
 
-        tracks_obj * tracksPrev;
-        tracks_obj * tracksNow;
+        beampatterns_obj * sep_gss_beampatterns_mics;
+        beampatterns_obj * sep_gss_beampatterns_spatialfilter;
+        steers_obj * sep_gss_steers;
+        gains_obj * sep_gss_gains;
+        masks_obj * sep_gss_masks;
+        tracks_obj * sep_gss_tracksPrev;
+        tracks_obj * sep_gss_tracksNow;
+        track2gain_obj * sep_gss_track2gain;
+        gain2mask_obj * sep_gss_gain2mask;
+        track2steer_obj * sep_gss_track2steer;
+        steer2demixing_gss_obj * sep_gss_steer2demixing;
+        demixings_obj * sep_gss_demixingsPrev;
+        demixings_obj * sep_gss_demixingsNow;
+        demixing2freq_obj * sep_gss_demixing2freq;
 
-        track2gain_obj * track2gain;
-        gain2mask_obj * gain2mask;
-        track2steer_obj * track2steer;
+        masks_obj * sep_masks;
+        demixings_obj * sep_demixings;
 
-        steer2demixing_ds_obj * steer2demixing_ds;
-        steer2demixing_gss_obj * steer2demixing_gss;
-        steer2demixing_mvdr_obj * steer2demixing_mvdr;
+        freq2env_obj * pf_ms_freq2env;
+        envs_obj * pf_ms_noisys;
+        demixing2env_obj * pf_ms_demixing2env;
+        envs_obj * pf_ms_noisesEst;
+        env2env_mcra_obj * pf_ms_env2env_mcra;
+        envs_obj * pf_ms_noisesSep;
+        env2env_interf_obj * pf_ms_env2env_interf;
+        envs_obj * pf_ms_interfs;
+        env2env_gainspeech_obj * pf_ms_env2env_gainspeech;
+        envs_obj * pf_ms_gainspeeches;
+        envs_obj * pf_ms_snrs;
+        envs_obj * pf_ms_vs;
+        env2env_probspeech_obj * pf_ms_env2env_probspeech;
+        envs_obj * pf_ms_probspeeches;
+        env2env_gainall_obj * pf_ms_env2env_gainall;       
+        envs_obj * pf_ms_gainalls;
+        freq2freq_gain_obj * pf_ms_freq2freq_gain;
 
-        demixings_obj * demixingsPrev;
-        demixings_obj * demixingsNow;
-
-        demixing2freq_obj * demixing2freq;
-
-        freq2env_obj * freq2env;
-        envs_obj * noisys;
-        demixing2env_obj * demixing2env;
-        envs_obj * noisesEst;
-        env2env_mcra_obj * env2env_mcra;
-        envs_obj * noisesSep;
-        env2env_interf_obj * env2env_interf;
-        envs_obj * interfs;
-        env2env_gainspeech_obj * env2env_gainspeech;
-        envs_obj * gainspeeches;
-        envs_obj * snrs;
-        envs_obj * vs;
-        env2env_probspeech_obj * env2env_probspeech;
-        envs_obj * probspeeches;
-        env2env_gainall_obj * env2env_gainall;
-        envs_obj * gainalls;
-        freq2freq_gain_obj * freq2freq_gain;
+        freq2env_obj * pf_ss_freq2env_channels;
+        envs_obj * pf_ss_env_channels;
+        demixing2env_obj * pf_ss_demixing2env;
+        envs_obj * pf_ss_env_channelseps;
+        freq2env_obj * pf_ss_freq2env_seps;
+        envs_obj * pf_ss_env_seps;
+        env2env_gainratio_obj * pf_ss_env2env_gainratio;
+        envs_obj * pf_ss_gainratio;
+        freq2freq_gain_obj * pf_ss_freq2freq_gain;
 
         msg_spectra_obj * in1;
         msg_powers_obj * in2;
@@ -108,22 +129,26 @@
         float sep_gss_lambda;
         float sep_gss_mu;
 
-        unsigned int pf_multi_bSize;
-        float pf_multi_alphaS;
-        unsigned int pf_multi_L;
-        float pf_multi_delta;
-        float pf_multi_alphaD;
+        unsigned int pf_ms_bSize;
+        float pf_ms_alphaS;
+        unsigned int pf_ms_L;
+        float pf_ms_delta;
+        float pf_ms_alphaD;
 
-        float pf_multi_eta;
-        float pf_multi_alphaZ;
-        float pf_multi_alphaPmin;
-        float pf_multi_thetaWin;
-        float pf_multi_alphaWin;
-        float pf_multi_maxAbsenceProb;
-        float pf_multi_Gmin;
-        unsigned int pf_multi_winSizeLocal;
-        unsigned int pf_multi_winSizeGlobal;
-        unsigned int pf_multi_winSizeFrame;
+        float pf_ms_eta;
+        float pf_ms_alphaZ;
+        float pf_ms_alphaPmin;
+        float pf_ms_thetaWin;
+        float pf_ms_alphaWin;
+        float pf_ms_maxAbsenceProb;
+        float pf_ms_Gmin;
+        unsigned int pf_ms_winSizeLocal;
+        unsigned int pf_ms_winSizeGlobal;
+        unsigned int pf_ms_winSizeFrame;
+
+        float pf_ss_Gmin;
+        float pf_ss_Gmid;
+        float pf_ss_Gslope;
 
     } mod_sss_cfg;
 
@@ -137,7 +162,7 @@
 
     int mod_sss_process_dgss(mod_sss_obj * obj);
 
-    int mod_sss_process_dmvdr(mod_sss_obj * obj);
+    int mod_sss_process_sspf(mod_sss_obj * obj);
 
     int mod_sss_process_mspf(mod_sss_obj * obj);
 

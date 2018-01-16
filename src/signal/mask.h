@@ -17,6 +17,8 @@
 
     void masks_destroy(masks_obj * obj);    
 
+    void masks_copy(masks_obj * dest, const masks_obj * src);
+
     void masks_printf(const masks_obj * obj);
 
 #endif
