@@ -6,3 +6,8 @@ ODAS stands for Open embeddeD Audition System. This is a library dedicated to pe
 Have a look at the wiki for more info.
 
 [![ODAS Demonstration](https://img.youtube.com/vi/n7y2rLAnd5I/0.jpg)](https://youtu.be/n7y2rLAnd5I)
+
+# Graphical User Interface (GUI) for Data Visualization
+
+Please have a look at the [odas_web](https://github.com/introlab/odas_web) project.
+![GUI](https://github.com/introlab/odas_web/blob/master/screenshots/live_data.png)
