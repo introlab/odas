@@ -21,7 +21,7 @@
     *
     */
     
-    #include "con_tracks.h"
+    #include <connector/con_tracks.h>
 
     con_tracks_obj * con_tracks_construct(const unsigned int nOuts, const msg_tracks_cfg * msg_tracks_config) {
 

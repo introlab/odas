@@ -20,7 +20,7 @@
     *
     */
     
-    #include "con_spectra.h"
+    #include <connector/con_spectra.h>
 
     con_spectra_obj * con_spectra_construct(const unsigned int nOuts, const msg_spectra_cfg * msg_spectra_config) {
 

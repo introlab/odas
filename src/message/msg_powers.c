@@ -21,7 +21,7 @@
     *
     */
     
-    #include "msg_powers.h"
+    #include <message/msg_powers.h>
 
     msg_powers_obj * msg_powers_construct(const msg_powers_cfg * msg_powers_config) {
 

@@ -21,7 +21,7 @@
     *
     */
 
-    #include "amod_sss.h"
+    #include <amodule/amod_sss.h>
 
     amod_sss_obj * amod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config) {
 

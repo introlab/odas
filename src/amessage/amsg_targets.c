@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_targets.h"
+    #include <amessage/amsg_targets.h>
 
     amsg_targets_obj * amsg_targets_construct(const unsigned int nMessages, const msg_targets_cfg * msg_targets_config) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "link.h"
+    #include <general/link.h>
 
     links_obj * links_construct_zero(const unsigned int nLinks) {
 

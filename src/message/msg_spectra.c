@@ -21,7 +21,7 @@
     *
     */
     
-    #include "msg_spectra.h"
+    #include <message/msg_spectra.h>
 
     msg_spectra_obj * msg_spectra_construct(const msg_spectra_cfg * msg_spectra_config) {
 

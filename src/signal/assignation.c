@@ -21,7 +21,7 @@
     *
     */
     
-    #include "assignation.h"
+    #include <signal/assignation.h>
 
     assignations_obj * assignations_construct_zero(const unsigned int nAssignations, const unsigned int nPots) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "category.h"
+    #include <signal/category.h>
 
     categories_obj * categories_construct_zero(const unsigned int nSignals) {
 

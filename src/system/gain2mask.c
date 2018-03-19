@@ -21,7 +21,7 @@
     *
     */
     
-    #include "gain2mask.h"
+    #include <system/gain2mask.h>
 
     gain2mask_obj * gain2mask_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const float gainMin) {
 

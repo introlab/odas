@@ -1,3 +1,4 @@
+project(ODAS)
 cmake_minimum_required(VERSION 2.4.6)
 
 if(COMMAND cmake_policy)
@@ -15,6 +16,11 @@ set(CMAKE_BUILD_TYPE "Release")
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
+
+#Add base directory for includes (global)
+include_directories(include/odas)
+
+add_subdirectory(include)
 
 set(SRC
 

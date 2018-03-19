@@ -21,7 +21,7 @@
     *
     */
 
-    #include "acon_categories.h"
+    #include <aconnector/acon_categories.h>
 
     acon_categories_obj * acon_categories_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_categories_cfg * msg_categories_config) {
 

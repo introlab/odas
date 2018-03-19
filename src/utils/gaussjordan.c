@@ -21,7 +21,7 @@
     *
     */
     
-    #include "gaussjordan.h"
+    #include <utils/gaussjordan.h>
 
     gaussjordan_obj * gaussjordan_construct_zero(const unsigned int nRowsCols, const float epsilon) {
 

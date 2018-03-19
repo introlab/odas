@@ -21,7 +21,7 @@
     *
     */
 
-    #include "delta.h"
+    #include <signal/delta.h>
 
     deltas_obj * deltas_construct_zero(const unsigned int nPairs) {
 

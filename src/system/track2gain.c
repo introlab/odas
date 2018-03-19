@@ -21,7 +21,7 @@
     *
     */
     
-    #include "track2gain.h"
+    #include <system/track2gain.h>
 
     track2gain_obj * track2gain_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const float * directions, const float * direction) {
 

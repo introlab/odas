@@ -21,7 +21,7 @@
     *
     */
 
-    #include "delay.h"
+    #include <init/delay.h>
 
     tdoas_obj * delay_tdoas(const points_obj * points, const mics_obj * mics, const soundspeed_obj * soundspeed, const unsigned int fS, const unsigned int frameSize, const unsigned int interpRate) {
 

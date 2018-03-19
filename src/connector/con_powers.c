@@ -21,7 +21,7 @@
     *
     */
     
-    #include "con_powers.h"
+    #include <connector/con_powers.h>
 
     con_powers_obj * con_powers_construct(const unsigned int nOuts, const msg_powers_cfg * msg_powers_config) {
 

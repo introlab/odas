@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mask.h"
+    #include <signal/mask.h>
 
     masks_obj * masks_construct_zero(const unsigned int nSeps, const unsigned int nChannels) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "triangle.h"
+    #include <signal/triangle.h>
 
     triangles_obj * triangles_construct_zero(const unsigned int nTriangles) {
 

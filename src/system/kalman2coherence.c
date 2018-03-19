@@ -21,7 +21,7 @@
     *
     */
 
-    #include "kalman2coherence.h"
+    #include <system/kalman2coherence.h>
 
     kalman2coherence_obj * kalman2coherence_construct(const float epsilon, const float sigmaR) {
 

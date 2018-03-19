@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mod_volume.h"
+    #include <module/mod_volume.h>
 
     mod_volume_obj * mod_volume_construct(const mod_volume_cfg * mod_volume_config, const msg_hops_cfg * msg_hops_config) {
 

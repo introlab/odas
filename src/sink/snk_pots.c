@@ -21,7 +21,7 @@
     *
     */
     
-    #include "snk_pots.h"
+    #include <sink/snk_pots.h>
 
     snk_pots_obj * snk_pots_construct(const snk_pots_cfg * snk_pots_config, const msg_pots_cfg * msg_pots_config) {
 

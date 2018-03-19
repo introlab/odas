@@ -21,7 +21,7 @@
     *
     */
     
-    #include "steer2demixing.h"
+    #include <system/steer2demixing.h>
 
     int count = 0;
 

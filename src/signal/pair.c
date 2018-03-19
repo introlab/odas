@@ -21,7 +21,7 @@
     *
     */
 
-    #include "pair.h"
+    #include <signal/pair.h>
 
     pairs_obj * pairs_construct_zero(const unsigned int nPairs) {
 

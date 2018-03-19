@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_categories.h"
+    #include <amessage/amsg_categories.h>
 
     amsg_categories_obj * amsg_categories_construct(const unsigned int nMessages, const msg_categories_cfg * msg_categories_config) {
 

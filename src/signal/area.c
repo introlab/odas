@@ -21,7 +21,7 @@
     *
     */
     
-    #include "area.h"
+    #include <signal/area.h>
 
     areas_obj * areas_construct_zero(const unsigned int nPointsDiscrete, const unsigned int nResolutionsPerDiscrete, const unsigned int nPairs) {
 

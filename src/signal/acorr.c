@@ -21,7 +21,7 @@
     *
     */
 
-    #include "acorr.h"
+    #include <signal/acorr.h>
 
     acorrs_obj * acorrs_construct_zero(const unsigned int nSignals, const unsigned int halfFrameSize) {
 

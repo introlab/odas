@@ -21,7 +21,7 @@
     *
     */
     
-    #include "con_pots.h"
+    #include <connector/con_pots.h>
 
     con_pots_obj * con_pots_construct(const unsigned int nOuts, const msg_pots_cfg * msg_pots_config) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "matrix.h"
+    #include <utils/matrix.h>
 
     matrix_obj * matrix_construct_zero(const unsigned int nRows, const unsigned int nCols) {
 

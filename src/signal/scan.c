@@ -21,7 +21,7 @@
     *
     */
     
-    #include "scan.h"
+    #include <signal/scan.h>
 
     scans_obj * scans_construct_null(const unsigned int nLevels) {
 

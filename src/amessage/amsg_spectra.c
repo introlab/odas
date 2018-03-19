@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_spectra.h"
+    #include <amessage/amsg_spectra.h>
 
     amsg_spectra_obj * amsg_spectra_construct(const unsigned int nMessages, const msg_spectra_cfg * msg_spectra_config) {
 

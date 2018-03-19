@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_powers.h"
+    #include <amessage/amsg_powers.h>
 
     amsg_powers_obj * amsg_powers_construct(const unsigned int nMessages, const msg_powers_cfg * msg_powers_config) {
 

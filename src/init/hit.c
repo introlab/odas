@@ -21,7 +21,7 @@
     *
     */
 
-    #include "hit.h"
+    #include <init/hit.h>
 
     areas_obj * hit_areas_zero(const taus_obj * taus, const tdoas_obj * tdoas, const deltas_obj * deltas) {
 

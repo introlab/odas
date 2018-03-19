@@ -21,7 +21,7 @@
     *
     */
     
-    #include "random.h"
+    #include <utils/random.h>
 
     random_obj * random_construct_zero(const unsigned int N) {
 

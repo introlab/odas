@@ -21,7 +21,7 @@
     *
     */
     
-    #include "freq2freq.h"
+    #include <system/freq2freq.h>
 
     freq2freq_phasor_obj * freq2freq_phasor_construct_zero(const unsigned int halfFrameSize, const float epsilon) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "inj_targets.h"
+    #include <injector/inj_targets.h>
 
     inj_targets_obj * inj_targets_construct(const inj_targets_cfg * inj_targets_config, const msg_hops_cfg * msg_hops_config, const msg_targets_cfg * msg_targets_config) {
 

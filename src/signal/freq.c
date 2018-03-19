@@ -21,7 +21,7 @@
     *
     */
     
-    #include "freq.h"
+    #include <signal/freq.h>
 
     freqs_obj * freqs_construct_zero(const unsigned int nSignals, const unsigned int halfFrameSize) {
 

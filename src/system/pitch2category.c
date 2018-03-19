@@ -21,7 +21,7 @@
     *
     */
     
-    #include "pitch2category.h"
+    #include <system/pitch2category.h>
 
     pitch2category_obj * pitch2category_construct_zero(const unsigned int nSeps, const float tauMin, const float tauMax, const float deltaTauMax, const float alpha, const float gamma, const float phiMin, const float r0) {
 

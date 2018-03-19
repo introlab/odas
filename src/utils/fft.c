@@ -21,7 +21,7 @@
     *
     */
 
-    #include "fft.h"
+    #include <utils/fft.h>
 
     fft_obj * fft_construct(const unsigned int frameSize) {
 

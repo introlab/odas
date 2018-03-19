@@ -21,7 +21,7 @@
     *
     */
     
-    #include "asnk_pots.h"
+    #include <asink/asnk_pots.h>
 
     asnk_pots_obj * asnk_pots_construct(const snk_pots_cfg * snk_pots_config, const msg_pots_cfg * msg_pots_config) {
 

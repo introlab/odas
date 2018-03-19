@@ -21,7 +21,7 @@
     *
     */
     
-    #include "soundspeed.h"
+    #include <general/soundspeed.h>
 
     soundspeed_obj * soundspeed_construct_zero(void) {
 

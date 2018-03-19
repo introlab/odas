@@ -21,7 +21,7 @@
     *
     */
 
-    #include "fifo.h"
+    #include <utils/fifo.h>
 
     fifo_obj * fifo_construct_zero(const unsigned int nMaxElements) {
 

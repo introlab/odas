@@ -4,7 +4,7 @@
     #include <time.h>
     #include <stdlib.h>
 
-    #include "../src/utils/inverse.h"
+    #include <utils/inverse.h>
 
     int main(int argc, char * argv[]) {
 

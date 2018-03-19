@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amod_classify.h"
+    #include <amodule/amod_classify.h>
 
     amod_classify_obj * amod_classify_construct(const mod_classify_cfg * mod_classify_config, const msg_hops_cfg * msg_hops_config, const msg_tracks_cfg * msg_tracks_config, const msg_categories_cfg * msg_categories_config) {
 

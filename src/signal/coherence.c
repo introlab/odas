@@ -21,7 +21,7 @@
     *
     */
 
-    #include "coherence.h"
+    #include <signal/coherence.h>
 
     coherences_obj * coherences_construct_zero(const unsigned int nPots, const unsigned int nTracks) {
 

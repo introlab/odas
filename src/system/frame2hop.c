@@ -21,7 +21,7 @@
     *
     */
     
-    #include "frame2hop.h"
+    #include <system/frame2hop.h>
     
     frame2hop_obj * frame2hop_construct_zero(const unsigned int hopSize, const unsigned int frameSize, const unsigned int nSignals) {
 

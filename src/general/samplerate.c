@@ -21,7 +21,7 @@
     *
     */
    
-    #include "samplerate.h"
+    #include <general/samplerate.h>
 
     samplerate_obj * samplerate_construct_zero(void) {
 

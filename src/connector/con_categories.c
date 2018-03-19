@@ -21,7 +21,7 @@
     *
     */
     
-    #include "con_categories.h"
+    #include <connector/con_categories.h>
 
     con_categories_obj * con_categories_construct(const unsigned int nOuts, const msg_categories_cfg * msg_categories_config) {
 

@@ -21,7 +21,7 @@
     *
     */
 
-    #include "mod_stft.h"
+    #include <module/mod_stft.h>
 
     mod_stft_obj * mod_stft_construct(const mod_stft_cfg * mod_stft_config, const msg_hops_cfg * msg_hops_config, const msg_spectra_cfg * msg_spectra_config) {
 

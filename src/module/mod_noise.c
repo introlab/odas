@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mod_noise.h"
+    #include <module/mod_noise.h>
 
     mod_noise_obj * mod_noise_construct(const mod_noise_cfg * mod_noise_config, const msg_spectra_cfg * msg_spectra_config, const msg_powers_cfg * msg_powers_config) {
 

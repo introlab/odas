@@ -21,7 +21,7 @@
     *
     */
     
-    #include "demixing2env.h"
+    #include <system/demixing2env.h>
 
     demixing2env_obj * demixing2env_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize) {
 

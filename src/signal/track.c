@@ -21,7 +21,7 @@
     *
     */
     
-    #include "track.h"
+    #include <signal/track.h>
 
     tracks_obj * tracks_construct_zero(const unsigned int nTracks) {
 

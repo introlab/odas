@@ -21,7 +21,7 @@
     *
     */
     
-    #include "snk_hops.h"
+    #include <sink/snk_hops.h>
 
     snk_hops_obj * snk_hops_construct(const snk_hops_cfg * snk_hops_config, const msg_hops_cfg * msg_hops_config) {
 

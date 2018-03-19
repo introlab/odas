@@ -21,7 +21,7 @@
     *
     */
 
-    #include "kalman2kalman.h"
+    #include <system/kalman2kalman.h>
 
     kalman2kalman_obj * kalman2kalman_construct(const float deltaT, const float sigmaQ, const float sigmaR, const float epsilon) {
 

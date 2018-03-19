@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_pots.h"
+    #include <amessage/amsg_pots.h>
 
     amsg_pots_obj * amsg_pots_construct(const unsigned int nMessages, const msg_pots_cfg * msg_pots_config) {
 

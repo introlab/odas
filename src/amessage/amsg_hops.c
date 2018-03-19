@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_hops.h"
+    #include <amessage/amsg_hops.h>
 
     amsg_hops_obj * amsg_hops_construct(const unsigned int nMessages, const msg_hops_cfg * msg_hops_config) {
 

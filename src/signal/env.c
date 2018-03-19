@@ -21,7 +21,7 @@
     *
     */
     
-    #include "env.h"
+    #include <signal/env.h>
 
     envs_obj * envs_construct_zero(const unsigned int nSignals, const unsigned int halfFrameSize) {
 

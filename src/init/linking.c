@@ -21,7 +21,7 @@
     *
     */
 
-    #include "linking.h"
+    #include <init/linking.h>
 
     maps_obj * linking_maps(const tdoas_obj * tdoasCoarse, const tdoas_obj * tdoasFine, const deltas_obj * deltasCoarse, const deltas_obj * deltasFine, const spatialmasks_obj * spatialmasksCoarse, const spatialmasks_obj * spatialmasksFine, const unsigned int nMatches) {
 

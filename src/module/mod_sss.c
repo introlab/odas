@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mod_sss.h"
+    #include <module/mod_sss.h>
 
     #include <stdio.h>
 

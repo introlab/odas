@@ -21,7 +21,7 @@
     *
     */
 
-    #include "mixture2mixture.h"
+    #include <system/mixture2mixture.h>
 
     mixture2mixture_obj * mixture2mixture_construct(const gaussians_1d_obj * active_gmm, const gaussians_1d_obj * inactive_gmm, const float diffuse_cst, const float Pfalse, const float Pnew, const float Ptrack, const float epsilon) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amsg_tracks.h"
+    #include <amessage/amsg_tracks.h>
 
     amsg_tracks_obj * amsg_tracks_construct(const unsigned int nMessages, const msg_tracks_cfg * msg_tracks_config) {
 

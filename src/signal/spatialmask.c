@@ -21,7 +21,7 @@
     *
     */
     
-    #include "spatialmask.h"
+    #include <signal/spatialmask.h>
 
     spatialmasks_obj * spatialmasks_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 

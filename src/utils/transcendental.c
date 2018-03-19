@@ -21,7 +21,7 @@
     *
     */
     
-    #include "transcendental.h"
+    #include <utils/transcendental.h>
 
     transcendental_obj * transcendental_construct_zero(const float minValue, const float maxValue, const unsigned int nElements) {
 

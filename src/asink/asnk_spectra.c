@@ -21,7 +21,7 @@
     *
     */
     
-    #include "asnk_spectra.h"
+    #include <asink/asnk_spectra.h>
 
     asnk_spectra_obj * asnk_spectra_construct(const snk_spectra_cfg * snk_spectra_config, const msg_spectra_cfg * msg_spectra_config) {
 

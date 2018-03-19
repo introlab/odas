@@ -21,7 +21,7 @@
     *
     */
 
-    #include "windowing.h"
+    #include <init/windowing.h>
 
     window_obj * windowing_hann(const unsigned int frameSize) {
 

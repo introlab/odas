@@ -21,7 +21,7 @@
     *
     */
 
-    #include "msg_tracks.h"
+    #include <message/msg_tracks.h>
 
     msg_tracks_obj * msg_tracks_construct(const msg_tracks_cfg * cfg) {
 

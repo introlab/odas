@@ -21,7 +21,7 @@
     *
     */
 
-    #include "frame2freq.h"
+    #include <system/frame2freq.h>
 
     frame2freq_obj * frame2freq_construct_zero(const unsigned int frameSize, const unsigned int halfFrameSize) {
 

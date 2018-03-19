@@ -21,7 +21,7 @@
     *
     */
     
-    #include "target.h"
+    #include <signal/target.h>
 
     targets_obj * targets_construct_zero(const unsigned int nTargets) {
 

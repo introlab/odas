@@ -21,7 +21,7 @@
     *
     */
     
-    #include "acon_targets.h"
+    #include <aconnector/acon_targets.h>
 
     acon_targets_obj * acon_targets_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_targets_cfg * msg_targets_config) {
 

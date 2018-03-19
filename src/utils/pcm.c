@@ -21,7 +21,7 @@
     *
     */
 
-    #include "pcm.h"
+    #include <utils/pcm.h>
 
     float pcm_signedXXbits2normalized(const char * bytes, const unsigned int nBytes) {
 
