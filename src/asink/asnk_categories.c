@@ -1,4 +1,4 @@
-    
+
     #include "asnk_categories.h"
 
     asnk_categories_obj * asnk_categories_construct(const snk_categories_cfg * snk_categories_config, const msg_categories_cfg * msg_categories_config) {

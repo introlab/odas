@@ -1,10 +1,6 @@
     
     #include "spatialmask.h"
 
-    // +----------------------------------------------------------+
-    // | Constructor                                              |
-    // +----------------------------------------------------------+
-
     spatialmasks_obj * spatialmasks_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 
         spatialmasks_obj * obj;
@@ -20,10 +16,6 @@
         return obj;
 
     }
-
-    // +----------------------------------------------------------+
-    // | Clone                                                    |
-    // +----------------------------------------------------------+
 
     spatialmasks_obj * spatialmasks_clone(const spatialmasks_obj * obj) {
 
@@ -41,20 +33,12 @@
 
     }
 
-    // +----------------------------------------------------------+
-    // | Destructor                                               |
-    // +----------------------------------------------------------+
-
     void spatialmasks_destroy(spatialmasks_obj * obj) {
 
         free((void *) obj->array);
         free((void *) obj);
 
     }
-
-    // +----------------------------------------------------------+
-    // | Print                                                    |
-    // +----------------------------------------------------------+
 
     void spatialmasks_printf(const spatialmasks_obj * obj) {
 

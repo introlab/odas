@@ -1,4 +1,4 @@
-    
+
     #include "interface.h"
 
     interface_obj * interface_construct() {

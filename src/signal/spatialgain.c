@@ -1,10 +1,6 @@
     
     #include "spatialgain.h"
 
-    // +----------------------------------------------------------+
-    // | Constructor                                              |
-    // +----------------------------------------------------------+
-
     spatialgains_obj * spatialgains_construct_zero(const unsigned int nChannels, const unsigned int nPoints) {
 
         spatialgains_obj * obj;
@@ -20,10 +16,6 @@
         return obj;
 
     }
-
-    // +----------------------------------------------------------+
-    // | Clone                                                    |
-    // +----------------------------------------------------------+
 
     spatialgains_obj * spatialgains_clone(const spatialgains_obj * obj) {
 
@@ -41,20 +33,12 @@
 
     }
 
-    // +----------------------------------------------------------+
-    // | Destructor                                               |
-    // +----------------------------------------------------------+
-
     void spatialgains_destroy(spatialgains_obj * obj) {
 
         free((void *) obj->array);
         free((void *) obj);
 
     }
-
-    // +----------------------------------------------------------+
-    // | Print                                                    |
-    // +----------------------------------------------------------+
 
     void spatialgains_printf(const spatialgains_obj * obj) {
 

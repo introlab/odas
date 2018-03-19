@@ -1,4 +1,4 @@
-    
+
     #include "acorr2pitch.h"
 
     acorr2pitch_obj * acorr2pitch_construct_zero(const unsigned int nSignals, const unsigned int halfFrameSize, const unsigned int winSize) {

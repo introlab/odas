@@ -1,4 +1,4 @@
-    
+
     #include "ainj_targets.h"
 
     ainj_targets_obj * ainj_targets_construct(const inj_targets_cfg * inj_targets_config, const msg_hops_cfg * msg_hops_config, const msg_targets_cfg * msg_targets_config) {

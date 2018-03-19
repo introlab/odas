@@ -1,4 +1,4 @@
-    
+   
     #include "freq2env.h"
 
     freq2env_obj * freq2env_construct_zero(const unsigned int halfFrameSize) {

@@ -1,10 +1,6 @@
 
     #include "spatialindex.h"
 
-    // +----------------------------------------------------------+
-    // | Constructor                                              |
-    // +----------------------------------------------------------+
-
     spatialindexes_obj * spatialindexes_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 
         spatialindexes_obj * obj;
@@ -23,10 +19,6 @@
         return obj;
 
     }
-
-    // +----------------------------------------------------------+
-    // | Clone                                                    |
-    // +----------------------------------------------------------+
 
     spatialindexes_obj * spatialindexes_clone(const spatialindexes_obj * obj) {
 
@@ -47,10 +39,6 @@
 
     }
 
-    // +----------------------------------------------------------+
-    // | Destructor                                               |
-    // +----------------------------------------------------------+    
-
     void spatialindexes_destroy(spatialindexes_obj * obj) {
 
         free((void *) obj->array);
@@ -59,10 +47,6 @@
         free((void *) obj);
 
     }
-
-    // +----------------------------------------------------------+
-    // | Print                                                    |
-    // +----------------------------------------------------------+
 
     void spatialindexes_printf(const spatialindexes_obj * obj) {
 
