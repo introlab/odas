@@ -21,7 +21,7 @@
     *
     */
     
-    #include "spatialgain.h"
+    #include <signal/spatialgain.h>
 
     spatialgains_obj * spatialgains_construct_zero(const unsigned int nChannels, const unsigned int nPoints) {
 

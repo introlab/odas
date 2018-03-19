@@ -21,7 +21,7 @@
     *
     */
 
-    #include "combining.h"
+    #include <init/combining.h>
 
     assignations_obj * combining_generate(const unsigned int nPots, const unsigned int nTracks) {
 

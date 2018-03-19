@@ -21,7 +21,7 @@
     *
     */
     
-    #include "freq2xcorr.h"
+    #include <system/freq2xcorr.h>
 
     freq2xcorr_obj * freq2xcorr_construct_zero(const unsigned int frameSize, const unsigned int halfFrameSize) {
 

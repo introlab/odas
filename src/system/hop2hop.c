@@ -21,7 +21,7 @@
     *
     */
     
-    #include "hop2hop.h"
+    #include <system/hop2hop.h>
 
     hop2hop_multiplex_obj * hop2hop_multiplex_construct_zero(const unsigned int hopSize) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amod_resample.h"
+    #include <amodule/amod_resample.h>
 
     amod_resample_obj * amod_resample_construct(const mod_resample_cfg * mod_resample_config, const msg_hops_cfg * msg_hops_in_config, const msg_hops_cfg * msg_hops_out_config) {
 

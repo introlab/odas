@@ -21,7 +21,7 @@
     *
     */
     
-    #include "spatialfilter.h"
+    #include <general/spatialfilter.h>
 
     spatialfilter_obj * spatialfilter_construct_zero(void) {
 

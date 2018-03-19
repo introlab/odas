@@ -21,7 +21,7 @@
     *
     */
 
-    #include "window.h"
+    #include <signal/window.h>
 
     window_obj * window_construct_zero(const unsigned int frameSize) {
 

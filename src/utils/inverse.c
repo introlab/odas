@@ -21,7 +21,7 @@
     *
     */
     
-    #include "inverse.h"
+    #include <utils/inverse.h>
 
     inverse_real_obj * inverse_real_construct_zero(const unsigned int nRowsCols, const float epsilon) {
 

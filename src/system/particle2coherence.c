@@ -21,7 +21,7 @@
     *
     */
     
-    #include "particle2coherence.h"
+    #include <system/particle2coherence.h>
 
     particle2coherence_obj * particle2coherence_construct(const float sigmaR) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "msg_pots.h"
+    #include <message/msg_pots.h>
 
     msg_pots_obj * msg_pots_construct(const msg_pots_cfg * cfg) {
 

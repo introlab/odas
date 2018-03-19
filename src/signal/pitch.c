@@ -21,7 +21,7 @@
     *
     */
     
-    #include "pitch.h"
+    #include <signal/pitch.h>
 
     pitches_obj * pitches_construct_zero(const unsigned int nSignals) {
 

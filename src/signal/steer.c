@@ -21,7 +21,7 @@
     *
     */
     
-    #include "steer.h"
+    #include <signal/steer.h>
 
     steers_obj * steers_construct_zero(const unsigned int halfFrameSize, const unsigned int nSeps, const unsigned int nChannels) {
 

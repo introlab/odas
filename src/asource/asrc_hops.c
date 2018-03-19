@@ -21,7 +21,7 @@
     *
     */
     
-    #include "asrc_hops.h"
+    #include <asource/asrc_hops.h>
 
     asrc_hops_obj * asrc_hops_construct(const src_hops_cfg * src_hops_config, const msg_hops_cfg * msg_hops_config) {
 

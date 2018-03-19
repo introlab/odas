@@ -21,7 +21,7 @@
     *
     */
     
-    #include "snk_categories.h"
+    #include <sink/snk_categories.h>
 
     snk_categories_obj * snk_categories_construct(const snk_categories_cfg * snk_categories_config, const msg_categories_cfg * msg_categories_config) {
 

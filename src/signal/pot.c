@@ -21,7 +21,7 @@
     *
     */
     
-    #include "pot.h"
+    #include <signal/pot.h>
 
     pots_obj * pots_construct_zero(const unsigned int nPots) {
 

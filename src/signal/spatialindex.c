@@ -21,7 +21,7 @@
     *
     */
 
-    #include "spatialindex.h"
+    #include <signal/spatialindex.h>
 
     spatialindexes_obj * spatialindexes_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "aimg.h"
+    #include <signal/aimg.h>
 
     aimg_obj * aimg_construct_zero(const unsigned int aimgSize) {
 

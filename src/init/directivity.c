@@ -21,7 +21,7 @@
     *
     */
 
-    #include "directivity.h"
+    #include <init/directivity.h>
 
     beampatterns_obj * directivity_beampattern_mics(const mics_obj * mics, const unsigned int nThetas) {
 

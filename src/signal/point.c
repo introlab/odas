@@ -21,7 +21,7 @@
     *
     */
     
-    #include "point.h"
+    #include <signal/point.h>
 
     points_obj * points_construct_zero(const unsigned int nPoints) {
 

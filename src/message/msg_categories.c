@@ -21,7 +21,7 @@
     *
     */
 
-    #include "msg_categories.h"
+    #include <message/msg_categories.h>
 
     msg_categories_obj * msg_categories_construct(const msg_categories_cfg * msg_categories_config) {
 

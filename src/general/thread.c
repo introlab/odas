@@ -21,7 +21,7 @@
     *
     */
     
-    #include "thread.h"
+    #include <general/thread.h>
 
     thread_obj * thread_construct(void * (* start_routine) (void *), void * arg) {
 

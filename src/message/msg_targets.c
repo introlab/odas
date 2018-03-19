@@ -21,7 +21,7 @@
     *
     */
 
-    #include "msg_targets.h"
+    #include <message/msg_targets.h>
 
     msg_targets_obj * msg_targets_construct(const msg_targets_cfg * cfg) {
 

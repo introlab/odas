@@ -21,7 +21,7 @@
     *
     */
     
-    #include "acon_powers.h"
+    #include <aconnector/acon_powers.h>
 
     acon_powers_obj * acon_powers_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_powers_cfg * msg_powers_config) {
 

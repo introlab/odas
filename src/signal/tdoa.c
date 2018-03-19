@@ -21,7 +21,7 @@
     *
     */
     
-    #include "tdoa.h"
+    #include <signal/tdoa.h>
 
     tdoas_obj * tdoas_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 

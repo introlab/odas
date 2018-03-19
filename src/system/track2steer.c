@@ -21,7 +21,7 @@
     *
     */
     
-    #include "track2steer.h"
+    #include <system/track2steer.h>
 
     track2steer_obj * track2steer_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize, const float c, const unsigned int fS, const float * mics) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "xcorr2xcorr.h"
+    #include <system/xcorr2xcorr.h>
 
     xcorr2xcorr_obj * xcorr2xcorr_construct_zero(const unsigned int frameSize) {
 

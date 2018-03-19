@@ -21,7 +21,7 @@
     *
     */
     
-    #include "snk_spectra.h"
+    #include <sink/snk_spectra.h>
 
     snk_spectra_obj * snk_spectra_construct(const snk_spectra_cfg * snk_spectra_config, const msg_spectra_cfg * msg_spectra_config) {
 

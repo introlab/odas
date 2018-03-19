@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amod_ssl.h"
+    #include <amodule/amod_ssl.h>
 
     amod_ssl_obj * amod_ssl_construct(const mod_ssl_cfg * mod_ssl_config, const msg_spectra_cfg * msg_spectra_config, const msg_pots_cfg * msg_pots_config) {
 

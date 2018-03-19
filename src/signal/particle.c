@@ -21,7 +21,7 @@
     *
     */
     
-    #include "particle.h"
+    #include <signal/particle.h>
     
     particles_obj * particles_construct_zero(const unsigned int nParticles) {
 

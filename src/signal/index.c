@@ -21,7 +21,7 @@
     *
     */
     
-    #include "index.h"
+    #include <signal/index.h>
 
     indexes_obj * indexes_construct_zero(const unsigned int nCoarses, const unsigned int nFines) {
 

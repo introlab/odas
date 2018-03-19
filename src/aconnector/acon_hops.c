@@ -21,7 +21,7 @@
     *
     */
 
-    #include "acon_hops.h"
+    #include <aconnector/acon_hops.h>
 
     acon_hops_obj * acon_hops_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_hops_cfg * msg_hops_config) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "tau.h"
+    #include <signal/tau.h>
 
     taus_obj * taus_construct_zero(const unsigned int nPoints, const unsigned int nPairs) {
 

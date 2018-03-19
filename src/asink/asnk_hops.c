@@ -21,7 +21,7 @@
     *
     */
     
-    #include "asnk_hops.h"
+    #include <asink/asnk_hops.h>
 
     asnk_hops_obj * asnk_hops_construct(const snk_hops_cfg * snk_hops_config, const msg_hops_cfg * msg_hops_config) {
 

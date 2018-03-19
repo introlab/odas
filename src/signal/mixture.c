@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mixture.h"
+    #include <signal/mixture.h>
 
     mixture_obj * mixture_construct_zero(const unsigned int nPots, const unsigned int nTracks) {
 

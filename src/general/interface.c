@@ -21,7 +21,7 @@
     *
     */
 
-    #include "interface.h"
+    #include <general/interface.h>
 
     interface_obj * interface_construct() {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "mod_sst.h"
+    #include <module/mod_sst.h>
 
     mod_sst_obj * mod_sst_construct(const mod_sst_cfg * mod_sst_config, const mod_ssl_cfg * mod_ssl_config, const msg_pots_cfg * msg_pots_config, const msg_targets_cfg * msg_targets_config, const msg_tracks_cfg * msg_tracks_config) {
 

@@ -21,7 +21,7 @@
     *
     */
 
-    #include "kalman.h"
+    #include <signal/kalman.h>
     
     kalman_obj * kalman_construct_zero(void) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "demixing2freq.h"
+    #include <system/demixing2freq.h>
 
     demixing2freq_obj * demixing2freq_construct_zero(const unsigned int nSeps, const unsigned int nChannels, const unsigned int halfFrameSize) {
 

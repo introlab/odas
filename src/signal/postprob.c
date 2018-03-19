@@ -21,7 +21,7 @@
     *
     */
 
-    #include "postprob.h"
+    #include <signal/postprob.h>
 
     postprobs_obj * postprobs_construct_zero(const unsigned int nPots, const unsigned int nTracks) {
 

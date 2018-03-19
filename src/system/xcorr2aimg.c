@@ -21,7 +21,7 @@
     *
     */
     
-    #include "xcorr2aimg.h"
+    #include <system/xcorr2aimg.h>
 
     xcorr2aimg_obj * xcorr2aimg_construct_zero(const unsigned int aimgSize) {
 

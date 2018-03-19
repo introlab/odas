@@ -21,7 +21,7 @@
     *
     */
     
-    #include "amod_mapping.h"
+    #include <amodule/amod_mapping.h>
 
     amod_mapping_obj * amod_mapping_construct(const mod_mapping_cfg * mod_mapping_config, const msg_hops_cfg * msg_hops_config) {
 

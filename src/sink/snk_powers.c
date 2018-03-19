@@ -21,7 +21,7 @@
     *
     */
     
-    #include "snk_powers.h"
+    #include <sink/snk_powers.h>
 
     snk_powers_obj * snk_powers_construct(const snk_powers_cfg * snk_powers_config, const msg_powers_cfg * msg_powers_config) {
 

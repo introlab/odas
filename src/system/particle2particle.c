@@ -21,7 +21,7 @@
     *
     */
     
-    #include "particle2particle.h"
+    #include <system/particle2particle.h>
 
     particle2particle_obj * particle2particle_construct(const unsigned int nParticles, const float deltaT, const float st_alpha, const float st_beta, const float st_ratio, const float ve_alpha, const float ve_beta, const float ve_ratio, const float ac_alpha, const float ac_beta, const float ac_ratio, const double epsilon, const float sigmaR, const float Nmin) {
 

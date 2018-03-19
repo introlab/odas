@@ -21,7 +21,7 @@
     *
     */
 
-    #include "map.h"
+    #include <signal/map.h>
 
     maps_obj * maps_construct_zero(const unsigned int nCoarses, const unsigned int nFines) {
 

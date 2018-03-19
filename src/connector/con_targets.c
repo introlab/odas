@@ -21,7 +21,7 @@
     *
     */
 
-    #include "con_targets.h"
+    #include <connector/con_targets.h>
 
     con_targets_obj * con_targets_construct(const unsigned int nOuts, const msg_targets_cfg * msg_targets_config) {
 

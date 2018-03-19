@@ -21,7 +21,7 @@
     *
     */
 
-    #include "cmatrix.h"
+    #include <utils/cmatrix.h>
 
     cmatrix_obj * cmatrix_construct_zero(const unsigned int nRows, const unsigned int nCols) {
 

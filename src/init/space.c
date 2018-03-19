@@ -21,7 +21,7 @@
     *
     */
 
-    #include "space.h"
+    #include <init/space.h>
 
     triangles_obj * space_triangles_level_zero(void) {
 

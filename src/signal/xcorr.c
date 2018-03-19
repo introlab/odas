@@ -21,7 +21,7 @@
     *
     */
     
-    #include "xcorr.h"
+    #include <signal/xcorr.h>
 
     xcorrs_obj * xcorrs_construct_zero(const unsigned int nSignals, const unsigned int frameSize) {
 

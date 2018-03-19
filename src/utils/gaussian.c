@@ -21,7 +21,7 @@
     *
     */
     
-    #include "gaussian.h"
+    #include <utils/gaussian.h>
 
     gaussian_1d_obj * gaussian_1d_construct_zero(void) {
 

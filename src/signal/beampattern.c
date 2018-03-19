@@ -21,7 +21,7 @@
     *
     */
     
-    #include "beampattern.h"
+    #include <signal/beampattern.h>
 
     beampatterns_obj * beampatterns_construct_zero(const unsigned int nChannels, const unsigned int nThetas) {
 

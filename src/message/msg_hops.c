@@ -21,7 +21,7 @@
     *
     */
 
-    #include "msg_hops.h"
+    #include <message/msg_hops.h>
 
     msg_hops_obj * msg_hops_construct(const msg_hops_cfg * msg_hops_config) {
 

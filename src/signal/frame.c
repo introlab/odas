@@ -21,7 +21,7 @@
     *
     */
     
-    #include "frame.h"
+    #include <signal/frame.h>
 
     frames_obj * frames_construct_zero(const unsigned int nSignals, const unsigned int frameSize) {
 

@@ -21,7 +21,7 @@
     *
     */
     
-    #include "hop.h"
+    #include <signal/hop.h>
 
     hops_obj * hops_construct_zero(const unsigned int nSignals, const unsigned int hopSize) {
 

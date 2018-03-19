@@ -21,7 +21,7 @@
     *
     */
     
-    #include "asnk_tracks.h"
+    #include <asink/asnk_tracks.h>
 
     asnk_tracks_obj * asnk_tracks_construct(const snk_tracks_cfg * snk_tracks_config, const msg_tracks_cfg * msg_tracks_config) {
 

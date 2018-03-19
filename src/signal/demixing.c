@@ -21,7 +21,7 @@
     *
     */
 
-    #include "demixing.h"
+    #include <signal/demixing.h>
     
     demixings_obj * demixings_construct_zero(const unsigned int halfFrameSize, const unsigned int nSeps, const unsigned int nChannels) {
 

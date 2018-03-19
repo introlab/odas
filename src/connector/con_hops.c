@@ -21,7 +21,7 @@
     *
     */
     
-    #include "con_hops.h"
+    #include <connector/con_hops.h>
 
     con_hops_obj * con_hops_construct(const unsigned int nOuts, const msg_hops_cfg * msg_hops_config) {
 

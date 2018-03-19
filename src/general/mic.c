@@ -21,7 +21,7 @@
     *
     */
 
-    #include "mic.h"
+    #include <general/mic.h>
 
     mics_obj * mics_construct_zero(const unsigned int nChannels) {
 
