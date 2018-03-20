@@ -65,7 +65,7 @@
 
     interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
 
-    interface_obj * interface_construct_soundcard_by_name(char * deviceName);
+    interface_obj * interface_construct_soundcard_name(char * deviceName);
 
     interface_obj * interface_construct_terminal(void);
 
