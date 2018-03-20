@@ -48,7 +48,11 @@
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)))) {
+              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)) ||
+              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int08)) ||
+              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int16)) ||
+              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int24)) ||
+              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int32)))) {
             
             printf("Source hops: Invalid interface and/or format.\n");
             exit(EXIT_FAILURE);
