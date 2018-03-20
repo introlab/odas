@@ -176,7 +176,8 @@
         }       
 
         tmpStr = (char *) malloc(sizeof(char) * 1024);
-        sprintf(tmpStr, "hw:%u,%u", obj->interface->card, obj->interface->device);
+        tmpStr = obj->interface->deviceName;
+        //sprintf(tmpStr, "hw:%u,%u", obj->interface->card, obj->interface->device);
 
         if ((err = snd_pcm_open(&(obj->ch), tmpStr, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
             printf("Source hops: Cannot open audio device %s: %s\n",tmpStr, snd_strerror(err));
