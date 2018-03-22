@@ -10,8 +10,8 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="367.16757"
-   height="359.93958"
-   viewBox="0 0 367.16758 359.93958"
+   height="259.93958"
+   viewBox="0 0 367.16758 259.93958"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -27,8 +27,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="208.30947"
-     inkscape:cy="204.91588"
+     inkscape:cx="208.30946"
+     inkscape:cy="154.91588"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -37,10 +37,10 @@
      inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     fit-margin-top="50"
+     fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="50"
+     fit-margin-bottom="0"
      units="px"
      showguides="false" />
   <defs
@@ -61,7 +61,7 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     transform="translate(-153.9074,-43.732533)">
+     transform="translate(-153.9074,-93.732533)">
     <g
        id="g4426">
       <ellipse
