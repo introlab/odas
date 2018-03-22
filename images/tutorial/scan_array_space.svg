@@ -12,15 +12,12 @@
    width="103.6228mm"
    height="97.450615mm"
    viewBox="0 0 367.16741 345.29745"
-   id="svg4930"
+   id="svg4322"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="scan_array_space.svg"
-   inkscape:export-filename="/afs/csail.mit.edu/u/f/fgrondin/Documents/Code/Git/odas/images/tutorial/scan_array_space.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   sodipodi:docname="scan_array_space.svg">
   <defs
-     id="defs4932" />
+     id="defs4324" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -28,23 +25,23 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="-45.617832"
-     inkscape:cy="271.49092"
+     inkscape:zoom="0.35"
+     inkscape:cx="-369.98772"
+     inkscape:cy="155.50587"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
      inkscape:window-x="1920"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     inkscape:window-maximized="1" />
   <metadata
-     id="metadata4935">
+     id="metadata4327">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -59,18 +56,18 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-107.84479,-199.53527)">
+     transform="translate(-233.55915,-342.57062)">
     <ellipse
        id="path4171"
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:6, 12;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        transform="scale(1,-1)"
-       cx="310.22327"
-       cy="-378.17279"
+       cx="435.93762"
+       cy="-521.20813"
        rx="163.28894"
        ry="79.802048" />
     <g
        id="g4277"
-       transform="matrix(0.57975388,0,0,0.57975388,-2.711331,9.933815)">
+       transform="matrix(0.57975388,0,0,0.57975388,123.00303,152.96916)">
       <path
          inkscape:connector-curvature="0"
          id="path4167"
@@ -149,21 +146,21 @@
        transform="scale(1,-1)"
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.99999985, 11.99999971;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="ellipse4403"
-       cx="310.22327"
-       cy="-378.17279"
+       cx="435.93762"
+       cy="-521.20813"
        rx="163.28894"
        ry="165.15994" />
     <ellipse
        id="path4405"
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.99999989, 11.99999979;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        transform="scale(1,-1)"
-       cx="310.22327"
-       cy="-378.17279"
+       cx="435.93762"
+       cy="-521.20813"
        rx="33.998108"
        ry="161.5838" />
     <g
        id="g5640"
-       transform="translate(-1.5258789e-5,-194.00003)">
+       transform="translate(125.71434,-50.964689)">
       <path
          style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="M 299.14859,516.22375 255.2505,560.12184"
