@@ -9,16 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="367.16757"
-   height="259.93958"
-   viewBox="0 0 367.16758 259.93958"
-   id="svg2"
+   width="103.62285mm"
+   height="73.360725mm"
+   viewBox="0 0 367.16757 259.93958"
+   id="svg4203"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="scan_array_plane.svg"
-   inkscape:export-filename="/afs/csail.mit.edu/u/f/fgrondin/Documents/Code/Git/odas/images/tutorial/scan_array_plane.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   sodipodi:docname="scan_array_plane.svg">
+  <defs
+     id="defs4205" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,27 +25,23 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="208.30946"
-     inkscape:cy="154.91588"
+     inkscape:zoom="0.35"
+     inkscape:cx="-252.84478"
+     inkscape:cy="-90.030218"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1056"
-     inkscape:window-x="1920"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     units="px"
-     showguides="false" />
-  <defs
-     id="defs4" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
   <metadata
-     id="metadata7">
+     id="metadata4208">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -58,11 +53,12 @@
     </rdf:RDF>
   </metadata>
   <g
-     id="layer1"
-     inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     transform="translate(-153.9074,-93.732533)">
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-116.41621,-182.39242)">
     <g
+       transform="translate(-37.491194,88.659883)"
        id="g4426">
       <ellipse
          ry="79.802048"
