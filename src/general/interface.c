@@ -58,8 +58,7 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
-            obj->card = 0;
-            obj->device = 0;
+        obj->deviceName = (char *) NULL;
 
         // +----------------------------------------------------------+
         // | Terminal                                                 |
@@ -106,8 +105,7 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
-            obj->card = 0;
-            obj->device = 0;
+        obj->deviceName = (char *) NULL;
 
         // +----------------------------------------------------------+
         // | Terminal                                                 |
@@ -155,8 +153,7 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
-            obj->card = 0;
-            obj->device = 0;
+        obj->deviceName = (char *) NULL;
 
         // +----------------------------------------------------------+
         // | Terminal                                                 |
@@ -204,8 +201,7 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
-            obj->card = 0;
-            obj->device = 0;
+        obj->deviceName = (char *) NULL;
 
         // +----------------------------------------------------------+
         // | Terminal                                                 |
@@ -217,53 +213,62 @@
 
     }
 
-    interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device) {
+   interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device) {
 
-        interface_obj * obj;
+       char * deviceName = (char *) malloc(sizeof(char) * 1024);
 
-        obj = (interface_obj *) malloc(sizeof(interface_obj));
+       sprintf(deviceName, "hw:%u,%u", card, device);
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+       return interface_construct_soundcard_by_name(deviceName);
 
-            obj->type = interface_soundcard;
+   }
 
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
+   interface_obj * interface_construct_soundcard_by_name(char * deviceName) {
 
-            // (Empty)
+       interface_obj * obj;
 
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
+       obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-            obj->fileName = (char *) NULL;
+       // +----------------------------------------------------------+
+       // | Type                                                     |
+       // +----------------------------------------------------------+
 
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
+       obj->type = interface_soundcard;
 
-            obj->ip = (char *) NULL;
-            obj->port = 0;
+       // +----------------------------------------------------------+
+       // | Blackhole                                                |
+       // +----------------------------------------------------------+
 
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
+       // (Empty)
 
-            obj->card = card;
-            obj->device = device;
+       // +----------------------------------------------------------+
+       // | File                                                     |
+       // +----------------------------------------------------------+
 
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
+       obj->fileName = (char *) NULL;
 
-            // (Empty)
+       // +----------------------------------------------------------+
+       // | Socket                                                   |
+       // +----------------------------------------------------------+
 
-        return obj;
+       obj->ip = (char *) NULL;
+       obj->port = 0;
 
-    }
+       // +----------------------------------------------------------+
+       // | Soundcard                                                |
+       // +----------------------------------------------------------+
+
+       obj->deviceName = deviceName;
+
+       // +----------------------------------------------------------+
+       // | Terminal                                                 |
+       // +----------------------------------------------------------+
+
+       // (Empty)
+
+       return obj;
+
+   }
 
     interface_obj * interface_construct_terminal(void) {
 
@@ -300,8 +305,7 @@
         // | Soundcard                                                |
         // +----------------------------------------------------------+
 
-            obj->card = 0;
-            obj->device = 0;
+        obj->deviceName = (char *) NULL;
 
         // +----------------------------------------------------------+
         // | Terminal                                                 |
@@ -359,10 +363,7 @@
         // +----------------------------------------------------------+
 
             if (obj->type == interface_soundcard) {
-                
-                clone->card = obj->card;
-                clone->device = obj->device;
-
+                clone->deviceName = obj->deviceName;
             }
 
         // +----------------------------------------------------------+
@@ -382,6 +383,14 @@
             free((void *) obj->fileName);
 
         }
+
+        /* Will propably be freed somewhere else. Which is a bit ugly.
+        if (obj->deviceName != NULL) {
+
+            free((void *) obj->deviceName);
+
+        }
+        */
 
         if (obj->ip != NULL) {
 
@@ -419,9 +428,9 @@
 
                 case interface_soundcard:
 
-                    printf("type = soundcard, card = %u, device = %u\n",obj->card,obj->device);
+                    printf("type = soundcard_name, devicename = %s\n",obj->deviceName);
 
-                break;
+                    break;
 
                 case interface_terminal:
 

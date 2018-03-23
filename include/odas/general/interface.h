@@ -17,7 +17,7 @@
     * but WITHOUT ANY WARRANTY; without even the implied warranty of
     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     * GNU General Public License for more details.
-    * 
+    *
     * You should have received a copy of the GNU General Public License
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
@@ -27,15 +27,15 @@
     #include <stdio.h>
     #include <string.h>
 
-    typedef enum interface_type { 
-        
+    typedef enum interface_type {
+
         interface_undefined = 0,
         interface_blackhole = 1,
         interface_file = 2,
-        interface_socket = 3, 
-        interface_soundcard = 4, 
+        interface_socket = 3,
+        interface_soundcard = 4,
         interface_terminal = 5,
-        
+
     } interface_type;
 
     typedef struct interface_obj {
@@ -47,8 +47,7 @@
         char * ip;
         unsigned int port;
 
-        unsigned int card;
-        unsigned int device;
+        char * deviceName;
 
     } interface_obj;
 
@@ -61,6 +60,8 @@
     interface_obj * interface_construct_socket(const char * ip, const unsigned int port);
 
     interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
+
+    interface_obj * interface_construct_soundcard_by_name(char * deviceName);
 
     interface_obj * interface_construct_terminal(void);
 
