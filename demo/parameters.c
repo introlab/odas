@@ -202,7 +202,7 @@
 
                 tmpStr2 = parameters_lookup_string(fileConfig, "raw.interface.devicename");
 
-                cfg->interface = interface_construct_soundcard_name(tmpStr2);
+                cfg->interface = interface_construct_soundcard_by_name(tmpStr2);
 
             }
             else {

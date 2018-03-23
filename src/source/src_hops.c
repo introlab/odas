@@ -48,11 +48,7 @@
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)) ||
-              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_soundcard_name)  && (obj->format->type == format_binary_int32)))) {
+              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)))) {
             
             printf("Source hops: Invalid interface and/or format.\n");
             exit(EXIT_FAILURE);
@@ -142,7 +138,6 @@
         snd_pcm_hw_params_t * hw_params;
         snd_pcm_format_t format;
         int err;
-        char * tmpStr;
 
         switch (obj->format->type) {
             
@@ -179,16 +174,11 @@
 
         }       
 
-        tmpStr = (char *) malloc(sizeof(char) * 1024);
-        tmpStr = obj->interface->deviceName;
-        //sprintf(tmpStr, "hw:%u,%u", obj->interface->card, obj->interface->device);
 
-        if ((err = snd_pcm_open(&(obj->ch), tmpStr, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
-            printf("Source hops: Cannot open audio device %s: %s\n",tmpStr, snd_strerror(err));
+        if ((err = snd_pcm_open(&(obj->ch), obj->interface->deviceName, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
+            printf("Source hops: Cannot open audio device %s: %s\n",obj->interface->deviceName, snd_strerror(err));
             exit(EXIT_FAILURE);
         }
-
-        free((void *) tmpStr);
 
         if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
             printf("Source hops: Cannot allocate hardware parameter structure: %s\n", snd_strerror(err));

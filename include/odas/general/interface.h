@@ -35,7 +35,6 @@
         interface_socket = 3,
         interface_soundcard = 4,
         interface_terminal = 5,
-        interface_soundcard_name = 6,
 
     } interface_type;
 
@@ -47,9 +46,6 @@
 
         char * ip;
         unsigned int port;
-
-        unsigned int card;
-        unsigned int device;
 
         char * deviceName;
 
@@ -65,7 +61,7 @@
 
     interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
 
-    interface_obj * interface_construct_soundcard_name(char * deviceName);
+    interface_obj * interface_construct_soundcard_by_name(char * deviceName);
 
     interface_obj * interface_construct_terminal(void);
 
