@@ -26,7 +26,6 @@
     #include "../general/mic.h"
     #include "../general/samplerate.h"
     #include "../general/soundspeed.h"
-    #include "../general/spatialfilter.h"
 
     #include "../init/directivity.h"
 
@@ -63,7 +62,6 @@
         char mode_pf;
 
         beampatterns_obj * sep_ds_beampatterns_mics;
-        beampatterns_obj * sep_ds_beampatterns_spatialfilter;
         steers_obj * sep_ds_steers;
         gains_obj * sep_ds_gains;
         masks_obj * sep_ds_masks;
@@ -78,7 +76,6 @@
         demixing2freq_obj * sep_ds_demixing2freq;
 
         beampatterns_obj * sep_gss_beampatterns_mics;
-        beampatterns_obj * sep_gss_beampatterns_spatialfilter;
         steers_obj * sep_gss_steers;
         gains_obj * sep_gss_gains;
         masks_obj * sep_gss_masks;
@@ -146,7 +143,6 @@
         mics_obj * mics;
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed;
-        spatialfilter_obj * spatialfilter;    
 
         float sep_gss_lambda;
         float sep_gss_mu;

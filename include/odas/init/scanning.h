@@ -42,6 +42,6 @@
     #include <init/linking.h>
     #include <init/space.h>
 
-    scans_obj * scanning_init_scans(const mics_obj * mics, const spatialfilter_obj * spatialfilter, const unsigned int nLevels, const unsigned int * levels, const unsigned int fS, const soundspeed_obj * soundspeed, const unsigned int nMatches, const unsigned int frameSize, const signed int * deltas, const float probMin, const unsigned int nRefineLevels, const unsigned int nThetas, const float gainMin, const unsigned int interpRate);
+    scans_obj * scanning_init_scans(const mics_obj * mics, const spatialfilters_obj * spatialfilters, const unsigned int nLevels, const unsigned int * levels, const unsigned int fS, const soundspeed_obj * soundspeed, const unsigned int nMatches, const unsigned int frameSize, const signed int * deltas, const float probMin, const unsigned int nRefineLevels, const unsigned int nThetas, const float gainMin, const unsigned int interpRate);
 
 #endif

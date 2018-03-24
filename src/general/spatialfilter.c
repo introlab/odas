@@ -23,49 +23,66 @@
     
     #include <general/spatialfilter.h>
 
-    spatialfilter_obj * spatialfilter_construct_zero(void) {
+    spatialfilters_obj * spatialfilters_construct_zero(unsigned int nFilters) {
 
-        spatialfilter_obj * obj;
+        spatialfilters_obj * obj;
 
-        obj = (spatialfilter_obj *) malloc(sizeof(spatialfilter_obj));
+        obj = (spatialfilters_obj *) malloc(sizeof(spatialfilters_obj));
 
-        obj->direction = (float *) malloc(sizeof(float) * 3);
-        memset(obj->direction, 0x00, sizeof(float) * 3);
+        obj->nFilters = nFilters;
 
-        obj->thetaAllPass = 0.0f;
-        obj->thetaNoPass = 0.0f;
+        obj->direction = (float *) malloc(sizeof(float) * nFilters * 3);
+        memset(obj->direction, 0x00, sizeof(float) * nFilters * 3);
+
+        obj->thetaAllPass = (float *) malloc(sizeof(float) * nFilters);
+        memset(obj->thetaAllPass, 0x00, sizeof(float) * nFilters);
+
+        obj->thetaNoPass = (float *) malloc(sizeof(float) * nFilters);
+        memset(obj->thetaNoPass, 0x00, sizeof(float) * nFilters);
 
         return obj;
 
     }
 
-    spatialfilter_obj * spatialfilter_clone(const spatialfilter_obj * obj) {
+    spatialfilters_obj * spatialfilters_clone(const spatialfilters_obj * obj) {
 
-        spatialfilter_obj * clone;
+        spatialfilters_obj * clone;
 
-        clone = (spatialfilter_obj *) malloc(sizeof(spatialfilter_obj));
+        clone = (spatialfilters_obj *) malloc(sizeof(spatialfilters_obj));
 
-        clone->direction = (float *) malloc(sizeof(float) * 3);
-        memcpy(clone->direction, obj->direction, sizeof(float) * 3);
+        clone->direction = (float *) malloc(sizeof(float) * obj->nFilters * 3);
+        memcpy(clone->direction, obj->direction, sizeof(float) * obj->nFilters * 3);
 
-        clone->thetaAllPass = obj->thetaAllPass;
-        clone->thetaNoPass = obj->thetaNoPass;
+        clone->thetaAllPass = (float *) malloc(sizeof(float) * obj->nFilters);
+        memcpy(clone->thetaAllPass, obj->thetaAllPass, sizeof(float) * obj->nFilters);
+
+        clone->thetaNoPass = (float *) malloc(sizeof(float) * obj->nFilters);
+        memcpy(clone->thetaNoPass, obj->thetaNoPass, sizeof(float) * obj->nFilters);
 
         return clone;
 
     }
 
-    void spatialfilter_destroy(spatialfilter_obj * obj) {
+    void spatialfilters_destroy(spatialfilters_obj * obj) {
 
         free((void *) obj->direction);
+        free((void *) obj->thetaAllPass);
+        free((void *) obj->thetaNoPass);
         free((void *) obj);
 
     }
 
-    void spatialfilter_printf(const spatialfilter_obj * obj) {
+    void spatialfilters_printf(const spatialfilters_obj * obj) {
 
-        printf("direction = (%+1.3f,%+1.3f,%+1.3f)\n", obj->direction[0], obj->direction[1], obj->direction[2]);
-        printf("thetaAllPass = %f\n", obj->thetaAllPass);
-        printf("thetaNoPass = %f\n", obj->thetaNoPass);
+        unsigned int iFilter;
+
+        for (iFilter = 0; iFilter < obj->nFilters; iFilter++) {
+
+            printf("direction = (%+1.3f,%+1.3f,%+1.3f), thetaAllPass = %f, thetaNoPass = %f\n", 
+                    obj->direction[iFilter * 3 + 0], obj->direction[iFilter * 3 + 1], obj->direction[iFilter * 3 + 2], 
+                    obj->thetaAllPass[iFilter], 
+                    obj->thetaNoPass[iFilter]);
+
+        }
 
     }

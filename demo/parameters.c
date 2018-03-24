@@ -477,7 +477,9 @@
         mod_ssl_cfg * cfg;
 
         unsigned int nChannels;
+        unsigned int nFilters;
         unsigned int iChannel;
+        unsigned int iFilter;
         unsigned int iSample;
         unsigned int iLevel;
 
@@ -638,13 +640,44 @@
         // | Spatial filter                                           |
         // +----------------------------------------------------------+
 
-            cfg->spatialfilter = spatialfilter_construct_zero();
+            nFilters = parameters_count(fileConfig, "general.spatialfilters");
 
-            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
-            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
-            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
-            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
-            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
+            cfg->spatialfilters = spatialfilters_construct_zero(nFilters);
+
+            for (iFilter = 0; iFilter < nFilters; iFilter++) {
+
+                // +--------------------------------------------------+
+                // | Direction                                        |
+                // +--------------------------------------------------+
+
+                for (iSample = 0; iSample < 3; iSample++) {
+
+                    tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                    sprintf(tmpLabel, "general.spatialfilters.[%u].direction.[%u]", iFilter, iSample);
+                    cfg->spatialfilters->direction[iFilter * 3 + iSample] = parameters_lookup_float(fileConfig, tmpLabel);
+                    free((void *) tmpLabel);
+
+                }
+
+                // +--------------------------------------------------+
+                // | thetaAllPass                                     |
+                // +--------------------------------------------------+
+
+                tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpLabel, "general.spatialfilters.[%u].angle.[0]", iFilter);
+                cfg->spatialfilters->thetaAllPass[iFilter] = parameters_lookup_float(fileConfig, tmpLabel);
+                free((void *) tmpLabel);
+
+                // +--------------------------------------------------+
+                // | thetaNoPass                                      |
+                // +--------------------------------------------------+
+
+                tmpLabel = (char *) malloc(sizeof(char) * 1024);
+                sprintf(tmpLabel, "general.spatialfilters.[%u].angle.[1]", iFilter);
+                cfg->spatialfilters->thetaNoPass[iFilter] = parameters_lookup_float(fileConfig, tmpLabel);
+                free((void *) tmpLabel);
+
+            }
 
         return cfg;
 
@@ -1260,18 +1293,6 @@
 
             cfg->soundspeed->mu = parameters_lookup_float(fileConfig, "general.speedofsound.mu");
             cfg->soundspeed->sigma2 = parameters_lookup_float(fileConfig, "general.speedofsound.sigma2");
-
-        // +----------------------------------------------------------+
-        // | Spatial filter                                           |
-        // +----------------------------------------------------------+
-
-            cfg->spatialfilter = spatialfilter_construct_zero();
-
-            cfg->spatialfilter->direction[0] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[0]");
-            cfg->spatialfilter->direction[1] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[1]");
-            cfg->spatialfilter->direction[2] = parameters_lookup_float(fileConfig, "general.spatialfilter.direction.[2]");
-            cfg->spatialfilter->thetaAllPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[0]");
-            cfg->spatialfilter->thetaNoPass = parameters_lookup_float(fileConfig, "general.spatialfilter.angle.[1]");
 
         // +----------------------------------------------------------+
         // | Number of thetas                                         |

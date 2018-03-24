@@ -44,7 +44,7 @@
         obj->interpRate = mod_ssl_config->interpRate;
 
         obj->scans = scanning_init_scans(mod_ssl_config->mics, 
-                                         mod_ssl_config->spatialfilter,
+                                         mod_ssl_config->spatialfilters,
                                          mod_ssl_config->nLevels, 
                                          mod_ssl_config->levels, 
                                          mod_ssl_config->samplerate->mu, 
@@ -107,8 +107,6 @@
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
 
-        //obj->tmpFile = fopen("weights.bin","wb");
-
         return obj;
 
     }
@@ -117,8 +115,6 @@
 
         unsigned int iLevel;
         unsigned int iPot;
-
-        //fclose(obj->tmpFile);
 
         scans_destroy(obj->scans);
 
@@ -279,7 +275,7 @@
         cfg->mics = (mics_obj *) NULL;
         cfg->samplerate = (samplerate_obj *) NULL;
         cfg->soundspeed = (soundspeed_obj *) NULL;
-        cfg->spatialfilter = (spatialfilter_obj *) NULL;
+        cfg->spatialfilters = (spatialfilters_obj *) NULL;
         
         cfg->nLevels = 0;;
         cfg->levels = (unsigned int *) NULL;
@@ -308,8 +304,8 @@
             soundspeed_destroy(cfg->soundspeed);
         }
 
-        if (cfg->spatialfilter != NULL) {
-            spatialfilter_destroy(cfg->spatialfilter);
+        if (cfg->spatialfilters != NULL) {
+            spatialfilters_destroy(cfg->spatialfilters);
         }
 
         if (cfg->levels != NULL) {
@@ -331,7 +327,7 @@
         mics_printf(cfg->mics);
         samplerate_printf(cfg->samplerate);
         soundspeed_printf(cfg->soundspeed);
-        spatialfilter_printf(cfg->spatialfilter);
+        spatialfilters_printf(cfg->spatialfilters);
 
         for (iLevel = 0; iLevel < cfg->nLevels; iLevel++) {
 

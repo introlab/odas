@@ -41,7 +41,6 @@
         obj->mode_pf = mod_sss_config->mode_pf;
 
         obj->sep_ds_beampatterns_mics = (beampatterns_obj *) NULL;
-        obj->sep_ds_beampatterns_spatialfilter = (beampatterns_obj *) NULL;
         obj->sep_ds_steers = (steers_obj *) NULL;
         obj->sep_ds_gains = (gains_obj *) NULL;
         obj->sep_ds_masks = (masks_obj *) NULL;
@@ -56,7 +55,6 @@
         obj->sep_ds_demixing2freq = (demixing2freq_obj *) NULL;
 
         obj->sep_gss_beampatterns_mics = (beampatterns_obj *) NULL;
-        obj->sep_gss_beampatterns_spatialfilter = (beampatterns_obj *) NULL;
         obj->sep_gss_steers = (steers_obj *) NULL;
         obj->sep_gss_gains = (gains_obj *) NULL;
         obj->sep_gss_masks = (masks_obj *) NULL;
@@ -77,9 +75,6 @@
                 obj->sep_ds_beampatterns_mics = directivity_beampattern_mics(mod_sss_config->mics, 
                                                                              mod_sss_config->nThetas);
 
-                obj->sep_ds_beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sss_config->spatialfilter, 
-                                                                                               mod_sss_config->nThetas);
-
                 obj->sep_ds_steers = steers_construct_zero(msg_spectra_config->halfFrameSize, 
                                                            msg_tracks_config->nTracks, 
                                                            msg_spectra_config->nChannels);
@@ -96,8 +91,7 @@
 
                 obj->sep_ds_track2gain = track2gain_construct_zero(msg_tracks_config->nTracks,
                                                                    msg_spectra_config->nChannels,
-                                                                   mod_sss_config->mics->direction,
-                                                                   mod_sss_config->spatialfilter->direction);
+                                                                   mod_sss_config->mics->direction);
 
                 obj->sep_ds_gain2mask = gain2mask_construct_zero(msg_tracks_config->nTracks,
                                                                  msg_spectra_config->nChannels,
@@ -134,9 +128,6 @@
                 obj->sep_gss_beampatterns_mics = directivity_beampattern_mics(mod_sss_config->mics, 
                                                                               mod_sss_config->nThetas);
 
-                obj->sep_gss_beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_sss_config->spatialfilter, 
-                                                                                                mod_sss_config->nThetas);
-
                 obj->sep_gss_steers = steers_construct_zero(msg_spectra_config->halfFrameSize, 
                                                             msg_tracks_config->nTracks, 
                                                             msg_spectra_config->nChannels);
@@ -153,8 +144,7 @@
 
                 obj->sep_gss_track2gain = track2gain_construct_zero(msg_tracks_config->nTracks,
                                                                     msg_spectra_config->nChannels,
-                                                                    mod_sss_config->mics->direction,
-                                                                    mod_sss_config->spatialfilter->direction);
+                                                                    mod_sss_config->mics->direction);
 
                 obj->sep_gss_gain2mask = gain2mask_construct_zero(msg_tracks_config->nTracks,
                                                                   msg_spectra_config->nChannels,
@@ -368,7 +358,6 @@
             case 'd':
 
                 beampatterns_destroy(obj->sep_ds_beampatterns_mics);
-                beampatterns_destroy(obj->sep_ds_beampatterns_spatialfilter);
                 steers_destroy(obj->sep_ds_steers);
                 gains_destroy(obj->sep_ds_gains);
                 masks_destroy(obj->sep_ds_masks);
@@ -387,7 +376,6 @@
             case 'g':
 
                 beampatterns_destroy(obj->sep_gss_beampatterns_mics);
-                beampatterns_destroy(obj->sep_gss_beampatterns_spatialfilter);
                 steers_destroy(obj->sep_gss_steers);
                 gains_destroy(obj->sep_gss_gains);
                 masks_destroy(obj->sep_gss_masks);
@@ -552,7 +540,6 @@
 
             track2gain_process(obj->sep_ds_track2gain, 
                                obj->sep_ds_beampatterns_mics, 
-                               obj->sep_ds_beampatterns_spatialfilter, 
                                obj->sep_ds_tracksNow,
                                obj->sep_ds_gains);
 
@@ -626,8 +613,7 @@
                         obj->in3->tracks);
 
             track2gain_process(obj->sep_gss_track2gain, 
-                               obj->sep_gss_beampatterns_mics, 
-                               obj->sep_gss_beampatterns_spatialfilter, 
+                               obj->sep_gss_beampatterns_mics,
                                obj->sep_gss_tracksNow,
                                obj->sep_gss_gains);
 
@@ -857,7 +843,6 @@
         cfg->mics = (mics_obj *) NULL;
         cfg->samplerate = (samplerate_obj *) NULL;
         cfg->soundspeed = (soundspeed_obj *) NULL;
-        cfg->spatialfilter = (spatialfilter_obj *) NULL;  
 
         return cfg;
 
@@ -875,10 +860,6 @@
 
         if (cfg->soundspeed != NULL) {
             soundspeed_destroy(cfg->soundspeed);
-        }
-
-        if (cfg->spatialfilter != NULL) {
-            spatialfilter_destroy(cfg->spatialfilter);
         }
 
         free((void *) cfg);
