@@ -11,3 +11,9 @@ Have a look at the wiki for more info.
 
 Please have a look at the [odas_web](https://github.com/introlab/odas_web) project.
 ![GUI](https://github.com/introlab/odas_web/blob/master/screenshots/live_data.png)
+
+
+# Open Source Hardware from IntRoLab
+
+* [8SoundsUSB](https://sourceforge.net/projects/eightsoundsusb/), 8 inputs, USB powered, configurable microphone array.
+* [16SoundsUSB](https://github.com/introlab/16SoundsUSB) 16 inputs, USB powered, configurable microphone array.
