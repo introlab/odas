@@ -60,6 +60,8 @@
         msg_tracks_obj * in2;
         msg_categories_obj * out;
 
+        char enabled;
+
     } mod_classify_obj;
 
     typedef struct mod_classify_cfg {
@@ -86,6 +88,10 @@
     void mod_classify_connect(mod_classify_obj * obj, msg_hops_obj * in1, msg_tracks_obj * in2, msg_categories_obj * out);
 
     void mod_classify_disconnect(mod_classify_obj * obj);
+
+    void mod_classify_enable(mod_classify_obj * obj);
+
+    void mod_classify_disable(mod_classify_obj * obj);
 
     mod_classify_cfg * mod_classify_cfg_construct(void);
 

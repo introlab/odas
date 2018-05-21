@@ -31,7 +31,9 @@
         hop2hop_gain_obj * hop2hop_gain;
 
         msg_hops_obj * in;
-        msg_hops_obj * out;        
+        msg_hops_obj * out;
+
+        char enabled;  
 
     } mod_volume_obj;
 
@@ -50,6 +52,10 @@
     void mod_volume_connect(mod_volume_obj * obj, msg_hops_obj * in, msg_hops_obj * out);
 
     void mod_volume_disconnect(mod_volume_obj * obj);
+
+    void mod_volume_enable(mod_volume_obj * obj);
+
+    void mod_volume_disable(mod_volume_obj * obj);
 
     mod_volume_cfg * mod_volume_cfg_construct(void);
 

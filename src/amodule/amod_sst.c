@@ -37,6 +37,8 @@
 
         obj->thread = thread_construct(&amod_sst_thread, (void *) obj);
 
+        mod_sst_disable(obj->mod_sst);
+
         return obj;
 
     }
@@ -63,6 +65,18 @@
         obj->in1 = (amsg_pots_obj *) NULL;
         obj->in2 = (amsg_targets_obj *) NULL;
         obj->out = (amsg_tracks_obj *) NULL;
+
+    }
+
+    void amod_sst_enable(amod_sst_obj * obj) {
+
+        mod_sst_enable(obj->mod_sst);
+
+    }
+
+    void amod_sst_disable(amod_sst_obj * obj) {
+
+        mod_sst_disable(obj->mod_sst);
 
     }
 

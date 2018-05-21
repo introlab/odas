@@ -36,8 +36,9 @@
 
         obj->thread = thread_construct(&amod_noise_thread, (void *) obj);
 
-        return obj;
+        mod_noise_disable(obj->mod_noise);
 
+        return obj;
 
     }
 
@@ -61,6 +62,18 @@
 
         obj->in = (amsg_spectra_obj *) NULL;
         obj->out = (amsg_powers_obj *) NULL;
+
+    }
+
+    void amod_noise_enable(amod_noise_obj * obj) {
+
+        mod_noise_enable(obj->mod_noise);
+
+    }
+
+    void amod_noise_disable(amod_noise_obj * obj) {
+
+        mod_noise_disable(obj->mod_noise);
 
     }
 

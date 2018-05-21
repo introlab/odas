@@ -31,6 +31,11 @@
 
         obj->hop2hop_gain = hop2hop_gain_construct_zero(msg_hops_config->hopSize, mod_volume_config->gain);
 
+        obj->in = (msg_hops_obj *) NULL;
+        obj->out = (msg_hops_obj *) NULL;
+
+        obj->enabled = 0;
+
         return obj;
 
     }
@@ -47,9 +52,18 @@
 
         if (msg_hops_isZero(obj->in) == 0) {
 
-            hop2hop_gain_process(obj->hop2hop_gain, 
-                                 obj->in->hops, 
-                                 obj->out->hops);
+            if (obj->enabled == 1) {
+
+                hop2hop_gain_process(obj->hop2hop_gain, 
+                                     obj->in->hops, 
+                                     obj->out->hops);
+
+            }
+            else {
+
+                hops_zero(obj->out->hops);
+
+            }
 
             obj->out->timeStamp = obj->in->timeStamp;
 
@@ -79,6 +93,18 @@
 
         obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_hops_obj *) NULL;
+
+    }
+
+    void mod_volume_enable(mod_volume_obj * obj) {
+
+        obj->enabled = 1;
+
+    }
+
+    void mod_volume_disable(mod_volume_obj * obj) {
+
+        obj->enabled = 0;
 
     }
 

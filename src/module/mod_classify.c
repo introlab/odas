@@ -67,6 +67,8 @@
         obj->in2 = (msg_tracks_obj *) NULL;
         obj->out = (msg_categories_obj *) NULL;
 
+        obj->enabled = 0;
+
         return obj;
 
     }
@@ -98,11 +100,20 @@
 
         if (msg_hops_isZero(obj->in1) == 0) {
 
-            hop2frame_process(obj->hop2frame, obj->in1->hops, obj->frames);
-            frame2freq_process(obj->frame2freq, obj->frames, obj->freqs);
-            freq2acorr_process(obj->freq2acorr, obj->freqs, obj->acorrs);
-            acorr2pitch_process(obj->acorr2pitch, obj->acorrs, obj->pitches);
-            pitch2category_process(obj->pitch2category, obj->pitches, obj->in2->tracks, obj->out->categories);
+            if (obj->enabled == 1) {
+
+                hop2frame_process(obj->hop2frame, obj->in1->hops, obj->frames);
+                frame2freq_process(obj->frame2freq, obj->frames, obj->freqs);
+                freq2acorr_process(obj->freq2acorr, obj->freqs, obj->acorrs);
+                acorr2pitch_process(obj->acorr2pitch, obj->acorrs, obj->pitches);
+                pitch2category_process(obj->pitch2category, obj->pitches, obj->in2->tracks, obj->out->categories);
+
+            }
+            else {
+
+                categories_zero(obj->out->categories);
+
+            }
 
             obj->out->timeStamp = obj->in1->timeStamp;
 
@@ -134,6 +145,18 @@
         obj->in1 = (msg_hops_obj *) NULL;
         obj->in2 = (msg_tracks_obj *) NULL;
         obj->out = (msg_categories_obj *) NULL;
+
+    }
+
+    void mod_classify_enable(mod_classify_obj * obj) {
+
+        obj->enabled = 1;
+
+    }
+
+    void mod_classify_disable(mod_classify_obj * obj) {
+
+        obj->enabled = 0;
 
     }
 

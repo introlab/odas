@@ -48,6 +48,10 @@
 
     void amod_sst_disconnect(amod_sst_obj * obj);
 
+    void amod_sst_enable(amod_sst_obj * obj);
+
+    void amod_sst_disable(amod_sst_obj * obj);
+
     void * amod_sst_thread(void * ptr);    
 
 #endif

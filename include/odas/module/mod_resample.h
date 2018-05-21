@@ -75,6 +75,8 @@
         msg_hops_obj * in;
         msg_hops_obj * out;
 
+        char enabled;
+
     } mod_resample_obj;
 
     typedef struct mod_resample_cfg {
@@ -107,6 +109,10 @@
     void mod_resample_connect(mod_resample_obj * obj, msg_hops_obj * in, msg_hops_obj * out);
 
     void mod_resample_disconnect(mod_resample_obj * obj);
+
+    void mod_resample_enable(mod_resample_obj * obj);
+
+    void mod_resample_disable(mod_resample_obj * obj);
 
     mod_resample_cfg * mod_resample_cfg_construct(void);
 

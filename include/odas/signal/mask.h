@@ -37,9 +37,11 @@
 
     masks_obj * masks_construct_zero(const unsigned int nSeps, const unsigned int nChannels);
 
-    void masks_destroy(masks_obj * obj);    
-
     void masks_copy(masks_obj * dest, const masks_obj * src);
+
+    void masks_zero(masks_obj * obj);
+
+    void masks_destroy(masks_obj * obj);
 
     void masks_printf(const masks_obj * obj);
 

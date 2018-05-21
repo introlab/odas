@@ -36,6 +36,8 @@
 
         obj->thread = thread_construct(&amod_ssl_thread, (void *) obj);
 
+        mod_ssl_disable(obj->mod_ssl);
+
         return obj;
 
     }
@@ -60,6 +62,18 @@
 
         obj->in = (amsg_spectra_obj *) NULL;
         obj->out = (amsg_pots_obj *) NULL;
+
+    }
+
+    void amod_ssl_enable(amod_ssl_obj * obj) {
+
+        mod_ssl_enable(obj->mod_ssl);
+
+    }
+
+    void amod_ssl_disable(amod_ssl_obj * obj) {
+
+        mod_ssl_disable(obj->mod_ssl);
 
     }
 

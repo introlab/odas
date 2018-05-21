@@ -45,6 +45,8 @@
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_powers_obj *) NULL;
 
+        obj->enabled = 0;
+
         return obj;
 
     }
@@ -65,15 +67,24 @@
 
         if (msg_spectra_isZero(obj->in) == 0) {
 
-            freq2env_process(obj->freq2env,
-                             obj->in->freqs,
-                             obj->envs);
+            if (obj->enabled == 1) {
 
-            env2env_mcra_process(obj->env2env_mcra,
-                                 NULL,
-                                 obj->envs,
-                                 NULL,
-                                 obj->out->envs);
+                freq2env_process(obj->freq2env,
+                                 obj->in->freqs,
+                                 obj->envs);
+
+                env2env_mcra_process(obj->env2env_mcra,
+                                     NULL,
+                                     obj->envs,
+                                     NULL,
+                                     obj->out->envs);
+
+            }
+            else {
+
+                envs_zero(obj->out->envs);
+
+            }
 
             obj->out->timeStamp = obj->in->timeStamp;
 
@@ -103,6 +114,18 @@
 
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_powers_obj *) NULL;
+
+    }
+
+    void mod_noise_enable(mod_noise_obj * obj) {
+
+        obj->enabled = 1;
+
+    }
+
+    void mod_noise_disable(mod_noise_obj * obj) {
+
+        obj->enabled = 0;
 
     }
 

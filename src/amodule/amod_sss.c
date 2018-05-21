@@ -39,6 +39,8 @@
         
         obj->thread = thread_construct(&amod_sss_thread, (void *) obj);
 
+        mod_sss_disable(obj->mod_sss);
+
         return obj;
 
     }
@@ -69,6 +71,18 @@
         obj->in3 = (amsg_tracks_obj *) NULL;
         obj->out1 = (amsg_spectra_obj *) NULL;
         obj->out2 = (amsg_spectra_obj *) NULL;
+
+    }
+
+    void amod_sss_enable(amod_sss_obj * obj) {
+
+        mod_sss_enable(obj->mod_sss);
+
+    }
+
+    void amod_sss_disable(amod_sss_obj * obj) {
+
+        mod_sss_disable(obj->mod_sss);
 
     }
 

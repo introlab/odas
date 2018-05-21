@@ -36,6 +36,8 @@
 
         obj->thread = thread_construct(&amod_istft_thread, (void *) obj);
 
+        mod_istft_disable(obj->mod_istft);
+
         return obj;
 
     }
@@ -60,6 +62,18 @@
 
         obj->in = (amsg_spectra_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
+
+    }
+
+    void amod_istft_enable(amod_istft_obj * obj) {
+
+        mod_istft_enable(obj->mod_istft);
+
+    }
+
+    void amod_istft_disable(amod_istft_obj * obj) {
+
+        mod_istft_disable(obj->mod_istft);
 
     }
 

@@ -49,6 +49,10 @@
 
     void amod_sss_disconnect(amod_sss_obj * obj);
 
+    void amod_sss_enable(amod_sss_obj * obj);
+
+    void amod_sss_disable(amod_sss_obj * obj);
+
     void * amod_sss_thread(void * ptr);        
 
 #endif

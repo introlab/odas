@@ -354,8 +354,7 @@
         obj->out1 = (msg_spectra_obj *) NULL;
         obj->out2 = (msg_spectra_obj *) NULL;
 
-        fidTmp1 = fopen("tmp1.bin","wb");
-        fidTmp2 = fopen("tmp2.bin","wb");
+        obj->enabled = 0;
 
         return obj;
 
@@ -544,49 +543,58 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
-            tracks_copy(obj->sep_ds_tracksPrev,
-                        obj->sep_ds_tracksNow);
+            if (obj->enabled == 1) {
 
-            tracks_copy(obj->sep_ds_tracksNow,
-                        obj->in3->tracks);
+                tracks_copy(obj->sep_ds_tracksPrev,
+                            obj->sep_ds_tracksNow);
 
-            track2gain_process(obj->sep_ds_track2gain, 
-                               obj->sep_ds_beampatterns_mics, 
-                               obj->sep_ds_beampatterns_spatialfilter, 
-                               obj->sep_ds_tracksNow,
-                               obj->sep_ds_gains);
+                tracks_copy(obj->sep_ds_tracksNow,
+                            obj->in3->tracks);
 
-            gain2mask_process(obj->sep_ds_gain2mask, 
-                              obj->sep_ds_gains, 
-                              obj->sep_ds_masks);
+                track2gain_process(obj->sep_ds_track2gain, 
+                                   obj->sep_ds_beampatterns_mics, 
+                                   obj->sep_ds_beampatterns_spatialfilter, 
+                                   obj->sep_ds_tracksNow,
+                                   obj->sep_ds_gains);
 
-            track2steer_process(obj->sep_ds_track2steer, 
-                                obj->sep_ds_tracksNow,
-                                obj->sep_ds_gains,
-                                obj->sep_ds_masks,
-                                obj->sep_ds_steers);
+                gain2mask_process(obj->sep_ds_gain2mask, 
+                                  obj->sep_ds_gains, 
+                                  obj->sep_ds_masks);
 
-            demixings_copy(obj->sep_ds_demixingsPrev, 
-                           obj->sep_ds_demixingsNow);
+                track2steer_process(obj->sep_ds_track2steer, 
+                                    obj->sep_ds_tracksNow,
+                                    obj->sep_ds_gains,
+                                    obj->sep_ds_masks,
+                                    obj->sep_ds_steers);
 
-            steer2demixing_ds_process(obj->sep_ds_steer2demixing, 
+                demixings_copy(obj->sep_ds_demixingsPrev, 
+                               obj->sep_ds_demixingsNow);
+
+                steer2demixing_ds_process(obj->sep_ds_steer2demixing, 
+                                          obj->sep_ds_tracksNow,
+                                          obj->sep_ds_steers, 
+                                          obj->sep_ds_masks, 
+                                          obj->sep_ds_demixingsNow);
+
+                demixing2freq_process(obj->sep_ds_demixing2freq, 
                                       obj->sep_ds_tracksNow,
-                                      obj->sep_ds_steers, 
+                                      obj->sep_ds_demixingsNow, 
                                       obj->sep_ds_masks, 
-                                      obj->sep_ds_demixingsNow);
+                                      obj->in1->freqs, 
+                                      obj->out1->freqs);
 
-            demixing2freq_process(obj->sep_ds_demixing2freq, 
-                                  obj->sep_ds_tracksNow,
-                                  obj->sep_ds_demixingsNow, 
-                                  obj->sep_ds_masks, 
-                                  obj->in1->freqs, 
-                                  obj->out1->freqs);
+                demixings_copy(obj->sep_demixings,
+                               obj->sep_ds_demixingsNow);
 
-            demixings_copy(obj->sep_demixings,
-                           obj->sep_ds_demixingsNow);
+                masks_copy(obj->sep_masks,
+                           obj->sep_ds_masks);
 
-            masks_copy(obj->sep_masks,
-                       obj->sep_ds_masks);
+            }
+            else {
+
+                masks_zero(obj->sep_masks);
+
+            }
 
             obj->out1->timeStamp = obj->in1->timeStamp;
             
@@ -619,52 +627,61 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
-            tracks_copy(obj->sep_gss_tracksPrev,
-                        obj->sep_gss_tracksNow);
+            if (obj->enabled == 1) {
 
-            tracks_copy(obj->sep_gss_tracksNow,
-                        obj->in3->tracks);
+                tracks_copy(obj->sep_gss_tracksPrev,
+                            obj->sep_gss_tracksNow);
 
-            track2gain_process(obj->sep_gss_track2gain, 
-                               obj->sep_gss_beampatterns_mics, 
-                               obj->sep_gss_beampatterns_spatialfilter, 
-                               obj->sep_gss_tracksNow,
-                               obj->sep_gss_gains);
+                tracks_copy(obj->sep_gss_tracksNow,
+                            obj->in3->tracks);
 
-            gain2mask_process(obj->sep_gss_gain2mask, 
-                              obj->sep_gss_gains, 
-                              obj->sep_gss_masks);
+                track2gain_process(obj->sep_gss_track2gain, 
+                                   obj->sep_gss_beampatterns_mics, 
+                                   obj->sep_gss_beampatterns_spatialfilter, 
+                                   obj->sep_gss_tracksNow,
+                                   obj->sep_gss_gains);
 
-            track2steer_process(obj->sep_gss_track2steer, 
-                                obj->sep_gss_tracksNow,
-                                obj->sep_gss_gains,
-                                obj->sep_gss_masks,
-                                obj->sep_gss_steers);
+                gain2mask_process(obj->sep_gss_gain2mask, 
+                                  obj->sep_gss_gains, 
+                                  obj->sep_gss_masks);
 
-            demixings_copy(obj->sep_gss_demixingsPrev,
-                           obj->sep_gss_demixingsNow);
+                track2steer_process(obj->sep_gss_track2steer, 
+                                    obj->sep_gss_tracksNow,
+                                    obj->sep_gss_gains,
+                                    obj->sep_gss_masks,
+                                    obj->sep_gss_steers);
 
-            steer2demixing_gss_process(obj->sep_gss_steer2demixing, 
-                                       obj->sep_gss_tracksPrev, 
-                                       obj->sep_gss_tracksNow, 
-                                       obj->sep_gss_steers, 
-                                       obj->sep_gss_masks, 
-                                       obj->in1->freqs,
-                                       obj->sep_gss_demixingsPrev,
-                                       obj->sep_gss_demixingsNow);
+                demixings_copy(obj->sep_gss_demixingsPrev,
+                               obj->sep_gss_demixingsNow);
 
-            demixing2freq_process(obj->sep_gss_demixing2freq, 
-                                  obj->sep_gss_tracksNow,
-                                  obj->sep_gss_demixingsNow, 
-                                  obj->sep_gss_masks, 
-                                  obj->in1->freqs, 
-                                  obj->out1->freqs);        
+                steer2demixing_gss_process(obj->sep_gss_steer2demixing, 
+                                           obj->sep_gss_tracksPrev, 
+                                           obj->sep_gss_tracksNow, 
+                                           obj->sep_gss_steers, 
+                                           obj->sep_gss_masks, 
+                                           obj->in1->freqs,
+                                           obj->sep_gss_demixingsPrev,
+                                           obj->sep_gss_demixingsNow);
 
-            demixings_copy(obj->sep_demixings,
-                           obj->sep_gss_demixingsNow);
+                demixing2freq_process(obj->sep_gss_demixing2freq, 
+                                      obj->sep_gss_tracksNow,
+                                      obj->sep_gss_demixingsNow, 
+                                      obj->sep_gss_masks, 
+                                      obj->in1->freqs, 
+                                      obj->out1->freqs);        
 
-            masks_copy(obj->sep_masks,
-                       obj->sep_gss_masks);            
+                demixings_copy(obj->sep_demixings,
+                               obj->sep_gss_demixingsNow);
+
+                masks_copy(obj->sep_masks,
+                           obj->sep_gss_masks);       
+
+            }     
+            else {
+
+                masks_zero(obj->sep_masks);
+
+            }
 
             obj->out1->timeStamp = obj->in1->timeStamp;
             
@@ -697,53 +714,62 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
 
-            freq2env_process(obj->pf_ms_freq2env,
-                             obj->out1->freqs,
-                             obj->pf_ms_noisys);
+            if (obj->enabled == 1) {
 
-            demixing2env_process(obj->pf_ms_demixing2env,
-                                 obj->in3->tracks, 
-                                 obj->sep_demixings, 
-                                 obj->sep_masks, 
-                                 obj->in2->envs,
-                                 obj->pf_ms_noisesEst);
+                freq2env_process(obj->pf_ms_freq2env,
+                                 obj->out1->freqs,
+                                 obj->pf_ms_noisys);
 
-            env2env_mcra_process(obj->pf_ms_env2env_mcra, 
-                                 obj->in3->tracks, 
-                                 obj->pf_ms_noisys, 
-                                 obj->pf_ms_noisesEst,
-                                 obj->pf_ms_noisesSep);
+                demixing2env_process(obj->pf_ms_demixing2env,
+                                     obj->in3->tracks, 
+                                     obj->sep_demixings, 
+                                     obj->sep_masks, 
+                                     obj->in2->envs,
+                                     obj->pf_ms_noisesEst);
 
-            env2env_interf_process(obj->pf_ms_env2env_interf, 
-                                   obj->in3->tracks, 
-                                   obj->pf_ms_noisys, 
-                                   obj->pf_ms_noisesSep, 
-                                   obj->pf_ms_interfs);           
+                env2env_mcra_process(obj->pf_ms_env2env_mcra, 
+                                     obj->in3->tracks, 
+                                     obj->pf_ms_noisys, 
+                                     obj->pf_ms_noisesEst,
+                                     obj->pf_ms_noisesSep);
 
-            env2env_gainspeech_process(obj->pf_ms_env2env_gainspeech, 
+                env2env_interf_process(obj->pf_ms_env2env_interf, 
                                        obj->in3->tracks, 
                                        obj->pf_ms_noisys, 
-                                       obj->pf_ms_interfs, 
-                                       obj->pf_ms_gainspeeches, 
-                                       obj->pf_ms_snrs, 
-                                       obj->pf_ms_vs);
+                                       obj->pf_ms_noisesSep, 
+                                       obj->pf_ms_interfs);           
 
-            env2env_probspeech_process(obj->pf_ms_env2env_probspeech, 
-                                       obj->in3->tracks,
-                                       obj->pf_ms_snrs, 
-                                       obj->pf_ms_vs, 
-                                       obj->pf_ms_probspeeches);
+                env2env_gainspeech_process(obj->pf_ms_env2env_gainspeech, 
+                                           obj->in3->tracks, 
+                                           obj->pf_ms_noisys, 
+                                           obj->pf_ms_interfs, 
+                                           obj->pf_ms_gainspeeches, 
+                                           obj->pf_ms_snrs, 
+                                           obj->pf_ms_vs);
 
-            env2env_gainall_process(obj->pf_ms_env2env_gainall, 
-                                    obj->in3->tracks, 
-                                    obj->pf_ms_gainspeeches, 
-                                    obj->pf_ms_probspeeches, 
-                                    obj->pf_ms_gainalls);
+                env2env_probspeech_process(obj->pf_ms_env2env_probspeech, 
+                                           obj->in3->tracks,
+                                           obj->pf_ms_snrs, 
+                                           obj->pf_ms_vs, 
+                                           obj->pf_ms_probspeeches);
 
-            freq2freq_gain_process(obj->pf_ms_freq2freq_gain, 
-                                   obj->out1->freqs, 
-                                   obj->pf_ms_gainalls,
-                                   obj->out2->freqs);
+                env2env_gainall_process(obj->pf_ms_env2env_gainall, 
+                                        obj->in3->tracks, 
+                                        obj->pf_ms_gainspeeches, 
+                                        obj->pf_ms_probspeeches, 
+                                        obj->pf_ms_gainalls);
+
+                freq2freq_gain_process(obj->pf_ms_freq2freq_gain, 
+                                       obj->out1->freqs, 
+                                       obj->pf_ms_gainalls,
+                                       obj->out2->freqs);
+
+            }
+            else {
+
+                freqs_zero(obj->out2->freqs);
+
+            }
 
             obj->out2->timeStamp = obj->in1->timeStamp;
 
@@ -776,34 +802,40 @@
 
         if (msg_spectra_isZero(obj->in1) == 0) {
  
-            freq2env_process(obj->pf_ss_freq2env_channels,
-                             obj->in1->freqs,
-                             obj->pf_ss_env_channels);
+            if (obj->enabled == 1) {
 
-            demixing2env_process(obj->pf_ss_demixing2env,
-                                 obj->in3->tracks, 
-                                 obj->sep_demixings, 
-                                 obj->sep_masks, 
-                                 obj->pf_ss_env_channels,
-                                 obj->pf_ss_env_channelseps);   
+                freq2env_process(obj->pf_ss_freq2env_channels,
+                                 obj->in1->freqs,
+                                 obj->pf_ss_env_channels);
 
-            freq2env_process(obj->pf_ss_freq2env_seps,
-                             obj->out1->freqs,
-                             obj->pf_ss_env_seps);         
+                demixing2env_process(obj->pf_ss_demixing2env,
+                                     obj->in3->tracks, 
+                                     obj->sep_demixings, 
+                                     obj->sep_masks, 
+                                     obj->pf_ss_env_channels,
+                                     obj->pf_ss_env_channelseps);   
 
-            env2env_gainratio_process(obj->pf_ss_env2env_gainratio, 
-                                      obj->in3->tracks, 
-                                      obj->pf_ss_env_seps, 
-                                      obj->pf_ss_env_channelseps,
-                                      obj->pf_ss_gainratio);
+                freq2env_process(obj->pf_ss_freq2env_seps,
+                                 obj->out1->freqs,
+                                 obj->pf_ss_env_seps);         
 
-            fwrite(obj->pf_ss_env_channelseps->array[0], sizeof(float), obj->pf_ss_env_channelseps->halfFrameSize, fidTmp1);
-            fwrite(obj->pf_ss_env_seps->array[0], sizeof(float), obj->pf_ss_env_seps->halfFrameSize, fidTmp2);
+                env2env_gainratio_process(obj->pf_ss_env2env_gainratio, 
+                                          obj->in3->tracks, 
+                                          obj->pf_ss_env_seps, 
+                                          obj->pf_ss_env_channelseps,
+                                          obj->pf_ss_gainratio);
 
-            freq2freq_gain_process(obj->pf_ss_freq2freq_gain, 
-                                   obj->out1->freqs, 
-                                   obj->pf_ss_gainratio,
-                                   obj->out2->freqs);
+                freq2freq_gain_process(obj->pf_ss_freq2freq_gain, 
+                                       obj->out1->freqs, 
+                                       obj->pf_ss_gainratio,
+                                       obj->out2->freqs);
+
+            }
+            else {
+
+                freqs_zero(obj->out2->freqs);
+
+            }
 
             obj->out2->timeStamp = obj->in1->timeStamp;
 
@@ -839,6 +871,18 @@
         obj->in3 = (msg_tracks_obj *) NULL;
         obj->out1 = (msg_spectra_obj *) NULL;
         obj->out2 = (msg_spectra_obj *) NULL;
+
+    }
+
+    void mod_sss_enable(mod_sss_obj * obj) {
+
+        obj->enabled = 1;
+
+    }
+
+    void mod_sss_disable(mod_sss_obj * obj) {
+
+        obj->enabled = 0;
 
     }
 

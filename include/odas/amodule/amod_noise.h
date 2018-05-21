@@ -45,6 +45,10 @@
 
     void amod_noise_disconnect(amod_noise_obj * obj);
 
+    void amod_noise_enable(amod_noise_obj * obj);
+
+    void amod_noise_disable(amod_noise_obj * obj);
+
     void * amod_noise_thread(void * ptr);    
 
 #endif
