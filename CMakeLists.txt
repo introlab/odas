@@ -197,15 +197,15 @@ target_link_libraries(odas
     pthread
 )
 
-add_executable(odascore
-    demo/odascore/main.c
-    demo/odascore/configs.c
-    demo/odascore/objects.c
-    demo/odascore/parameters.c
-    demo/odascore/profiler.c
-    demo/odascore/threads.c
+add_executable(odaslive
+    demo/odaslive/main.c
+    demo/odaslive/configs.c
+    demo/odaslive/objects.c
+    demo/odaslive/parameters.c
+    demo/odaslive/profiler.c
+    demo/odaslive/threads.c
 )
-target_link_libraries(odascore
+target_link_libraries(odaslive
     odas
 )
 
