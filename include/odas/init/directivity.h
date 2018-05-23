@@ -38,9 +38,9 @@
 
     beampatterns_obj * directivity_beampattern_mics(const mics_obj * mics, const unsigned int nThetas);
 
-    beampatterns_obj * directivity_beampattern_spatialfilter(const spatialfilter_obj * spatialfilter, const unsigned int nThetas);
+    beampatterns_obj * directivity_beampattern_spatialfilters(const spatialfilters_obj * spatialfilters, const unsigned int nThetas);
 
-    spatialgains_obj * directivity_spatialgains(const mics_obj * mics, const beampatterns_obj * beampatterns_mics, const spatialfilter_obj * spatialfilter, const beampatterns_obj * beampatterns_spatialfilter, const points_obj * points);
+    spatialgains_obj * directivity_spatialgains(const mics_obj * mics, const beampatterns_obj * beampatterns_mics, const spatialfilters_obj * spatialfilters, const beampatterns_obj * beampatterns_spatialfilter, const points_obj * points);
 
     spatialmasks_obj * directivity_spatialmasks(const spatialgains_obj * spatialgains, const float minGain);
 

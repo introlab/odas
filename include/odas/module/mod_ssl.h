@@ -94,7 +94,7 @@
         mics_obj * mics;
         samplerate_obj * samplerate;
         soundspeed_obj * soundspeed;
-        spatialfilter_obj * spatialfilter;
+        spatialfilters_obj * spatialfilters;
 
         unsigned int interpRate;
         float epsilon; 

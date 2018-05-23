@@ -78,44 +78,52 @@
 
     }
 
-    beampatterns_obj * directivity_beampattern_spatialfilter(const spatialfilter_obj * spatialfilter, const unsigned int nThetas) {
+    beampatterns_obj * directivity_beampattern_spatialfilters(const spatialfilters_obj * spatialfilters, const unsigned int nThetas) {
 
         beampatterns_obj * obj;
         
+        unsigned int nFilters;
+        unsigned int iFilter;
         unsigned int iTheta;
         float theta;
         float xap, xnp, x0;
         float alpha;
 
-        obj = beampatterns_construct_zero(1, nThetas);
+        nFilters = spatialfilters->nFilters;
 
-        obj->minThetas[0] = 0.0f;
-        obj->maxThetas[0] = 180.0f;
-        obj->deltaThetas[0] = (obj->maxThetas[0] - obj->minThetas[0]) / ((float) (nThetas - 1));
+        obj = beampatterns_construct_zero(nFilters, nThetas);
 
-        for (iTheta = 0; iTheta < nThetas; iTheta++) {
+        for (iFilter = 0; iFilter < nFilters; iFilter++) {
 
-            theta = ((float) iTheta) * obj->deltaThetas[0] + obj->minThetas[0];
+            obj->minThetas[iFilter] = 0.0f;
+            obj->maxThetas[iFilter] = 180.0f;
+            obj->deltaThetas[iFilter] = (obj->maxThetas[iFilter] - obj->minThetas[iFilter]) / ((float) (nThetas - 1));
 
-            if (theta <= spatialfilter->thetaAllPass) {
+            for (iTheta = 0; iTheta < nThetas; iTheta++) {
 
-                obj->gains[iTheta] = 1.0f;
+                theta = ((float) iTheta) * obj->deltaThetas[iFilter] + obj->minThetas[iFilter];
 
-            }
-            else if (theta >= spatialfilter->thetaNoPass) {
+                if (theta <= spatialfilters->thetaAllPass[iFilter]) {
 
-                obj->gains[iTheta] = 0.0f;
+                    obj->gains[iFilter * nThetas + iTheta] = 1.0f;
 
-            }
-            else {
+                }
+                else if (theta >= spatialfilters->thetaNoPass[iFilter]) {
 
-                xap = spatialfilter->thetaAllPass;
-                xnp = spatialfilter->thetaNoPass;
+                    obj->gains[iFilter * nThetas + iTheta] = 0.0f;
 
-                x0 = (xap + xnp) / 2.0f;
-                alpha = 20.0f / (xnp - xap);
+                }
+                else {
 
-                obj->gains[iTheta] = 1.0f / (1.0f + expf(alpha * (theta - x0)));
+                    xap = spatialfilters->thetaAllPass[iFilter];
+                    xnp = spatialfilters->thetaNoPass[iFilter];
+
+                    x0 = (xap + xnp) / 2.0f;
+                    alpha = 20.0f / (xnp - xap);
+
+                    obj->gains[iFilter * nThetas + iTheta] = 1.0f / (1.0f + expf(alpha * (theta - x0)));
+
+                }
 
             }
 
@@ -125,10 +133,12 @@
 
     }
 
-    spatialgains_obj * directivity_spatialgains(const mics_obj * mics, const beampatterns_obj * beampatterns_mics, const spatialfilter_obj * spatialfilter, const beampatterns_obj * beampatterns_spatialfilter, const points_obj * points) {
+    spatialgains_obj * directivity_spatialgains(const mics_obj * mics, const beampatterns_obj * beampatterns_mics, const spatialfilters_obj * spatialfilters, const beampatterns_obj * beampatterns_spatialfilter, const points_obj * points) {
 
         spatialgains_obj * obj;
 
+        unsigned int nFilters;
+        unsigned int iFilter;
         unsigned int nChannels;
         unsigned int iChannel;
         unsigned int nPoints;
@@ -145,9 +155,11 @@
         unsigned int nThetasMic;
         unsigned int nThetasFilter;
 
-        float gainMic;
         float gainFilter;
-
+        float gainFilters;
+        float gainMic;
+        
+        nFilters = spatialfilters->nFilters;
         nChannels = mics->nChannels;
         nPoints = points->nPoints;
         nThetasMic = beampatterns_mics->nThetas;
@@ -155,43 +167,27 @@
 
         obj = spatialgains_construct_zero(nChannels, nPoints);
 
-        for (iChannel = 0; iChannel < nChannels; iChannel++) {
+        for (iPoint = 0; iPoint < nPoints; iPoint++) {
 
-            dx = mics->direction[iChannel * 3 + 0];
-            dy = mics->direction[iChannel * 3 + 1];
-            dz = mics->direction[iChannel * 3 + 2];
+            ux = points->array[iPoint * 3 + 0];
+            uy = points->array[iPoint * 3 + 1];
+            uz = points->array[iPoint * 3 + 2];
 
-            dNorm = sqrtf(dx * dx + dy * dy + dz * dz);
+            uNorm = sqrtf(ux * ux + uy * uy + uz * uz);
 
-            sx = spatialfilter->direction[0];
-            sy = spatialfilter->direction[1];
-            sz = spatialfilter->direction[2];
+            gainFilters = 1.0f;
 
-            sNorm = sqrtf(sx * sx + sy * sy + sz * sz);
+            for (iFilter = 0; iFilter < nFilters; iFilter++) {
 
-            for (iPoint = 0; iPoint < nPoints; iPoint++) {
+                sx = spatialfilters->direction[iFilter * 3 + 0];
+                sy = spatialfilters->direction[iFilter * 3 + 1];
+                sz = spatialfilters->direction[iFilter * 3 + 2];
 
-                ux = points->array[iPoint * 3 + 0];
-                uy = points->array[iPoint * 3 + 1];
-                uz = points->array[iPoint * 3 + 2];
+                sNorm = sqrtf(sx * sx + sy * sy + sz * sz);
 
-                uNorm = sqrtf(ux * ux + uy * uy + uz * uz);
-
-                projMic = dx * ux + dy * uy + dz * uz;
                 projFilter = sx * ux + sy * uy + sz * uz;
-
-                thetaMic = (360.0f/(2.0f * M_PI)) * acosf(projMic / (dNorm * uNorm));
                 thetaFilter = (360.0f/(2.0f * M_PI)) * acosf(projFilter / (sNorm * uNorm));
-
-                iThetaMic = roundf((thetaMic - beampatterns_mics->minThetas[iChannel]) / (beampatterns_mics->deltaThetas[iChannel]) + beampatterns_mics->minThetas[iChannel]);
                 iThetaFilter = roundf((thetaFilter - beampatterns_spatialfilter->minThetas[0]) / (beampatterns_spatialfilter->deltaThetas[0]) + beampatterns_spatialfilter->minThetas[0]);
-
-                if (iThetaMic < 0) {
-                    iThetaMic = 0;
-                }
-                if (iThetaMic >= nThetasMic) {
-                    iThetaMic = nThetasMic - 1;
-                }
 
                 if (iThetaFilter < 0) {
                     iThetaFilter = 0;
@@ -200,10 +196,34 @@
                     iThetaFilter = nThetasFilter - 1;
                 }                
 
-                gainMic = beampatterns_mics->gains[iChannel * nThetasMic + iThetaMic];
                 gainFilter = beampatterns_spatialfilter->gains[iThetaFilter];
 
-                obj->array[iPoint * nChannels + iChannel] = gainMic * gainFilter;
+                gainFilters *= gainFilter;
+
+            }
+
+            for (iChannel = 0; iChannel < nChannels; iChannel++) {
+
+                dx = mics->direction[iChannel * 3 + 0];
+                dy = mics->direction[iChannel * 3 + 1];
+                dz = mics->direction[iChannel * 3 + 2];
+
+                dNorm = sqrtf(dx * dx + dy * dy + dz * dz);           
+
+                projMic = dx * ux + dy * uy + dz * uz;
+                thetaMic = (360.0f/(2.0f * M_PI)) * acosf(projMic / (dNorm * uNorm));
+                iThetaMic = roundf((thetaMic - beampatterns_mics->minThetas[iChannel]) / (beampatterns_mics->deltaThetas[iChannel]) + beampatterns_mics->minThetas[iChannel]);
+
+                if (iThetaMic < 0) {
+                    iThetaMic = 0;
+                }
+                if (iThetaMic >= nThetasMic) {
+                    iThetaMic = nThetasMic - 1;
+                }                
+
+                gainMic = beampatterns_mics->gains[iChannel * nThetasMic + iThetaMic];
+
+                obj->array[iPoint * nChannels + iChannel] = gainFilters * gainMic;
 
             }
 

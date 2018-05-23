@@ -30,7 +30,7 @@
         unsigned int iTrackMax;
         points_obj * points;
         beampatterns_obj * beampatterns_mics;
-        beampatterns_obj * beampatterns_spatialfilter;
+        beampatterns_obj * beampatterns_spatialfilters;
         spatialgains_obj * spatialgains;
         spatialmasks_obj * spatialmasks;
         spatialindexes_obj * spatialindexes;
@@ -135,8 +135,8 @@
 
         points = space_sphere(mod_ssl_config->levels[mod_ssl_config->nLevels-1]);
         beampatterns_mics = directivity_beampattern_mics(mod_ssl_config->mics, mod_ssl_config->nThetas);
-        beampatterns_spatialfilter = directivity_beampattern_spatialfilter(mod_ssl_config->spatialfilter, mod_ssl_config->nThetas);
-        spatialgains = directivity_spatialgains(mod_ssl_config->mics, beampatterns_mics, mod_ssl_config->spatialfilter, beampatterns_spatialfilter, points);           
+        beampatterns_spatialfilters = directivity_beampattern_spatialfilters(mod_ssl_config->spatialfilters, mod_ssl_config->nThetas);
+        spatialgains = directivity_spatialgains(mod_ssl_config->mics, beampatterns_mics, mod_ssl_config->spatialfilters, beampatterns_spatialfilters, points);           
         spatialmasks = directivity_spatialmasks(spatialgains, mod_ssl_config->gainMin);    
         spatialindexes = directivity_spatialindexes(spatialmasks);
 
@@ -154,7 +154,7 @@
 
         points_destroy(points);
         beampatterns_destroy(beampatterns_mics);
-        beampatterns_destroy(beampatterns_spatialfilter);
+        beampatterns_destroy(beampatterns_spatialfilters);
         spatialgains_destroy(spatialgains);
         spatialmasks_destroy(spatialmasks);
         spatialindexes_destroy(spatialindexes);
