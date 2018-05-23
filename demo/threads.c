@@ -325,7 +325,7 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_stft_mics_object->thread);               
+                thread_join(aobjs->amod_stft_mics_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |
@@ -357,7 +357,7 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_ssl_object->thread);               
+                thread_join(aobjs->amod_ssl_object->thread);
 
             // +------------------------------------------------------+
             // | Sinks                                                |
@@ -395,7 +395,7 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_sst_object->thread);               
+                thread_join(aobjs->amod_sst_object->thread);
 
             // +------------------------------------------------------+
             // | Sinks                                                |
@@ -417,7 +417,7 @@
             // | Module                                               |
             // +------------------------------------------------------+  
 
-                thread_join(aobjs->amod_sss_object->thread);               
+                thread_join(aobjs->amod_sss_object->thread);
 
             // +------------------------------------------------------+
             // | Connector                                            |

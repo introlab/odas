@@ -1098,8 +1098,11 @@
            
                 memset(obj->out->tracks->array, 0x00, sizeof(float) * obj->out->tracks->nTracks * 3);
                 memset(obj->out->tracks->ids, 0x00, sizeof(unsigned long long) * obj->out->tracks->nTracks);
+                memset(obj->out->tracks->activity, 0x00, sizeof(float) * obj->out->tracks->nTracks);
 
                 for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
+
+                    strcpy(obj->out->tracks->tags[iTrackMax], "");
 
                     if (obj->ids[iTrackMax] != 0) {
 
