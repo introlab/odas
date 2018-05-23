@@ -198,28 +198,21 @@ target_link_libraries(odas
 )
 
 add_executable(odascore
-    demo/client.c
-    demo/configs.c
-    demo/objects.c
-    demo/parameters.c
-    demo/profiler.c
-    demo/threads.c
+    demo/odascore/main.c
+    demo/odascore/configs.c
+    demo/odascore/objects.c
+    demo/odascore/parameters.c
+    demo/odascore/profiler.c
+    demo/odascore/threads.c
 )
 target_link_libraries(odascore
     odas
 )
 
-add_executable(debug
-    demo/debug.c
+add_executable(odasserver
+    demo/odasserver/main.c
 )
-target_link_libraries(debug
-    odas
-)
-
-add_executable(server
-    demo/server.c
-)
-target_link_libraries(server
+target_link_libraries(odasserver
     odas
 )
 
