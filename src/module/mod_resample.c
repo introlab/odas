@@ -119,6 +119,8 @@
         obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_hops_obj *) NULL;
 
+        obj->enabled = 0;
+
         return obj;
 
     }
@@ -241,28 +243,32 @@
 
             if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
 
-                hop2frame_process(obj->hop2frame, 
-                                  obj->in->hops,
-                                  obj->framesAnalysis);
+                if (obj->enabled == 1) {
 
-                frame2freq_process(obj->frame2freq,
-                                   obj->framesAnalysis,
-                                   obj->freqsAnalysis);
+                    hop2frame_process(obj->hop2frame, 
+                                      obj->in->hops,
+                                      obj->framesAnalysis);
 
-                freq2freq_lowpass_process(obj->freq2freq_lowpass,
-                                          obj->freqsAnalysis,
-                                          obj->freqsSynthesis);
+                    frame2freq_process(obj->frame2freq,
+                                       obj->framesAnalysis,
+                                       obj->freqsAnalysis);
 
-                freq2frame_process(obj->freq2frame,
-                                   obj->freqsSynthesis,
-                                   obj->framesSynthesis);
-             
-                frame2hop_process(obj->frame2hop,
-                                  obj->framesSynthesis,
-                                  obj->hops);
+                    freq2freq_lowpass_process(obj->freq2freq_lowpass,
+                                              obj->freqsAnalysis,
+                                              obj->freqsSynthesis);
 
-                hop2hop_buffer_push(obj->hop2hop,
-                                    obj->hops);
+                    freq2frame_process(obj->freq2frame,
+                                       obj->freqsSynthesis,
+                                       obj->framesSynthesis);
+                 
+                    frame2hop_process(obj->frame2hop,
+                                      obj->framesSynthesis,
+                                      obj->hops);
+
+                    hop2hop_buffer_push(obj->hop2hop,
+                                        obj->hops);
+
+                }
 
                 rtnValue = 0;
 
@@ -293,8 +299,12 @@
 
             if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
 
-                hop2hop_buffer_push(obj->hop2hop,
-                                    obj->in->hops);
+                if (obj->enabled == 1) {
+
+                    hop2hop_buffer_push(obj->hop2hop,
+                                        obj->in->hops);
+
+                }
 
                 rtnValue = 0;
 
@@ -325,8 +335,12 @@
 
             if (hop2hop_buffer_isFull(obj->hop2hop) == 0) {
 
-                hop2hop_buffer_push(obj->hop2hop,
-                                    obj->in->hops);
+                if (obj->enabled == 1) {
+
+                    hop2hop_buffer_push(obj->hop2hop,
+                                        obj->in->hops);
+
+                }
 
                 rtnValue = 0;
 
@@ -355,8 +369,17 @@
 
         if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
 
-            hop2hop_buffer_pop(obj->hop2hop,
-                               obj->out->hops);
+            if (obj->enabled == 1) {
+
+                hop2hop_buffer_pop(obj->hop2hop,
+                                   obj->out->hops);
+
+            }
+            else {
+
+                hops_zero(obj->out->hops);
+
+            }
 
             obj->timeStamp++;
             obj->out->timeStamp = obj->timeStamp;
@@ -384,28 +407,37 @@
 
         if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
 
-            hop2hop_buffer_pop(obj->hop2hop,
-                               obj->hops);
+            if (obj->enabled == 1) {
 
-            hop2frame_process(obj->hop2frame, 
-                              obj->hops,
-                              obj->framesAnalysis);
+                hop2hop_buffer_pop(obj->hop2hop,
+                                   obj->hops);
 
-            frame2freq_process(obj->frame2freq,
-                               obj->framesAnalysis,
-                               obj->freqsAnalysis);
+                hop2frame_process(obj->hop2frame, 
+                                  obj->hops,
+                                  obj->framesAnalysis);
 
-            freq2freq_lowpass_process(obj->freq2freq_lowpass,
-                                      obj->freqsAnalysis,
-                                      obj->freqsSynthesis);
+                frame2freq_process(obj->frame2freq,
+                                   obj->framesAnalysis,
+                                   obj->freqsAnalysis);
 
-            freq2frame_process(obj->freq2frame,
-                               obj->freqsSynthesis,
-                               obj->framesSynthesis);
-         
-            frame2hop_process(obj->frame2hop,
-                              obj->framesSynthesis,
-                              obj->out->hops);
+                freq2freq_lowpass_process(obj->freq2freq_lowpass,
+                                          obj->freqsAnalysis,
+                                          obj->freqsSynthesis);
+
+                freq2frame_process(obj->freq2frame,
+                                   obj->freqsSynthesis,
+                                   obj->framesSynthesis);
+             
+                frame2hop_process(obj->frame2hop,
+                                  obj->framesSynthesis,
+                                  obj->out->hops);
+
+            }
+            else {
+
+                hops_zero(obj->out->hops);
+
+            }
 
             obj->timeStamp++;
             obj->out->timeStamp = obj->timeStamp;
@@ -433,8 +465,17 @@
 
         if (hop2hop_buffer_isEmpty(obj->hop2hop) == 0) {
 
-            hop2hop_buffer_pop(obj->hop2hop,
-                               obj->out->hops);
+            if (obj->enabled == 1) {
+
+                hop2hop_buffer_pop(obj->hop2hop,
+                                   obj->out->hops);
+
+            }
+            else {
+
+                hops_zero(obj->out->hops);
+
+            }
 
             obj->timeStamp++;
             obj->out->timeStamp = obj->timeStamp;
@@ -467,6 +508,18 @@
 
         obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_hops_obj *) NULL;
+
+    }
+
+    void mod_resample_enable(mod_resample_obj * obj) {
+
+        obj->enabled = 1;
+
+    }
+
+    void mod_resample_disable(mod_resample_obj * obj) {
+
+        obj->enabled = 0;
 
     }
 

@@ -44,6 +44,10 @@
 
     void amod_volume_disconnect(amod_volume_obj * obj);
 
+    void amod_volume_enable(amod_volume_obj * obj);
+
+    void amod_volume_disable(amod_volume_obj * obj);
+
     void * amod_volume_thread(void * ptr);    
 
 #endif

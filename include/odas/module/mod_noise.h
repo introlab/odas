@@ -37,6 +37,8 @@
         msg_spectra_obj * in;
         msg_powers_obj * out;        
 
+        char enabled;
+
     } mod_noise_obj;
 
     typedef struct mod_noise_cfg {
@@ -58,6 +60,10 @@
     void mod_noise_connect(mod_noise_obj * obj, msg_spectra_obj * in, msg_powers_obj * out);
 
     void mod_noise_disconnect(mod_noise_obj * obj);
+
+    void mod_noise_enable(mod_noise_obj * obj);
+
+    void mod_noise_disable(mod_noise_obj * obj);
 
     mod_noise_cfg * mod_noise_cfg_construct(void);
 

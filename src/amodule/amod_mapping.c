@@ -36,6 +36,8 @@
 
         obj->thread = thread_construct(&amod_mapping_thread, (void *) obj);
 
+        mod_mapping_disable(obj->mod_mapping);
+
         return obj;
 
     }
@@ -60,6 +62,18 @@
 
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
+
+    }
+
+    void amod_mapping_enable(amod_mapping_obj * obj) {
+
+        mod_mapping_enable(obj->mod_mapping);
+
+    }
+
+    void amod_mapping_disable(amod_mapping_obj * obj) {
+
+        mod_mapping_disable(obj->mod_mapping);
 
     }
 

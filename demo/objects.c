@@ -499,6 +499,62 @@
                     snk_categories_connect(objs->snk_categories_object,
                                            objs->con_categories_object->outs[0]);
 
+        // +----------------------------------------------------------+
+        // | Enable modules                                           |
+        // +----------------------------------------------------------+  
+
+            mod_mapping_enable(objs->mod_mapping_mics_object);
+            mod_resample_enable(objs->mod_resample_mics_object);
+            mod_stft_enable(objs->mod_stft_mics_object);
+
+            if (cfgs->snk_pots_ssl_config->interface->type != interface_blackhole) {
+
+                mod_ssl_enable(objs->mod_ssl_object);
+
+            }
+
+            if (cfgs->snk_tracks_sst_config->interface->type != interface_blackhole) {
+
+                mod_ssl_enable(objs->mod_ssl_object);
+                mod_sst_enable(objs->mod_sst_object);
+
+            }
+
+            if (cfgs->snk_hops_seps_vol_config->interface->type != interface_blackhole) {
+
+                mod_ssl_enable(objs->mod_ssl_object);
+                mod_sst_enable(objs->mod_sst_object);
+                mod_noise_enable(objs->mod_noise_mics_object);
+                mod_sss_enable(objs->mod_sss_object);
+                mod_istft_enable(objs->mod_istft_seps_object);
+                mod_resample_enable(objs->mod_resample_seps_object);
+                mod_volume_enable(objs->mod_volume_seps_object);
+
+            }
+
+            if (cfgs->snk_hops_pfs_vol_config->interface->type != interface_blackhole) {
+
+                mod_ssl_enable(objs->mod_ssl_object);
+                mod_sst_enable(objs->mod_sst_object);
+                mod_noise_enable(objs->mod_noise_mics_object);
+                mod_sss_enable(objs->mod_sss_object);
+                mod_istft_enable(objs->mod_istft_pfs_object);
+                mod_resample_enable(objs->mod_resample_pfs_object);
+                mod_volume_enable(objs->mod_volume_pfs_object);
+
+            }
+
+            if (cfgs->snk_categories_config->interface->type != interface_blackhole) {
+
+                mod_ssl_enable(objs->mod_ssl_object);
+                mod_sst_enable(objs->mod_sst_object);
+                mod_noise_enable(objs->mod_noise_mics_object);
+                mod_sss_enable(objs->mod_sss_object);
+                mod_istft_enable(objs->mod_istft_seps_object);
+                mod_classify_enable(objs->mod_classify_object);
+
+            }
+
         return objs;
 
     }
@@ -1256,6 +1312,62 @@
 
                     asnk_categories_connect(objs->asnk_categories_object,
                                             objs->acon_categories_object->outs[0]);
+
+        // +----------------------------------------------------------+
+        // | Enable modules                                           |
+        // +----------------------------------------------------------+  
+
+            amod_mapping_enable(objs->amod_mapping_mics_object);
+            amod_resample_enable(objs->amod_resample_mics_object);
+            amod_stft_enable(objs->amod_stft_mics_object);
+
+            if (cfgs->snk_pots_ssl_config->interface->type != interface_blackhole) {
+
+                amod_ssl_enable(objs->amod_ssl_object);
+
+            }
+
+            if (cfgs->snk_tracks_sst_config->interface->type != interface_blackhole) {
+
+                amod_ssl_enable(objs->amod_ssl_object);
+                amod_sst_enable(objs->amod_sst_object);
+
+            }
+
+            if (cfgs->snk_hops_seps_vol_config->interface->type != interface_blackhole) {
+
+                amod_ssl_enable(objs->amod_ssl_object);
+                amod_sst_enable(objs->amod_sst_object);
+                amod_noise_enable(objs->amod_noise_mics_object);
+                amod_sss_enable(objs->amod_sss_object);
+                amod_istft_enable(objs->amod_istft_seps_object);
+                amod_resample_enable(objs->amod_resample_seps_object);
+                amod_volume_enable(objs->amod_volume_seps_object);
+
+            }
+
+            if (cfgs->snk_hops_pfs_vol_config->interface->type != interface_blackhole) {
+
+                amod_ssl_enable(objs->amod_ssl_object);
+                amod_sst_enable(objs->amod_sst_object);
+                amod_noise_enable(objs->amod_noise_mics_object);
+                amod_sss_enable(objs->amod_sss_object);
+                amod_istft_enable(objs->amod_istft_pfs_object);
+                amod_resample_enable(objs->amod_resample_pfs_object);
+                amod_volume_enable(objs->amod_volume_pfs_object);
+
+            }
+
+            if (cfgs->snk_categories_config->interface->type != interface_blackhole) {
+
+                amod_ssl_enable(objs->amod_ssl_object);
+                amod_sst_enable(objs->amod_sst_object);
+                amod_noise_enable(objs->amod_noise_mics_object);
+                amod_sss_enable(objs->amod_sss_object);
+                amod_istft_enable(objs->amod_istft_seps_object);
+                amod_classify_enable(objs->amod_classify_object);
+
+            }
 
         return objs;
 

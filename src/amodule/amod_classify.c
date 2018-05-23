@@ -37,6 +37,8 @@
 
         obj->thread = thread_construct(&amod_classify_thread, (void *) obj);
 
+        mod_classify_disable(obj->mod_classify);
+
         return obj;
 
     }
@@ -63,6 +65,18 @@
         obj->in1 = (amsg_hops_obj *) NULL;
         obj->in2 = (amsg_tracks_obj *) NULL;
         obj->out = (amsg_categories_obj *) NULL;
+
+    }
+
+    void amod_classify_enable(amod_classify_obj * obj) {
+
+        mod_classify_enable(obj->mod_classify);
+
+    }
+
+    void amod_classify_disable(amod_classify_obj * obj) {
+
+        mod_classify_disable(obj->mod_classify);
 
     }
 

@@ -44,6 +44,10 @@
 
     void amod_resample_disconnect(amod_resample_obj * obj);
 
+    void amod_resample_enable(amod_resample_obj * obj);
+
+    void amod_resample_disable(amod_resample_obj * obj);
+
     void * amod_resample_thread(void * ptr);    
 
 #endif

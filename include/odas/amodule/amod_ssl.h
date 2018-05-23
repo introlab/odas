@@ -46,6 +46,10 @@
 
     void amod_ssl_disconnect(amod_ssl_obj * obj);
 
+    void amod_ssl_enable(amod_ssl_obj * obj);
+
+    void amod_ssl_disable(amod_ssl_obj * obj);
+
     void * amod_ssl_thread(void * ptr);    
 
 #endif

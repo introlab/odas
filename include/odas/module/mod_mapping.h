@@ -37,6 +37,8 @@
         msg_hops_obj * in;
         msg_hops_obj * out;
 
+        char enabled;
+
     } mod_mapping_obj;
 
     typedef struct mod_mapping_cfg {
@@ -54,6 +56,10 @@
     void mod_mapping_connect(mod_mapping_obj * obj, msg_hops_obj * in, msg_hops_obj * out);
 
     void mod_mapping_disconnect(mod_mapping_obj * obj);
+
+    void mod_mapping_enable(mod_mapping_obj * obj);
+
+    void mod_mapping_disable(mod_mapping_obj * obj);
 
     mod_mapping_cfg * mod_mapping_cfg_construct(void);
 

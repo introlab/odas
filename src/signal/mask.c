@@ -39,18 +39,24 @@
 
     }
 
+    void masks_copy(masks_obj * dest, const masks_obj * src) {
+
+        memcpy(dest->array, src->array, sizeof(char) * src->nSeps * src->nChannels);
+
+    }    
+
+    void masks_zero(masks_obj * obj) {
+
+        memset(obj->array, 0x00, sizeof(char) * obj->nSeps * obj->nChannels);
+
+    }
+
     void masks_destroy(masks_obj * obj) {
 
         free((void *) obj->array);
         free((void *) obj);
 
     }
-
-    void masks_copy(masks_obj * dest, const masks_obj * src) {
-
-        memcpy(dest->array, src->array, sizeof(char) * src->nSeps * src->nChannels);
-
-    }    
 
     void masks_printf(const masks_obj * obj) {
 

@@ -36,6 +36,8 @@
 
         obj->thread = thread_construct(&amod_volume_thread, (void *) obj);
 
+        mod_volume_disable(obj->mod_volume);
+
         return obj;        
 
     }
@@ -60,6 +62,18 @@
 
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
+
+    }
+
+    void amod_volume_enable(amod_volume_obj * obj) {
+
+        mod_volume_enable(obj->mod_volume);
+
+    }
+
+    void amod_volume_disable(amod_volume_obj * obj) {
+
+        mod_volume_disable(obj->mod_volume);
 
     }
 

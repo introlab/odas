@@ -44,6 +44,10 @@
 
     void amod_mapping_disconnect(amod_mapping_obj * obj);
 
+    void amod_mapping_enable(amod_mapping_obj * obj);
+
+    void amod_mapping_disable(amod_mapping_obj * obj);
+
     void * amod_mapping_thread(void * ptr);    
 
 #endif

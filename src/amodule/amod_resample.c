@@ -36,6 +36,8 @@
 
         obj->thread = thread_construct(&amod_resample_thread, (void *) obj);
 
+        mod_resample_disable(obj->mod_resample);
+
         return obj;
 
     }
@@ -60,6 +62,18 @@
 
         obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_hops_obj *) NULL;
+
+    }
+
+    void amod_resample_enable(amod_resample_obj * obj) {
+
+        mod_resample_enable(obj->mod_resample);
+
+    }
+
+    void amod_resample_disable(amod_resample_obj * obj) {
+
+        mod_resample_disable(obj->mod_resample);
 
     }
 

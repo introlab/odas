@@ -47,6 +47,10 @@
 
     void amod_classify_disconnect(amod_classify_obj * obj);
 
+    void amod_classify_enable(amod_classify_obj * obj);
+
+    void amod_classify_disable(amod_classify_obj * obj);
+
     void * amod_classify_thread(void * ptr);    
 
 #endif

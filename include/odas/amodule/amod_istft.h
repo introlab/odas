@@ -45,6 +45,10 @@
 
     void amod_istft_disconnect(amod_istft_obj * obj);
 
+    void amod_istft_enable(amod_istft_obj * obj);
+
+    void amod_istft_disable(amod_istft_obj * obj);
+
     void * amod_istft_thread(void * ptr);    
 
 #endif
