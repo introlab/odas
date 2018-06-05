@@ -9,6 +9,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
 pkg_check_modules(PC_ALSA REQUIRED alsa)
 pkg_check_modules(PC_LIBCONFIG REQUIRED libconfig)
+pkg_search_module (PC_JSON-C REQUIRED json-c json)
+find_library(MATRIX_CREATOR_HAL matrix_creator_hal)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
@@ -21,6 +23,10 @@ set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 include_directories(include/odas)
 
 add_subdirectory(include)
+
+find_path (JSON_C_INCLUDE_DIR json.h PATH_SUFFIXES json-c json)
+find_library (JSON_C_LIBRARIES NAMES json-c libjson-c)
+include_directories (${JSON_C_INCLUDE_DIR})
 
 set(SRC
 
@@ -207,6 +213,15 @@ add_executable(odaslive
 )
 target_link_libraries(odaslive
     odas
+)
+
+add_executable(matrix-odas
+    demo/matrix-demos/matrix-odas.cpp
+)
+target_link_libraries(matrix-odas
+    odas
+    ${JSON_C_LIBRARIES}
+    ${MATRIX_CREATOR_HAL}
 )
 
 add_executable(odasserver
