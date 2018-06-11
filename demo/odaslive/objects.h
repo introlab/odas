@@ -1,5 +1,5 @@
-#ifndef __DEMO_OBJECTS
-#define __DEMO_OBJECTS
+#ifndef __ODASLIVE_OBJECTS
+#define __ODASLIVE_OBJECTS
 
     #include "configs.h"
 

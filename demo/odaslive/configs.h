@@ -1,5 +1,5 @@
-#ifndef __DEMO_CONFIGS
-#define __DEMO_CONFIGS
+#ifndef __ODASLIVE_CONFIGS
+#define __ODASLIVE_CONFIGS
 
     #include "parameters.h"
 

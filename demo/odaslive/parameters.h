@@ -1,5 +1,5 @@
-#ifndef __DEMO_PARAMETERS
-#define __DEMO_PARAMETERS
+#ifndef __ODASLIVE_PARAMETERS
+#define __ODASLIVE_PARAMETERS
 
     #include <odas/odas.h>
     #include <libconfig.h>

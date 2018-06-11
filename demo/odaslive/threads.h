@@ -1,5 +1,5 @@
-#ifndef __DEMO_THREADS
-#define __DEMO_THREADS
+#ifndef __ODASLIVE_THREADS
+#define __ODASLIVE_THREADS
 
     #include "objects.h"
     #include "profiler.h"

@@ -19,8 +19,10 @@ extern "C" {
     #include <message/msg_spectra.h>
     #include <message/msg_targets.h>
     #include <message/msg_tracks.h>
+    #include <module/mod_bf.h>
     #include <module/mod_classify.h>
     #include <module/mod_istft.h>
+    #include <module/mod_lag.h>
     #include <module/mod_mapping.h>
     #include <module/mod_noise.h>
     #include <module/mod_resample.h>
@@ -28,6 +30,7 @@ extern "C" {
     #include <module/mod_sst.h>
     #include <module/mod_sss.h>
     #include <module/mod_stft.h>
+    #include <module/mod_tt.h>
     #include <module/mod_volume.h>
     #include <sink/snk_categories.h>
     #include <sink/snk_hops.h>
@@ -36,6 +39,7 @@ extern "C" {
     #include <sink/snk_spectra.h>
     #include <sink/snk_tracks.h>
     #include <source/src_hops.h>
+    
     #include <aconnector/acon_categories.h>
     #include <aconnector/acon_hops.h>
     #include <aconnector/acon_pots.h>
@@ -53,6 +57,7 @@ extern "C" {
     #include <amessage/amsg_tracks.h>
     #include <amodule/amod_classify.h>
     #include <amodule/amod_istft.h>
+    #include <amodule/amod_lag.h>
     #include <amodule/amod_mapping.h>
     #include <amodule/amod_noise.h>
     #include <amodule/amod_resample.h>
@@ -68,6 +73,14 @@ extern "C" {
     #include <asink/asnk_spectra.h>
     #include <asink/asnk_tracks.h>
     #include <asource/asrc_hops.h>
+
+    #include <deserializer/dsr_hops.h>
+    #include <deserializer/dsr_targets.h>
+
+    #include <serializer/ser_hops.h>
+    #include <serializer/ser_tracks.h>
+
+    #include <utils/json.h>
 
 #ifdef __cplusplus
 } //extern "C"

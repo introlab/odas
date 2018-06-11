@@ -55,8 +55,8 @@
 
     msg_spectra_cfg * msg_spectra_cfg_construct(void);
 
-    void msg_spectra_cfg_destroy(msg_spectra_cfg * msg_spectra_config);
+    void msg_spectra_cfg_destroy(msg_spectra_cfg * cfg);
 
-    void msg_spectra_cfg_printf(const msg_spectra_cfg * msg_spectra_config);
+    void msg_spectra_cfg_printf(const msg_spectra_cfg * cfg);
 
 #endif

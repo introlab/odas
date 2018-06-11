@@ -1,5 +1,5 @@
-#ifndef __DEMO_PROFILER
-#define __DEMO_PROFILER
+#ifndef __ODASLIVE_PROFILER
+#define __ODASLIVE_PROFILER
 
     #include <stdlib.h>
     #include <stdio.h>

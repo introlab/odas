@@ -55,8 +55,8 @@
 
     msg_hops_cfg * msg_hops_cfg_construct(void);
 
-    void msg_hops_cfg_destroy(msg_hops_cfg * msg_hops_config);
+    void msg_hops_cfg_destroy(msg_hops_cfg * cfg);
 
-    void msg_hops_cfg_printf(const msg_hops_cfg * msg_hops_config);
+    void msg_hops_cfg_printf(const msg_hops_cfg * cfg);
 
 #endif

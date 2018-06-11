@@ -17,205 +17,229 @@ set(CMAKE_BUILD_TYPE "Release")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
 
-#Add base directory for includes (global)
+# Add base directory for includes (global)
 include_directories(include/odas)
 
 add_subdirectory(include)
 
-set(SRC
-
-    src/general/format.c
-    src/general/interface.c
-    src/general/link.c
-    src/general/mic.c
-    src/general/samplerate.c
-    src/general/soundspeed.c
-    src/general/spatialfilter.c    
-    src/general/thread.c
-
-    src/init/combining.c
-    src/init/delay.c
-    src/init/directivity.c
-    src/init/hit.c
-    src/init/linking.c
-    src/init/scanning.c
-    src/init/space.c
-    src/init/windowing.c
-
-    src/signal/acorr.c
-    src/signal/aimg.c
-    src/signal/area.c
-    src/signal/assignation.c
-    src/signal/beampattern.c
-    src/signal/category.c
-    src/signal/coherence.c
-    src/signal/delta.c
-    src/signal/demixing.c
-    src/signal/env.c
-    src/signal/frame.c
-    src/signal/freq.c
-    src/signal/gain.c
-    src/signal/hop.c
-    src/signal/index.c
-    src/signal/kalman.c
-    src/signal/map.c
-    src/signal/mask.c
-    src/signal/mixture.c
-    src/signal/pair.c
-    src/signal/particle.c
-    src/signal/pitch.c
-    src/signal/point.c
-    src/signal/postprob.c
-    src/signal/pot.c
-    src/signal/scan.c
-    src/signal/spatialgain.c
-    src/signal/spatialindex.c
-    src/signal/spatialmask.c
-    src/signal/steer.c
-    src/signal/target.c
-    src/signal/tau.c
-    src/signal/tdoa.c
-    src/signal/track.c
-    src/signal/triangle.c
-    src/signal/window.c
-    src/signal/xcorr.c
-
-    src/system/acorr2pitch.c
-    src/system/demixing2env.c
-    src/system/demixing2freq.c
-    src/system/env2env.c
-    src/system/hop2hop.c
-    src/system/hop2frame.c
-    src/system/frame2freq.c
-    src/system/freq2acorr.c
-    src/system/freq2env.c
-    src/system/freq2freq.c
-    src/system/freq2frame.c
-    src/system/freq2xcorr.c
-    src/system/frame2hop.c
-    src/system/gain2mask.c
-    src/system/kalman2coherence.c
-    src/system/kalman2kalman.c
-    src/system/mixture2mixture.c
-    src/system/particle2coherence.c
-    src/system/particle2particle.c
-    src/system/pitch2category.c
-    src/system/steer2demixing.c
-    src/system/track2gain.c
-    src/system/track2steer.c
-    src/system/xcorr2aimg.c
-    src/system/xcorr2xcorr.c
-
-    src/utils/cmatrix.c
-    src/utils/fft.c
-    src/utils/fifo.c
-    src/utils/gaussian.c
-    src/utils/gaussjordan.c
-    src/utils/inverse.c
-    src/utils/matrix.c
-    src/utils/pcm.c
-    src/utils/random.c
-    src/utils/transcendental.c
-
-    src/aconnector/acon_categories.c
-    src/aconnector/acon_hops.c
-    src/aconnector/acon_pots.c
-    src/aconnector/acon_powers.c
-    src/aconnector/acon_spectra.c
-    src/aconnector/acon_targets.c
-    src/aconnector/acon_tracks.c
-    src/ainjector/ainj_targets.c
-    src/amessage/amsg_categories.c
-    src/amessage/amsg_hops.c
-    src/amessage/amsg_pots.c
-    src/amessage/amsg_powers.c
-    src/amessage/amsg_spectra.c
-    src/amessage/amsg_targets.c
-    src/amessage/amsg_tracks.c
-    src/amodule/amod_classify.c
-    src/amodule/amod_istft.c
-    src/amodule/amod_mapping.c
-    src/amodule/amod_noise.c
-    src/amodule/amod_resample.c
-    src/amodule/amod_ssl.c
-    src/amodule/amod_sss.c
-    src/amodule/amod_sst.c
-    src/amodule/amod_stft.c
-    src/amodule/amod_volume.c
-    src/asink/asnk_categories.c
-    src/asink/asnk_hops.c    
-    src/asink/asnk_pots.c
-    src/asink/asnk_powers.c
-    src/asink/asnk_spectra.c
-    src/asink/asnk_tracks.c
-    src/asource/asrc_hops.c  
-    
-    src/connector/con_categories.c
-    src/connector/con_hops.c
-    src/connector/con_pots.c
-    src/connector/con_powers.c
-    src/connector/con_spectra.c
-    src/connector/con_targets.c
-    src/connector/con_tracks.c
-    src/injector/inj_targets.c
-    src/message/msg_categories.c
-    src/message/msg_hops.c
-    src/message/msg_pots.c
-    src/message/msg_powers.c
-    src/message/msg_spectra.c
-    src/message/msg_targets.c
-    src/message/msg_tracks.c
-    src/module/mod_classify.c
-    src/module/mod_istft.c
-    src/module/mod_mapping.c
-    src/module/mod_noise.c
-    src/module/mod_resample.c
-    src/module/mod_ssl.c
-    src/module/mod_sss.c
-    src/module/mod_sst.c
-    src/module/mod_stft.c
-    src/module/mod_volume.c
-    src/sink/snk_categories.c
-    src/sink/snk_hops.c
-    src/sink/snk_pots.c
-    src/sink/snk_powers.c
-    src/sink/snk_spectra.c
-    src/sink/snk_tracks.c
-    src/source/src_hops.c
-
-)
-
 add_library(odas SHARED
-	${SRC}
+
+    src/odas/general/format.c
+    src/odas/general/interface.c
+    src/odas/general/link.c
+    src/odas/general/mic.c
+    src/odas/general/samplerate.c
+    src/odas/general/soundspeed.c
+    src/odas/general/spatialfilter.c    
+    src/odas/general/thread.c
+
+    src/odas/init/combining.c
+    src/odas/init/delay.c
+    src/odas/init/directivity.c
+    src/odas/init/hit.c
+    src/odas/init/linking.c
+    src/odas/init/scanning.c
+    src/odas/init/space.c
+    src/odas/init/windowing.c
+
+    src/odas/signal/acorr.c
+    src/odas/signal/aimg.c
+    src/odas/signal/area.c
+    src/odas/signal/assignation.c
+    src/odas/signal/beampattern.c
+    src/odas/signal/category.c
+    src/odas/signal/coherence.c
+    src/odas/signal/delta.c
+    src/odas/signal/demixing.c
+    src/odas/signal/env.c
+    src/odas/signal/frame.c
+    src/odas/signal/freq.c
+    src/odas/signal/gain.c
+    src/odas/signal/hop.c
+    src/odas/signal/index.c
+    src/odas/signal/kalman.c
+    src/odas/signal/map.c
+    src/odas/signal/mask.c
+    src/odas/signal/mixture.c
+    src/odas/signal/pair.c
+    src/odas/signal/particle.c
+    src/odas/signal/pitch.c
+    src/odas/signal/point.c
+    src/odas/signal/postprob.c
+    src/odas/signal/pot.c
+    src/odas/signal/scan.c
+    src/odas/signal/spatialgain.c
+    src/odas/signal/spatialindex.c
+    src/odas/signal/spatialmask.c
+    src/odas/signal/steer.c
+    src/odas/signal/target.c
+    src/odas/signal/tau.c
+    src/odas/signal/tdoa.c
+    src/odas/signal/track.c
+    src/odas/signal/triangle.c
+    src/odas/signal/window.c
+    src/odas/signal/xcorr.c
+
+    src/odas/system/acorr2pitch.c
+    src/odas/system/demixing2env.c
+    src/odas/system/demixing2freq.c
+    src/odas/system/env2env.c
+    src/odas/system/hop2hop.c
+    src/odas/system/hop2frame.c
+    src/odas/system/frame2freq.c
+    src/odas/system/freq2acorr.c
+    src/odas/system/freq2env.c
+    src/odas/system/freq2freq.c
+    src/odas/system/freq2frame.c
+    src/odas/system/freq2xcorr.c
+    src/odas/system/frame2hop.c
+    src/odas/system/gain2mask.c
+    src/odas/system/kalman2coherence.c
+    src/odas/system/kalman2kalman.c
+    src/odas/system/mixture2mixture.c
+    src/odas/system/particle2coherence.c
+    src/odas/system/particle2particle.c
+    src/odas/system/pitch2category.c
+    src/odas/system/steer2demixing.c
+    src/odas/system/track2gain.c
+    src/odas/system/track2steer.c
+    src/odas/system/xcorr2aimg.c
+    src/odas/system/xcorr2xcorr.c
+
+    src/odas/utils/cmatrix.c
+    src/odas/utils/fft.c
+    src/odas/utils/fifo.c
+    src/odas/utils/gaussian.c
+    src/odas/utils/gaussjordan.c
+    src/odas/utils/inverse.c
+    src/odas/utils/json.c
+    src/odas/utils/matrix.c
+    src/odas/utils/pcm.c
+    src/odas/utils/random.c
+    src/odas/utils/stringify.c
+    src/odas/utils/transcendental.c
+
+    src/odas/aconnector/acon_categories.c
+    src/odas/aconnector/acon_hops.c
+    src/odas/aconnector/acon_pots.c
+    src/odas/aconnector/acon_powers.c
+    src/odas/aconnector/acon_spectra.c
+    src/odas/aconnector/acon_targets.c
+    src/odas/aconnector/acon_tracks.c
+    src/odas/ainjector/ainj_targets.c
+    src/odas/amessage/amsg_categories.c
+    src/odas/amessage/amsg_hops.c
+    src/odas/amessage/amsg_pots.c
+    src/odas/amessage/amsg_powers.c
+    src/odas/amessage/amsg_spectra.c
+    src/odas/amessage/amsg_targets.c
+    src/odas/amessage/amsg_tracks.c
+    src/odas/amodule/amod_classify.c
+    src/odas/amodule/amod_istft.c
+    src/odas/amodule/amod_lag.c
+    src/odas/amodule/amod_mapping.c
+    src/odas/amodule/amod_noise.c
+    src/odas/amodule/amod_resample.c
+    src/odas/amodule/amod_ssl.c
+    src/odas/amodule/amod_sss.c
+    src/odas/amodule/amod_sst.c
+    src/odas/amodule/amod_stft.c
+    src/odas/amodule/amod_volume.c
+    src/odas/asink/asnk_categories.c
+    src/odas/asink/asnk_hops.c    
+    src/odas/asink/asnk_pots.c
+    src/odas/asink/asnk_powers.c
+    src/odas/asink/asnk_spectra.c
+    src/odas/asink/asnk_tracks.c
+    src/odas/asource/asrc_hops.c  
+    
+    src/odas/connector/con_categories.c
+    src/odas/connector/con_hops.c
+    src/odas/connector/con_pots.c
+    src/odas/connector/con_powers.c
+    src/odas/connector/con_spectra.c
+    src/odas/connector/con_targets.c
+    src/odas/connector/con_tracks.c
+    src/odas/injector/inj_targets.c
+    src/odas/message/msg_categories.c
+    src/odas/message/msg_hops.c
+    src/odas/message/msg_pots.c
+    src/odas/message/msg_powers.c
+    src/odas/message/msg_spectra.c
+    src/odas/message/msg_targets.c
+    src/odas/message/msg_tracks.c
+    src/odas/module/mod_bf.c
+    src/odas/module/mod_classify.c
+    src/odas/module/mod_istft.c
+    src/odas/module/mod_lag.c
+    src/odas/module/mod_mapping.c
+    src/odas/module/mod_noise.c
+    src/odas/module/mod_resample.c
+    src/odas/module/mod_ssl.c
+    src/odas/module/mod_sss.c
+    src/odas/module/mod_sst.c
+    src/odas/module/mod_stft.c
+    src/odas/module/mod_tt.c
+    src/odas/module/mod_volume.c
+    src/odas/sink/snk_categories.c
+    src/odas/sink/snk_hops.c
+    src/odas/sink/snk_pots.c
+    src/odas/sink/snk_powers.c
+    src/odas/sink/snk_spectra.c
+    src/odas/sink/snk_tracks.c
+    src/odas/source/src_hops.c
+
+    src/odas/deserializer/dsr_hops.c
+    src/odas/deserializer/dsr_targets.c
+
+    src/odas/serializer/ser_hops.c
+    src/odas/serializer/ser_tracks.c
+
 )
 
 target_link_libraries(odas
-	${PC_FFTW3_LIBRARIES}
+	
+    ${PC_FFTW3_LIBRARIES}
 	${PC_ALSA_LIBRARIES}
-    ${PC_LIBCONFIG_LIBRARIES}
 	m
     pthread
+
 )
 
-add_executable(odaslive
-    demo/odaslive/main.c
-    demo/odaslive/configs.c
-    demo/odaslive/objects.c
-    demo/odaslive/parameters.c
-    demo/odaslive/profiler.c
-    demo/odaslive/threads.c
-)
-target_link_libraries(odaslive
-    odas
+add_executable(server-bf
+
+    demo/server/bf/main.c
+    demo/server/bf/configs.c
+    demo/server/bf/objects.c
+    demo/server/bf/params.c
+    demo/server/bf/settings.c
+    
 )
 
-add_executable(odasserver
-    demo/odasserver/main.c
-)
-target_link_libraries(odasserver
+target_link_libraries(server-bf
+
     odas
+    ${PC_LIBCONFIG_LIBRARIES}
+
+)
+
+add_executable(client
+
+    demo/client/file/main.c
+
+)
+
+add_executable(debug
+
+    demo/debug/test.c
+
+)
+
+target_link_libraries(debug
+
+    odas
+
 )
 
 install(TARGETS odas DESTINATION lib)
-
 
