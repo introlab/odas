@@ -12,27 +12,19 @@ class Targets:
 
 	def toJSON(self):
 
-		string = ''
-		string += '{\n'
-		string += '    "targets":\n'
-		string += '        [\n'
+		string = '{"targets":['
 
 		for iTarget in range(0, self.nTargets):
 
-			string += '            {\n'
-			string += '                "tag": ' + '"' + str(self.tags[iTarget]) + '"' + ',\n'
-			string += '                "x": ' + str(self.xyz[iTarget,0]) + ',\n'
-			string += '                "y": ' + str(self.xyz[iTarget,1]) + ',\n'
-			string += '                "z": ' + str(self.xyz[iTarget,2]) + '\n'
-			string += '            }'
+			string += '{"tag":"' + str(self.tags[iTarget]) + '",'
+			string += '"x":' + str(self.xyz[iTarget,0]) + ','
+			string += '"y":' + str(self.xyz[iTarget,1]) + ','
+			string += '"z":' + str(self.xyz[iTarget,2]) + '}'
 
 			if (iTarget != (self.nTargets-1)):
 
 				string += ','
 
-			string += '            \n'
-
-		string += '        ]\n'
-		string += '}'
+		string += ']}'
 
 		return string

@@ -69,16 +69,7 @@ for iFrame in range(0, nFrames):
 
 	hops.load(samples)
 
-	if (iFrame == 0):
-
-		string = ''
-		string += '{\n'
-		string += '    "raw":'
-		string += ('\n' + hops.toJSON()).replace('\n','\n    ')
-		string += ',\n\n' 
-		string += '    "aim":'
-		string += ('\n' + targets.toJSON()).replace('\n','\n    ')
-		string += '\n}';
+	string = '{"raw":' + hops.toJSON() + ',' + '"aim":' + targets.toJSON() + '}';
 
 	socket.send(string.encode('utf-8'))
 	reply = socket.recv(65536);

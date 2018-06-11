@@ -69,45 +69,26 @@
 
     	unsigned int iTrack;
 
-    	strcpy(obj->out, "");
-    	strcat(obj->out, "{\n");
-    	strcat(obj->out, "    \"tracks\":\n");
-    	strcat(obj->out, "    [\n");
+    	strcpy(obj->out, "{\"tracks\":[");
 
     	for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
-    		strcat(obj->out, "        {\"id\": \"");
-    		sprintf(obj->string, "%llu", obj->in->tracks->ids[iTrack]);
-    		strcat(obj->out, obj->string);
+    		sprintf(obj->string, "{\"id\":\"%llu\",\"tag\":\"%s\",\"x\":%1.3f,\"y\":%1.3f,\"z\":%1.3f}",
+                    obj->in->tracks->ids[iTrack],
+                    obj->in->tracks->tags[iTrack],
+                    obj->in->tracks->array[iTrack*3+0],
+                    obj->in->tracks->array[iTrack*3+1],
+                    obj->in->tracks->array[iTrack*3+2]);
 
-    		strcat(obj->out, "\", \"tag\": \"");
-    		sprintf(obj->string, "%s", obj->in->tracks->tags[iTrack]);
-    		strcat(obj->out, obj->string);
-
-    		strcat(obj->out, "\", \"x\": ");
-    		sprintf(obj->string, "%1.3f", obj->in->tracks->array[iTrack*3 + 0]);
-    		strcat(obj->out, obj->string);
-
-    		strcat(obj->out, ", \"y\": ");
-    		sprintf(obj->string, "%1.3f", obj->in->tracks->array[iTrack*3 + 1]);
-    		strcat(obj->out, obj->string);
-
-    		strcat(obj->out, ", \"z\": ");
-    		sprintf(obj->string, "%1.3f", obj->in->tracks->array[iTrack*3 + 2]);
-    		strcat(obj->out, obj->string);   		
-
-    		strcat(obj->out, "}");
+            strcat(obj->out, obj->string);
 
     		if (iTrack != (obj->nTracks - 1)) {
     			strcat(obj->out, ",");
     		}
 
-    		strcat(obj->out, "\n");
-
     	}
 
-    	strcat(obj->out, "    ]\n");
-    	strcat(obj->out, "}\n");
+    	strcat(obj->out, "]}");
 
     }
 

@@ -167,13 +167,11 @@
                 // Outputs
 
                 strTmp[0] = 0x00;
-                strcat(strTmp, "{\n");
-                strcat(strTmp, "\"separated\":\n");
+                strcat(strTmp, "{\"separated\":");
                 strcat(strTmp, objs->out1);
-                strcat(strTmp, ",\n");
-                strcat(strTmp, "\"tracks\":\n");
+                strcat(strTmp, ",\"tracks\":");
                 strcat(strTmp, objs->out2);
-                strcat(strTmp, "}\n");
+                strcat(strTmp, "}");
 
                 send(connection_id, strTmp, strlen(strTmp), 0);
 

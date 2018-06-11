@@ -19,32 +19,16 @@ class Hops:
 
 	def toJSON(self):
 
-		string = ''
-		string += '{\n'
-		string += '    "hops":\n'
-		string += '        [\n'
+		string = '{"hops":['
 
 		for iChannel in range(0, self.nChannels):
 
-			string += '            ['
-
-			for iSample in range(0, self.hopSize):
-
-				string += "{:1.3e}".format(self.array[iChannel,iSample])
-
-				if (iSample != (self.hopSize-1)):
-
-					string += ','
-
-			string += ']'
+			vector = self.array[iChannel,:]
+			string += np.array2string(vector, separator=',', max_line_width = 100000, formatter={'float_kind':lambda vector: "%1.3e" % vector})
 
 			if (iChannel != (self.nChannels-1)):
+				string += ","
 
-				string += ','
-
-			string += '\n'
-
-		string += '        ]\n'
-		string += '}'
+		string += ']}'
 
 		return string

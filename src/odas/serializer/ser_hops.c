@@ -71,14 +71,11 @@
         unsigned int iSample;
         char number[256];
 
-    	strcpy(obj->out, "");
-    	strcat(obj->out, "{\n");
-    	strcat(obj->out, "    \"hops\":\n");
-		strcat(obj->out, "        [\n");
+    	strcpy(obj->out, "{\"hops\":[");
 
     	for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-            strcat(obj->out, "            [");
+            strcat(obj->out, "[");
 
             for (iSample = 0; iSample < obj->hopSize; iSample++) {
 
@@ -97,12 +94,9 @@
     			strcat(obj->out, ",");
     		}
 
-    		strcat(obj->out, "\n");
-
     	}
 
-    	strcat(obj->out, "        ]\n");
-    	strcat(obj->out, "}\n");
+    	strcat(obj->out, "]}");
 
     }
 
