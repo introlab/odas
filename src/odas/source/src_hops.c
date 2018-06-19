@@ -40,6 +40,9 @@
 
         obj->fp = (FILE *) NULL;
         obj->ch = (snd_pcm_t *) NULL;
+        obj->server_address = (struct sockaddr_in *) NULL;
+        obj->server_id = 0;
+        obj->connection_id = 0;
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
@@ -161,7 +164,17 @@
 
     void src_hops_open_interface_socket(src_hops_obj * obj) {
 
-        // To be done
+        obj->server_address = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
+
+        obj->server_address->sin_family = AF_INET;
+        obj->server_address->sin_addr.s_addr = htonl(INADDR_ANY);
+        obj->server_address->sin_port = htons(obj->interface->port);
+
+        obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
+
+        bind(obj->server_id, (struct sockaddr *) obj->server_address, sizeof(*(obj->server_address)));
+        listen(obj->server_id, 1);
+        obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
 
     }
 
@@ -308,7 +321,9 @@
 
     void src_hops_close_interface_socket(src_hops_obj * obj) {
 
-        // To be done
+        free((void *) obj->server_address);
+        obj->server_id = 0;
+        obj->connection_id = 0;
 
     }
 
@@ -321,41 +336,6 @@
     int src_hops_process(src_hops_obj * obj) {
 
         int rtnValue;
-
-        switch(obj->format->type) {
-
-            case format_binary_int08:
-
-                src_hops_process_format_binary_int08(obj);
-
-            break;
-
-            case format_binary_int16:
-
-                src_hops_process_format_binary_int16(obj);                
-
-            break;
-
-            case format_binary_int24:
-
-                src_hops_process_format_binary_int24(obj);
-
-            break;
-
-            case format_binary_int32:
-
-                src_hops_process_format_binary_int32(obj);
-
-            break;
-
-            default:
-
-                printf("Source hops: Invalid format type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
 
         switch(obj->interface->type) {
 
@@ -389,6 +369,41 @@
                 exit(EXIT_FAILURE);
 
             break;           
+
+        }
+
+        switch(obj->format->type) {
+
+            case format_binary_int08:
+
+                src_hops_process_format_binary_int08(obj);
+
+            break;
+
+            case format_binary_int16:
+
+                src_hops_process_format_binary_int16(obj);                
+
+            break;
+
+            case format_binary_int24:
+
+                src_hops_process_format_binary_int24(obj);
+
+            break;
+
+            case format_binary_int32:
+
+                src_hops_process_format_binary_int32(obj);
+
+            break;
+
+            default:
+
+                printf("Source hops: Invalid format type.\n");
+                exit(EXIT_FAILURE);
+
+            break;
 
         }
 
@@ -455,7 +470,20 @@
 
     int src_hops_process_interface_socket(src_hops_obj * obj) {
 
+        unsigned int nBytes;
+        unsigned int messageSize;
 
+        nBytes = 0;
+
+        while( (messageSize = recv(obj->connection_id, &(obj->buffer[nBytes]), (obj->bufferSize-nBytes), 0)) > 0) {
+
+            nBytes += messageSize;
+
+            if (nBytes == obj->bufferSize) {
+                break;
+            }
+
+        }        
 
     }
 

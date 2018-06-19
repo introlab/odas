@@ -27,6 +27,9 @@
     #include <stdio.h>
     #include <string.h>
     #include <alsa/asoundlib.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -47,6 +50,9 @@
 
         FILE * fp;
         snd_pcm_t * ch;
+        struct sockaddr_in * server_address;
+        int server_id;
+        int connection_id;
 
         char * buffer;
         unsigned int bufferSize;
