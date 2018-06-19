@@ -25,8 +25,8 @@
 
     #include "../module/mod_sss.h"
     #include "../amessage/amsg_powers.h"
-    #include "../amessage/amsg_tracks.h"
     #include "../amessage/amsg_spectra.h"
+    #include "../amessage/amsg_tracks.h"
     #include "../general/thread.h"
 
     typedef struct amod_sss_obj {
@@ -41,7 +41,7 @@
 
     } amod_sss_obj;
 
-    amod_sss_obj * amod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config);
+    amod_sss_obj * amod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config, const msg_powers_cfg * msg_powers_config);
 
     void amod_sss_destroy(amod_sss_obj * obj);
 

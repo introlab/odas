@@ -37,14 +37,11 @@
         obj->format = format_clone(snk_tracks_config->format);
         obj->interface = interface_clone(snk_tracks_config->interface);
 
-        if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
+        if (!(((obj->interface->type == interface_blackhole)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
               ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)) ||
               ((obj->interface->type == interface_terminal) && (obj->format->type == format_text_json)))) {
             
-            interface_printf(obj->interface);
-            format_printf(obj->format);
-
             printf("Sink tracks: Invalid interface and/or format.\n");
             exit(EXIT_FAILURE);
 
@@ -142,7 +139,7 @@
     }
 
     void snk_tracks_open_interface_socket(snk_tracks_obj * obj) {
-
+/*
         memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
 
         obj->sserver.sin_family = AF_INET;
@@ -156,7 +153,7 @@
             exit(EXIT_FAILURE);
 
         }   
-
+*/
     }
 
     void snk_tracks_open_interface_terminal(snk_tracks_obj * obj) {
@@ -218,7 +215,7 @@
 
     void snk_tracks_close_interface_socket(snk_tracks_obj * obj) {
 
-        close(obj->sid);
+        //close(obj->sid);
 
     }
 
@@ -318,12 +315,12 @@
     }
 
     void snk_tracks_process_interface_socket(snk_tracks_obj * obj) {
-
+/*
         if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
             printf("Sink tracks: Could not send message.\n");
             exit(EXIT_FAILURE);
         }  
-
+*/
     }
 
     void snk_tracks_process_interface_terminal(snk_tracks_obj * obj) {

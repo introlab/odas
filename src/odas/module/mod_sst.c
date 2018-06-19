@@ -1215,6 +1215,7 @@
         cfg = (mod_sst_cfg *) malloc(sizeof(mod_sst_cfg));
 
         cfg->mode = 0x00;
+        cfg->add = 0x00;
 
         cfg->hopSize = 0;
         cfg->sigmaQ = 0.0f;
@@ -1273,6 +1274,7 @@
         unsigned int iTrackMax;
 
         printf("mode = %c\n", cfg->mode);
+        printf("add = %c\n", cfg->add);
         printf("nTracksMax = %u\n", cfg->nTracksMax);
         printf("hopSize = %u\n", cfg->hopSize);
         printf("sigmaQ = %f\n", cfg->sigmaQ);

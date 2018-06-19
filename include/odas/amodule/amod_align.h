@@ -1,11 +1,11 @@
-#ifndef __ODAS_AINJECTOR_TARGETS
-#define __ODAS_AINJECTOR_TARGETS
+#ifndef __ODAS_AMODULE_ALIGN
+#define __ODAS_AMODULE_ALIGN
 
     /**
-    * \file     ainj_targets.h
+    * \file     amod_align.h
     * \author   François Grondin <francois.grondin2@usherbrooke.ca>
     * \version  2.0
-    * \date     2018-03-18
+    * \date     2018-05-24
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify
@@ -23,28 +23,34 @@
     *
     */
 
-    #include "../injector/inj_targets.h"
+    #include "../module/mod_align.h"
     #include "../amessage/amsg_hops.h"
     #include "../amessage/amsg_targets.h"
     #include "../general/thread.h"
 
-    typedef struct ainj_targets_obj {
+    typedef struct amod_align_obj {
 
-        inj_targets_obj * inj_targets;
-        amsg_hops_obj * in;
+        mod_align_obj * mod_align;
+        amsg_targets_obj * in1;
+        amsg_hops_obj * in2;
+        amsg_hops_obj * in3;
         amsg_targets_obj * out;
-        thread_obj * thread;    
+        thread_obj * thread;        
 
-    } ainj_targets_obj;
+    } amod_align_obj;
 
-    ainj_targets_obj * ainj_targets_construct(const inj_targets_cfg * inj_targets_config, const msg_hops_cfg * msg_hops_config, const msg_targets_cfg * msg_targets_config);
+    amod_align_obj * amod_align_construct(const mod_align_cfg * mod_align_config, const msg_targets_cfg * msg_targets_in_config, const msg_hops_cfg * msg_hops_in_config, const msg_targets_cfg * msg_targets_out_config);
 
-    void ainj_targets_destroy(ainj_targets_obj * obj);
+    void amod_align_destroy(amod_align_obj * obj);
 
-    void ainj_targets_connect(ainj_targets_obj * obj, amsg_hops_obj * in, amsg_targets_obj * out);
+    void amod_align_connect(amod_align_obj * obj, amsg_targets_obj * in1, amsg_hops_obj * in2, amsg_targets_obj * out);
 
-    void ainj_targets_disconnect(ainj_targets_obj * obj);
+    void amod_align_disconnect(amod_align_obj * obj);
 
-    void * ainj_targets_thread(void * ptr); 
+    void amod_align_enable(amod_align_obj * obj);
+
+    void amod_align_disable(amod_align_obj * obj);
+
+    void * amod_align_thread(void * ptr);    
 
 #endif

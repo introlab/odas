@@ -335,41 +335,22 @@
 
     }
 
-    void json_tokens_extractFloats(const json_tokens * obj, const char * string, const int iToken, float * dest) {
+    void json_tokens_extractInt(const json_tokens * obj, const char * string, const int iToken, int * dest) {
 
-        unsigned int iToken2;
-        unsigned int count;
+        char tmp[256]; // 256 characters should be more than enough for any numbers
+        unsigned int start;
+        unsigned int len;
 
-        count = 0;
+        start = obj->tokens[iToken].start;
+        len = obj->tokens[iToken].end-obj->tokens[iToken].start;
 
-        // Loop only in filled tokens
-        for (iToken2 = 0; iToken2 <= obj->iToken; iToken2++) {
+        memcpy(tmp, &(string[start]), sizeof(char) * len);
+        tmp[len] = 0x00;
 
-            // If this token is part of the array or object, and is a value
-            if ((obj->tokens[iToken2].parent == iToken) && (json_tokens_type(obj, string, iToken2) == 'V')) {
-                
-                if (iToken2 < obj->iToken) {
+        *dest = atoi(tmp);        
 
-                    if (json_tokens_type(obj, string, (iToken2+1)) == 'N') {
+    }
 
-                        json_tokens_extractFloat(obj, string, iToken2+1, &(dest[count]));
-
-                    }
-                    else {
-
-                        dest[count] = NAN;
-
-                    }
-
-                }
-
-                count++;
-
-            }
-
-        }
-
-    }  
 
     int json_fsm_micro_digit09(const char * string, int offset) {
 

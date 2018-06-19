@@ -28,7 +28,7 @@
     FILE * fidTmp1;
     FILE * fidTmp2;
 
-    mod_sss_obj * mod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config) {
+    mod_sss_obj * mod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config, const msg_powers_cfg * msg_powers_config) {
 
         mod_sss_obj * obj;
         

@@ -43,10 +43,7 @@
         interface_type type;
 
         char * fileName;
-
-        char * ip;
         unsigned int port;
-
         char * deviceName;
 
     } interface_obj;
@@ -57,11 +54,9 @@
 
     interface_obj * interface_construct_file(const char * fileName);
 
-    interface_obj * interface_construct_socket(const char * ip, const unsigned int port);
+    interface_obj * interface_construct_socket(const unsigned int port);
 
-    interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
-
-    interface_obj * interface_construct_soundcard_by_name(char * deviceName);
+    interface_obj * interface_construct_soundcard(const char * deviceName);
 
     interface_obj * interface_construct_terminal(void);
 

@@ -2,8 +2,8 @@
    /**
     * \file     src_hops.c
     * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
+    * \version  2.1
+    * \date     2018-06-12
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@
     src_hops_obj * src_hops_construct(const src_hops_cfg * src_hops_config, const msg_hops_cfg * msg_hops_config) {
 
         src_hops_obj * obj;
-        unsigned int nBytes;
 
         obj = (src_hops_obj *) malloc(sizeof(src_hops_obj));
 
@@ -39,12 +38,20 @@
         obj->format = format_clone(src_hops_config->format);
         obj->interface = interface_clone(src_hops_config->interface);
 
+        obj->fp = (FILE *) NULL;
+        obj->ch = (snd_pcm_t *) NULL;
+
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
-        if (!(((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
+        if (!(((obj->interface->type == interface_blackhole)) ||
+              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int24)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int32)) ||
+              ((obj->interface->type == interface_socket) && (obj->format->type == format_binary_int08)) ||
+              ((obj->interface->type == interface_socket) && (obj->format->type == format_binary_int16)) ||
+              ((obj->interface->type == interface_socket) && (obj->format->type == format_binary_int24)) ||
+              ((obj->interface->type == interface_socket) && (obj->format->type == format_binary_int32)) ||             
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int24)) ||
@@ -55,9 +62,6 @@
 
         }
 
-        obj->buffer = (char *) malloc(sizeof(char) * obj->hopSize * obj->nChannels * 4);
-        memset(obj->buffer, 0x00, sizeof(char) * obj->hopSize * obj->nChannels * 4);
-
         switch (obj->format->type) {
 
             case format_binary_int08: obj->bufferSize = obj->hopSize * obj->nChannels * 1; break;
@@ -66,6 +70,9 @@
             case format_binary_int32: obj->bufferSize = obj->hopSize * obj->nChannels * 4; break;
 
         }      
+
+        obj->buffer = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
 
         obj->out = (msg_hops_obj *) NULL;
         
@@ -99,9 +106,21 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                src_hops_open_interface_blackhole(obj);
+
+            break;
+
             case interface_file:
 
                 src_hops_open_interface_file(obj);
+
+            break;
+
+            case interface_socket:
+
+                src_hops_open_interface_socket(obj);
 
             break;
 
@@ -122,6 +141,13 @@
 
     }
 
+    void src_hops_open_interface_blackhole(src_hops_obj * obj) {
+
+        // Do nothing
+
+    }
+
+
     void src_hops_open_interface_file(src_hops_obj * obj) {
 
         obj->fp = fopen(obj->interface->fileName, "rb");
@@ -130,6 +156,12 @@
             printf("Cannot open file %s\n",obj->interface->fileName);
             exit(EXIT_FAILURE);
         }
+
+    }
+
+    void src_hops_open_interface_socket(src_hops_obj * obj) {
+
+        // To be done
 
     }
 
@@ -173,7 +205,6 @@
             break;
 
         }       
-
 
         if ((err = snd_pcm_open(&(obj->ch), obj->interface->deviceName, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
             printf("Source hops: Cannot open audio device %s: %s\n",obj->interface->deviceName, snd_strerror(err));
@@ -228,9 +259,21 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                src_hops_close_interface_blackhole(obj);
+
+            break;
+
             case interface_file:
 
                 src_hops_close_interface_file(obj);
+
+            break;
+
+            case interface_socket:
+
+                src_hops_close_interface_socket(obj);
 
             break;
 
@@ -251,9 +294,21 @@
 
     }
 
+    void src_hops_close_interface_blackhole(src_hops_obj * obj) {
+
+        // Do nothing
+
+    }
+
     void src_hops_close_interface_file(src_hops_obj * obj) {
 
         fclose(obj->fp);
+
+    }
+
+    void src_hops_close_interface_socket(src_hops_obj * obj) {
+
+        // To be done
 
     }
 
@@ -304,9 +359,21 @@
 
         switch(obj->interface->type) {
 
+            case interface_blackhole:
+
+                rtnValue = src_hops_process_interface_blackhole(obj);
+
+            break;
+
             case interface_file:
 
                 rtnValue = src_hops_process_interface_file(obj);
+
+            break;
+
+            case interface_socket:
+
+                rtnValue = src_hops_process_interface_socket(obj);
 
             break;
 
@@ -327,6 +394,17 @@
 
         obj->timeStamp++;
         obj->out->timeStamp = obj->timeStamp;
+
+        return rtnValue;
+
+    }
+
+    int src_hops_process_interface_blackhole(src_hops_obj * obj) {
+
+        int rtnValue;
+
+        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
+        rtnValue = 0;
 
         return rtnValue;
 
@@ -372,6 +450,12 @@
         }
 
         return rtnValue;
+
+    }
+
+    int src_hops_process_interface_socket(src_hops_obj * obj) {
+
+
 
     }
 
@@ -496,15 +580,19 @@
 
     }
 
-    void src_hops_cfg_destroy(src_hops_cfg * src_hops_config) {
+    void src_hops_cfg_destroy(src_hops_cfg * cfg) {
 
-        if (src_hops_config->format != NULL) {
-            format_destroy(src_hops_config->format);
+        if (cfg->format != NULL) {
+            format_destroy(cfg->format);
         }
-        if (src_hops_config->interface != NULL) {
-            interface_destroy(src_hops_config->interface);
+        if (cfg->interface != NULL) {
+            interface_destroy(cfg->interface);
         }
 
-        free((void *) src_hops_config);
+        free((void *) cfg);
+
+    }
+
+    void src_hops_cfg_printf(const src_hops_cfg * cfg) {
 
     }

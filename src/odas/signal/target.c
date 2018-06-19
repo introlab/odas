@@ -36,7 +36,7 @@
 
         for (iTarget = 0; iTarget < nTargets; iTarget++) {
 
-            obj->tags[iTarget] = (char *) malloc(sizeof(char) * 256);
+            obj->tags[iTarget] = (char *) malloc(sizeof(char) * 64);
             strcpy(obj->tags[iTarget], "");
 
         }
@@ -77,7 +77,7 @@
 
         for (iTarget = 0; iTarget < obj->nTargets; iTarget++) {
 
-            clone->tags[iTarget] = (char *) malloc(sizeof(char) * 256);
+            clone->tags[iTarget] = (char *) malloc(sizeof(char) * 64);
             strcpy(clone->tags[iTarget], obj->tags[iTarget]);
             
         }

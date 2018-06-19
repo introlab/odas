@@ -37,7 +37,7 @@
         obj->format = format_clone(snk_pots_config->format);
         obj->interface = interface_clone(snk_pots_config->interface);
 
-        if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
+        if (!(((obj->interface->type == interface_blackhole)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_float)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
               ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)) ||
@@ -140,7 +140,7 @@
     }
 
     void snk_pots_open_interface_socket(snk_pots_obj * obj) {
-
+/*
         memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
 
         obj->sserver.sin_family = AF_INET;
@@ -154,7 +154,7 @@
             exit(EXIT_FAILURE);
 
         }  
-
+*/
     }
 
     void snk_pots_open_interface_terminal(snk_pots_obj * obj) {
@@ -216,7 +216,7 @@
 
     void snk_pots_close_interface_socket(snk_pots_obj * obj) {
 
-        close(obj->sid);
+        //close(obj->sid);
 
     }
 
@@ -322,12 +322,12 @@
     }
 
     void snk_pots_process_interface_socket(snk_pots_obj * obj) {
-
+/*
         if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
             printf("Sink pots: Could not send message.\n");
             exit(EXIT_FAILURE);
         }        
-
+*/
     }
 
     void snk_pots_process_interface_terminal(snk_pots_obj * obj) {

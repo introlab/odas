@@ -4,8 +4,8 @@
    /**
     * \file     src_hops.h
     * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
+    * \version  2.1
+    * \date     2018-06-12
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify
@@ -74,21 +74,33 @@
 
     void src_hops_open(src_hops_obj * obj);
 
+    void src_hops_open_interface_blackhole(src_hops_obj * obj);
+
     void src_hops_open_interface_file(src_hops_obj * obj);
+
+    void src_hops_open_interface_socket(src_hops_obj * obj);
 
     void src_hops_open_interface_soundcard(src_hops_obj * obj);
 
     void src_hops_close(src_hops_obj * obj);
 
+    void src_hops_close_interface_blackhole(src_hops_obj * obj);
+
     void src_hops_close_interface_file(src_hops_obj * obj);
 
-    void src_hops_close_interface_soundcard(src_hops_obj * obj);
+    void src_hops_close_interface_socket(src_hops_obj * obj);
+
+    void src_hops_close_interface_soundcard(src_hops_obj * obj);   
 
     int src_hops_process(src_hops_obj * obj);
 
+    int src_hops_process_interface_blackhole(src_hops_obj * obj);
+
     int src_hops_process_interface_file(src_hops_obj * obj);
 
-    int src_hops_process_interface_soundcard(src_hops_obj * obj);
+    int src_hops_process_interface_socket(src_hops_obj * obj);
+
+    int src_hops_process_interface_soundcard(src_hops_obj * obj);   
 
     void src_hops_process_format_binary_int08(src_hops_obj * obj);
 
@@ -100,6 +112,8 @@
 
     src_hops_cfg * src_hops_cfg_construct(void);
 
-    void src_hops_cfg_destroy(src_hops_cfg * src_hops_config);
+    void src_hops_cfg_destroy(src_hops_cfg * cfg);
+
+    void src_hops_cfg_printf(const src_hops_cfg * cfg);
 
 #endif

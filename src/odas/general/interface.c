@@ -29,42 +29,11 @@
 
         obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        obj->type = interface_undefined;
 
-            obj->type = interface_undefined;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) NULL;
-            obj->port = 0;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
+        obj->fileName = (char *) NULL;
+        obj->port = 0;
         obj->deviceName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
 
         return obj;
 
@@ -76,42 +45,11 @@
 
         obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        obj->type = interface_blackhole;
 
-            obj->type = interface_blackhole;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) NULL;
-            obj->port = 0;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
+        obj->fileName = (char *) NULL;
+        obj->port = 0;
         obj->deviceName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
 
         return obj;
 
@@ -123,148 +61,45 @@
 
         obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        obj->type = interface_file;
 
-            obj->type = interface_file;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) malloc(sizeof(char) * (strlen(fileName)+1));
-            strcpy(obj->fileName, fileName);
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) NULL;
-            obj->port = 0;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
+        obj->fileName = (char *) malloc(sizeof(char) * (strlen(fileName)+1));
+        strcpy(obj->fileName, fileName);
+        obj->port = 0;
         obj->deviceName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
 
         return obj;
 
     }
 
-    interface_obj * interface_construct_socket(const char * ip, const unsigned int port) {
+    interface_obj * interface_construct_socket(const unsigned int port) {
 
         interface_obj * obj;
 
         obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        obj->type = interface_socket;
 
-            obj->type = interface_socket;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) malloc(sizeof(char) * (strlen(ip)+1));
-            strcpy(obj->ip, ip);
-            obj->port = port;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
+        obj->fileName = (char *) NULL;
+        obj->port = port;
         obj->deviceName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
 
         return obj;        
 
     }
 
-   interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device) {
+   interface_obj * interface_construct_soundcard(const char * deviceName) {
 
-       char * deviceName = (char *) malloc(sizeof(char) * 1024);
+        interface_obj * obj;
 
-       sprintf(deviceName, "hw:%u,%u", card, device);
+        obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-       return interface_construct_soundcard_by_name(deviceName);
+        obj->type = interface_soundcard;
 
-   }
-
-   interface_obj * interface_construct_soundcard_by_name(char * deviceName) {
-
-       interface_obj * obj;
-
-       obj = (interface_obj *) malloc(sizeof(interface_obj));
-
-       // +----------------------------------------------------------+
-       // | Type                                                     |
-       // +----------------------------------------------------------+
-
-       obj->type = interface_soundcard;
-
-       // +----------------------------------------------------------+
-       // | Blackhole                                                |
-       // +----------------------------------------------------------+
-
-       // (Empty)
-
-       // +----------------------------------------------------------+
-       // | File                                                     |
-       // +----------------------------------------------------------+
-
-       obj->fileName = (char *) NULL;
-
-       // +----------------------------------------------------------+
-       // | Socket                                                   |
-       // +----------------------------------------------------------+
-
-       obj->ip = (char *) NULL;
-       obj->port = 0;
-
-       // +----------------------------------------------------------+
-       // | Soundcard                                                |
-       // +----------------------------------------------------------+
-
-       obj->deviceName = deviceName;
-
-       // +----------------------------------------------------------+
-       // | Terminal                                                 |
-       // +----------------------------------------------------------+
-
-       // (Empty)
+        obj->fileName = (char *) NULL;
+        obj->port = 0;
+        obj->deviceName = (char *) malloc(sizeof(char) * (strlen(deviceName)+1));
+        strcpy(obj->deviceName, deviceName);
 
        return obj;
 
@@ -276,42 +111,11 @@
 
         obj = (interface_obj *) malloc(sizeof(interface_obj));
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        obj->type = interface_terminal;
 
-            obj->type = interface_terminal;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) NULL;
-            obj->port = 0;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
+        obj->fileName = (char *) NULL;
+        obj->port = 0;
         obj->deviceName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
 
         return obj;
 
@@ -323,54 +127,27 @@
 
         clone = interface_construct();
 
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
+        clone->type = obj->type;        
 
-            clone->type = obj->type;        
+        if (obj->type == interface_file) {
+            
+            clone->fileName = (char *) malloc(sizeof(char) * (strlen(obj->fileName) + 1));
+            strcpy(clone->fileName, obj->fileName);
 
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
+        }
 
-            // (Empty)
+        if (obj->type == interface_socket) {
+            
+            clone->port = obj->port;
 
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
+        }
 
-            if (obj->type == interface_file) {
-                
-                clone->fileName = (char *) malloc(sizeof(char) * (strlen(obj->fileName) + 1));
-                strcpy(clone->fileName, obj->fileName);
+        if (obj->type == interface_soundcard) {
 
-            }
+            clone->deviceName = (char *) malloc(sizeof(char) * (strlen(obj->deviceName) + 1));
+            strcpy(clone->deviceName, obj->deviceName);
 
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+                
-
-            if (obj->type == interface_socket) {
-                
-                clone->ip = (char *) malloc(sizeof(char) * (strlen(obj->ip) + 1));
-                strcpy(clone->ip, obj->ip);
-                clone->port = obj->port;
-
-            }
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
-            if (obj->type == interface_soundcard) {
-                clone->deviceName = obj->deviceName;
-            }
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
+        }
 
         return clone;
 
@@ -384,17 +161,9 @@
 
         }
 
-        /* Will propably be freed somewhere else. Which is a bit ugly.
         if (obj->deviceName != NULL) {
 
             free((void *) obj->deviceName);
-
-        }
-        */
-
-        if (obj->ip != NULL) {
-
-            free((void *) obj->ip);
 
         }
 
@@ -416,19 +185,19 @@
 
                 case interface_file:
 
-                    printf("type = file, fileName = %s\n",obj->fileName);
+                    printf("type = file, fileName = %s\n", obj->fileName);
 
                 break;
 
                 case interface_socket:
 
-                    printf("type = socket, ip = %s, port = %u\n",obj->ip,obj->port);
+                    printf("type = socket, port = %u\n", obj->port);
 
                 break;
 
                 case interface_soundcard:
 
-                    printf("type = soundcard_name, devicename = %s\n",obj->deviceName);
+                    printf("type = soundcard, deviceName = %s\n", obj->deviceName);
 
                     break;
 

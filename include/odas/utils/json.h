@@ -71,8 +71,8 @@
 
     void json_tokens_extractFloat(const json_tokens * obj, const char * string, const int iToken, float * dest);
 
-    void json_tokens_extractFloats(const json_tokens * obj, const char * string, const int iToken, float * dest);
-
+    void json_tokens_extractInt(const json_tokens * obj, const char * string, const int iToken, int * dest);
+    
 
     int json_fsm_micro_digit09(const char * string, int offset);
 

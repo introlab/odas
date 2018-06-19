@@ -119,22 +119,19 @@ add_library(odas SHARED
     src/odas/utils/stringify.c
     src/odas/utils/transcendental.c
 
-    src/odas/aconnector/acon_categories.c
     src/odas/aconnector/acon_hops.c
     src/odas/aconnector/acon_pots.c
     src/odas/aconnector/acon_powers.c
     src/odas/aconnector/acon_spectra.c
     src/odas/aconnector/acon_targets.c
     src/odas/aconnector/acon_tracks.c
-    src/odas/ainjector/ainj_targets.c
-    src/odas/amessage/amsg_categories.c
     src/odas/amessage/amsg_hops.c
     src/odas/amessage/amsg_pots.c
     src/odas/amessage/amsg_powers.c
     src/odas/amessage/amsg_spectra.c
     src/odas/amessage/amsg_targets.c
     src/odas/amessage/amsg_tracks.c
-    src/odas/amodule/amod_classify.c
+    src/odas/amodule/amod_align.c
     src/odas/amodule/amod_istft.c
     src/odas/amodule/amod_lag.c
     src/odas/amodule/amod_mapping.c
@@ -144,32 +141,25 @@ add_library(odas SHARED
     src/odas/amodule/amod_sss.c
     src/odas/amodule/amod_sst.c
     src/odas/amodule/amod_stft.c
-    src/odas/amodule/amod_volume.c
-    src/odas/asink/asnk_categories.c
     src/odas/asink/asnk_hops.c    
     src/odas/asink/asnk_pots.c
-    src/odas/asink/asnk_powers.c
-    src/odas/asink/asnk_spectra.c
     src/odas/asink/asnk_tracks.c
-    src/odas/asource/asrc_hops.c  
-    
-    src/odas/connector/con_categories.c
+    src/odas/asource/asrc_hops.c
+    src/odas/asource/asrc_targets.c
+
     src/odas/connector/con_hops.c
     src/odas/connector/con_pots.c
     src/odas/connector/con_powers.c
     src/odas/connector/con_spectra.c
     src/odas/connector/con_targets.c
     src/odas/connector/con_tracks.c
-    src/odas/injector/inj_targets.c
-    src/odas/message/msg_categories.c
     src/odas/message/msg_hops.c
     src/odas/message/msg_pots.c
     src/odas/message/msg_powers.c
     src/odas/message/msg_spectra.c
     src/odas/message/msg_targets.c
     src/odas/message/msg_tracks.c
-    src/odas/module/mod_bf.c
-    src/odas/module/mod_classify.c
+    src/odas/module/mod_align.c
     src/odas/module/mod_istft.c
     src/odas/module/mod_lag.c
     src/odas/module/mod_mapping.c
@@ -179,21 +169,11 @@ add_library(odas SHARED
     src/odas/module/mod_sss.c
     src/odas/module/mod_sst.c
     src/odas/module/mod_stft.c
-    src/odas/module/mod_tt.c
-    src/odas/module/mod_volume.c
-    src/odas/sink/snk_categories.c
     src/odas/sink/snk_hops.c
     src/odas/sink/snk_pots.c
-    src/odas/sink/snk_powers.c
-    src/odas/sink/snk_spectra.c
     src/odas/sink/snk_tracks.c
     src/odas/source/src_hops.c
-
-    src/odas/deserializer/dsr_hops.c
-    src/odas/deserializer/dsr_targets.c
-
-    src/odas/serializer/ser_hops.c
-    src/odas/serializer/ser_tracks.c
+    src/odas/source/src_targets.c
 
 )
 
@@ -206,36 +186,18 @@ target_link_libraries(odas
 
 )
 
-add_executable(server-bf
+add_executable(core
 
-    demo/server/bf/main.c
-    demo/server/bf/configs.c
-    demo/server/bf/objects.c
-    demo/server/bf/params.c
-    demo/server/bf/settings.c
-    
-)
+    demo/core/main.c
 
-target_link_libraries(server-bf
-
-    odas
-    ${PC_LIBCONFIG_LIBRARIES}
+    demo/core/configs.c
+    demo/core/objects.c
+    demo/core/params.c
+    demo/core/settings.c
 
 )
 
-add_executable(client
-
-    demo/client/file/main.c
-
-)
-
-add_executable(debug
-
-    demo/debug/test.c
-
-)
-
-target_link_libraries(debug
+target_link_libraries(core
 
     odas
 

@@ -23,13 +23,13 @@
 
     #include <amodule/amod_sss.h>
 
-    amod_sss_obj * amod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config) {
+    amod_sss_obj * amod_sss_construct(const mod_sss_cfg * mod_sss_config, const msg_tracks_cfg * msg_tracks_config, const msg_spectra_cfg * msg_spectra_config, const msg_powers_cfg * msg_powers_config) {
 
         amod_sss_obj * obj;
 
         obj = (amod_sss_obj *) malloc(sizeof(amod_sss_obj));
 
-        obj->mod_sss = mod_sss_construct(mod_sss_config, msg_tracks_config, msg_spectra_config);
+        obj->mod_sss = mod_sss_construct(mod_sss_config, msg_tracks_config, msg_spectra_config, msg_powers_config);
 
         obj->in1 = (amsg_spectra_obj *) NULL;
         obj->in2 = (amsg_powers_obj *) NULL;

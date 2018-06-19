@@ -1,8 +1,8 @@
-#ifndef __ODAS_CONNECTOR_CATEGORIES
-#define __ODAS_CONNECTOR_CATEGORIES
+#ifndef __ODAS_ASOURCE_TARGETS
+#define __ODAS_ASOURCE_TARGETS
 
     /**
-    * \file     con_categories.h
+    * \file     asource_hops.h
     * \author   François Grondin <francois.grondin2@usherbrooke.ca>
     * \version  2.0
     * \date     2018-03-18
@@ -23,24 +23,28 @@
     *
     */
 
-    #include "../message/msg_categories.h"
+    #include "../amessage/amsg_targets.h"
+    #include "../source/src_targets.h"
+    #include "../general/thread.h"
 
     #include <stdlib.h>
-    #include <stdio.h>
 
-    typedef struct con_categories_obj {
+    typedef struct asrc_targets_obj {
 
-        msg_categories_obj * in;
-        msg_categories_obj ** outs;
+        src_targets_obj * src_targets;
+        amsg_targets_obj * out;
+        thread_obj * thread;
 
-        unsigned int nOuts;
+    } asrc_targets_obj;
 
-    } con_categories_obj;
+    asrc_targets_obj * asrc_targets_construct(const src_targets_cfg * src_targets_config, const msg_targets_cfg * msg_targets_config);
 
-    con_categories_obj * con_categories_construct(const unsigned int nOuts, const msg_categories_cfg * msg_categories_config);
+    void asrc_targets_destroy(asrc_targets_obj * obj);
 
-    void con_categories_destroy(con_categories_obj * obj);
+    void asrc_targets_connect(asrc_targets_obj * obj, amsg_targets_obj * out);
 
-    int con_categories_process(con_categories_obj * obj);
+    void asrc_targets_disconnect(asrc_targets_obj * obj);
+
+    void * asrc_targets_thread(void * ptr);
 
 #endif

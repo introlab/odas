@@ -50,7 +50,7 @@
     void msg_targets_zero(msg_targets_obj * obj);
 
     unsigned int msg_targets_isZero(const msg_targets_obj * obj);
-
+                      
     msg_targets_cfg * msg_targets_cfg_construct(void);
 
     void msg_targets_cfg_destroy(msg_targets_cfg * cfg);

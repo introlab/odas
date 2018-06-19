@@ -40,7 +40,7 @@
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
-        if (!(((obj->interface->type == interface_blackhole)  && (obj->format->type == format_undefined)) ||
+        if (!(((obj->interface->type == interface_blackhole)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int24)) ||
@@ -138,7 +138,7 @@
     }
 
     void snk_hops_open_interface_socket(snk_hops_obj * obj) {
-
+/*
         memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
 
         obj->sserver.sin_family = AF_INET;
@@ -152,7 +152,7 @@
             exit(EXIT_FAILURE);
 
         }          
-
+*/
     }
 
     void snk_hops_close(snk_hops_obj * obj) {
@@ -202,7 +202,7 @@
 
     void snk_hops_close_interface_socket(snk_hops_obj * obj) {
 
-        close(obj->sid);
+        //close(obj->sid);
 
     }
 
@@ -308,12 +308,12 @@
     }
 
     void snk_hops_process_interface_socket(snk_hops_obj * obj) {
-
+/*
         if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
             printf("Sink hops: Could not send message.\n");
             exit(EXIT_FAILURE);
         }
-
+*/
     }
 
     void snk_hops_process_format_binary_int08(snk_hops_obj * obj) {
