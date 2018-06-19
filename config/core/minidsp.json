@@ -1,0 +1,393 @@
+{
+
+    "version": 
+    {
+
+        "major": 3,
+        "minor": 0
+
+    },
+
+    "raw":
+    {
+
+        "format":
+        {
+
+            "fS": 48000,
+            "hopSize": 512,
+            "nBits": 32
+
+        },
+
+        "nChannels": 7,
+
+        "input":
+        {
+            
+            "type": "soundcard",
+            "file": { "path": "" }, "socket": { "port": 0 }, "soundcard": { "device": "" }
+
+        },
+
+        "output":
+        {
+
+            "type": "blackhole",
+            "file": { "path": "" }, "socket": { "port": 0 }
+
+        }
+
+    },
+
+    "mapping":
+    {
+
+        "map": [1, 2, 3, 4, 5, 6, 7]
+
+    },
+
+    "general":
+    {
+        
+        "epsilon": 1E-20,
+
+        "size": 
+        {
+            "hopSize": 128,
+            "frameSize": 256
+        },
+        
+        "samplerate":
+        {
+            "mu": 16000,
+            "sigma2": 0.01
+        },
+
+        "speedofsound":
+        {
+            "mu": 343.0,
+            "sigma2": 25.0
+        },
+
+        "mics":
+        [
+            
+            { 
+                "mu": [ 0.000, 0.000, 0.000 ],
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]
+            },
+
+            { 
+                "mu": [ 0.000, 0.043, 0.000 ], 
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]
+            },
+
+            { 
+                "mu": [ 0.037, 0.021, 0.000], 
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]
+            },
+
+            { 
+                "mu": [ 0.037, -0.021, 0.000 ], 
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]
+            },
+
+            { 
+                "mu": [ 0.000, -0.043, 0.000 ], 
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]        
+            },
+
+            { 
+                "mu": [ -0.037, -0.021, 0.000 ],
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]        
+            },
+
+            { 
+                "mu": [ -0.037, 0.021, 0.000 ], 
+                "sigma2": [ 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 ],
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 100.0 ]        
+            }
+            
+        ],
+
+        "spatialfilters":
+        [
+
+            {
+
+                "direction": [ 0.000, 0.000, 1.000 ],
+                "angle": [ 90.0, 95.0 ]
+
+            }
+
+        ],
+
+        "nThetas": 181,
+        "gainMin": 0.25
+
+    },
+
+    "sne":
+    {
+
+        "b": 3,
+        "alphaS": 0.1,
+        "L": 150,
+        "delta": 3.0,
+        "alphaD": 0.1
+
+    },
+
+    "ssl":
+    {
+
+        "nPots": 4,
+        "nMatches": 10,
+        "probMin": 0.5,
+        "nRefinedLevels": 1,
+        "interpRate": 4,
+
+        "scans":
+        [
+            { "level": 2, "delta": -1 },
+            { "level": 4, "delta": -1 }
+        ],
+
+        "output":
+        {
+
+            "type": "blackhole",
+            "file": { "path": "" }, "socket": { "port": 0 }
+
+        }
+
+    },
+
+    "sst":
+    {
+
+        "mode": "kalman",
+        "add": "dynamic",
+
+        "energy":
+        {
+            "active":
+            [
+                { "weight": 1.0, "mu": 0.4, "sigma2": 0.0025 }
+            ],
+
+            "inactive":
+            [
+                { "weight": 1.0, "mu": 0.25, "sigma2": 0.0025 }
+            ]
+        },
+
+        "sigmaR2":
+        {
+            "prob": 0.0025,
+            "active": 0.0225,
+            "target": 0.0025
+        },
+
+        "P":
+        {
+            "false": 0.1,
+            "new": 0.1,
+            "track": 0.8
+        },
+
+        "levels":
+        {
+
+            "new":
+            {
+                "theta": 0.3
+            },
+
+            "prob":
+            {
+                "theta": 0.8,
+                "N": 5
+            },
+
+            "inactive":
+            {
+                "theta": 0.9,
+                "N": [ 150, 150, 150, 150 ]
+            }
+
+        },
+
+        "kalman":
+        {
+            "sigmaQ": 0.001
+        },
+
+        "particle":
+        {
+
+            "nParticles": 1000,
+
+            "stationary":
+            {
+                "alpha": 2.0,
+                "beta": 0.04,
+                "ratio": 0.5
+            },
+
+            "velocity":
+            {
+                "alpha": 0.05,
+                "beta": 0.2,
+                "ratio": 0.3
+            },
+
+            "acceleration":
+            {
+                "alpha": 0.5,
+                "beta": 0.2,
+                "ratio": 0.2
+            },
+
+            "Nmin": 0.7
+
+        },
+
+        "targets":
+        [
+            { "tag": "fan", "x": 0.0, "y": 0.0, "z": 1.0 }
+        ],
+
+        "input":
+        {
+
+            "type": "blackhole",
+            "file": { "path": "" }, "socket": { "port": 0 }
+
+        },
+
+        "output":
+        {
+
+            "type": "blackhole",
+            "file": { "path": "" }, "socket": { "port": 0 }            
+
+        }
+
+    },
+
+    "sss":
+    {
+
+        "separation":
+        {
+
+            "mode": "dds",
+
+            "techniques":
+            {
+
+                "dds": {},
+
+                "dgss":
+                {
+
+                    "mu": 0.01,
+                    "lambda": 0.5
+
+                },
+
+                "dmvdr": {}
+
+            },
+
+            "format":
+            {
+
+                "fS": 48000,
+                "hopSize": 512,
+                "nBits": 32
+
+            },
+
+            "output":
+            {
+
+                "type": "blackhole",
+                "file": { "path": "" }, "socket": { "port": 0 }            
+
+            }
+
+        },
+
+        "postfiltering":
+        {
+
+            "mode": "ss",
+
+            "techniques":
+            {
+
+                "ms":
+                {
+
+                    "alphaPmin": 0.07,
+                    "eta": 0.5,
+                    "alphaZ": 0.8,
+                    "thetaWin": 0.3,
+                    "alphaWin": 0.3,
+                    "maxAbsenceProb": 0.9,
+                    "Gmin": 0.01,
+                    "winSizeLocal": 3,
+                    "winSizeGlobal": 23,
+                    "winSizeFrame": 256
+
+                },
+
+                "ss":
+                {
+
+                    "Gmin": 0.01,
+                    "Gmid": 0.5,
+                    "Gslope": 10.0
+
+                }
+
+            },
+
+            "format":
+            {
+
+                "fS": 48000,
+                "hopSize": 512,
+                "nBits": 32
+
+            },
+
+            "output":
+            {
+
+                "type": "blackhole",
+                "file": { "path": "" }, "socket": { "port": 0 }            
+
+            }            
+
+        }
+
+    }
+
+}
