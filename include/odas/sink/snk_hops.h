@@ -51,7 +51,6 @@
         unsigned int bufferSize;
 
         FILE * fp;
-        struct sockaddr_in * server_address;
         int server_id;
         int connection_id;
 

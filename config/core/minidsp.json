@@ -14,9 +14,9 @@
         "format":
         {
 
-            "fS": 48000,
-            "hopSize": 512,
-            "nBits": 32
+            "fS": 16000,
+            "hopSize": 128,
+            "nBits": 16
 
         },
 
@@ -25,16 +25,16 @@
         "input":
         {
             
-            "type": "soundcard",
-            "file": { "path": "" }, "socket": { "port": 0 }, "soundcard": { "device": "" }
+            "type": "socket",
+            "file": { "path": "" }, "socket": { "port": 5000 }, "soundcard": { "device": "" }
 
         },
 
         "output":
         {
 
-            "type": "blackhole",
-            "file": { "path": "" }, "socket": { "port": 0 }
+            "type": "file",
+            "file": { "path": "output.raw" }, "socket": { "port": 0 }
 
         }
 
@@ -170,8 +170,8 @@
         "output":
         {
 
-            "type": "blackhole",
-            "file": { "path": "" }, "socket": { "port": 0 }
+            "type": "file",
+            "file": { "path": "pots.json" }, "socket": { "port": 0 }
 
         }
 
@@ -283,8 +283,8 @@
         "output":
         {
 
-            "type": "blackhole",
-            "file": { "path": "" }, "socket": { "port": 0 }            
+            "type": "file",
+            "file": { "path": "tracks.json" }, "socket": { "port": 0 }            
 
         }
 
@@ -292,6 +292,8 @@
 
     "sss":
     {
+
+        "offset": 10,
 
         "separation":
         {
@@ -318,17 +320,17 @@
             "format":
             {
 
-                "fS": 48000,
-                "hopSize": 512,
-                "nBits": 32
+                "fS": 16000,
+                "hopSize": 128,
+                "nBits": 16
 
             },
 
             "output":
             {
 
-                "type": "blackhole",
-                "file": { "path": "" }, "socket": { "port": 0 }            
+                "type": "file",
+                "file": { "path": "separated.raw" }, "socket": { "port": 0 }            
 
             }
 
@@ -372,9 +374,9 @@
             "format":
             {
 
-                "fS": 48000,
-                "hopSize": 512,
-                "nBits": 32
+                "fS": 16000,
+                "hopSize": 128,
+                "nBits": 16
 
             },
 

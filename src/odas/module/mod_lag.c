@@ -30,6 +30,11 @@
 
         obj = (mod_lag_obj *) malloc(sizeof(mod_lag_obj));
 
+        if (mod_lag_config->nElements == 0) {
+            printf("The number of elements must be at least 1\n");
+            exit(EXIT_FAILURE);
+        }
+
         obj->nElements = mod_lag_config->nElements;
 
         obj->freqs = (freqs_obj **) malloc(sizeof(freqs_obj *) * obj->nElements);

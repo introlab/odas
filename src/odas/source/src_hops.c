@@ -40,7 +40,6 @@
 
         obj->fp = (FILE *) NULL;
         obj->ch = (snd_pcm_t *) NULL;
-        obj->server_address = (struct sockaddr_in *) NULL;
         obj->server_id = 0;
         obj->connection_id = 0;
 
@@ -164,17 +163,17 @@
 
     void src_hops_open_interface_socket(src_hops_obj * obj) {
 
-        obj->server_address = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
+        struct sockaddr_in server_address;
 
-        obj->server_address->sin_family = AF_INET;
-        obj->server_address->sin_addr.s_addr = htonl(INADDR_ANY);
-        obj->server_address->sin_port = htons(obj->interface->port);
+        server_address.sin_family = AF_INET;
+        server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+        server_address.sin_port = htons(obj->interface->port);
 
         obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
-
-        bind(obj->server_id, (struct sockaddr *) obj->server_address, sizeof(*(obj->server_address)));
+        
+        bind(obj->server_id, (struct sockaddr *) &server_address, sizeof(server_address));
         listen(obj->server_id, 1);
-        obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
+        obj->connection_id = accept(obj->server_id, (struct sockaddr*) NULL, NULL);
 
     }
 
@@ -324,7 +323,6 @@
         close(obj->connection_id);
         close(obj->server_id);
 
-        free((void *) obj->server_address);
         obj->server_id = 0;
         obj->connection_id = 0;
 
@@ -473,6 +471,7 @@
 
     int src_hops_process_interface_socket(src_hops_obj * obj) {
 
+        int rtnValue;
         unsigned int nBytes;
         unsigned int messageSize;
 
@@ -486,7 +485,16 @@
                 break;
             }
 
-        }        
+        }
+
+        if (messageSize == 0) {
+            rtnValue = -1;
+        }
+        else {
+            rtnValue = 0;
+        }
+
+        return rtnValue;
 
     }
 
