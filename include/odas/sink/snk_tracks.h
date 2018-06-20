@@ -49,10 +49,10 @@
         unsigned int bufferSize;
 
         FILE * fp;
-
-        struct sockaddr_in sserver;
-        int sid;
-
+        struct sockaddr_in * server_address;
+        int server_id;
+        int connection_id;     
+        
         msg_tracks_obj * in;
 
     } snk_tracks_obj;
@@ -104,8 +104,6 @@
     void snk_tracks_process_interface_terminal(snk_tracks_obj * obj);
 
     void snk_tracks_process_format_text_json(snk_tracks_obj * obj);
-
-    void snk_tracks_process_format_undefined(snk_tracks_obj * obj);
 
     snk_tracks_cfg * snk_tracks_cfg_construct(void);
 

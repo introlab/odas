@@ -207,6 +207,9 @@
 
     void src_targets_close_interface_socket(src_targets_obj * obj) {
 
+        close(obj->connection_id);
+        close(obj->server_id);
+
         free((void *) obj->server_address);
         obj->server_id = 0;
         obj->connection_id = 0;

@@ -48,9 +48,12 @@
         }
 
         obj->fp = (FILE *) NULL;
+        obj->server_address = (struct sockaddr_in *) NULL;
+        obj->server_id = 0;
+        obj->connection_id = 0;                
 
-        obj->buffer = (char *) malloc(sizeof(char) * 1024);
-        memset(obj->buffer, 0x00, sizeof(char) * 1024);
+        obj->buffer = (char *) malloc(sizeof(char) * 4096);
+        memset(obj->buffer, 0x00, sizeof(char) * 4096);
         obj->bufferSize = 0;
 
         obj->in = (msg_tracks_obj *) NULL;
@@ -123,7 +126,7 @@
 
     void snk_tracks_open_interface_blackhole(snk_tracks_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -139,26 +142,24 @@
     }
 
     void snk_tracks_open_interface_socket(snk_tracks_obj * obj) {
-/*
-        memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
 
-        obj->sserver.sin_family = AF_INET;
-        obj->sserver.sin_addr.s_addr = inet_addr(obj->interface->ip);
-        obj->sserver.sin_port = htons(obj->interface->port);
-        obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+        obj->server_address = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
 
-        if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
+        obj->server_address->sin_family = AF_INET;
+        obj->server_address->sin_addr.s_addr = htonl(INADDR_ANY);
+        obj->server_address->sin_port = htons(obj->interface->port);
 
-            printf("Sink tracks: Cannot connect to server\n");
-            exit(EXIT_FAILURE);
+        obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
 
-        }   
-*/
+        bind(obj->server_id, (struct sockaddr *) obj->server_address, sizeof(*(obj->server_address)));
+        listen(obj->server_id, 1);
+        obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
+
     }
 
     void snk_tracks_open_interface_terminal(snk_tracks_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -215,13 +216,18 @@
 
     void snk_tracks_close_interface_socket(snk_tracks_obj * obj) {
 
-        //close(obj->sid);
+        close(obj->connection_id);
+        close(obj->server_id);
+
+        free((void *) obj->server_address);
+        obj->server_id = 0;
+        obj->connection_id = 0;
 
     }
 
     void snk_tracks_close_interface_terminal(snk_tracks_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -236,12 +242,6 @@
                 case format_text_json:
 
                     snk_tracks_process_format_text_json(obj);
-
-                break;
-
-                case format_undefined:
-
-                    snk_tracks_process_format_undefined(obj);
 
                 break;
 
@@ -315,12 +315,12 @@
     }
 
     void snk_tracks_process_interface_socket(snk_tracks_obj * obj) {
-/*
-        if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
+
+        if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
             printf("Sink tracks: Could not send message.\n");
             exit(EXIT_FAILURE);
         }  
-*/
+
     }
 
     void snk_tracks_process_interface_terminal(snk_tracks_obj * obj) {
@@ -364,13 +364,6 @@
         sprintf(obj->buffer,"%s}\n",obj->buffer);
 
         obj->bufferSize = strlen(obj->buffer);
-
-    }
-
-    void snk_tracks_process_format_undefined(snk_tracks_obj * obj) {
-
-        obj->buffer[0] = 0x00;
-        obj->bufferSize = 0;
 
     }
 

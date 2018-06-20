@@ -51,9 +51,9 @@
         unsigned int bufferSize;
 
         FILE * fp;
-
-        struct sockaddr_in sserver;
-        int sid;
+        struct sockaddr_in * server_address;
+        int server_id;
+        int connection_id;
 
         char bytes[4];
 
@@ -108,8 +108,6 @@
     void snk_hops_process_format_binary_int24(snk_hops_obj * obj);
 
     void snk_hops_process_format_binary_int32(snk_hops_obj * obj);
-
-    void snk_hops_process_format_undefined(snk_hops_obj * obj);
 
     snk_hops_cfg * snk_hops_cfg_construct(void);
 

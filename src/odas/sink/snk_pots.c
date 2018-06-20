@@ -38,7 +38,6 @@
         obj->interface = interface_clone(snk_pots_config->interface);
 
         if (!(((obj->interface->type == interface_blackhole)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_float)) ||
               ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
               ((obj->interface->type == interface_socket)  && (obj->format->type == format_text_json)) ||
               ((obj->interface->type == interface_terminal) && (obj->format->type == format_text_json)))) {
@@ -49,9 +48,12 @@
         }
 
         obj->fp = (FILE *) NULL;
+        obj->server_address = (struct sockaddr_in *) NULL;
+        obj->server_id = 0;
+        obj->connection_id = 0;        
 
-        obj->buffer = (char *) malloc(sizeof(char) * 1024);
-        memset(obj->buffer, 0x00, sizeof(char) * 1024);
+        obj->buffer = (char *) malloc(sizeof(char) * 4096);
+        memset(obj->buffer, 0x00, sizeof(char) * 4096);
         obj->bufferSize = 0;
 
         obj->in = (msg_pots_obj *) NULL;
@@ -140,26 +142,24 @@
     }
 
     void snk_pots_open_interface_socket(snk_pots_obj * obj) {
-/*
-        memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
 
-        obj->sserver.sin_family = AF_INET;
-        obj->sserver.sin_addr.s_addr = inet_addr(obj->interface->ip);
-        obj->sserver.sin_port = htons(obj->interface->port);
-        obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+        obj->server_address = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));
 
-        if ( (connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0 ) {
+        obj->server_address->sin_family = AF_INET;
+        obj->server_address->sin_addr.s_addr = htonl(INADDR_ANY);
+        obj->server_address->sin_port = htons(obj->interface->port);
 
-            printf("Sink pots: Cannot connect to server\n");
-            exit(EXIT_FAILURE);
+        obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
 
-        }  
-*/
+        bind(obj->server_id, (struct sockaddr *) obj->server_address, sizeof(*(obj->server_address)));
+        listen(obj->server_id, 1);
+        obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
+
     }
 
     void snk_pots_open_interface_terminal(snk_pots_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -204,7 +204,7 @@
 
     void snk_pots_close_interface_blackhole(snk_pots_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -216,13 +216,18 @@
 
     void snk_pots_close_interface_socket(snk_pots_obj * obj) {
 
-        //close(obj->sid);
+        close(obj->connection_id);
+        close(obj->server_id);
+
+        free((void *) obj->server_address);
+        obj->server_id = 0;
+        obj->connection_id = 0;
 
     }
 
     void snk_pots_close_interface_terminal(snk_pots_obj * obj) {
 
-        // Empty
+        // Nothing to do
 
     }
 
@@ -234,21 +239,9 @@
 
             switch(obj->format->type) {
 
-                case format_binary_float:
-
-                    snk_pots_process_format_binary_float(obj);
-
-                break;
-
                 case format_text_json:
 
                     snk_pots_process_format_text_json(obj);
-
-                break;
-
-                case format_undefined:                
-
-                    snk_pots_process_format_undefined(obj);
 
                 break;
 
@@ -322,24 +315,17 @@
     }
 
     void snk_pots_process_interface_socket(snk_pots_obj * obj) {
-/*
-        if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
+
+        if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
             printf("Sink pots: Could not send message.\n");
             exit(EXIT_FAILURE);
         }        
-*/
+
     }
 
     void snk_pots_process_interface_terminal(snk_pots_obj * obj) {
 
         printf("%s",obj->buffer);
-
-    }
-
-    void snk_pots_process_format_binary_float(snk_pots_obj * obj) {
-
-        memcpy(obj->buffer, obj->in->pots->array, sizeof(float) * 4 * obj->in->pots->nPots);
-        obj->bufferSize = sizeof(float) * 4 * obj->in->pots->nPots;        
 
     }
 
@@ -372,13 +358,6 @@
         sprintf(obj->buffer,"%s}\n",obj->buffer);        
 
         obj->bufferSize = strlen(obj->buffer);
-
-    }
-
-    void snk_pots_process_format_undefined(snk_pots_obj * obj) {
-
-        obj->buffer[0] = 0x00;
-        obj->bufferSize = 0;        
 
     }
 
