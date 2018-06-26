@@ -19,9 +19,6 @@
         amod_stft_obj * amod_stft;
         acon_spectra_obj * acon_spectra;
 
-        amod_noise_obj * amod_noise;
-        acon_powers_obj * acon_powers;
-
         amod_ssl_obj * amod_ssl;
         acon_pots_obj * acon_pots;
         asnk_pots_obj * asnk_pots;
@@ -31,7 +28,9 @@
         asnk_tracks_obj * asnk_tracks;
 
         amod_lag_obj * amod_lag;
-        acon_spectra_obj * acon_spectra_lag;
+        acon_spectra_obj * acon_spectra_delay;
+        amod_noise_obj * amod_noise_delay;
+        acon_powers_obj * acon_powers_delay;
 
         amod_sss_obj * amod_sss;
 

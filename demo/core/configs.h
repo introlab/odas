@@ -17,9 +17,6 @@
         mod_stft_cfg * mod_stft_config;
         msg_spectra_cfg * msg_spectra_config;
 
-        mod_noise_cfg * mod_noise_config;
-        msg_powers_cfg * msg_powers_config;
-
         mod_ssl_cfg * mod_ssl_config;
         msg_pots_cfg * msg_pots_config;
         snk_pots_cfg * snk_pots_config;
@@ -29,7 +26,9 @@
         snk_tracks_cfg * snk_tracks_config;
 
         mod_lag_cfg * mod_lag_config;
-        msg_spectra_cfg * msg_spectra_lag_config;
+        msg_spectra_cfg * msg_spectra_delay_config;
+        mod_noise_cfg * mod_noise_delay_config;
+        msg_powers_cfg * msg_powers_delay_config;
 
         mod_sss_cfg * mod_sss_config;
 

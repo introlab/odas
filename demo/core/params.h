@@ -25,10 +25,6 @@
 
     void params_process_msg_spectra(const settings * sets, msg_spectra_cfg * cfg);
 
-    void params_process_mod_noise(const settings * sets, mod_noise_cfg * cfg);
-
-    void params_process_msg_powers(const settings * sets, msg_powers_cfg * cfg);
-
     void params_process_mod_ssl(const settings * sets, mod_ssl_cfg * cfg);
 
     void params_process_msg_pots(const settings * sets, msg_pots_cfg * cfg);
@@ -43,7 +39,11 @@
 
     void params_process_mod_lag(const settings * sets, mod_lag_cfg * cfg);
 
-    void params_process_msg_spectra_lag(const settings * sets, msg_spectra_cfg * cfg);
+    void params_process_msg_spectra_delay(const settings * sets, msg_spectra_cfg * cfg);
+
+    void params_process_mod_noise_delay(const settings * sets, mod_noise_cfg * cfg);
+
+    void params_process_msg_powers_delay(const settings * sets, msg_powers_cfg * cfg);
 
     void params_process_mod_sss(const settings * sets, mod_sss_cfg * cfg);
 

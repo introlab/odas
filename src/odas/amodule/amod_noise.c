@@ -92,8 +92,6 @@
             amsg_spectra_empty_push(obj->in, msg_spectra_in);
             amsg_powers_filled_push(obj->out, msg_powers_out);
 
-            printf("amod_noise: %llu\n", msg_powers_out->timeStamp);
-
             // If this is the last frame, rtnValue = -1
             if (rtnValue == -1) {
                 break;

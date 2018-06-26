@@ -49,6 +49,20 @@
 
     }
 
+    void amod_lag_connect(amod_lag_obj * obj, amsg_spectra_obj * in, amsg_spectra_obj * out) {
+
+        obj->in = in;
+        obj->out = out;
+
+    }
+
+    void amod_lag_disconnect(amod_lag_obj * obj) {
+
+        obj->in = (amsg_spectra_obj *) NULL;
+        obj->out = (amsg_spectra_obj *) NULL;
+
+    }
+
     void * amod_lag_thread(void * ptr) {
 
         amod_lag_obj * obj;

@@ -14,9 +14,6 @@
         params_process_mod_stft(sets, cfgs->mod_stft_config);
         params_process_msg_spectra(sets, cfgs->msg_spectra_config);
 
-        params_process_mod_noise(sets, cfgs->mod_noise_config);
-        params_process_msg_powers(sets, cfgs->msg_powers_config);
-
         params_process_mod_ssl(sets, cfgs->mod_ssl_config);
         params_process_msg_pots(sets, cfgs->msg_pots_config);
         params_process_snk_pots(scks, cfgs->snk_pots_config);
@@ -26,7 +23,9 @@
         params_process_snk_tracks(scks, cfgs->snk_tracks_config);
 
         params_process_mod_lag(sets, cfgs->mod_lag_config);
-        params_process_msg_spectra_lag(sets, cfgs->msg_spectra_lag_config);
+        params_process_msg_spectra_delay(sets, cfgs->msg_spectra_delay_config);
+        params_process_mod_noise_delay(sets, cfgs->mod_noise_delay_config);
+        params_process_msg_powers_delay(sets, cfgs->msg_powers_delay_config);
 
         params_process_mod_sss(sets, cfgs->mod_sss_config);
         
@@ -86,23 +85,6 @@
     }
 
     void params_process_msg_spectra(const settings * sets, msg_spectra_cfg * cfg) {
-
-        cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
-        cfg->nChannels = sets->general.mics.N;
-
-    }
-
-    void params_process_mod_noise(const settings * sets, mod_noise_cfg * cfg) {
-
-        cfg->bSize = sets->sne.b;
-        cfg->alphaS = sets->sne.alphaS;
-        cfg->L = sets->sne.L;
-        cfg->delta = sets->sne.delta;
-        cfg->alphaD = sets->sne.alphaD;
-
-    }
-
-    void params_process_msg_powers(const settings * sets, msg_powers_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
         cfg->nChannels = sets->general.mics.N;
@@ -301,12 +283,30 @@
 
     }
 
-    void params_process_msg_spectra_lag(const settings * sets, msg_spectra_cfg * cfg) {
+    void params_process_msg_spectra_delay(const settings * sets, msg_spectra_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
         cfg->nChannels = sets->general.mics.N;
 
     }
+
+    void params_process_mod_noise_delay(const settings * sets, mod_noise_cfg * cfg) {
+
+        cfg->bSize = sets->sne.b;
+        cfg->alphaS = sets->sne.alphaS;
+        cfg->L = sets->sne.L;
+        cfg->delta = sets->sne.delta;
+        cfg->alphaD = sets->sne.alphaD;
+
+    }
+
+    void params_process_msg_powers_delay(const settings * sets, msg_powers_cfg * cfg) {
+
+        cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
+        cfg->nChannels = sets->general.mics.N;
+
+    }
+
 
     void params_process_mod_sss(const settings * sets, mod_sss_cfg * cfg) {
 

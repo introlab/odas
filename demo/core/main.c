@@ -98,7 +98,6 @@
         printf(" Initializing configs..... "); fflush(stdout); 
         cfgs = configs_construct();
         params_process(sets, scks, cfgs);
-        sockets_printf(scks);
         printf("[Done]\n");
 
         printf(" Terminating settings..... "); fflush(stdout);
