@@ -23,6 +23,7 @@
 		char * line;
 		char * string;
 		FILE * fp;
+		char * rtnPtr;
 
 		unsigned int nTokens = 4096;
 		unsigned int nBytesPerLine = 1024;
@@ -387,7 +388,7 @@
 		if (fp == NULL) { printf("Cannot open file %s\n", file); exit(EXIT_FAILURE); }
 		while(feof(fp)==0) {
 			line[0] = 0x00;
-			fgets(line, nBytesPerLine, fp);
+			rtnPtr = fgets(line, nBytesPerLine, fp);
 			strcat(string, line);
 		}
 		fclose(fp);
