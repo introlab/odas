@@ -66,19 +66,19 @@ All other ununed ports are set to 0.
 Suppose you are using a UMA8 microphone array from MiniDSP, you can use the following configuration file:
 
 ```
-config/minidsp/uma8.json
+settings/config/minidsp/uma8.json
 ```
 
 Now the following socket file defines the ports used in this example:
 
 ```
-socket/sst.json
+settings/socket/sst.json
 ```
 
 Then you can launch odas:
 
 ```
-bin/core -c config/minidsp/uma8.json -s socket/ssl.json 
+bin/core -c settings/config/minidsp/uma8.json -s settings/socket/ssl.json 
 ```
 
 You should see something like this:
