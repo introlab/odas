@@ -36,8 +36,6 @@
 
         obj->thread = thread_construct(&amod_ssl_thread, (void *) obj);
 
-        mod_ssl_disable(obj->mod_ssl);
-
         return obj;
 
     }
@@ -65,18 +63,6 @@
 
     }
 
-    void amod_ssl_enable(amod_ssl_obj * obj) {
-
-        mod_ssl_enable(obj->mod_ssl);
-
-    }
-
-    void amod_ssl_disable(amod_ssl_obj * obj) {
-
-        mod_ssl_disable(obj->mod_ssl);
-
-    }
-
     void * amod_ssl_thread(void * ptr) {
 
         amod_ssl_obj * obj;
@@ -85,6 +71,15 @@
         int rtnValue;
 
         obj = (amod_ssl_obj *) ptr;
+
+        if (obj->in == NULL) {
+            printf("amod_ssl: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out == NULL) {
+            printf("amod_ssl: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
 
         while(1) {
 

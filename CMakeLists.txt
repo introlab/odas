@@ -7,8 +7,6 @@ endif(COMMAND cmake_policy)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
-pkg_check_modules(PC_ALSA REQUIRED alsa)
-pkg_check_modules(PC_LIBCONFIG REQUIRED libconfig)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
@@ -24,8 +22,6 @@ add_subdirectory(include)
 
 add_library(odas SHARED
 
-    src/odas/general/format.c
-    src/odas/general/interface.c
     src/odas/general/link.c
     src/odas/general/mic.c
     src/odas/general/samplerate.c
@@ -116,7 +112,7 @@ add_library(odas SHARED
     src/odas/utils/matrix.c
     src/odas/utils/pcm.c
     src/odas/utils/random.c
-    src/odas/utils/stringify.c
+    src/odas/utils/share.c
     src/odas/utils/transcendental.c
 
     src/odas/aconnector/acon_hops.c
@@ -131,18 +127,16 @@ add_library(odas SHARED
     src/odas/amessage/amsg_spectra.c
     src/odas/amessage/amsg_targets.c
     src/odas/amessage/amsg_tracks.c
-    src/odas/amodule/amod_align.c
     src/odas/amodule/amod_istft.c
     src/odas/amodule/amod_lag.c
-    src/odas/amodule/amod_mapping.c
     src/odas/amodule/amod_noise.c
-    src/odas/amodule/amod_resample.c
     src/odas/amodule/amod_ssl.c
     src/odas/amodule/amod_sss.c
     src/odas/amodule/amod_sst.c
     src/odas/amodule/amod_stft.c
     src/odas/asink/asnk_hops.c    
     src/odas/asink/asnk_pots.c
+    src/odas/asink/asnk_targets.c
     src/odas/asink/asnk_tracks.c
     src/odas/asource/asrc_hops.c
     src/odas/asource/asrc_targets.c
@@ -159,18 +153,16 @@ add_library(odas SHARED
     src/odas/message/msg_spectra.c
     src/odas/message/msg_targets.c
     src/odas/message/msg_tracks.c
-    src/odas/module/mod_align.c
     src/odas/module/mod_istft.c
     src/odas/module/mod_lag.c
-    src/odas/module/mod_mapping.c
     src/odas/module/mod_noise.c
-    src/odas/module/mod_resample.c
     src/odas/module/mod_ssl.c
     src/odas/module/mod_sss.c
     src/odas/module/mod_sst.c
     src/odas/module/mod_stft.c
     src/odas/sink/snk_hops.c
     src/odas/sink/snk_pots.c
+    src/odas/sink/snk_targets.c
     src/odas/sink/snk_tracks.c
     src/odas/source/src_hops.c
     src/odas/source/src_targets.c
@@ -180,7 +172,6 @@ add_library(odas SHARED
 target_link_libraries(odas
 	
     ${PC_FFTW3_LIBRARIES}
-	${PC_ALSA_LIBRARIES}
 	m
     pthread
 

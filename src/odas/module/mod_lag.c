@@ -48,8 +48,6 @@
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_spectra_obj *) NULL;
 
-        obj->enabled = 0;
-
         return obj;
 
     }
@@ -78,23 +76,14 @@
 
         if (msg_spectra_isZero(obj->in) == 0) {
 
-            if (obj->enabled == 1) {
+            for (iElement = 0; iElement < (obj->nElements - 1); iElement++) {
 
-                for (iElement = 0; iElement < (obj->nElements - 1); iElement++) {
-
-                    freqs_copy(obj->freqs[obj->nElements - iElement - 1], obj->freqs[obj->nElements - iElement - 2]);
-
-                }
-
-                freqs_copy(obj->freqs[0], obj->in->freqs);
-                freqs_copy(obj->out->freqs, obj->freqs[obj->nElements - 1]);
+                freqs_copy(obj->freqs[obj->nElements - iElement - 1], obj->freqs[obj->nElements - iElement - 2]);
 
             }
-            else {
 
-                freqs_zero(obj->out->freqs);
-
-            }
+            freqs_copy(obj->freqs[0], obj->in->freqs);
+            freqs_copy(obj->out->freqs, obj->freqs[obj->nElements - 1]);
 
             obj->out->timeStamp = obj->in->timeStamp;
 
@@ -124,18 +113,6 @@
 
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_spectra_obj *) NULL;
-
-    }
-
-    void mod_lag_enable(mod_lag_obj * obj) {
-
-        obj->enabled = 1;
-
-    }
-
-    void mod_lag_disable(mod_lag_obj * obj) {
-
-        obj->enabled = 0;
 
     }
 

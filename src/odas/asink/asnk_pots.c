@@ -67,6 +67,11 @@
 
         obj = (asnk_pots_obj *) ptr;
 
+        if (obj->in == NULL) {
+            printf("asnk_pots: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+
         // Open the sink
         snk_pots_open(obj->snk_pots);
 

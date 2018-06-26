@@ -32,58 +32,21 @@
 
 		int token_root_O;
 
-		int token_root_raw_V;
-		int token_root_raw_O;
+		int token_root_socket_V;
+		int token_root_socket_O;
 
-		int token_root_raw_format_V;
-		int token_root_raw_format_O;
-		int token_root_raw_format_fS_V;
-		int token_root_raw_format_fS_N;
-		int token_root_raw_format_hopSize_V;
-		int token_root_raw_format_hopSize_N;
-		int token_root_raw_format_nBits_V;
-		int token_root_raw_format_nBits_N;
-
-		int token_root_raw_nChannels_V;
-		int token_root_raw_nChannels_N;
-
-		int token_root_raw_input_V;
-		int token_root_raw_input_O;
-		int token_root_raw_input_type_V;
-		int token_root_raw_input_type_S;
-		int token_root_raw_input_file_V;
-		int token_root_raw_input_file_O;
-		int token_root_raw_input_file_path_V;
-		int token_root_raw_input_file_path_S;
-		int token_root_raw_input_socket_V;
-		int token_root_raw_input_socket_O;
-		int token_root_raw_input_socket_port_V;
-		int token_root_raw_input_socket_port_N;
-		int token_root_raw_input_soundcard_V;
-		int token_root_raw_input_soundcard_O;
-		int token_root_raw_input_soundcard_device_V;
-		int token_root_raw_input_soundcard_device_S;
-		
-		int token_root_raw_output_V;
-		int token_root_raw_output_O;
-		int token_root_raw_output_type_V;
-		int token_root_raw_output_type_S;
-		int token_root_raw_output_file_V;
-		int token_root_raw_output_file_O;
-		int token_root_raw_output_file_path_V;
-		int token_root_raw_output_file_path_S;
-		int token_root_raw_output_socket_V;
-		int token_root_raw_output_socket_O;
-		int token_root_raw_output_socket_port_V;
-		int token_root_raw_output_socket_port_N;	
-
-		int token_root_mapping_V;
-		int token_root_mapping_O;
-
-		int token_root_mapping_map_V;
-		int token_root_mapping_map_A;
-		int token_root_mapping_map_e_V[SETTINGS_NCHANNELS];
-		int token_root_mapping_map_e_N[SETTINGS_NCHANNELS];
+		int token_root_socket_raw_V;
+		int token_root_socket_raw_N;
+		int token_root_socket_targets_V;
+		int token_root_socket_targets_N;
+		int token_root_socket_pots_V;
+		int token_root_socket_pots_N;
+		int token_root_socket_tracks_V;
+		int token_root_socket_tracks_N;
+		int token_root_socket_seps_V;
+		int token_root_socket_seps_N;
+		int token_root_socket_pfs_V;
+		int token_root_socket_pfs_N;
 
 		int token_root_general_V;
 		int token_root_general_O;
@@ -220,19 +183,6 @@
 		int token_root_ssl_scans_e_delta_V[SETTINGS_NSCANS];
 		int token_root_ssl_scans_e_delta_N[SETTINGS_NSCANS];
 
-		int token_root_ssl_output_V;
-		int token_root_ssl_output_O;
-		int token_root_ssl_output_type_V;
-		int token_root_ssl_output_type_S;
-		int token_root_ssl_output_file_V;
-		int token_root_ssl_output_file_O;
-		int token_root_ssl_output_file_path_V;
-		int token_root_ssl_output_file_path_S;
-		int token_root_ssl_output_socket_V;
-		int token_root_ssl_output_socket_O;
-		int token_root_ssl_output_socket_port_V;
-		int token_root_ssl_output_socket_port_N;	
-
 		int token_root_sst_V;
 		int token_root_sst_O;
 
@@ -339,45 +289,6 @@
 		int token_root_sst_particle_Nmin_V;
 		int token_root_sst_particle_Nmin_N;
 
-		int token_root_sst_targets_V;
-		int token_root_sst_targets_A;
-		int token_root_sst_targets_e_V[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_O[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_tag_V[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_tag_S[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_x_V[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_x_N[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_y_V[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_y_N[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_z_V[SETTINGS_NTARGETS];
-		int token_root_sst_targets_e_z_N[SETTINGS_NTARGETS];
-
-		int token_root_sst_input_V;
-		int token_root_sst_input_O;
-		int token_root_sst_input_type_V;
-		int token_root_sst_input_type_S;
-		int token_root_sst_input_file_V;
-		int token_root_sst_input_file_O;
-		int token_root_sst_input_file_path_V;
-		int token_root_sst_input_file_path_S;
-		int token_root_sst_input_socket_V;
-		int token_root_sst_input_socket_O;
-		int token_root_sst_input_socket_port_V;
-		int token_root_sst_input_socket_port_N;
-
-		int token_root_sst_output_V;
-		int token_root_sst_output_O;
-		int token_root_sst_output_type_V;
-		int token_root_sst_output_type_S;
-		int token_root_sst_output_file_V;
-		int token_root_sst_output_file_O;
-		int token_root_sst_output_file_path_V;
-		int token_root_sst_output_file_path_S;
-		int token_root_sst_output_socket_V;
-		int token_root_sst_output_socket_O;
-		int token_root_sst_output_socket_port_V;
-		int token_root_sst_output_socket_port_N;	
-
 		int token_root_sss_V;
 		int token_root_sss_O;
 
@@ -409,18 +320,6 @@
 		int token_root_sss_separation_format_hopSize_N;
 		int token_root_sss_separation_format_nBits_V;
 		int token_root_sss_separation_format_nBits_N;	
-		int token_root_sss_separation_output_V;
-		int token_root_sss_separation_output_O;
-		int token_root_sss_separation_output_type_V;
-		int token_root_sss_separation_output_type_S;
-		int token_root_sss_separation_output_file_V;
-		int token_root_sss_separation_output_file_O;
-		int token_root_sss_separation_output_file_path_V;
-		int token_root_sss_separation_output_file_path_S;
-		int token_root_sss_separation_output_socket_V;
-		int token_root_sss_separation_output_socket_O;
-		int token_root_sss_separation_output_socket_port_V;
-		int token_root_sss_separation_output_socket_port_N;
 
 		int token_root_sss_postfiltering_V;
 		int token_root_sss_postfiltering_O;
@@ -467,27 +366,13 @@
 		int token_root_sss_postfiltering_format_hopSize_N;
 		int token_root_sss_postfiltering_format_nBits_V;
 		int token_root_sss_postfiltering_format_nBits_N;	
-		int token_root_sss_postfiltering_output_V;
-		int token_root_sss_postfiltering_output_O;
-		int token_root_sss_postfiltering_output_type_V;
-		int token_root_sss_postfiltering_output_type_S;
-		int token_root_sss_postfiltering_output_file_V;
-		int token_root_sss_postfiltering_output_file_O;
-		int token_root_sss_postfiltering_output_file_path_V;
-		int token_root_sss_postfiltering_output_file_path_S;
-		int token_root_sss_postfiltering_output_socket_V;
-		int token_root_sss_postfiltering_output_socket_O;
-		int token_root_sss_postfiltering_output_socket_port_V;
-		int token_root_sss_postfiltering_output_socket_port_N;
 
-		unsigned int iChannel, nChannels;
 		unsigned int iMic, nMics;
 		unsigned int iSpatialFilter, nSpatialFilters;
 		unsigned int iScan, nScans;
 		unsigned int iGaussianActive, nGaussiansActive;
 		unsigned int iGaussianInactive, nGaussiansInactive;
 		unsigned int iLevel, nLevels;
-		unsigned int iTarget, nTargets;
 
 		// Allocate
 
@@ -517,65 +402,21 @@
 		
 		token_root_O = json_tokens_getFromValue(tokens, string, -1);
 
-		token_root_raw_V = json_tokens_getFromObject(tokens, string, token_root_O, "raw");
-		token_root_raw_O = json_tokens_getFromValue(tokens, string, token_root_raw_V);
+		token_root_socket_V = json_tokens_getFromObject(tokens, string, token_root_O, "socket");
+		token_root_socket_O = json_tokens_getFromValue(tokens, string, token_root_socket_V);
 
-		token_root_raw_format_V = json_tokens_getFromObject(tokens, string, token_root_raw_O, "format");
-		token_root_raw_format_O = json_tokens_getFromValue(tokens, string, token_root_raw_format_V);
-		token_root_raw_format_fS_V = json_tokens_getFromObject(tokens, string, token_root_raw_format_O, "fS");
-		token_root_raw_format_fS_N = json_tokens_getFromValue(tokens, string, token_root_raw_format_fS_V);
-		token_root_raw_format_hopSize_V = json_tokens_getFromObject(tokens, string, token_root_raw_format_O, "hopSize");
-		token_root_raw_format_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_raw_format_hopSize_V);
-		token_root_raw_format_nBits_V = json_tokens_getFromObject(tokens, string, token_root_raw_format_O, "nBits");
-		token_root_raw_format_nBits_N = json_tokens_getFromValue(tokens, string, token_root_raw_format_nBits_V);
-
-		token_root_raw_nChannels_V = json_tokens_getFromObject(tokens, string, token_root_raw_O, "nChannels");
-		token_root_raw_nChannels_N = json_tokens_getFromValue(tokens, string, token_root_raw_nChannels_V);
-
-		token_root_raw_input_V = json_tokens_getFromObject(tokens, string, token_root_raw_O, "input");
-		token_root_raw_input_O = json_tokens_getFromValue(tokens, string, token_root_raw_input_V);
-		token_root_raw_input_type_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_O, "type");
-		token_root_raw_input_type_S = json_tokens_getFromValue(tokens, string, token_root_raw_input_type_V);
-		token_root_raw_input_file_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_O, "file");
-		token_root_raw_input_file_O = json_tokens_getFromValue(tokens, string, token_root_raw_input_file_V);
-		token_root_raw_input_file_path_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_file_O, "path");
-		token_root_raw_input_file_path_S = json_tokens_getFromValue(tokens, string, token_root_raw_input_file_path_V);
-		token_root_raw_input_socket_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_O, "socket");
-		token_root_raw_input_socket_O = json_tokens_getFromValue(tokens, string, token_root_raw_input_socket_V);
-		token_root_raw_input_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_socket_O, "port");
-		token_root_raw_input_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_raw_input_socket_port_V);
-		token_root_raw_input_soundcard_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_O, "soundcard");
-		token_root_raw_input_soundcard_O = json_tokens_getFromValue(tokens, string, token_root_raw_input_soundcard_V);
-		token_root_raw_input_soundcard_device_V = json_tokens_getFromObject(tokens, string, token_root_raw_input_soundcard_O, "device");
-		token_root_raw_input_soundcard_device_S = json_tokens_getFromValue(tokens, string, token_root_raw_input_soundcard_device_V);		
-
-		token_root_raw_output_V = json_tokens_getFromObject(tokens, string, token_root_raw_O, "output");
-		token_root_raw_output_O = json_tokens_getFromValue(tokens, string, token_root_raw_output_V);
-		token_root_raw_output_type_V = json_tokens_getFromObject(tokens, string, token_root_raw_output_O, "type");
-		token_root_raw_output_type_S = json_tokens_getFromValue(tokens, string, token_root_raw_output_type_V);
-		token_root_raw_output_file_V = json_tokens_getFromObject(tokens, string, token_root_raw_output_O, "file");
-		token_root_raw_output_file_O = json_tokens_getFromValue(tokens, string, token_root_raw_output_file_V);
-		token_root_raw_output_file_path_V = json_tokens_getFromObject(tokens, string, token_root_raw_output_file_O, "path");
-		token_root_raw_output_file_path_S = json_tokens_getFromValue(tokens, string, token_root_raw_output_file_path_V);
-		token_root_raw_output_socket_V = json_tokens_getFromObject(tokens, string, token_root_raw_output_O, "socket");
-		token_root_raw_output_socket_O = json_tokens_getFromValue(tokens, string, token_root_raw_output_socket_V);
-		token_root_raw_output_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_raw_output_socket_O, "port");
-		token_root_raw_output_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_raw_output_socket_port_V);
-
-		token_root_mapping_V = json_tokens_getFromObject(tokens, string, token_root_O, "mapping");
-		token_root_mapping_O = json_tokens_getFromValue(tokens, string, token_root_mapping_V);
-
-		token_root_mapping_map_V = json_tokens_getFromObject(tokens, string, token_root_mapping_O, "map");
-		token_root_mapping_map_A = json_tokens_getFromValue(tokens, string, token_root_mapping_map_V);
-		
-		nChannels = json_tokens_count(tokens, string, token_root_mapping_map_A);
-
-		for (iChannel = 0; iChannel < nChannels; iChannel++) {
-
-			token_root_mapping_map_e_V[iChannel] = json_tokens_getFromArray(tokens, string, token_root_mapping_map_A, iChannel);
-			token_root_mapping_map_e_N[iChannel] = json_tokens_getFromValue(tokens, string, token_root_mapping_map_e_V[iChannel]);
-
-		}
+		token_root_socket_raw_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "raw");
+		token_root_socket_raw_N = json_tokens_getFromValue(tokens, string, token_root_socket_raw_V);
+		token_root_socket_targets_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "targets");
+		token_root_socket_targets_N = json_tokens_getFromValue(tokens, string, token_root_socket_targets_V);
+		token_root_socket_pots_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "pots");
+		token_root_socket_pots_N = json_tokens_getFromValue(tokens, string, token_root_socket_pots_V);
+		token_root_socket_tracks_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "tracks");
+		token_root_socket_tracks_N = json_tokens_getFromValue(tokens, string, token_root_socket_tracks_V);
+		token_root_socket_seps_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "seps");
+		token_root_socket_seps_N = json_tokens_getFromValue(tokens, string, token_root_socket_seps_V);
+		token_root_socket_pfs_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "pfs");
+		token_root_socket_pfs_N = json_tokens_getFromValue(tokens, string, token_root_socket_pfs_V);
 
 		token_root_general_V = json_tokens_getFromObject(tokens, string, token_root_O, "general");
 		token_root_general_O = json_tokens_getFromValue(tokens, string, token_root_general_V);
@@ -743,19 +584,6 @@
 
 		}
 
-		token_root_ssl_output_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "output");
-		token_root_ssl_output_O = json_tokens_getFromValue(tokens, string, token_root_ssl_output_V);
-		token_root_ssl_output_type_V = json_tokens_getFromObject(tokens, string, token_root_ssl_output_O, "type");
-		token_root_ssl_output_type_S = json_tokens_getFromValue(tokens, string, token_root_ssl_output_type_V);
-		token_root_ssl_output_file_V = json_tokens_getFromObject(tokens, string, token_root_ssl_output_O, "file");
-		token_root_ssl_output_file_O = json_tokens_getFromValue(tokens, string, token_root_ssl_output_file_V);
-		token_root_ssl_output_file_path_V = json_tokens_getFromObject(tokens, string, token_root_ssl_output_file_O, "path");
-		token_root_ssl_output_file_path_S = json_tokens_getFromValue(tokens, string, token_root_ssl_output_file_path_V);
-		token_root_ssl_output_socket_V = json_tokens_getFromObject(tokens, string, token_root_ssl_output_O, "socket");
-		token_root_ssl_output_socket_O = json_tokens_getFromValue(tokens, string, token_root_ssl_output_socket_V);
-		token_root_ssl_output_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_ssl_output_socket_O, "port");
-		token_root_ssl_output_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_ssl_output_socket_port_V);		
-
 		token_root_sst_V = json_tokens_getFromObject(tokens, string, token_root_O, "sst");
 		token_root_sst_O = json_tokens_getFromValue(tokens, string, token_root_sst_V);
 
@@ -887,53 +715,6 @@
 		token_root_sst_particle_Nmin_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "Nmin");
 		token_root_sst_particle_Nmin_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_Nmin_V);
 
-		token_root_sst_targets_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "targets");
-		token_root_sst_targets_A = json_tokens_getFromValue(tokens, string, token_root_sst_targets_V);
-
-		nTargets = json_tokens_count(tokens, string, token_root_sst_targets_A);
-
-		for (iTarget = 0; iTarget < nTargets; iTarget++) {
-
-			token_root_sst_targets_e_V[iTarget] = json_tokens_getFromArray(tokens, string, token_root_sst_targets_A, iTarget);
-			token_root_sst_targets_e_O[iTarget] = json_tokens_getFromValue(tokens, string, token_root_sst_targets_e_V[iTarget]);
-
-			token_root_sst_targets_e_tag_V[iTarget] = json_tokens_getFromObject(tokens, string, token_root_sst_targets_e_O[iTarget], "tag");
-			token_root_sst_targets_e_tag_S[iTarget] = json_tokens_getFromValue(tokens, string, token_root_sst_targets_e_tag_V[iTarget]);
-			token_root_sst_targets_e_x_V[iTarget] = json_tokens_getFromObject(tokens, string, token_root_sst_targets_e_O[iTarget], "x");
-			token_root_sst_targets_e_x_N[iTarget] = json_tokens_getFromValue(tokens, string, token_root_sst_targets_e_x_V[iTarget]);
-			token_root_sst_targets_e_y_V[iTarget] = json_tokens_getFromObject(tokens, string, token_root_sst_targets_e_O[iTarget], "y");
-			token_root_sst_targets_e_y_N[iTarget] = json_tokens_getFromValue(tokens, string, token_root_sst_targets_e_y_V[iTarget]);
-			token_root_sst_targets_e_z_V[iTarget] = json_tokens_getFromObject(tokens, string, token_root_sst_targets_e_O[iTarget], "z");
-			token_root_sst_targets_e_z_N[iTarget] = json_tokens_getFromValue(tokens, string, token_root_sst_targets_e_z_V[iTarget]);
-
-		}
-
-		token_root_sst_input_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "input");
-		token_root_sst_input_O = json_tokens_getFromValue(tokens, string, token_root_sst_input_V);
-		token_root_sst_input_type_V = json_tokens_getFromObject(tokens, string, token_root_sst_input_O, "type");
-		token_root_sst_input_type_S = json_tokens_getFromValue(tokens, string, token_root_sst_input_type_V);
-		token_root_sst_input_file_V = json_tokens_getFromObject(tokens, string, token_root_sst_input_O, "file");
-		token_root_sst_input_file_O = json_tokens_getFromValue(tokens, string, token_root_sst_input_file_V);
-		token_root_sst_input_file_path_V = json_tokens_getFromObject(tokens, string, token_root_sst_input_file_O, "path");
-		token_root_sst_input_file_path_S = json_tokens_getFromValue(tokens, string, token_root_sst_input_file_path_V);
-		token_root_sst_input_socket_V = json_tokens_getFromObject(tokens, string, token_root_sst_input_O, "socket");
-		token_root_sst_input_socket_O = json_tokens_getFromValue(tokens, string, token_root_sst_input_socket_V);
-		token_root_sst_input_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_sst_input_socket_O, "port");
-		token_root_sst_input_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_sst_input_socket_port_V);
-
-		token_root_sst_output_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "output");
-		token_root_sst_output_O = json_tokens_getFromValue(tokens, string, token_root_sst_output_V);
-		token_root_sst_output_type_V = json_tokens_getFromObject(tokens, string, token_root_sst_output_O, "type");
-		token_root_sst_output_type_S = json_tokens_getFromValue(tokens, string, token_root_sst_output_type_V);
-		token_root_sst_output_file_V = json_tokens_getFromObject(tokens, string, token_root_sst_output_O, "file");
-		token_root_sst_output_file_O = json_tokens_getFromValue(tokens, string, token_root_sst_output_file_V);
-		token_root_sst_output_file_path_V = json_tokens_getFromObject(tokens, string, token_root_sst_output_file_O, "path");
-		token_root_sst_output_file_path_S = json_tokens_getFromValue(tokens, string, token_root_sst_output_file_path_V);
-		token_root_sst_output_socket_V = json_tokens_getFromObject(tokens, string, token_root_sst_output_O, "socket");
-		token_root_sst_output_socket_O = json_tokens_getFromValue(tokens, string, token_root_sst_output_socket_V);
-		token_root_sst_output_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_sst_output_socket_O, "port");
-		token_root_sst_output_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_sst_output_socket_port_V);
-
 		token_root_sss_V = json_tokens_getFromObject(tokens, string, token_root_O, "sss");
 		token_root_sss_O = json_tokens_getFromValue(tokens, string, token_root_sss_V);
 
@@ -966,19 +747,6 @@
 		token_root_sss_separation_format_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_hopSize_V);
 		token_root_sss_separation_format_nBits_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_format_O, "nBits");
 		token_root_sss_separation_format_nBits_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_nBits_V);
-
-		token_root_sss_separation_output_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "output");
-		token_root_sss_separation_output_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_V);
-		token_root_sss_separation_output_type_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_output_O, "type");
-		token_root_sss_separation_output_type_S = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_type_V);
-		token_root_sss_separation_output_file_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_output_O, "file");
-		token_root_sss_separation_output_file_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_file_V);
-		token_root_sss_separation_output_file_path_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_output_file_O, "path");
-		token_root_sss_separation_output_file_path_S = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_file_path_V);
-		token_root_sss_separation_output_socket_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_output_O, "socket");
-		token_root_sss_separation_output_socket_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_socket_V);
-		token_root_sss_separation_output_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_output_socket_O, "port");
-		token_root_sss_separation_output_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_output_socket_port_V);
 
 		token_root_sss_postfiltering_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "postfiltering");
 		token_root_sss_postfiltering_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_V);
@@ -1027,42 +795,14 @@
 		token_root_sss_postfiltering_format_nBits_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_format_O, "nBits");
 		token_root_sss_postfiltering_format_nBits_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_format_nBits_V);
 
-		token_root_sss_postfiltering_output_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "output");
-		token_root_sss_postfiltering_output_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_V);
-		token_root_sss_postfiltering_output_type_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_output_O, "type");
-		token_root_sss_postfiltering_output_type_S = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_type_V);
-		token_root_sss_postfiltering_output_file_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_output_O, "file");
-		token_root_sss_postfiltering_output_file_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_file_V);
-		token_root_sss_postfiltering_output_file_path_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_output_file_O, "path");
-		token_root_sss_postfiltering_output_file_path_S = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_file_path_V);
-		token_root_sss_postfiltering_output_socket_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_output_O, "socket");
-		token_root_sss_postfiltering_output_socket_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_socket_V);
-		token_root_sss_postfiltering_output_socket_port_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_output_socket_O, "port");
-		token_root_sss_postfiltering_output_socket_port_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_output_socket_port_V);		
-
 		// Access each token
 
-		json_tokens_extractInt(tokens, string, token_root_raw_format_fS_N, &(sets->raw.format.fS));
-		json_tokens_extractInt(tokens, string, token_root_raw_format_hopSize_N, &(sets->raw.format.hopSize));
-		json_tokens_extractInt(tokens, string, token_root_raw_format_nBits_N, &(sets->raw.format.nBits));
-		json_tokens_extractInt(tokens, string, token_root_raw_nChannels_N, &(sets->raw.nChannels));
-
-		json_tokens_extractString(tokens, string, token_root_raw_input_type_S, sets->raw.input.type);
-		json_tokens_extractString(tokens, string, token_root_raw_input_file_path_S, sets->raw.input.file.path);
-		json_tokens_extractInt(tokens, string, token_root_raw_input_socket_port_N, &(sets->raw.input.socket.port));
-		json_tokens_extractString(tokens, string, token_root_raw_input_soundcard_device_S, sets->raw.input.soundcard.device);
-
-		json_tokens_extractString(tokens, string, token_root_raw_output_type_S, sets->raw.output.type);
-		json_tokens_extractString(tokens, string, token_root_raw_output_file_path_S, sets->raw.output.file.path);
-		json_tokens_extractInt(tokens, string, token_root_raw_output_socket_port_N, &(sets->raw.output.socket.port));
-
-		sets->mapping.N = nChannels;
-
-		for (iChannel = 0; iChannel < nChannels; iChannel++) {
-
-			json_tokens_extractInt(tokens, string, token_root_mapping_map_e_N[iChannel], &(sets->mapping.array[iChannel]));
-
-		}
+		json_tokens_extractInt(tokens, string, token_root_socket_raw_N, &(sets->socket.raw));
+		json_tokens_extractInt(tokens, string, token_root_socket_targets_N, &(sets->socket.targets));
+		json_tokens_extractInt(tokens, string, token_root_socket_pots_N, &(sets->socket.pots));
+		json_tokens_extractInt(tokens, string, token_root_socket_tracks_N, &(sets->socket.tracks));
+		json_tokens_extractInt(tokens, string, token_root_socket_seps_N, &(sets->socket.seps));
+		json_tokens_extractInt(tokens, string, token_root_socket_pfs_N, &(sets->socket.pfs));
 
 		json_tokens_extractFloat(tokens, string, token_root_general_epsilon_N, &(sets->general.epsilon));
 		json_tokens_extractInt(tokens, string, token_root_general_size_hopSize_N, &(sets->general.size.hopSize));
@@ -1136,10 +876,6 @@
 
 		}
 
-		json_tokens_extractString(tokens, string, token_root_ssl_output_type_S, sets->ssl.output.type);
-		json_tokens_extractString(tokens, string, token_root_ssl_output_file_path_S, sets->ssl.output.file.path);
-		json_tokens_extractInt(tokens, string, token_root_ssl_output_socket_port_N, &(sets->ssl.output.socket.port));
-
 		json_tokens_extractString(tokens, string, token_root_sst_mode_S, sets->sst.mode);
 		json_tokens_extractString(tokens, string, token_root_sst_add_S, sets->sst.add);
 
@@ -1198,38 +934,11 @@
 		json_tokens_extractFloat(tokens, string, token_root_sst_particle_acceleration_ratio_N, &(sets->sst.particle.acceleration.ratio));
 		json_tokens_extractFloat(tokens, string, token_root_sst_particle_Nmin_N, &(sets->sst.particle.Nmin));
 
-		sets->sst.targets.N = nTargets;
-
-		for (iTarget = 0; iTarget < nTargets; iTarget++) {
-
-			json_tokens_extractString(tokens, string, token_root_sst_targets_e_tag_S[iTarget], sets->sst.targets.array[iTarget].tag);
-			json_tokens_extractFloat(tokens, string, token_root_sst_targets_e_x_N[iTarget], &(sets->sst.targets.array[iTarget].x));
-			json_tokens_extractFloat(tokens, string, token_root_sst_targets_e_y_N[iTarget], &(sets->sst.targets.array[iTarget].y));
-			json_tokens_extractFloat(tokens, string, token_root_sst_targets_e_z_N[iTarget], &(sets->sst.targets.array[iTarget].z));
-
-		}
-
-		json_tokens_extractString(tokens, string, token_root_sst_input_type_S, sets->sst.input.type);
-		json_tokens_extractString(tokens, string, token_root_sst_input_file_path_S, sets->sst.input.file.path);
-		json_tokens_extractInt(tokens, string, token_root_sst_input_socket_port_N, &(sets->sst.input.socket.port));
-
-		json_tokens_extractString(tokens, string, token_root_sst_output_type_S, sets->sst.output.type);
-		json_tokens_extractString(tokens, string, token_root_sst_output_file_path_S, sets->sst.output.file.path);
-		json_tokens_extractInt(tokens, string, token_root_sst_output_socket_port_N, &(sets->sst.output.socket.port));
-
 		json_tokens_extractInt(tokens, string, token_root_sss_offset_N, &(sets->sss.offset));
 
 		json_tokens_extractString(tokens, string, token_root_sss_separation_mode_S, sets->sss.separation.mode);
 		json_tokens_extractFloat(tokens, string, token_root_sss_separation_techniques_dgss_mu_N, &(sets->sss.separation.techniques.dgss.mu));
 		json_tokens_extractFloat(tokens, string, token_root_sss_separation_techniques_dgss_lambda_N, &(sets->sss.separation.techniques.dgss.lambda));
-
-		json_tokens_extractInt(tokens, string, token_root_sss_separation_format_fS_N, &(sets->sss.separation.format.fS));		
-		json_tokens_extractInt(tokens, string, token_root_sss_separation_format_hopSize_N, &(sets->sss.separation.format.hopSize));
-		json_tokens_extractInt(tokens, string, token_root_sss_separation_format_nBits_N, &(sets->sss.separation.format.nBits));
-
-		json_tokens_extractString(tokens, string, token_root_sss_separation_output_type_S, sets->sss.separation.output.type);
-		json_tokens_extractString(tokens, string, token_root_sss_separation_output_file_path_S, sets->sss.separation.output.file.path);
-		json_tokens_extractInt(tokens, string, token_root_sss_separation_output_socket_port_N, &(sets->sss.separation.output.socket.port));
 
 		json_tokens_extractString(tokens, string, token_root_sss_postfiltering_mode_S, sets->sss.postfiltering.mode);
 		json_tokens_extractFloat(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaPmin_N, &(sets->sss.postfiltering.techniques.ms.alphaPmin));
@@ -1246,14 +955,6 @@
 		json_tokens_extractFloat(tokens, string, token_root_sss_postfiltering_techniques_ss_Gmid_N, &(sets->sss.postfiltering.techniques.ss.Gmid));
 		json_tokens_extractFloat(tokens, string, token_root_sss_postfiltering_techniques_ss_Gslope_N, &(sets->sss.postfiltering.techniques.ss.Gslope));
 
-		json_tokens_extractInt(tokens, string, token_root_sss_postfiltering_format_fS_N, &(sets->sss.postfiltering.format.fS));		
-		json_tokens_extractInt(tokens, string, token_root_sss_postfiltering_format_hopSize_N, &(sets->sss.postfiltering.format.hopSize));
-		json_tokens_extractInt(tokens, string, token_root_sss_postfiltering_format_nBits_N, &(sets->sss.postfiltering.format.nBits));
-
-		json_tokens_extractString(tokens, string, token_root_sss_postfiltering_output_type_S, sets->sss.postfiltering.output.type);
-		json_tokens_extractString(tokens, string, token_root_sss_postfiltering_output_file_path_S, sets->sss.postfiltering.output.file.path);
-		json_tokens_extractInt(tokens, string, token_root_sss_postfiltering_output_socket_port_N, &(sets->sss.postfiltering.output.socket.port));
-
 		// Free
 
 		free((void *) line);
@@ -1267,29 +968,12 @@
 		unsigned int n;
 		unsigned int d;
 
-		printf("raw.format.fS = %u\n", sets->raw.format.fS);
-		printf("raw.format.hopSize = %u\n", sets->raw.format.hopSize);
-		printf("raw.format.nBits = %u\n", sets->raw.format.nBits);
-		printf("raw.nChannels = %u\n", sets->raw.nChannels);
-		printf("raw.input.type = \"%s\"\n", sets->raw.input.type);
-		printf("raw.input.file.path = \"%s\"\n", sets->raw.input.file.path);
-		printf("raw.input.socket.port = %u\n", sets->raw.input.socket.port);
-		printf("raw.input.soundcard.device = \"%s\"\n", sets->raw.input.soundcard.device);
-		printf("raw.output.type = \"%s\"\n", sets->raw.output.type);
-		printf("raw.output.file.path = \"%s\"\n", sets->raw.output.file.path);
-		printf("raw.output.socket.port = %u\n", sets->raw.output.socket.port);
-
-		printf("\n");
-
-		printf("mapping.map = [ ");
-
-		for (n = 0; n < sets->mapping.N; n++) {
-
-			printf("%u ", sets->mapping.array[n]);
-
-		}
-
-		printf("]\n");
+		printf("socket.raw = %u\n", sets->socket.raw);
+		printf("socket.targets = %u\n", sets->socket.targets);
+		printf("socket.pots = %u\n", sets->socket.pots);
+		printf("socket.tracks = %u\n", sets->socket.tracks);
+		printf("socket.seps = %u\n", sets->socket.seps);
+		printf("socket.pfs = %u\n", sets->socket.pfs);		
 
 		printf("\n");
 
@@ -1371,10 +1055,6 @@
 
 		}
 
-		printf("ssl.output.type = \"%s\"\n", sets->ssl.output.type);
-		printf("ssl.output.file.path = \"%s\"\n", sets->ssl.output.file.path);
-		printf("ssl.output.socket.port = %u\n", sets->ssl.output.socket.port);
-
 		printf("\n");
 
 		printf("sst.mode = %s­\n", sets->sst.mode);
@@ -1427,32 +1107,12 @@
 		printf("sst.particle.acceleration.ratio = %f\n", sets->sst.particle.acceleration.ratio);
 		printf("sst.particle.Nmin = %f\n", sets->sst.particle.Nmin);
 
-		for (n = 0; n < sets->sst.targets.N; n++) {
-			printf("sst.targets[%u].tag = \"%s\"\n", n, sets->sst.targets.array[n].tag);
-			printf("sst.targets[%u].x = %f\n", n, sets->sst.targets.array[n].x);
-			printf("sst.targets[%u].y = %f\n", n, sets->sst.targets.array[n].y);
-			printf("sst.targets[%u].z = %f\n", n, sets->sst.targets.array[n].z);
-		}
-
-		printf("sst.input.type = \"%s\"\n", sets->sst.input.type);
-		printf("sst.input.file.path = \"%s\"\n", sets->sst.input.file.path);
-		printf("sst.input.socket.port = %u\n", sets->sst.input.socket.port);
-		printf("sst.output.type = \"%s\"\n", sets->sst.output.type);
-		printf("sst.output.file.path = \"%s\"\n", sets->sst.output.file.path);
-		printf("sst.output.socket.port = %u\n", sets->sst.output.socket.port);
-
 		printf("\n");
 
 		printf("sss.offset = %u\n", sets->sss.offset);
 		printf("sss.separation.mode = \"%s\"\n", sets->sss.separation.mode);
 		printf("sss.separation.techniques.dgss.mu = %f\n", sets->sss.separation.techniques.dgss.mu);
 		printf("sss.separation.techniques.dgss.lambda = %f\n", sets->sss.separation.techniques.dgss.lambda);
-		printf("sss.separation.format.fS = %u\n", sets->sss.separation.format.fS);
-		printf("sss.separation.format.hopSize = %u\n", sets->sss.separation.format.hopSize);
-		printf("sss.separation.format.nBits = %u\n", sets->sss.separation.format.nBits);
-		printf("sss.separation.output.type = \"%s\"\n", sets->sss.separation.output.type);
-		printf("sss.separation.output.file.path = \"%s\"\n", sets->sss.separation.output.file.path);
-		printf("sss.separation.output.socket.port = %u\n", sets->sss.separation.output.socket.port);
 		printf("sss.postfiltering.mode = \"%s\"\n", sets->sss.postfiltering.mode);
 		printf("sss.postfiltering.techniques.ms.alphaPmin = %f\n", sets->sss.postfiltering.techniques.ms.alphaPmin);
 		printf("sss.postfiltering.techniques.ms.eta = %f\n", sets->sss.postfiltering.techniques.ms.eta);
@@ -1467,11 +1127,5 @@
 		printf("sss.postfiltering.techniques.ss.Gmin = %f\n", sets->sss.postfiltering.techniques.ss.Gmin);
 		printf("sss.postfiltering.techniques.ss.Gmid = %f\n", sets->sss.postfiltering.techniques.ss.Gmid);
 		printf("sss.postfiltering.techniques.ss.Gslope = %f\n", sets->sss.postfiltering.techniques.ss.Gslope);
-		printf("sss.postfiltering.format.fS = %u\n", sets->sss.postfiltering.format.fS);
-		printf("sss.postfiltering.format.hopSize = %u\n", sets->sss.postfiltering.format.hopSize);
-		printf("sss.postfiltering.format.nBits = %u\n", sets->sss.postfiltering.format.nBits);
-		printf("sss.postfiltering.output.type = \"%s\"\n", sets->sss.postfiltering.output.type);
-		printf("sss.postfiltering.output.file.path = \"%s\"\n", sets->sss.postfiltering.output.file.path);
-		printf("sss.postfiltering.output.socket.port = %u\n", sets->sss.postfiltering.output.socket.port);
 
 	}

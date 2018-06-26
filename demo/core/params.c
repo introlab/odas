@@ -3,27 +3,19 @@
 
     void params_process(const settings * sets, configs * cfgs) {
 
-    	params_process_src_hops_in_raw(sets, cfgs->src_hops_in_raw_config);
-    	params_process_msg_hops_in_raw(sets, cfgs->msg_hops_in_raw_config);
-        params_process_snk_hops_in_raw(sets, cfgs->snk_hops_in_raw_config);
+    	params_process_src_hops(sets, cfgs->src_hops_config);
+    	params_process_msg_hops(sets, cfgs->msg_hops_config);
+        params_process_snk_hops(sets, cfgs->snk_hops_config);
 
-    	params_process_src_targets_in_raw(sets, cfgs->src_targets_in_raw_config);
-    	params_process_msg_targets_in_raw(sets, cfgs->msg_targets_in_raw_config);
+    	params_process_src_targets(sets, cfgs->src_targets_config);
+    	params_process_msg_targets(sets, cfgs->msg_targets_config);
+        params_process_snk_targets(sets, cfgs->snk_targets_config);
 
-        params_process_mod_mapping_in(sets, cfgs->mod_mapping_in_config);
-        params_process_msg_hops_in_map(sets, cfgs->msg_hops_in_map_config);
+        params_process_mod_stft(sets, cfgs->mod_stft_config);
+        params_process_msg_spectra(sets, cfgs->msg_spectra_config);
 
-        params_process_mod_resample_in(sets, cfgs->mod_resample_in_config);
-        params_process_msg_hops_in_rs(sets, cfgs->msg_hops_in_rs_config);
-
-        params_process_mod_align_in(sets, cfgs->mod_align_in_config);
-        params_process_msg_targets_in_rs(sets, cfgs->msg_targets_in_rs_config);
-
-        params_process_mod_stft_in(sets, cfgs->mod_stft_in_config);
-        params_process_msg_spectra_in(sets, cfgs->msg_spectra_in_config);
-
-        params_process_mod_noise_in(sets, cfgs->mod_noise_in_config);
-        params_process_msg_powers_in(sets, cfgs->msg_powers_in_config);
+        params_process_mod_noise(sets, cfgs->mod_noise_config);
+        params_process_msg_powers(sets, cfgs->msg_powers_config);
 
         params_process_mod_ssl(sets, cfgs->mod_ssl_config);
         params_process_msg_pots(sets, cfgs->msg_pots_config);
@@ -37,163 +29,70 @@
         params_process_msg_spectra_lag(sets, cfgs->msg_spectra_lag_config);
 
         params_process_mod_sss(sets, cfgs->mod_sss_config);
-        params_process_msg_spectra_out_sep(sets, cfgs->msg_spectra_out_sep_config);
-        params_process_msg_spectra_out_pf(sets, cfgs->msg_spectra_out_pf_config);
+        
+        params_process_msg_spectra_sep(sets, cfgs->msg_spectra_sep_config);
+        params_process_mod_istft_sep(sets, cfgs->mod_istft_sep_config);
+        params_process_msg_hops_sep(sets, cfgs->msg_hops_sep_config);
+        params_process_snk_hops_sep(sets, cfgs->snk_hops_sep_config);
 
-        params_process_mod_istft_out_sep(sets, cfgs->mod_istft_out_sep_config);
-        params_process_msg_hops_out_sep(sets, cfgs->msg_hops_out_sep_config);
-        params_process_mod_resample_out_seprs(sets, cfgs->mod_resample_out_seprs_config);
-        params_process_msg_hops_out_seprs(sets, cfgs->msg_hops_out_seprs_config);
-        params_process_snk_hops_out_seprs(sets, cfgs->snk_hops_out_seprs_config);
-
-        params_process_mod_istft_out_pf(sets, cfgs->mod_istft_out_pf_config);
-        params_process_msg_hops_out_pf(sets, cfgs->msg_hops_out_pf_config);
-        params_process_mod_resample_out_pfrs(sets, cfgs->mod_resample_out_pfrs_config);
-        params_process_msg_hops_out_pfrs(sets, cfgs->msg_hops_out_pfrs_config);
-        params_process_snk_hops_out_pfrs(sets, cfgs->snk_hops_out_pfrs_config);
+        params_process_msg_spectra_pf(sets, cfgs->msg_spectra_pf_config);
+        params_process_mod_istft_pf(sets, cfgs->mod_istft_pf_config);
+        params_process_msg_hops_pf(sets, cfgs->msg_hops_pf_config);
+        params_process_snk_hops_pf(sets, cfgs->snk_hops_pf_config);
 
     }
 
-    void params_process_src_hops_in_raw(const settings * sets, src_hops_cfg * cfg) {
+    void params_process_src_hops(const settings * sets, src_hops_cfg * cfg) {
 
-        switch (sets->raw.format.nBits) {
-
-            case 8: case 16: case 24: case 32: cfg->format = format_construct_binary_int(sets->raw.format.nBits); break;
-            default: printf("Invalid number of bits\n"); exit(EXIT_FAILURE); break;
-
-        }
-
-        if (strcmp(sets->raw.input.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->raw.input.type, "file") == 0) { cfg->interface = interface_construct_file(sets->raw.input.file.path); }
-        else if (strcmp(sets->raw.input.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->raw.input.socket.port); }
-        else if (strcmp(sets->raw.input.type, "soundcard") == 0) { cfg->interface = interface_construct_soundcard(sets->raw.input.soundcard.device); }
-        else { printf("raw.src_hops: Invalid interface\n"); exit(EXIT_FAILURE); }
+        cfg->port = sets->socket.raw;
 
     }
 
-    void params_process_msg_hops_in_raw(const settings * sets, msg_hops_cfg * cfg) {
-
-        cfg->hopSize = sets->raw.format.hopSize;
-        cfg->nChannels = sets->raw.nChannels;
-        cfg->fS = sets->raw.format.fS;
-
-    }
-
-    void params_process_snk_hops_in_raw(const settings * sets, snk_hops_cfg * cfg) {
-
-        switch (sets->raw.format.nBits) {
-
-            case 8: case 16: case 24: case 32: cfg->format = format_construct_binary_int(sets->raw.format.nBits); break;
-            default: printf("Invalid number of bits\n"); exit(EXIT_FAILURE); break;
-
-        }
-
-        if (strcmp(sets->raw.output.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->raw.output.type, "file") == 0) { cfg->interface = interface_construct_file(sets->raw.output.file.path); }
-        else if (strcmp(sets->raw.output.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->raw.output.socket.port); }
-        else { printf("raw.snk_hops: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->fS = sets->raw.format.fS;
-
-    }
-
-    
-    void params_process_src_targets_in_raw(const settings * sets, src_targets_cfg * cfg) {
-
-        unsigned int iTarget;
-
-        cfg->format = format_construct_text_json();
-
-        if (strcmp(sets->sst.input.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->sst.input.type, "file") == 0) { cfg->interface = interface_construct_file(sets->sst.input.file.path); }
-        else if (strcmp(sets->sst.input.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->sst.input.socket.port); }
-        else { printf("sst.src_targets: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->targets = targets_construct_zero(sets->sst.targets.N);
-
-        for (iTarget = 0; iTarget < sets->sst.targets.N; iTarget++) {
-
-            strcpy(cfg->targets->tags[iTarget], sets->sst.targets.array[iTarget].tag);
-            cfg->targets->array[iTarget *3 + 0] = sets->sst.targets.array[iTarget].x;
-            cfg->targets->array[iTarget *3 + 1] = sets->sst.targets.array[iTarget].y;
-            cfg->targets->array[iTarget *3 + 2] = sets->sst.targets.array[iTarget].z;
-
-        }
-
-    }
-
-    void params_process_msg_targets_in_raw(const settings * sets, msg_targets_cfg * cfg) {
-
-        cfg->nTargets = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->raw.format.fS;
-
-    }
-
-    void params_process_mod_mapping_in(const settings * sets, mod_mapping_cfg * cfg) {
-
-        unsigned int iChannel;
-
-        cfg->links = links_construct_zero(sets->mapping.N);
-
-        for (iChannel = 0; iChannel < sets->mapping.N; iChannel++) {
-
-            cfg->links->array[iChannel] = sets->mapping.array[iChannel];
-
-        }
-
-    }
-
-    void params_process_msg_hops_in_map(const settings * sets, msg_hops_cfg * cfg) {
-
-        cfg->hopSize = sets->raw.format.hopSize;
-        cfg->nChannels = sets->mapping.N;
-        cfg->fS = sets->raw.format.fS;        
-
-    }
-
-    void params_process_mod_resample_in(const settings * sets, mod_resample_cfg * cfg) {
-
-        cfg->fSin = sets->raw.format.fS;
-        cfg->fSout = sets->general.samplerate.mu;
-
-    }
-
-    void params_process_msg_hops_in_rs(const settings * sets, msg_hops_cfg * cfg) {
+    void params_process_msg_hops(const settings * sets, msg_hops_cfg * cfg) {
 
         cfg->hopSize = sets->general.size.hopSize;
-        cfg->nChannels = sets->mapping.N;
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->nChannels = sets->general.mics.N;
+
+    }
+    
+    void params_process_snk_hops(const settings * sets, snk_hops_cfg * cfg) {
+
+        cfg->port = 0;
 
     }
 
-    void params_process_mod_align_in(const settings * sets, mod_align_cfg * cfg) {
+    void params_process_src_targets(const settings * sets, src_targets_cfg * cfg) {
 
-        // Nothing to do here
+        cfg->port = sets->socket.targets;
 
     }
 
-    void params_process_msg_targets_in_rs(const settings * sets, msg_targets_cfg * cfg) {
+    void params_process_msg_targets(const settings * sets, msg_targets_cfg * cfg) {
 
         cfg->nTargets = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
 
     }
 
-    void params_process_mod_stft_in(const settings * sets, mod_stft_cfg * cfg) {
+    void params_process_snk_targets(const settings * sets, snk_targets_cfg * cfg) {
+
+        cfg->port = 0;
+
+    }
+
+    void params_process_mod_stft(const settings * sets, mod_stft_cfg * cfg) {
 
         // Nothing to do here
 
     }
 
-    void params_process_msg_spectra_in(const settings * sets, msg_spectra_cfg * cfg) {
+    void params_process_msg_spectra(const settings * sets, msg_spectra_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
-        cfg->nChannels = sets->mapping.N;
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->nChannels = sets->general.mics.N;
 
     }
 
-    void params_process_mod_noise_in(const settings * sets, mod_noise_cfg * cfg) {
+    void params_process_mod_noise(const settings * sets, mod_noise_cfg * cfg) {
 
         cfg->bSize = sets->sne.b;
         cfg->alphaS = sets->sne.alphaS;
@@ -203,11 +102,10 @@
 
     }
 
-    void params_process_msg_powers_in(const settings * sets, msg_powers_cfg * cfg) {
+    void params_process_msg_powers(const settings * sets, msg_powers_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
-        cfg->nChannels = sets->mapping.N;
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->nChannels = sets->general.mics.N;
 
     }
 
@@ -287,20 +185,12 @@
     void params_process_msg_pots(const settings * sets, msg_pots_cfg * cfg) {
 
         cfg->nPots = sets->ssl.nPots;
-        cfg->fS = sets->general.samplerate.mu;
 
     }
 
     void params_process_snk_pots(const settings * sets, snk_pots_cfg * cfg) {
 
-        cfg->format = format_construct_text_json();
-
-        if (strcmp(sets->ssl.output.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->ssl.output.type, "file") == 0) { cfg->interface = interface_construct_file(sets->ssl.output.file.path); }
-        else if (strcmp(sets->ssl.output.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->ssl.output.socket.port); }
-        else { printf("ssl.snk_pots: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->port = sets->socket.pots;
 
     }
 
@@ -333,6 +223,10 @@
 
         cfg->hopSize = sets->general.size.hopSize;
         cfg->sigmaQ = sets->sst.kalman.sigmaQ;
+
+        cfg->samplerate = samplerate_construct_zero();
+        cfg->samplerate->mu = sets->general.samplerate.mu;
+        cfg->samplerate->sigma2 = sets->general.samplerate.sigma2;
 
 	    cfg->nParticles = sets->sst.particle.nParticles;
 	    cfg->st_alpha = sets->sst.particle.stationary.alpha;
@@ -392,20 +286,12 @@
     void params_process_msg_tracks(const settings * sets, msg_tracks_cfg * cfg) {
 
         cfg->nTracks = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
 
     }
 
     void params_process_snk_tracks(const settings * sets, snk_tracks_cfg * cfg) {
 
-        cfg->format = format_construct_text_json();
-
-        if (strcmp(sets->sst.output.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->sst.output.type, "file") == 0) { cfg->interface = interface_construct_file(sets->sst.output.file.path); }
-        else if (strcmp(sets->sst.output.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->sst.output.socket.port); }
-        else { printf("sst.snk_tracks: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->port = sets->socket.tracks;
 
     }
 
@@ -418,8 +304,7 @@
     void params_process_msg_spectra_lag(const settings * sets, msg_spectra_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
-        cfg->nChannels = sets->mapping.N;
-        cfg->fS = sets->general.samplerate.mu;
+        cfg->nChannels = sets->general.mics.N;
 
     }
 
@@ -511,112 +396,54 @@
 
     }
 
-    void params_process_msg_spectra_out_sep(const settings * sets, msg_spectra_cfg * cfg) {
+    void params_process_msg_spectra_sep(const settings * sets, msg_spectra_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
         cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
 
     }
 
-    void params_process_msg_spectra_out_pf(const settings * sets, msg_spectra_cfg * cfg) {
-
-        cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
-        cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
-
-    }
-
-    void params_process_mod_istft_out_sep(const settings * sets, mod_istft_cfg * cfg) {
+    void params_process_mod_istft_sep(const settings * sets, mod_istft_cfg * cfg) {
 
         // Nothing to do here
 
     }
 
-    void params_process_msg_hops_out_sep(const settings * sets, msg_hops_cfg * cfg) {
+    void params_process_msg_hops_sep(const settings * sets, msg_hops_cfg * cfg) {
 
         cfg->hopSize = sets->general.size.hopSize;
         cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
 
     }
 
-    void params_process_mod_resample_out_seprs(const settings * sets, mod_resample_cfg * cfg) {
+    void params_process_snk_hops_sep(const settings * sets, snk_hops_cfg * cfg) {
+     
+        cfg->port = sets->socket.seps;
 
-        cfg->fSin = sets->general.samplerate.mu;
-        cfg->fSout = sets->sss.separation.format.fS;
+    }
+
+    void params_process_msg_spectra_pf(const settings * sets, msg_spectra_cfg * cfg) {
+
+        cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
+        cfg->nChannels = sets->sst.levels.lInactive.N;
+
+    }
+
+    void params_process_mod_istft_pf(const settings * sets, mod_istft_cfg * cfg) {
+
+        // Nothing to do here
+
+    }
+
+    void params_process_msg_hops_pf(const settings * sets, msg_hops_cfg * cfg) {
+
+        cfg->hopSize = sets->general.size.hopSize;
+        cfg->nChannels = sets->sst.levels.lInactive.N;
+
+    }
+
+    void params_process_snk_hops_pf(const settings * sets, snk_hops_cfg * cfg) {
         
-    }
-
-    void params_process_msg_hops_out_seprs(const settings * sets, msg_hops_cfg * cfg) {
-
-        cfg->hopSize = sets->sss.separation.format.hopSize;
-        cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->sss.separation.format.fS;
-
-    }
-
-    void params_process_snk_hops_out_seprs(const settings * sets, snk_hops_cfg * cfg) {
-
-        switch (sets->sss.separation.format.nBits) {
-
-            case 8: case 16: case 24: case 32: cfg->format = format_construct_binary_int(sets->sss.separation.format.nBits); break;
-            default: printf("Invalid number of bits\n"); exit(EXIT_FAILURE); break;
-
-        }
-
-        if (strcmp(sets->sss.separation.output.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->sss.separation.output.type, "file") == 0) { cfg->interface = interface_construct_file(sets->sss.separation.output.file.path); }
-        else if (strcmp(sets->sss.separation.output.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->sss.separation.output.socket.port); }
-        else { printf("sss.separation.snk_hops: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->fS = sets->sss.separation.format.fS;
-
-    }
-
-    void params_process_mod_istft_out_pf(const settings * sets, mod_istft_cfg * cfg) {
-
-        // Nothing to do here
-
-    }
-
-    void params_process_msg_hops_out_pf(const settings * sets, msg_hops_cfg * cfg) {
-
-        cfg->hopSize = sets->general.size.hopSize;
-        cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->general.samplerate.mu;
-
-    }
-
-    void params_process_mod_resample_out_pfrs(const settings * sets, mod_resample_cfg * cfg) {
-
-        cfg->fSin = sets->general.samplerate.mu;
-        cfg->fSout = sets->sss.postfiltering.format.fS;
-
-    }
-
-    void params_process_msg_hops_out_pfrs(const settings * sets, msg_hops_cfg * cfg) {
-
-        cfg->hopSize = sets->sss.postfiltering.format.hopSize;
-        cfg->nChannels = sets->sst.levels.lInactive.N;
-        cfg->fS = sets->sss.postfiltering.format.fS;
-
-    }
-
-    void params_process_snk_hops_out_pfrs(const settings * sets, snk_hops_cfg * cfg) {
-
-        switch (sets->sss.postfiltering.format.nBits) {
-
-            case 8: case 16: case 24: case 32: cfg->format = format_construct_binary_int(sets->sss.postfiltering.format.nBits); break;
-            default: printf("Invalid number of bits\n"); exit(EXIT_FAILURE); break;
-
-        }
-
-        if (strcmp(sets->sss.postfiltering.output.type, "blackhole") == 0) { cfg->interface = interface_construct_blackhole(); }
-        else if (strcmp(sets->sss.postfiltering.output.type, "file") == 0) { cfg->interface = interface_construct_file(sets->sss.postfiltering.output.file.path); }
-        else if (strcmp(sets->sss.postfiltering.output.type, "socket") == 0) { cfg->interface = interface_construct_socket(sets->sss.postfiltering.output.socket.port); }
-        else { printf("sss.postfiltering.snk_hops: Invalid interface\n"); exit(EXIT_FAILURE); }
-
-        cfg->fS = sets->sss.postfiltering.format.fS;
+        cfg->port = sets->socket.pfs;
 
     }

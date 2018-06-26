@@ -29,7 +29,6 @@
     typedef struct msg_pots_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         pots_obj * pots;
 
     } msg_pots_obj;
@@ -37,7 +36,6 @@
     typedef struct msg_pots_cfg {
 
         unsigned int nPots;
-        unsigned int fS;
 
     } msg_pots_cfg;
 

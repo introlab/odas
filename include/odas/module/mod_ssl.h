@@ -85,8 +85,6 @@
         msg_spectra_obj * in;
         msg_pots_obj * out;
 
-        char enabled;
-
     } mod_ssl_obj;
 
     typedef struct mod_ssl_cfg {
@@ -118,10 +116,6 @@
     void mod_ssl_connect(mod_ssl_obj * obj, msg_spectra_obj * in, msg_pots_obj * out);
 
     void mod_ssl_disconnect(mod_ssl_obj * obj);
-
-    void mod_ssl_enable(mod_ssl_obj * obj);
-
-    void mod_ssl_disable(mod_ssl_obj * obj);
 
     mod_ssl_cfg * mod_ssl_cfg_construct(void);
 

@@ -44,10 +44,6 @@
 
     void amod_lag_disconnect(amod_lag_obj * obj);
 
-    void amod_lag_enable(amod_lag_obj * obj);
-
-    void amod_lag_disable(amod_lag_obj * obj);
-
     void * amod_lag_thread(void * ptr);    
 
 #endif

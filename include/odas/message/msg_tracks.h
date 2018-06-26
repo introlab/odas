@@ -29,7 +29,6 @@
     typedef struct msg_tracks_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         tracks_obj * tracks;
 
     } msg_tracks_obj;
@@ -37,7 +36,6 @@
     typedef struct msg_tracks_cfg {
 
         unsigned int nTracks;
-        unsigned int fS;
 
     } msg_tracks_cfg;
 

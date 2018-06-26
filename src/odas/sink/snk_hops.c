@@ -33,35 +33,16 @@
 
         obj->hopSize = msg_hops_config->hopSize;
         obj->nChannels = msg_hops_config->nChannels;
-        obj->fS = snk_hops_config->fS;
         
-        obj->format = format_clone(snk_hops_config->format);
-        obj->interface = interface_clone(snk_hops_config->interface);
-
-        obj->fp = (FILE *) NULL;
         obj->server_id = 0;
         obj->connection_id = 0;
+        obj->port = snk_hops_config->port;        
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
-        if (!(((obj->interface->type == interface_blackhole)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int32)) ||
-              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_socket)  && (obj->format->type == format_binary_int32)))) {
-            
-            printf("Sink hops: Invalid interface and/or format.\n");
-            exit(EXIT_FAILURE);
-
-        }
-
-        obj->buffer = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
-        memset(obj->buffer, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
-        obj->bufferSize = 0;
+        obj->bufferSize = obj->hopSize * obj->nChannels * 2;
+        obj->buffer = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * obj->bufferSize);
+        memset(obj->buffer, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * obj->bufferSize);
 
         obj->in = (msg_hops_obj *) NULL;
 
@@ -71,10 +52,7 @@
 
     void snk_hops_destroy(snk_hops_obj * obj) {
 
-        format_destroy(obj->format);
-        interface_destroy(obj->interface);
         free((void *) obj->buffer);
-
         free((void *) obj);
 
     }
@@ -93,122 +71,36 @@
 
     void snk_hops_open(snk_hops_obj * obj) {
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                snk_hops_open_interface_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                snk_hops_open_interface_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                snk_hops_open_interface_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Sink hops: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;           
-
-        }
-
-    }
-
-    void snk_hops_open_interface_blackhole(snk_hops_obj * obj) {
-
-        // Empty
-
-    }
-
-    void snk_hops_open_interface_file(snk_hops_obj * obj) {
-
-        obj->fp = fopen(obj->interface->fileName, "wb");
-
-        if (obj->fp == NULL) {
-            printf("Cannot open file %s\n",obj->interface->fileName);
-            exit(EXIT_FAILURE);
-        }
-
-    }
-
-    void snk_hops_open_interface_socket(snk_hops_obj * obj) {
-
         struct sockaddr_in server_address;
 
-        server_address.sin_family = AF_INET;
-        server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-        server_address.sin_port = htons(obj->interface->port);
+        if (obj->port != 0) {
 
-        obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
+            memset(&server_address, 0x00, sizeof(server_address));
+            server_address.sin_family = AF_INET;
+            server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+            server_address.sin_port = htons(obj->port);
 
-        bind(obj->server_id, (struct sockaddr *) &server_address, sizeof(server_address));
-        listen(obj->server_id, 1);
-        obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
+            obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
+
+            bind(obj->server_id, (struct sockaddr *) &server_address, sizeof(server_address));
+            listen(obj->server_id, 1);
+            obj->connection_id = accept(obj->server_id, (struct sockaddr *) NULL, NULL);
+
+        }
 
     }
 
     void snk_hops_close(snk_hops_obj * obj) {
 
-        switch(obj->interface->type) {
+        if (obj->port != 0) {
 
-            case interface_blackhole:
+            close(obj->connection_id);
+            close(obj->server_id);
 
-                snk_hops_close_interface_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                snk_hops_close_interface_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                snk_hops_close_interface_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Sink hops: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
+            obj->server_id = 0;
+            obj->connection_id = 0;
 
         }
-
-    }
-
-    void snk_hops_close_interface_blackhole(snk_hops_obj * obj) {
-
-        // Empty
-
-    }
-
-    void snk_hops_close_interface_file(snk_hops_obj * obj) {
-
-        fclose(obj->fp);
-
-    }
-
-    void snk_hops_close_interface_socket(snk_hops_obj * obj) {
-
-        close(obj->connection_id);
-        close(obj->server_id);
-
-        obj->server_id = 0;
-        obj->connection_id = 0;
 
     }
 
@@ -218,69 +110,8 @@
 
         if (obj->in->timeStamp != 0) {
 
-            switch(obj->format->type) {
-
-                case format_binary_int08:
-
-                    snk_hops_process_format_binary_int08(obj);
-
-                break;
-
-                case format_binary_int16:
-
-                    snk_hops_process_format_binary_int16(obj);                
-
-                break;
-
-                case format_binary_int24:
-
-                    snk_hops_process_format_binary_int24(obj);
-
-                break;
-
-                case format_binary_int32:
-
-                    snk_hops_process_format_binary_int32(obj);
-
-                break;
-
-                default:
-
-                    printf("Sink hops: Invalid format type.\n");
-                    exit(EXIT_FAILURE);
-
-                break;
-
-            }
-
-            switch(obj->interface->type) {
-
-                case interface_blackhole:
-
-                    snk_hops_process_interface_blackhole(obj);
-
-                break;  
-
-                case interface_file:
-
-                    snk_hops_process_interface_file(obj);
-
-                break;
-
-                case interface_socket:
-
-                    snk_hops_process_interface_socket(obj);
-
-                break;
-
-                default:
-
-                    printf("Sink hops: Invalid interface type.\n");
-                    exit(EXIT_FAILURE);
-
-                break;
-
-            }
+            snk_hops_process_format(obj);
+            snk_hops_process_interface(obj);
 
             rtnValue = 0;
 
@@ -295,57 +126,20 @@
 
     }
 
-    void snk_hops_process_interface_blackhole(snk_hops_obj * obj) {
+    void snk_hops_process_interface(snk_hops_obj * obj) {
 
-        // Emtpy
+        if (obj->port != 0) {
 
-    }
-
-    void snk_hops_process_interface_file(snk_hops_obj * obj) {
-
-        fwrite(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
-
-    }
-
-    void snk_hops_process_interface_socket(snk_hops_obj * obj) {
-
-        if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
-            printf("Sink hops: Could not send message.\n");
-            exit(EXIT_FAILURE);           
-        }
-
-    }
-
-    void snk_hops_process_format_binary_int08(snk_hops_obj * obj) {
-
-        unsigned int iChannel;
-        unsigned int iSample;
-        float sample;
-        unsigned int nBytes;
-        unsigned int nBytesTotal;
-
-        nBytes = 1;
-        nBytesTotal = 0;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                sample = obj->in->hops->array[iChannel][iSample];
-                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                nBytesTotal += nBytes;
-
+            if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
+                printf("Sink hops: Could not send message.\n");
+                exit(EXIT_FAILURE);           
             }
 
         }
 
-        obj->bufferSize = nBytesTotal;
-
     }
 
-    void snk_hops_process_format_binary_int16(snk_hops_obj * obj) {
+    void snk_hops_process_format(snk_hops_obj * obj) {
 
         unsigned int iChannel;
         unsigned int iSample;
@@ -366,70 +160,9 @@
 
                 nBytesTotal += nBytes;
 
-
             }
 
         }
-
-        obj->bufferSize = nBytesTotal;
-
-    }
-
-    void snk_hops_process_format_binary_int24(snk_hops_obj * obj) {
-
-        unsigned int iChannel;
-        unsigned int iSample;
-        float sample;
-        unsigned int nBytes;
-        unsigned int nBytesTotal;
-
-        nBytes = 3;
-        nBytesTotal = 0;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                sample = obj->in->hops->array[iChannel][iSample];
-                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                nBytesTotal += nBytes;
-
-            }
-
-        }
-
-        obj->bufferSize = nBytesTotal;
-
-    }    
-
-    void snk_hops_process_format_binary_int32(snk_hops_obj * obj) {
-
-        unsigned int iChannel;
-        unsigned int iSample;
-        float sample;
-        unsigned int nBytes;
-        unsigned int nBytesTotal;
-
-        nBytes = 4;
-        nBytesTotal = 0;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                sample = obj->in->hops->array[iChannel][iSample];
-                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                nBytesTotal += nBytes;
-
-            }
-
-        }
-
-        obj->bufferSize = nBytesTotal;
 
     }
 
@@ -439,22 +172,13 @@
 
         cfg = (snk_hops_cfg *) malloc(sizeof(snk_hops_cfg));
 
-        cfg->fS = 0;
-        cfg->format = (format_obj *) NULL;
-        cfg->interface = (interface_obj *) NULL;
+        cfg->port = 0;
 
         return cfg;
 
     }
 
     void snk_hops_cfg_destroy(snk_hops_cfg * snk_hops_config) {
-
-        if (snk_hops_config->format != NULL) {
-            format_destroy(snk_hops_config->format);
-        }
-        if (snk_hops_config->interface != NULL) {
-            interface_destroy(snk_hops_config->interface);
-        }
 
         free((void *) snk_hops_config);
 

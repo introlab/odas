@@ -1,8 +1,8 @@
-#ifndef __ODAS_GENERAL_FORMAT
-#define __ODAS_GENERAL_FORMAT
+#ifndef __ODAS_UTILS_LATCH
+#define __ODAS_UTILS_LATCH
 
    /**
-    * \file     format.h
+    * \file     fifo.h
     * \author   François Grondin <francois.grondin2@usherbrooke.ca>
     * \version  2.0
     * \date     2018-03-18
@@ -25,39 +25,21 @@
 
     #include <stdlib.h>
     #include <stdio.h>
+    #include <pthread.h>
 
-    typedef enum format_type { 
-        
-        format_undefined = 0,
-        format_binary_int08 = 8, 
-        format_binary_int16 = 16, 
-        format_binary_int24 = 24, 
-        format_binary_int32 = 32, 
-        format_binary_float = 1, 
-        format_text_json = 2,
+    typedef struct share_obj {
 
-    } format_type;
+        void * ptr;
+        pthread_mutex_t use;
 
-    typedef struct format_obj {
+    } share_obj;
 
-        format_type type;
+    share_obj * share_construct(void * ptr);
 
-    } format_obj;
+    void share_destroy(share_obj * obj);
 
-    format_obj * format_construct();
+    void * share_get(share_obj * obj);
 
-    format_obj * format_construct_undefined();
-
-    format_obj * format_construct_binary_int(const unsigned int nBits);
-
-    format_obj * format_construct_binary_float();    
-
-    format_obj * format_construct_text_json();
-
-    format_obj * format_clone(const format_obj * obj);
-
-    void format_destroy(format_obj * obj);
-
-    void format_printf(const format_obj * obj);
+    void share_release(share_obj * obj, void * ptr);
 
 #endif

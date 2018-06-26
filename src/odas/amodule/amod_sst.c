@@ -37,8 +37,6 @@
 
         obj->thread = thread_construct(&amod_sst_thread, (void *) obj);
 
-        mod_sst_disable(obj->mod_sst);
-
         return obj;
 
     }
@@ -68,18 +66,6 @@
 
     }
 
-    void amod_sst_enable(amod_sst_obj * obj) {
-
-        mod_sst_enable(obj->mod_sst);
-
-    }
-
-    void amod_sst_disable(amod_sst_obj * obj) {
-
-        mod_sst_disable(obj->mod_sst);
-
-    }
-
     void * amod_sst_thread(void * ptr) {
 
         amod_sst_obj * obj;
@@ -89,6 +75,19 @@
         int rtnValue;
 
         obj = (amod_sst_obj *) ptr;
+
+        if (obj->in1 == NULL) {
+            printf("amod_sst: nothing connected to input 1\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->in2 == NULL) {
+            printf("amod_sst: nothing connected to input 2\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out == NULL) {
+            printf("amod_sst: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
 
         while(1) {
 
@@ -102,6 +101,8 @@
             amsg_pots_empty_push(obj->in1, msg_pots_in);
             amsg_targets_empty_push(obj->in2, msg_targets_in);
             amsg_tracks_filled_push(obj->out, msg_tracks_out);
+
+            printf("%d\n", rtnValue);
 
             // If this is the last frame, rtnValue = -1
             if (rtnValue == -1) {

@@ -39,8 +39,6 @@
         msg_spectra_obj * in;        
         msg_hops_obj * out;
 
-        char enabled;
-
     } mod_istft_obj;
 
     typedef struct mod_istft_cfg {
@@ -56,10 +54,6 @@
     void mod_istft_connect(mod_istft_obj * obj, msg_spectra_obj * in, msg_hops_obj * out);
 
     void mod_istft_disconnect(mod_istft_obj * obj);
-
-    void mod_istft_enable(mod_istft_obj * obj);
-
-    void mod_istft_disable(mod_istft_obj * obj);
 
     mod_istft_cfg * mod_istft_cfg_construct(void);
 

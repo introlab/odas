@@ -30,7 +30,6 @@
     typedef struct msg_hops_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         hops_obj * hops;
 
     } msg_hops_obj;
@@ -39,7 +38,6 @@
 
         unsigned int hopSize;
         unsigned int nChannels;
-        unsigned int fS;
 
     } msg_hops_cfg;
 

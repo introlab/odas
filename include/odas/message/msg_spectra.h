@@ -30,7 +30,6 @@
     typedef struct msg_spectra_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         freqs_obj * freqs;
 
     } msg_spectra_obj;
@@ -39,7 +38,6 @@
 
         unsigned int halfFrameSize;
         unsigned int nChannels;
-        unsigned int fS;
 
     } msg_spectra_cfg;
 

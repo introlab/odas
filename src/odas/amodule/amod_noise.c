@@ -36,8 +36,6 @@
 
         obj->thread = thread_construct(&amod_noise_thread, (void *) obj);
 
-        mod_noise_disable(obj->mod_noise);
-
         return obj;
 
     }
@@ -65,18 +63,6 @@
 
     }
 
-    void amod_noise_enable(amod_noise_obj * obj) {
-
-        mod_noise_enable(obj->mod_noise);
-
-    }
-
-    void amod_noise_disable(amod_noise_obj * obj) {
-
-        mod_noise_disable(obj->mod_noise);
-
-    }
-
     void * amod_noise_thread(void * ptr) {
 
         amod_noise_obj * obj;
@@ -85,6 +71,15 @@
         int rtnValue;
 
         obj = (amod_noise_obj *) ptr;
+
+        if (obj->in == NULL) {
+            printf("amod_noise: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out == NULL) {
+            printf("amod_noise: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
 
         while(1) {
 
@@ -96,6 +91,8 @@
             mod_noise_disconnect(obj->mod_noise);
             amsg_spectra_empty_push(obj->in, msg_spectra_in);
             amsg_powers_filled_push(obj->out, msg_powers_out);
+
+            printf("amod_noise: %llu\n", msg_powers_out->timeStamp);
 
             // If this is the last frame, rtnValue = -1
             if (rtnValue == -1) {

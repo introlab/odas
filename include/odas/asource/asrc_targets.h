@@ -23,6 +23,7 @@
     *
     */
 
+    #include "../amessage/amsg_hops.h"
     #include "../amessage/amsg_targets.h"
     #include "../source/src_targets.h"
     #include "../general/thread.h"
@@ -32,8 +33,11 @@
     typedef struct asrc_targets_obj {
 
         src_targets_obj * src_targets;
+        amsg_hops_obj * in;
         amsg_targets_obj * out;
         thread_obj * thread;
+        thread_obj * thread_receive;
+        thread_obj * thread_process;
 
     } asrc_targets_obj;
 
@@ -41,9 +45,13 @@
 
     void asrc_targets_destroy(asrc_targets_obj * obj);
 
-    void asrc_targets_connect(asrc_targets_obj * obj, amsg_targets_obj * out);
+    void asrc_targets_connect(asrc_targets_obj * obj, amsg_hops_obj * in, amsg_targets_obj * out);
 
     void asrc_targets_disconnect(asrc_targets_obj * obj);
+
+    void * asrc_targets_thread_receive(void * ptr);
+
+    void * asrc_targets_thread_process(void * ptr);
 
     void * asrc_targets_thread(void * ptr);
 

@@ -67,6 +67,11 @@
 
         obj = (asrc_hops_obj *) ptr;
 
+        if (obj->out == NULL) {
+            printf("asrc_hops: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
+
         // Open the source
         src_hops_open(obj->src_hops);
 
@@ -81,11 +86,6 @@
 
             // If this is the last frame, rtnValue = -1
             if (rtnValue == -1) {
-                break;
-            }
-
-            // Some other process may ask to stop the thread
-            if (thread_askedToStop(obj->thread) == 1) {
                 break;
             }
 

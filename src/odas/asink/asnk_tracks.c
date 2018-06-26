@@ -67,6 +67,11 @@
 
         obj = (asnk_tracks_obj *) ptr;
 
+        if (obj->in == NULL) {
+            printf("asnk_tracks: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+
         // Open the sink
         snk_tracks_open(obj->snk_tracks);
 

@@ -67,6 +67,11 @@
 
         obj = (asnk_hops_obj *) ptr;
 
+        if (obj->in == NULL) {
+            printf("asnk_hops: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+
         // Open the sink
         snk_hops_open(obj->snk_hops);
 

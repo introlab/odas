@@ -31,8 +31,6 @@
     #include <arpa/inet.h>
     #include <unistd.h>
 
-    #include "../general/format.h"
-    #include "../general/interface.h"
     #include "../message/msg_tracks.h"
 
     typedef struct snk_tracks_obj {
@@ -40,17 +38,13 @@
         unsigned long long timeStamp;
 
         unsigned int nTracks;
-        unsigned int fS;
-
-        format_obj * format;
-        interface_obj * interface;
 
         char * buffer;
         unsigned int bufferSize;
 
-        FILE * fp;
         int server_id;
         int connection_id;     
+        unsigned int port;       
         
         msg_tracks_obj * in;
 
@@ -58,9 +52,7 @@
 
     typedef struct snk_tracks_cfg {
 
-        unsigned int fS;
-        format_obj * format;
-        interface_obj * interface;
+        unsigned int port;
 
     } snk_tracks_cfg;
 
@@ -74,35 +66,13 @@
 
     void snk_tracks_open(snk_tracks_obj * obj);
 
-    void snk_tracks_open_interface_blackhole(snk_tracks_obj * obj);
-
-    void snk_tracks_open_interface_file(snk_tracks_obj * obj);
-
-    void snk_tracks_open_interface_socket(snk_tracks_obj * obj);
-
-    void snk_tracks_open_interface_terminal(snk_tracks_obj * obj);
-
     void snk_tracks_close(snk_tracks_obj * obj);
-
-    void snk_tracks_close_interface_blackhole(snk_tracks_obj * obj);
-
-    void snk_tracks_close_interface_file(snk_tracks_obj * obj);
-
-    void snk_tracks_close_interface_socket(snk_tracks_obj * obj);
-
-    void snk_tracks_close_interface_terminal(snk_tracks_obj * obj);
 
     int snk_tracks_process(snk_tracks_obj * obj);
 
-    void snk_tracks_process_interface_blackhole(snk_tracks_obj * obj);
+    void snk_tracks_process_interface(snk_tracks_obj * obj);
 
-    void snk_tracks_process_interface_file(snk_tracks_obj * obj);
-
-    void snk_tracks_process_interface_socket(snk_tracks_obj * obj);
-
-    void snk_tracks_process_interface_terminal(snk_tracks_obj * obj);
-
-    void snk_tracks_process_format_text_json(snk_tracks_obj * obj);
+    void snk_tracks_process_format(snk_tracks_obj * obj);
 
     snk_tracks_cfg * snk_tracks_cfg_construct(void);
 

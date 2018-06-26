@@ -31,8 +31,6 @@
     #include <netinet/in.h>
     #include <arpa/inet.h>
 
-    #include "../general/format.h"
-    #include "../general/interface.h"
     #include "../message/msg_hops.h"
     #include "../utils/pcm.h"
 
@@ -42,17 +40,13 @@
 
         unsigned int hopSize;
         unsigned int nChannels;
-        unsigned int fS;
-
-        format_obj * format;
-        interface_obj * interface;
 
         char * buffer;
         unsigned int bufferSize;
 
-        FILE * fp;
         int server_id;
         int connection_id;
+        unsigned int port;       
 
         char bytes[4];
 
@@ -62,9 +56,7 @@
 
     typedef struct snk_hops_cfg {
 
-        unsigned int fS;
-        format_obj * format;
-        interface_obj * interface;
+        unsigned int port;
 
     } snk_hops_cfg;
 
@@ -78,35 +70,13 @@
 
     void snk_hops_open(snk_hops_obj * obj);
 
-    void snk_hops_open_interface_blackhole(snk_hops_obj * obj);
-
-    void snk_hops_open_interface_file(snk_hops_obj * obj);
-
-    void snk_hops_open_interface_socket(snk_hops_obj * obj);
-
     void snk_hops_close(snk_hops_obj * obj);
-
-    void snk_hops_close_interface_blackhole(snk_hops_obj * obj);
-
-    void snk_hops_close_interface_file(snk_hops_obj * obj);
-
-    void snk_hops_close_interface_socket(snk_hops_obj * obj);
 
     int snk_hops_process(snk_hops_obj * obj);
 
-    void snk_hops_process_interface_blackhole(snk_hops_obj * obj);
+    void snk_hops_process_interface(snk_hops_obj * obj);
 
-    void snk_hops_process_interface_file(snk_hops_obj * obj);
-
-    void snk_hops_process_interface_socket(snk_hops_obj * obj);
-
-    void snk_hops_process_format_binary_int08(snk_hops_obj * obj);
-
-    void snk_hops_process_format_binary_int16(snk_hops_obj * obj);
-
-    void snk_hops_process_format_binary_int24(snk_hops_obj * obj);
-
-    void snk_hops_process_format_binary_int32(snk_hops_obj * obj);
+    void snk_hops_process_format(snk_hops_obj * obj);
 
     snk_hops_cfg * snk_hops_cfg_construct(void);
 

@@ -36,8 +36,6 @@
 
         obj->thread = thread_construct(&amod_lag_thread, (void *) obj);
 
-        mod_lag_disable(obj->mod_lag);
-
         return obj;
 
     }
@@ -51,32 +49,6 @@
 
     }
 
-    void amod_lag_connect(amod_lag_obj * obj, amsg_spectra_obj * in, amsg_spectra_obj * out) {
-
-        obj->in = in;
-        obj->out = out;
-
-    }
-
-    void amod_lag_disconnect(amod_lag_obj * obj) {
-
-        obj->in = (amsg_spectra_obj *) NULL;
-        obj->out = (amsg_spectra_obj *) NULL;
-
-    }
-
-    void amod_lag_enable(amod_lag_obj * obj) {
-
-        mod_lag_enable(obj->mod_lag);
-
-    }
-
-    void amod_lag_disable(amod_lag_obj * obj) {
-
-        mod_lag_disable(obj->mod_lag);
-
-    }
-
     void * amod_lag_thread(void * ptr) {
 
         amod_lag_obj * obj;
@@ -85,6 +57,15 @@
         int rtnValue;
 
         obj = (amod_lag_obj *) ptr;
+
+        if (obj->in == NULL) {
+            printf("amod_lag: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out == NULL) {
+            printf("amod_lag: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }       
 
         while(1) {
 

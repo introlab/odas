@@ -30,7 +30,6 @@
         obj = (msg_hops_obj *) malloc(sizeof(msg_hops_obj));
 
         obj->timeStamp = 0;
-        obj->fS = msg_hops_config->fS;
         obj->hops = hops_construct_zero(msg_hops_config->nChannels, msg_hops_config->hopSize);
 
         return obj;
@@ -47,7 +46,6 @@
     void msg_hops_copy(msg_hops_obj * dest, const msg_hops_obj * src) {
 
         dest->timeStamp = src->timeStamp;
-        dest->fS = src->fS;
         hops_copy(dest->hops, src->hops);
 
     }
@@ -55,7 +53,6 @@
     void msg_hops_zero(msg_hops_obj * obj) {
 
         obj->timeStamp = 0;
-        obj->fS = 0;
         hops_zero(obj->hops);
 
     }
@@ -83,7 +80,6 @@
 
         cfg->hopSize = 0;
         cfg->nChannels = 0;
-        cfg->fS = 0;
 
         return cfg;
 
@@ -102,7 +98,6 @@
             printf("msg_hops_cfg (%p)\n", cfg);
             printf(" + hopSize = %u\n", cfg->hopSize);
             printf(" + nChannels = %u\n", cfg->nChannels);        
-            printf(" + fS = %u\n", cfg->fS);
 
         }
         else {

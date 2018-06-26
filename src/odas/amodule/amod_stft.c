@@ -36,8 +36,6 @@
 
         obj->thread = thread_construct(&amod_stft_thread, (void *) obj);
 
-        mod_stft_disable(obj->mod_stft);
-
         return obj;
 
     }
@@ -65,18 +63,6 @@
 
     }
 
-    void amod_stft_enable(amod_stft_obj * obj) {
-
-        mod_stft_enable(obj->mod_stft);
-
-    }
-
-    void amod_stft_disable(amod_stft_obj * obj) {
-
-        mod_stft_disable(obj->mod_stft);
-
-    }
-
     void * amod_stft_thread(void * ptr) {
 
         amod_stft_obj * obj;
@@ -85,6 +71,15 @@
         int rtnValue;
 
         obj = (amod_stft_obj *) ptr;
+
+        if (obj->in == NULL) {
+            printf("amod_stft: nothing connected to input\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out == NULL) {
+            printf("amod_stft: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
 
         while(1) {
 

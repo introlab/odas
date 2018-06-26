@@ -40,7 +40,7 @@
 
     } acon_spectra_obj;
 
-    acon_spectra_obj * acon_spectra_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_spectra_cfg * msg_spectra_config);
+    acon_spectra_obj * acon_spectra_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_spectra_cfg * msg_spectra_config);
 
     void acon_spectra_destroy(acon_spectra_obj * obj);
 

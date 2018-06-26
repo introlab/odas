@@ -39,8 +39,6 @@
         
         obj->thread = thread_construct(&amod_sss_thread, (void *) obj);
 
-        mod_sss_disable(obj->mod_sss);
-
         return obj;
 
     }
@@ -74,18 +72,6 @@
 
     }
 
-    void amod_sss_enable(amod_sss_obj * obj) {
-
-        mod_sss_enable(obj->mod_sss);
-
-    }
-
-    void amod_sss_disable(amod_sss_obj * obj) {
-
-        mod_sss_disable(obj->mod_sss);
-
-    }
-
     void * amod_sss_thread(void * ptr) {
 
         amod_sss_obj * obj;
@@ -97,6 +83,27 @@
         int rtnValue;
 
         obj = (amod_sss_obj *) ptr;
+
+        if (obj->in1 == NULL) {
+            printf("amod_sss: nothing connected to input 1\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->in2 == NULL) {
+            printf("amod_sss: nothing connected to input 2\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->in3 == NULL) {
+            printf("amod_sss: nothing connected to input 3\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out1 == NULL) {
+            printf("amod_sss: nothing connected to output 1\n");
+            exit(EXIT_FAILURE);
+        }
+        if (obj->out2 == NULL) {
+            printf("amod_sss: nothing connected to output 2\n");
+            exit(EXIT_FAILURE);
+        }
 
         while(1) {
 

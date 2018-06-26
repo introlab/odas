@@ -23,7 +23,7 @@
 
     #include <aconnector/acon_hops.h>
 
-    acon_hops_obj * acon_hops_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_hops_cfg * msg_hops_config) {
+    acon_hops_obj * acon_hops_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_hops_cfg * msg_hops_config) {
 
         acon_hops_obj * obj;
         unsigned int iOut;

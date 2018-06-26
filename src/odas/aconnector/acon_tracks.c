@@ -23,7 +23,7 @@
     
     #include <aconnector/acon_tracks.h>
 
-    acon_tracks_obj * acon_tracks_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_tracks_cfg * msg_tracks_config) {
+    acon_tracks_obj * acon_tracks_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_tracks_cfg * msg_tracks_config) {
 
         acon_tracks_obj * obj;
         unsigned int iOut;

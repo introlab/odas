@@ -36,8 +36,6 @@
         obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_spectra_obj *) NULL;
 
-        obj->enabled = 0;
-
         return obj;
 
     }
@@ -58,17 +56,8 @@
 
         if (msg_hops_isZero(obj->in) == 0) {
 
-            if (obj->enabled == 1) {
-
-                hop2frame_process(obj->hop2frame, obj->in->hops, obj->frames);
-                frame2freq_process(obj->frame2freq, obj->frames, obj->out->freqs);
-
-            }
-            else {
-
-                freqs_zero(obj->out->freqs);
-
-            }
+            hop2frame_process(obj->hop2frame, obj->in->hops, obj->frames);
+            frame2freq_process(obj->frame2freq, obj->frames, obj->out->freqs);
 
             obj->out->timeStamp = obj->in->timeStamp;
 
@@ -98,18 +87,6 @@
 
         obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_spectra_obj *) NULL;
-
-    }
-
-    void mod_stft_enable(mod_stft_obj * obj) {
-
-        obj->enabled = 1;
-
-    }
-
-    void mod_stft_disable(mod_stft_obj * obj) {
-
-        obj->enabled = 0;
 
     }
 

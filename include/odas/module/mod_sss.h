@@ -126,8 +126,6 @@
         msg_spectra_obj * out1;
         msg_spectra_obj * out2;
 
-        char enabled;
-
     } mod_sss_obj;
 
     typedef struct mod_sss_cfg {
@@ -187,10 +185,6 @@
     void mod_sss_connect(mod_sss_obj * obj, msg_spectra_obj * in1, msg_powers_obj * in2, msg_tracks_obj * in3, msg_spectra_obj * out1, msg_spectra_obj * out2);
 
     void mod_sss_disconnect(mod_sss_obj * obj);
-
-    void mod_sss_enable(mod_sss_obj * obj);
-
-    void mod_sss_disable(mod_sss_obj * obj);
 
     mod_sss_cfg * mod_sss_cfg_construct(void);
 

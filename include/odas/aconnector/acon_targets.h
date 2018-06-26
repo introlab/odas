@@ -40,7 +40,7 @@
 
     } acon_targets_obj;
 
-    acon_targets_obj * acon_targets_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_targets_cfg * msg_targets_config);
+    acon_targets_obj * acon_targets_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_targets_cfg * msg_targets_config);
 
     void acon_targets_destroy(acon_targets_obj * obj);
 

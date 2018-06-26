@@ -32,23 +32,10 @@
         obj->timeStamp = 0;
 
         obj->nTargets = msg_targets_config->nTargets;
-        obj->fS = msg_targets_config->fS;
         
-        obj->format = format_clone(src_targets_config->format);
-        obj->interface = interface_clone(src_targets_config->interface);
-
-        obj->fp = (FILE *) NULL;
         obj->server_id = 0;
         obj->connection_id = 0;        
-
-        if (!(((obj->interface->type == interface_blackhole)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_text_json)) ||
-              ((obj->interface->type == interface_socket) && (obj->format->type == format_text_json)))) {
-            
-            printf("Source targets: Invalid interface and/or format.\n");
-            exit(EXIT_FAILURE);
-
-        }
+        obj->port = src_targets_config->port;
 
         obj->bufferSize = 4096;
 
@@ -59,8 +46,9 @@
 
         obj->tokens = json_tokens_construct(1024);
 
-        obj->targetsCst = targets_clone(src_targets_config->targets);
+        obj->sharedTargets = share_construct((void *) targets_construct_zero(msg_targets_config->nTargets));
 
+        obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_targets_obj *) NULL;
         
         return obj;
@@ -69,87 +57,38 @@
 
     void src_targets_destroy(src_targets_obj * obj) {
 
-        targets_destroy(obj->targetsCst);
+        targets_destroy((targets_obj *) share_get(obj->sharedTargets));
+        share_destroy(obj->sharedTargets);
         json_tokens_destroy(obj->tokens);
         free((void *) obj->buffer);
         free((void *) obj->string);
-        format_destroy(obj->format);
-        interface_destroy(obj->interface);       
 
         free((void *) obj);        
 
     }
 
-    void src_targets_connect(src_targets_obj * obj, msg_targets_obj * out) {
+    void src_targets_connect(src_targets_obj * obj, msg_hops_obj * in, msg_targets_obj * out) {
 
+        obj->in = in;
         obj->out = out;
 
     }
 
     void src_targets_disconnect(src_targets_obj * obj) {
 
+        obj->in = (msg_hops_obj *) NULL;
         obj->out = (msg_targets_obj *) NULL;
 
     }
 
     void src_targets_open(src_targets_obj * obj) {
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                src_targets_open_interface_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                src_targets_open_interface_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                src_targets_open_interface_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Source targets: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }        
-
-
-    }
-
-    void src_targets_open_interface_blackhole(src_targets_obj * obj) {
-
-        // Nothing to do
-
-    }
-
-    void src_targets_open_interface_file(src_targets_obj * obj) {
-
-        obj->fp = fopen(obj->interface->fileName, "rb");
-
-        if (obj->fp == NULL) {
-            printf("Cannot open file %s\n",obj->interface->fileName);
-            exit(EXIT_FAILURE);
-        }
-
-    }
-
-    void src_targets_open_interface_socket(src_targets_obj * obj) {
-
         struct sockaddr_in server_address;
 
+        memset(&server_address, 0x00, sizeof(server_address));
         server_address.sin_family = AF_INET;
         server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-        server_address.sin_port = htons(obj->interface->port);
+        server_address.sin_port = htons(obj->port);
 
         obj->server_id = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -161,51 +100,6 @@
 
     void src_targets_close(src_targets_obj * obj) {
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                src_targets_close_interface_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                src_targets_close_interface_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                src_targets_close_interface_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Source targets: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-    }
-
-    void src_targets_close_interface_blackhole(src_targets_obj * obj) {
-
-        // Nothing to do
-
-    }
-
-    void src_targets_close_interface_file(src_targets_obj * obj) {
-
-        fclose(obj->fp);
-
-    }
-
-    void src_targets_close_interface_socket(src_targets_obj * obj) {
-
         close(obj->connection_id);
         close(obj->server_id);
 
@@ -213,119 +107,34 @@
         obj->connection_id = 0;
 
     }
+
     
-    int src_targets_process(src_targets_obj * obj) {
+    int src_targets_receive(src_targets_obj * obj) {
 
         int rtnValue;
 
-        switch(obj->interface->type) {
-
-            case interface_blackhole:
-
-                rtnValue = src_targets_process_interface_blackhole(obj);
-
-            break;
-
-            case interface_file:
-
-                rtnValue = src_targets_process_interface_file(obj);
-
-            break;
-
-            case interface_socket:
-
-                rtnValue = src_targets_process_interface_socket(obj);
-
-            break;
-
-            default:
-
-                printf("Source targets: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;           
-
-        }
-
-        switch(obj->format->type) {
-
-            case format_text_json:
-
-                src_targets_process_format_text_json(obj);
-
-            break;
-
-            default:
-
-                printf("Source targets: Invalid format type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        obj->timeStamp++;
-        obj->out->timeStamp = obj->timeStamp;
+        rtnValue = src_targets_receive_interface(obj);
+        src_targets_receive_format(obj);
 
         return rtnValue;
 
     }
 
-    int src_targets_process_interface_blackhole(src_targets_obj * obj) {
-
-        obj->buffer[0] = 0x00;
-        strcat(obj->buffer, "{\"targets\":[]}");
-
-        strcpy(obj->string, obj->buffer);
-
-        return 0;
-
-    }
-
-    int src_targets_process_interface_file(src_targets_obj * obj) {
-
-        unsigned int nBytes;
-        unsigned int messageSize;
-        int ptr;
-        int rtnValue;
-
-        nBytes = strlen(obj->buffer);
-
-        messageSize = fread(obj->buffer, obj->bufferSize - nBytes, sizeof(char), obj->fp);
-
-        nBytes += messageSize;
-
-        json_tokens_clear(obj->tokens);
-        ptr = json_tokens_parse(obj->tokens, obj->buffer);
-
-        if (ptr != -1) {
-
-            memcpy(obj->string, obj->buffer, ptr);
-            memmove(obj->buffer, &(obj->buffer[ptr]), nBytes - ptr);
-            obj->buffer[nBytes - ptr] = 0x00;
-
-            rtnValue = 0;
-
-        }
-        else {
-
-            rtnValue = -1;
-
-        }
-
-        return rtnValue;
-
-    }
-
-    int src_targets_process_interface_socket(src_targets_obj * obj) {
+    int src_targets_receive_interface(src_targets_obj * obj) {
         
+        int rtnValue;
         unsigned int nBytes;
         unsigned int messageSize;
         int ptr;
 
         nBytes = strlen(obj->buffer);
 
-        while( (messageSize = recv(obj->connection_id, &(obj->buffer[nBytes]), (obj->bufferSize-nBytes), 0)) > 0) {
+        while ((messageSize = recv(obj->connection_id, &(obj->buffer[nBytes]), (obj->bufferSize-nBytes), 0)) > 0) {
+
+            if (messageSize == 0) {
+                ptr = -1;
+                break;
+            }
 
             nBytes += messageSize;
 
@@ -333,18 +142,29 @@
             ptr = json_tokens_parse(obj->tokens, obj->buffer);
 
             if (ptr != -1) {
+
+                memcpy(obj->string, obj->buffer, ptr);
+                memmove(obj->buffer, &(obj->buffer[ptr]), nBytes - ptr);
+                obj->buffer[nBytes - ptr] = 0x00;
+
                 break;
+
             }
 
         }
 
-        memcpy(obj->string, obj->buffer, ptr);
-        memmove(obj->buffer, &(obj->buffer[ptr]), nBytes - ptr);
-        obj->buffer[nBytes - ptr] = 0x00;
+        if (ptr != -1) {
+            rtnValue = 0;
+        }
+        else {
+            rtnValue = -1;
+        }            
+
+        return rtnValue;
 
     }
 
-    void src_targets_process_format_text_json(src_targets_obj * obj) {
+    void src_targets_receive_format(src_targets_obj * obj) {
 
         int ptr;
 
@@ -365,70 +185,104 @@
         int token_z_V;
         int token_z_N;
 
-        json_tokens_clear(obj->tokens);
-        ptr = json_tokens_parse(obj->tokens, obj->string);
+        targets_obj * targets;
 
-        if (ptr == -1) {
-            printf("Cannot parse JSON string.");
-            exit(EXIT_FAILURE);
+        if (strlen(obj->string) != 0) {
+
+            targets = (targets_obj *) share_get(obj->sharedTargets);
+
+            json_tokens_clear(obj->tokens);
+            ptr = json_tokens_parse(obj->tokens, obj->string);
+
+            if (ptr == -1) {
+                printf("Cannot parse JSON string.");
+                exit(EXIT_FAILURE);
+            }
+
+            token_root_O = json_tokens_getFromValue(obj->tokens, obj->string, -1);
+            if (token_root_O == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }       
+
+            token_targets_V = json_tokens_getFromObject(obj->tokens, obj->string, token_root_O, "targets");
+            if (token_targets_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+            token_targets_A = json_tokens_getFromValue(obj->tokens, obj->string, token_targets_V);
+            if (token_targets_A == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+            nTargets = json_tokens_count(obj->tokens, obj->string, token_targets_A);
+
+            for (iTarget = 0; iTarget < nTargets; iTarget++) {
+
+                token_target_V = json_tokens_getFromArray(obj->tokens, obj->string, token_targets_A, iTarget);
+                if (token_target_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_target_O = json_tokens_getFromValue(obj->tokens, obj->string, token_target_V);
+                if (token_target_O == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_tag_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "tag");
+                if (token_tag_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_tag_S = json_tokens_getFromValue(obj->tokens, obj->string, token_tag_V);
+                if (token_tag_S == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_x_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "x");
+                if (token_x_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_x_N = json_tokens_getFromValue(obj->tokens, obj->string, token_x_V);
+                if (token_x_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+                
+                token_y_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "y");
+                if (token_y_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_y_N = json_tokens_getFromValue(obj->tokens, obj->string, token_y_V);
+                if (token_y_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_z_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "z");
+                if (token_z_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                token_z_N = json_tokens_getFromValue(obj->tokens, obj->string, token_z_V);
+                if (token_z_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
+
+                json_tokens_extractString(obj->tokens, obj->string, token_tag_S, targets->tags[iTarget]);
+                json_tokens_extractFloat(obj->tokens, obj->string, token_x_N, &(targets->array[iTarget * 3 + 0]));
+                json_tokens_extractFloat(obj->tokens, obj->string, token_y_N, &(targets->array[iTarget * 3 + 1]));
+                json_tokens_extractFloat(obj->tokens, obj->string, token_z_N, &(targets->array[iTarget * 3 + 2]));
+
+            }
+
+            share_release(obj->sharedTargets, (void *) targets);
+
         }
-
-        token_root_O = json_tokens_getFromValue(obj->tokens, obj->string, -1);
-        if (token_root_O == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }       
-
-        token_targets_V = json_tokens_getFromObject(obj->tokens, obj->string, token_root_O, "targets");
-        if (token_targets_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-        token_targets_A = json_tokens_getFromValue(obj->tokens, obj->string, token_targets_V);
-        if (token_targets_A == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-        nTargets = json_tokens_count(obj->tokens, obj->string, token_targets_A);
-
-        for (iTarget = 0; iTarget < nTargets; iTarget++) {
-
-            token_target_V = json_tokens_getFromArray(obj->tokens, obj->string, token_targets_A, iTarget);
-            if (token_target_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_target_O = json_tokens_getFromValue(obj->tokens, obj->string, token_target_V);
-            if (token_target_O == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_tag_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "tag");
-            if (token_tag_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_tag_S = json_tokens_getFromValue(obj->tokens, obj->string, token_tag_V);
-            if (token_tag_S == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_x_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "x");
-            if (token_x_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_x_N = json_tokens_getFromValue(obj->tokens, obj->string, token_x_V);
-            if (token_x_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-            
-            token_y_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "y");
-            if (token_y_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_y_N = json_tokens_getFromValue(obj->tokens, obj->string, token_y_V);
-            if (token_y_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_z_V = json_tokens_getFromObject(obj->tokens, obj->string, token_target_O, "z");
-            if (token_z_V == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            token_z_N = json_tokens_getFromValue(obj->tokens, obj->string, token_z_V);
-            if (token_z_N == -1) { printf("Invalid JSON format.\n"); exit(EXIT_FAILURE); }
-
-            json_tokens_extractString(obj->tokens, obj->string, token_tag_S, obj->out->targets->tags[iTarget]);
-            json_tokens_extractFloat(obj->tokens, obj->string, token_x_N, &(obj->out->targets->array[iTarget * 3 + 0]));
-            json_tokens_extractFloat(obj->tokens, obj->string, token_y_N, &(obj->out->targets->array[iTarget * 3 + 1]));
-            json_tokens_extractFloat(obj->tokens, obj->string, token_z_N, &(obj->out->targets->array[iTarget * 3 + 2]));
-
-        }
-
-        obj->timeStamp++;
-
-        obj->out->timeStamp = obj->timeStamp;
-        obj->out->fS = obj->fS;
 
     }
+
+    int src_targets_process(src_targets_obj * obj) {
+
+        int rtnValue;
+
+        targets_obj * targets;
+
+        if (msg_hops_isZero(obj->in) == 0) {
+
+            targets = (targets_obj *) share_get(obj->sharedTargets);
+            targets_copy(obj->out->targets, targets);
+            share_release(obj->sharedTargets, (void *) targets);
+
+            obj->out->timeStamp = obj->in->timeStamp;
+
+            rtnValue = 0;
+
+        }
+        else {
+
+            msg_targets_zero(obj->out);
+
+            rtnValue = -1;
+
+        }
+
+        return rtnValue;
+
+    } 
 
     src_targets_cfg * src_targets_cfg_construct(void) {
 
@@ -436,23 +290,13 @@
 
         cfg = (src_targets_cfg *) malloc(sizeof(src_targets_cfg));
 
+        cfg->port = 0;
+
         return cfg;
 
     }
 
     void src_targets_cfg_destroy(src_targets_cfg * cfg) {
-
-        if (cfg->format != NULL) {
-            format_destroy(cfg->format);
-        }
-
-        if (cfg->interface != NULL) {
-            interface_destroy(cfg->interface);
-        }
-
-        if (cfg->targets != NULL) {
-            targets_destroy(cfg->targets);
-        }
 
         free((void *) cfg);        
 

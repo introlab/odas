@@ -23,7 +23,7 @@
     
     #include <aconnector/acon_pots.h>
 
-    acon_pots_obj * acon_pots_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_pots_cfg * msg_pots_config) {
+    acon_pots_obj * acon_pots_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_pots_cfg * msg_pots_config) {
 
         acon_pots_obj * obj;
         unsigned int iOut;

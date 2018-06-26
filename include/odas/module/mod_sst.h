@@ -103,14 +103,14 @@
         msg_targets_obj * in2;
         msg_tracks_obj * out;
 
-        char enabled;
-
     } mod_sst_obj;
 
     typedef struct mod_sst_cfg {
 
         char mode;
         char add;
+
+        samplerate_obj * samplerate;
 
         unsigned int nTracksMax;
         unsigned int hopSize;
@@ -156,10 +156,6 @@
     void mod_sst_connect(mod_sst_obj * obj, msg_pots_obj * in1, msg_targets_obj * in2, msg_tracks_obj * out);
 
     void mod_sst_disconnect(mod_sst_obj * obj);
-
-    void mod_sst_enable(mod_sst_obj * obj);
-
-    void mod_sst_disable(mod_sst_obj * obj);
 
     mod_sst_cfg * mod_sst_cfg_construct(void);
 

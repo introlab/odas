@@ -30,7 +30,6 @@
     typedef struct msg_powers_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         envs_obj * envs;
 
     } msg_powers_obj;
@@ -39,7 +38,6 @@
 
         unsigned int halfFrameSize;
         unsigned int nChannels;
-        unsigned int fS;
 
     } msg_powers_cfg;
 

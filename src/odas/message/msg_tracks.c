@@ -30,7 +30,6 @@
         obj = (msg_tracks_obj *) malloc(sizeof(msg_tracks_obj));
 
         obj->timeStamp = 0;
-        obj->fS = cfg->fS;
         obj->tracks = tracks_construct_zero(cfg->nTracks);
 
         return obj;
@@ -47,7 +46,6 @@
     void msg_tracks_copy(msg_tracks_obj * dest, const msg_tracks_obj * src) {
 
         dest->timeStamp = src->timeStamp;
-        dest->fS = src->fS;
         tracks_copy(dest->tracks, src->tracks);
 
     }
@@ -55,7 +53,6 @@
     void msg_tracks_zero(msg_tracks_obj * obj) {
 
         obj->timeStamp = 0;
-        obj->fS = 0;
         tracks_zero(obj->tracks);
 
     }
@@ -99,7 +96,6 @@
 
             printf("msg_tracks_cfg (%p)\n", cfg);
             printf(" + nTracks = %u\n", cfg->nTracks);
-            printf(" + fS = %u\n", cfg->fS);        
 
         }
         else {

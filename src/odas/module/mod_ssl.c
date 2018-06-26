@@ -106,8 +106,6 @@
 
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
-
-        obj->enabled = 0;
       
         return obj;
 
@@ -162,89 +160,80 @@
 
         if (msg_spectra_isZero(obj->in) == 0) {
 
-            if (obj->enabled == 1) {
+            freq2freq_phasor_process(obj->freq2freq_phasor, 
+                                     obj->in->freqs, 
+                                     obj->phasors);
 
-                freq2freq_phasor_process(obj->freq2freq_phasor, 
-                                         obj->in->freqs, 
-                                         obj->phasors);
+            freq2freq_product_process(obj->freq2freq_product, 
+                                      obj->phasors, 
+                                      obj->phasors,
+                                      obj->scans->pairs,
+                                      obj->products);        
 
-                freq2freq_product_process(obj->freq2freq_product, 
-                                          obj->phasors, 
-                                          obj->phasors,
-                                          obj->scans->pairs,
-                                          obj->products);        
+            freq2freq_interpolate_process(obj->freq2freq_interpolate,
+                                          obj->products,
+                                          obj->productsInterp);
 
-                freq2freq_interpolate_process(obj->freq2freq_interpolate,
-                                              obj->products,
-                                              obj->productsInterp);
+            freq2xcorr_process(obj->freq2xcorr, 
+                               obj->productsInterp, 
+                               obj->scans->pairs,
+                               obj->xcorrs);           
 
-                freq2xcorr_process(obj->freq2xcorr, 
-                                   obj->productsInterp, 
-                                   obj->scans->pairs,
-                                   obj->xcorrs);           
+            for (iPot = 0; iPot < obj->nPots; iPot++) {
+                
+                if (iPot > 0) {
 
-                for (iPot = 0; iPot < obj->nPots; iPot++) {
-                    
-                    if (iPot > 0) {
-
-                        xcorr2xcorr_process_reset(obj->xcorr2xcorr, 
-                    	                          obj->scans->tdoas[obj->nLevels-1],
-                                                  obj->scans->deltas[obj->nLevels-1],
-                                                  obj->scans->pairs,
-                                                  maxIndex,
-                                                  obj->xcorrs);
-
-                    }
-
-                    maxIndex = 0;
-
-                    for (iLevel = 0; iLevel < obj->nLevels; iLevel++) {
-
-                        xcorr2xcorr_process_max(obj->xcorr2xcorr, 
-                	                            obj->xcorrs, 
-                	                            obj->scans->tdoas[iLevel],
-             	                                obj->scans->deltas[iLevel],
-                                                obj->scans->pairs,
-                	                            obj->xcorrsMax);
-
-                        xcorr2aimg_process(obj->xcorr2aimg[iLevel],
-                    	                   obj->scans->tdoas[iLevel],
-                    	                   obj->scans->indexes[iLevel],
-                                           obj->scans->spatialindexes[iLevel],
-                                           maxIndex,
-                    	                   obj->xcorrsMax,
-                    	                   obj->aimgs[iLevel]);
-
-                        maxValue = obj->aimgs[iLevel]->array[0];
-
-                        for (iPoint = 0; iPoint < obj->aimgs[iLevel]->aimgSize; iPoint++) {
-
-                            if (obj->aimgs[iLevel]->array[iPoint] > maxValue) {
-
-                        	    maxValue = obj->aimgs[iLevel]->array[iPoint];
-                        	    maxIndex = iPoint;
-
-                            }
-
-                        }
-                       
-                    }
-
-                    obj->pots->array[iPot * 4 + 0] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 0];
-                    obj->pots->array[iPot * 4 + 1] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 1];
-                    obj->pots->array[iPot * 4 + 2] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 2];
-                    obj->pots->array[iPot * 4 + 3] = maxValue * ((float) obj->interpRate);
+                    xcorr2xcorr_process_reset(obj->xcorr2xcorr, 
+                	                          obj->scans->tdoas[obj->nLevels-1],
+                                              obj->scans->deltas[obj->nLevels-1],
+                                              obj->scans->pairs,
+                                              maxIndex,
+                                              obj->xcorrs);
 
                 }
-                
-                memcpy(obj->out->pots->array, obj->pots->array, sizeof(float) * obj->pots->nPots * 4);
+
+                maxIndex = 0;
+
+                for (iLevel = 0; iLevel < obj->nLevels; iLevel++) {
+
+                    xcorr2xcorr_process_max(obj->xcorr2xcorr, 
+            	                            obj->xcorrs, 
+            	                            obj->scans->tdoas[iLevel],
+         	                                obj->scans->deltas[iLevel],
+                                            obj->scans->pairs,
+            	                            obj->xcorrsMax);
+
+                    xcorr2aimg_process(obj->xcorr2aimg[iLevel],
+                	                   obj->scans->tdoas[iLevel],
+                	                   obj->scans->indexes[iLevel],
+                                       obj->scans->spatialindexes[iLevel],
+                                       maxIndex,
+                	                   obj->xcorrsMax,
+                	                   obj->aimgs[iLevel]);
+
+                    maxValue = obj->aimgs[iLevel]->array[0];
+
+                    for (iPoint = 0; iPoint < obj->aimgs[iLevel]->aimgSize; iPoint++) {
+
+                        if (obj->aimgs[iLevel]->array[iPoint] > maxValue) {
+
+                    	    maxValue = obj->aimgs[iLevel]->array[iPoint];
+                    	    maxIndex = iPoint;
+
+                        }
+
+                    }
+                   
+                }
+
+                obj->pots->array[iPot * 4 + 0] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 0];
+                obj->pots->array[iPot * 4 + 1] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 1];
+                obj->pots->array[iPot * 4 + 2] = obj->scans->points[obj->nLevels-1]->array[maxIndex * 3 + 2];
+                obj->pots->array[iPot * 4 + 3] = maxValue * ((float) obj->interpRate);
 
             }
-            else {
-
-                pots_zero(obj->out->pots);
-
-            }
+            
+            memcpy(obj->out->pots->array, obj->pots->array, sizeof(float) * obj->pots->nPots * 4);
 
             obj->out->timeStamp = obj->in->timeStamp;
 
@@ -274,18 +263,6 @@
 
         obj->in = (msg_spectra_obj *) NULL;
         obj->out = (msg_pots_obj *) NULL;
-
-    }
-
-    void mod_ssl_enable(mod_ssl_obj * obj) {
-
-        obj->enabled = 1;
-
-    }
-
-    void mod_ssl_disable(mod_ssl_obj * obj) {
-
-        obj->enabled = 0;
 
     }
 

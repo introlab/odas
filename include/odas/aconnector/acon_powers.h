@@ -40,7 +40,7 @@
 
     } acon_powers_obj;
 
-    acon_powers_obj * acon_powers_construct(const unsigned int nOuts, const unsigned int nMessages, const msg_powers_cfg * msg_powers_config);
+    acon_powers_obj * acon_powers_construct(const unsigned int nMessages, const unsigned int nOuts, const msg_powers_cfg * msg_powers_config);
 
     void acon_powers_destroy(acon_powers_obj * obj);
 

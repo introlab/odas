@@ -29,7 +29,6 @@
     typedef struct msg_targets_obj {
 
         unsigned long long timeStamp;
-        unsigned int fS;
         targets_obj * targets;
 
     } msg_targets_obj;
@@ -37,7 +36,6 @@
     typedef struct msg_targets_cfg {
 
         unsigned int nTargets;
-        unsigned int fS;
 
     } msg_targets_cfg;
 

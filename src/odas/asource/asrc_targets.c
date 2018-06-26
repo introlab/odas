@@ -30,9 +30,12 @@
         obj = (asrc_targets_obj *) malloc(sizeof(asrc_targets_obj));
 
         obj->src_targets = src_targets_construct(src_targets_config, msg_targets_config);
+        obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_targets_obj *) NULL;
 
         obj->thread = thread_construct(&asrc_targets_thread, (void *) obj);
+        obj->thread_receive = thread_construct(&asrc_targets_thread_receive, (void *) obj);
+        obj->thread_process = thread_construct(&asrc_targets_thread_process, (void *) obj);
 
         return obj;
 
@@ -42,27 +45,30 @@
 
         src_targets_destroy(obj->src_targets);
         thread_destroy(obj->thread);
+        thread_destroy(obj->thread_receive);
+        thread_destroy(obj->thread_process);
 
         free((void *) obj);
 
     }
 
-    void asrc_targets_connect(asrc_targets_obj * obj, amsg_targets_obj * out) {
+    void asrc_targets_connect(asrc_targets_obj * obj, amsg_hops_obj * in, amsg_targets_obj * out) {
 
+        obj->in = in;
         obj->out = out;
 
     }
 
     void asrc_targets_disconnect(asrc_targets_obj * obj) {
 
+        obj->in = (amsg_hops_obj *) NULL;
         obj->out = (amsg_targets_obj *) NULL;
 
     }
 
-    void * asrc_targets_thread(void * ptr) {
+    void * asrc_targets_thread_receive(void * ptr) {
 
         asrc_targets_obj * obj;
-        msg_targets_obj * msg_targets_out;
         int rtnValue;
 
         obj = (asrc_targets_obj *) ptr;
@@ -72,11 +78,42 @@
 
         while(1) {
 
+            rtnValue = src_targets_receive(obj->src_targets);
+
+            if (rtnValue == -1) {
+                break;
+            }
+
+        }
+
+        // Close the source
+        src_targets_close(obj->src_targets);                
+
+    }
+
+    void * asrc_targets_thread_process(void * ptr) {
+
+        asrc_targets_obj * obj;
+        msg_hops_obj * msg_hops_in;
+        msg_targets_obj * msg_targets_out;
+        int rtnValue;
+
+        obj = (asrc_targets_obj *) ptr;
+
+        if (obj->out == NULL) {
+            printf("asrc_targets: nothing connected to output\n");
+            exit(EXIT_FAILURE);
+        }
+
+        while(1) {
+
             // Pop a message, process, and push back
+            msg_hops_in = amsg_hops_filled_pop(obj->in);
             msg_targets_out = amsg_targets_empty_pop(obj->out);
-            src_targets_connect(obj->src_targets, msg_targets_out);
+            src_targets_connect(obj->src_targets, msg_hops_in, msg_targets_out);
             rtnValue = src_targets_process(obj->src_targets);
             src_targets_disconnect(obj->src_targets);
+            amsg_hops_empty_push(obj->in, msg_hops_in);
             amsg_targets_filled_push(obj->out, msg_targets_out);
 
             // If this is the last frame, rtnValue = -1
@@ -84,20 +121,30 @@
                 break;
             }
 
-            // Some other process may ask to stop the thread
-            if (thread_askedToStop(obj->thread) == 1) {
-                break;
-            }
-
         }
-
-        // Close the source
-        src_targets_close(obj->src_targets);
 
         // Send the "0" message, that kills all connected threads
         // that will consume this message
         msg_targets_out = amsg_targets_empty_pop(obj->out);
         msg_targets_zero(msg_targets_out);
         amsg_targets_filled_push(obj->out, msg_targets_out);
+
+    }
+
+    void * asrc_targets_thread(void * ptr) {
+
+        asrc_targets_obj * obj;
+
+        obj = (asrc_targets_obj *) ptr;
+
+        if (obj->src_targets->port != 0) {
+            thread_start(obj->thread_receive);
+        }
+        thread_start(obj->thread_process);
+
+        if (obj->src_targets->port != 0) {
+            thread_join(obj->thread_receive);
+        }
+        thread_join(obj->thread_process);
 
     }

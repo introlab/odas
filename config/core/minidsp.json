@@ -8,42 +8,16 @@
 
     },
 
-    "raw":
+    "socket":
     {
 
-        "format":
-        {
-
-            "fS": 16000,
-            "hopSize": 128,
-            "nBits": 16
-
-        },
-
-        "nChannels": 7,
-
-        "input":
-        {
-            
-            "type": "socket",
-            "file": { "path": "" }, "socket": { "port": 5000 }, "soundcard": { "device": "" }
-
-        },
-
-        "output":
-        {
-
-            "type": "file",
-            "file": { "path": "output.raw" }, "socket": { "port": 0 }
-
-        }
-
-    },
-
-    "mapping":
-    {
-
-        "map": [1, 2, 3, 4, 5, 6, 7]
+        "raw": 5000,
+        "targets": 0,
+        
+        "pots": 6000,
+        "tracks": 0,
+        "seps": 0,
+        "pfs": 0
 
     },
 
@@ -51,7 +25,7 @@
     {
         
         "epsilon": 1E-20,
-
+        
         "size": 
         {
             "hopSize": 128,
@@ -165,15 +139,7 @@
         [
             { "level": 2, "delta": -1 },
             { "level": 4, "delta": -1 }
-        ],
-
-        "output":
-        {
-
-            "type": "file",
-            "file": { "path": "pots.json" }, "socket": { "port": 0 }
-
-        }
+        ]
 
     },
 
@@ -265,27 +231,6 @@
 
             "Nmin": 0.7
 
-        },
-
-        "targets":
-        [
-            { "tag": "fan", "x": 0.0, "y": 0.0, "z": 1.0 }
-        ],
-
-        "input":
-        {
-
-            "type": "blackhole",
-            "file": { "path": "" }, "socket": { "port": 0 }
-
-        },
-
-        "output":
-        {
-
-            "type": "file",
-            "file": { "path": "tracks.json" }, "socket": { "port": 0 }            
-
         }
 
     },
@@ -314,23 +259,6 @@
                 },
 
                 "dmvdr": {}
-
-            },
-
-            "format":
-            {
-
-                "fS": 16000,
-                "hopSize": 128,
-                "nBits": 16
-
-            },
-
-            "output":
-            {
-
-                "type": "file",
-                "file": { "path": "separated.raw" }, "socket": { "port": 0 }            
 
             }
 
@@ -369,24 +297,7 @@
 
                 }
 
-            },
-
-            "format":
-            {
-
-                "fS": 16000,
-                "hopSize": 128,
-                "nBits": 16
-
-            },
-
-            "output":
-            {
-
-                "type": "blackhole",
-                "file": { "path": "" }, "socket": { "port": 0 }            
-
-            }            
+            }
 
         }
 

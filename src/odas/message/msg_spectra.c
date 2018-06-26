@@ -30,7 +30,6 @@
         obj = (msg_spectra_obj *) malloc(sizeof(msg_spectra_obj));
 
         obj->timeStamp = 0;
-        obj->fS = msg_spectra_config->fS;
         obj->freqs = freqs_construct_zero(msg_spectra_config->nChannels, msg_spectra_config->halfFrameSize);
 
         return obj;
@@ -47,7 +46,6 @@
     void msg_spectra_copy(msg_spectra_obj * dest, const msg_spectra_obj * src) {
 
         dest->timeStamp = src->timeStamp;
-        dest->fS = src->fS;
         freqs_copy(dest->freqs, src->freqs);
 
     }
@@ -55,7 +53,6 @@
     void msg_spectra_zero(msg_spectra_obj * obj) {
 
         obj->timeStamp = 0;
-        obj->fS = 0;
         freqs_zero(obj->freqs);
 
     }
@@ -83,7 +80,6 @@
 
         cfg->halfFrameSize = 0;
         cfg->nChannels = 0;
-        cfg->fS = 0;
 
         return cfg;
 
@@ -102,7 +98,6 @@
             printf("msg_spectra_cfg (%p)\n", cfg);
             printf(" + halfFrameSize = %u\n", cfg->halfFrameSize);
             printf(" + nChannels = %u\n", cfg->nChannels);
-            printf(" + fS = %u\n", cfg->fS);
 
         }
         else {

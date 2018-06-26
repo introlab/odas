@@ -33,8 +33,6 @@
         freqs_obj ** freqs;
         unsigned int nElements;
 
-        char enabled;
-
     } mod_lag_obj;
 
     typedef struct mod_lag_cfg {
@@ -52,10 +50,6 @@
     void mod_lag_connect(mod_lag_obj * obj, msg_spectra_obj * in, msg_spectra_obj * out);
 
     void mod_lag_disconnect(mod_lag_obj * obj);
-
-    void mod_lag_enable(mod_lag_obj * obj);
-
-    void mod_lag_disable(mod_lag_obj * obj);
 
     mod_lag_cfg * mod_lag_cfg_construct(void);
 

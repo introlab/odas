@@ -14,6 +14,18 @@
 	#define SETTINGS_NLEVELS			16
 	#define SETTINGS_NTARGETS			4
 	
+	typedef struct settings_socket {
+
+		unsigned int raw;
+		unsigned int targets;
+
+		unsigned int pots;
+		unsigned int tracks;
+		unsigned int seps;
+		unsigned int pfs;
+
+	} settings_socket;
+
 	typedef struct settings_size {
 
 		unsigned int hopSize;
@@ -152,22 +164,6 @@
 
 	} settings_particle;
 
-	typedef struct settings_target {
-
-		char tag[256];
-		float x;
-		float y;
-		float z;
-
-	} settings_target;
-
-	typedef struct settings_targets {
-
-		settings_target array[SETTINGS_NTARGETS];
-		unsigned int N;
-
-	} settings_targets;
-
 	typedef struct settings_dds {
 
 	} settings_dds;
@@ -221,59 +217,6 @@
 
 	} settings_ptechniques;	
 
-	typedef struct settings_file {
-
-		char path[1024];
-
-	} settings_file;
-
-	typedef struct settings_socket {
-
-		unsigned int port;
-
-	} settings_socket;
-
-	typedef struct settings_soundcard {
-
-		char device[256];
-
-	} settings_soundcard;
-
-	typedef struct settings_format {
-
-		unsigned int fS;
-		unsigned int hopSize;
-		unsigned int nBits;
-
-	} settings_format;
-
-	typedef struct settings_interface {
-
-		char type[256];
-
-		settings_file file;
-		settings_socket socket;
-		settings_soundcard soundcard;
-
-	} settings_interface;
-
-	typedef struct settings_raw {
-
-		settings_format format;		
-		unsigned int nChannels;
-
-		settings_interface input;
-		settings_interface output;
-
-	} settings_raw;
-
-	typedef struct settings_mapping {
-
-		unsigned int array[SETTINGS_NCHANNELS];
-		unsigned int N;
-
-	} settings_mapping;
-
 	typedef struct settings_general {
 
 		float epsilon;
@@ -310,8 +253,6 @@
 
 		settings_scans scans;
 
-		settings_interface output;
-
 	} settings_ssl;
 
 	typedef struct settings_sst {
@@ -328,11 +269,6 @@
 		settings_particle particle;
 		settings_kalman kalman;
 
-		settings_targets targets;
-
-		settings_interface input;
-		settings_interface output;
-
 	} settings_sst;
 
 	typedef struct settings_separation {
@@ -341,9 +277,6 @@
 
 		settings_stechniques techniques;
 
-		settings_format format;
-		settings_interface output;
-
 	} settings_separation;
 
 	typedef struct settings_postfiltering {
@@ -351,9 +284,6 @@
 		char mode[256];
 
 		settings_ptechniques techniques;
-
-		settings_format format;
-		settings_interface output;
 
 	} settings_postfiltering;	
 
@@ -369,8 +299,7 @@
 
 		json_tokens * tokens;
 
-		settings_raw raw;
-		settings_mapping mapping;
+		settings_socket socket;
 		settings_general general;
 		settings_sne sne;
 		settings_ssl ssl;

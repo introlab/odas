@@ -27,13 +27,10 @@
     #include <stdio.h>
     #include <string.h>
     #include <unistd.h>
-    #include <alsa/asoundlib.h>
     #include <sys/socket.h>
     #include <netinet/in.h>
     #include <arpa/inet.h>
 
-    #include "../general/format.h"
-    #include "../general/interface.h"
     #include "../message/msg_hops.h"
     #include "../signal/hop.h"
     #include "../utils/pcm.h"
@@ -44,16 +41,10 @@
 
         unsigned int hopSize;
         unsigned int nChannels;
-        unsigned int fS;
 
-        format_obj * format;
-        interface_obj * interface;
-
-        FILE * fp;
-        snd_pcm_t * ch;
-        struct sockaddr_in * server_address;
         int server_id;
         int connection_id;
+        unsigned int port;        
 
         char * buffer;
         unsigned int bufferSize;
@@ -66,8 +57,7 @@
 
     typedef struct src_hops_cfg {
 
-        format_obj * format;
-        interface_obj * interface;
+        unsigned int port;
 
     } src_hops_cfg;
 
@@ -81,41 +71,13 @@
 
     void src_hops_open(src_hops_obj * obj);
 
-    void src_hops_open_interface_blackhole(src_hops_obj * obj);
-
-    void src_hops_open_interface_file(src_hops_obj * obj);
-
-    void src_hops_open_interface_socket(src_hops_obj * obj);
-
-    void src_hops_open_interface_soundcard(src_hops_obj * obj);
-
     void src_hops_close(src_hops_obj * obj);
-
-    void src_hops_close_interface_blackhole(src_hops_obj * obj);
-
-    void src_hops_close_interface_file(src_hops_obj * obj);
-
-    void src_hops_close_interface_socket(src_hops_obj * obj);
-
-    void src_hops_close_interface_soundcard(src_hops_obj * obj);   
 
     int src_hops_process(src_hops_obj * obj);
 
-    int src_hops_process_interface_blackhole(src_hops_obj * obj);
+    int src_hops_process_interface(src_hops_obj * obj);
 
-    int src_hops_process_interface_file(src_hops_obj * obj);
-
-    int src_hops_process_interface_socket(src_hops_obj * obj);
-
-    int src_hops_process_interface_soundcard(src_hops_obj * obj);   
-
-    void src_hops_process_format_binary_int08(src_hops_obj * obj);
-
-    void src_hops_process_format_binary_int16(src_hops_obj * obj);
-
-    void src_hops_process_format_binary_int24(src_hops_obj * obj);
-
-    void src_hops_process_format_binary_int32(src_hops_obj * obj);
+    void src_hops_process_format(src_hops_obj * obj);
 
     src_hops_cfg * src_hops_cfg_construct(void);
 
