@@ -25,7 +25,7 @@
 		FILE * fp;
 
 		unsigned int nTokens = 1024;
-		unsigned int nBytesPerLine = 1024;
+		unsigned int nBytesPerLine = 4096;
 		unsigned int nBytesPerString = 65536;
 
 		int parseRtn;
@@ -388,7 +388,8 @@
 		while(feof(fp)==0) {
 			line[0] = 0x00;
 			line = fgets(line, nBytesPerLine, fp);
-			strcat(string, line);
+			if (line != NULL)
+				strcat(string, line);
 		}
 		fclose(fp);
 		
