@@ -14,18 +14,6 @@
 	#define SETTINGS_NLEVELS			16
 	#define SETTINGS_NTARGETS			4
 	
-	typedef struct settings_socket {
-
-		unsigned int raw;
-		unsigned int targets;
-
-		unsigned int pots;
-		unsigned int tracks;
-		unsigned int seps;
-		unsigned int pfs;
-
-	} settings_socket;
-
 	typedef struct settings_size {
 
 		unsigned int hopSize;
@@ -299,7 +287,6 @@
 
 		json_tokens * tokens;
 
-		settings_socket socket;
 		settings_general general;
 		settings_sne sne;
 		settings_ssl ssl;
@@ -315,5 +302,7 @@
 	void settings_load(settings * sets, const char * file);
 
 	void settings_printf(const settings * sets);
+
+	void settings_validate(int token);
 
 #endif

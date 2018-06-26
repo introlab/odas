@@ -185,6 +185,7 @@ add_executable(core
     demo/core/objects.c
     demo/core/params.c
     demo/core/settings.c
+    demo/core/sockets.c
 
 )
 

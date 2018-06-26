@@ -102,8 +102,6 @@
             amsg_targets_empty_push(obj->in2, msg_targets_in);
             amsg_tracks_filled_push(obj->out, msg_tracks_out);
 
-            printf("%d\n", rtnValue);
-
             // If this is the last frame, rtnValue = -1
             if (rtnValue == -1) {
                 break;

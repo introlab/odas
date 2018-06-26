@@ -1,7 +1,8 @@
 
 	#include <odas/odas.h>
 
-    #include "settings.h" 
+    #include "settings.h"
+    #include "sockets.h"
     #include "configs.h"  
     #include "params.h" 
     #include "objects.h"
@@ -23,8 +24,9 @@
 
         printf(" Parameters:\n");
         printf("\n");
-        printf("  -c     Configuration file (.cfg)\n");
+        printf("  -c     Configuration file (.json)\n");
         printf("  -h     Help\n");
+        printf("  -s     Socket file (.json)\n");
         printf("\n");
 
     }
@@ -34,14 +36,16 @@
         const unsigned int nMessages = 100;
 
         settings * sets;
+        sockets * scks;
         configs * cfgs;
         objects * objs;
 
         int c;
 
         char * file_config = (char *) NULL;
+        char * file_socket = (char *) NULL;
 
-        while ((c = getopt(argc,argv, "c:h")) != -1) {
+        while ((c = getopt(argc,argv, "c:hs:")) != -1) {
 
             switch(c) {
 
@@ -61,6 +65,13 @@
 
                 break;
 
+                case 's':
+
+                    file_socket = (char *) malloc(sizeof(char) * (strlen(optarg)+1));
+                    strcpy(file_socket, optarg);                        
+
+                break;
+
             }
 
         }
@@ -70,20 +81,29 @@
             exit(EXIT_FAILURE);
         }            
 
+        if (file_socket == NULL) {
+            printf("Missing socket file.\n");
+            exit(EXIT_FAILURE);
+        } 
+
         print_copyright();    
 
         printf(" Initializing settings.... "); fflush(stdout);
         sets = settings_construct();
+        scks = sockets_construct();
         settings_load(sets, file_config);
+        sockets_load(scks, file_socket);
         printf("[Done]\n");
 
         printf(" Initializing configs..... "); fflush(stdout); 
         cfgs = configs_construct();
-        params_process(sets, cfgs);
+        params_process(sets, scks, cfgs);
+        sockets_printf(scks);
         printf("[Done]\n");
 
         printf(" Terminating settings..... "); fflush(stdout);
         settings_destroy(sets);
+        sockets_destroy(scks);
         printf("[Done]\n");
 
         printf(" Initializing objects..... "); fflush(stdout);        

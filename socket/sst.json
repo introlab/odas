@@ -1,0 +1,12 @@
+{
+    "sockets":
+    {
+        "raw": 5001,
+        "targets": 0,
+        
+        "pots": 0,
+        "tracks": 6002,
+        "seps": 0,
+        "pfs": 0
+    }
+}

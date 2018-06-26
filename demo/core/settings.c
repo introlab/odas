@@ -33,22 +33,6 @@
 
 		int token_root_O;
 
-		int token_root_socket_V;
-		int token_root_socket_O;
-
-		int token_root_socket_raw_V;
-		int token_root_socket_raw_N;
-		int token_root_socket_targets_V;
-		int token_root_socket_targets_N;
-		int token_root_socket_pots_V;
-		int token_root_socket_pots_N;
-		int token_root_socket_tracks_V;
-		int token_root_socket_tracks_N;
-		int token_root_socket_seps_V;
-		int token_root_socket_seps_N;
-		int token_root_socket_pfs_V;
-		int token_root_socket_pfs_N;
-
 		int token_root_general_V;
 		int token_root_general_O;
 		
@@ -389,6 +373,7 @@
 		while(feof(fp)==0) {
 			line[0] = 0x00;
 			rtnPtr = fgets(line, nBytesPerLine, fp);
+			if ((strlen(line) + strlen(string)) > nBytesPerString) { printf("Buffer overflow while loading JSON\n"); exit(EXIT_FAILURE); }
 			strcat(string, line);
 		}
 		fclose(fp);
@@ -401,217 +386,201 @@
 
 		// Reference each token
 		
-		token_root_O = json_tokens_getFromValue(tokens, string, -1);
+		token_root_O = json_tokens_getFromValue(tokens, string, -1); settings_validate(token_root_O);
 
-		token_root_socket_V = json_tokens_getFromObject(tokens, string, token_root_O, "socket");
-		token_root_socket_O = json_tokens_getFromValue(tokens, string, token_root_socket_V);
+		token_root_general_V = json_tokens_getFromObject(tokens, string, token_root_O, "general"); settings_validate(token_root_general_V);
+		token_root_general_O = json_tokens_getFromValue(tokens, string, token_root_general_V); settings_validate(token_root_general_O);
 
-		token_root_socket_raw_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "raw");
-		token_root_socket_raw_N = json_tokens_getFromValue(tokens, string, token_root_socket_raw_V);
-		token_root_socket_targets_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "targets");
-		token_root_socket_targets_N = json_tokens_getFromValue(tokens, string, token_root_socket_targets_V);
-		token_root_socket_pots_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "pots");
-		token_root_socket_pots_N = json_tokens_getFromValue(tokens, string, token_root_socket_pots_V);
-		token_root_socket_tracks_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "tracks");
-		token_root_socket_tracks_N = json_tokens_getFromValue(tokens, string, token_root_socket_tracks_V);
-		token_root_socket_seps_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "seps");
-		token_root_socket_seps_N = json_tokens_getFromValue(tokens, string, token_root_socket_seps_V);
-		token_root_socket_pfs_V = json_tokens_getFromObject(tokens, string, token_root_socket_O, "pfs");
-		token_root_socket_pfs_N = json_tokens_getFromValue(tokens, string, token_root_socket_pfs_V);
+		token_root_general_epsilon_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "epsilon"); settings_validate(token_root_general_epsilon_V);
+		token_root_general_epsilon_N = json_tokens_getFromValue(tokens, string, token_root_general_epsilon_V); settings_validate(token_root_general_epsilon_N);
+		token_root_general_size_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "size"); settings_validate(token_root_general_size_V);
+		token_root_general_size_O = json_tokens_getFromValue(tokens, string, token_root_general_size_V); settings_validate(token_root_general_size_O);
+		token_root_general_size_hopSize_V = json_tokens_getFromObject(tokens, string, token_root_general_size_O, "hopSize"); settings_validate(token_root_general_size_hopSize_V);
+		token_root_general_size_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_general_size_hopSize_V); settings_validate(token_root_general_size_hopSize_N);
+		token_root_general_size_frameSize_V = json_tokens_getFromObject(tokens, string, token_root_general_size_O, "frameSize"); settings_validate(token_root_general_size_frameSize_V);
+		token_root_general_size_frameSize_N = json_tokens_getFromValue(tokens, string, token_root_general_size_frameSize_V); settings_validate(token_root_general_size_frameSize_N);
+		token_root_general_samplerate_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "samplerate"); settings_validate(token_root_general_samplerate_V);
+		token_root_general_samplerate_O = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_V); settings_validate(token_root_general_samplerate_O);
+		token_root_general_samplerate_mu_V = json_tokens_getFromObject(tokens, string, token_root_general_samplerate_O, "mu"); settings_validate(token_root_general_samplerate_mu_V);
+		token_root_general_samplerate_mu_N = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_mu_V); settings_validate(token_root_general_samplerate_mu_N);
+		token_root_general_samplerate_sigma2_V = json_tokens_getFromObject(tokens, string, token_root_general_samplerate_O, "sigma2"); settings_validate(token_root_general_samplerate_sigma2_V);
+		token_root_general_samplerate_sigma2_N = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_sigma2_V); settings_validate(token_root_general_samplerate_sigma2_N);
+		token_root_general_speedofsound_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "speedofsound"); settings_validate(token_root_general_speedofsound_V);
+		token_root_general_speedofsound_O = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_V); settings_validate(token_root_general_speedofsound_O);
+		token_root_general_speedofsound_mu_V = json_tokens_getFromObject(tokens, string, token_root_general_speedofsound_O, "mu"); settings_validate(token_root_general_speedofsound_mu_V);
+		token_root_general_speedofsound_mu_N = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_mu_V); settings_validate(token_root_general_speedofsound_mu_N);
+		token_root_general_speedofsound_sigma2_V = json_tokens_getFromObject(tokens, string, token_root_general_speedofsound_O, "sigma2"); settings_validate(token_root_general_speedofsound_sigma2_V);
+		token_root_general_speedofsound_sigma2_N = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_sigma2_V); settings_validate(token_root_general_speedofsound_sigma2_N);
 
-		token_root_general_V = json_tokens_getFromObject(tokens, string, token_root_O, "general");
-		token_root_general_O = json_tokens_getFromValue(tokens, string, token_root_general_V);
-
-		token_root_general_epsilon_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "epsilon");
-		token_root_general_epsilon_N = json_tokens_getFromValue(tokens, string, token_root_general_epsilon_V);
-		token_root_general_size_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "size");
-		token_root_general_size_O = json_tokens_getFromValue(tokens, string, token_root_general_size_V);
-		token_root_general_size_hopSize_V = json_tokens_getFromObject(tokens, string, token_root_general_size_O, "hopSize");
-		token_root_general_size_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_general_size_hopSize_V);
-		token_root_general_size_frameSize_V = json_tokens_getFromObject(tokens, string, token_root_general_size_O, "frameSize");
-		token_root_general_size_frameSize_N = json_tokens_getFromValue(tokens, string, token_root_general_size_frameSize_V);
-		token_root_general_samplerate_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "samplerate");
-		token_root_general_samplerate_O = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_V);
-		token_root_general_samplerate_mu_V = json_tokens_getFromObject(tokens, string, token_root_general_samplerate_O, "mu");
-		token_root_general_samplerate_mu_N = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_mu_V);
-		token_root_general_samplerate_sigma2_V = json_tokens_getFromObject(tokens, string, token_root_general_samplerate_O, "sigma2");
-		token_root_general_samplerate_sigma2_N = json_tokens_getFromValue(tokens, string, token_root_general_samplerate_sigma2_V);
-		token_root_general_speedofsound_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "speedofsound");
-		token_root_general_speedofsound_O = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_V);
-		token_root_general_speedofsound_mu_V = json_tokens_getFromObject(tokens, string, token_root_general_speedofsound_O, "mu");
-		token_root_general_speedofsound_mu_N = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_mu_V);
-		token_root_general_speedofsound_sigma2_V = json_tokens_getFromObject(tokens, string, token_root_general_speedofsound_O, "sigma2");
-		token_root_general_speedofsound_sigma2_N = json_tokens_getFromValue(tokens, string, token_root_general_speedofsound_sigma2_V);
-
-		token_root_general_mics_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "mics");
-		token_root_general_mics_A = json_tokens_getFromValue(tokens, string, token_root_general_mics_V);
+		token_root_general_mics_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "mics"); settings_validate(token_root_general_mics_V);
+		token_root_general_mics_A = json_tokens_getFromValue(tokens, string, token_root_general_mics_V); settings_validate(token_root_general_mics_A);
 		
 		nMics = json_tokens_count(tokens, string, token_root_general_mics_A);
 
 		for (iMic = 0; iMic < nMics; iMic++) {
 
-			token_root_general_mics_e_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_A, iMic);
-			token_root_general_mics_e_O[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_V[iMic]);
+			token_root_general_mics_e_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_A, iMic); settings_validate(token_root_general_mics_e_V[iMic]);
+			token_root_general_mics_e_O[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_V[iMic]); settings_validate(token_root_general_mics_e_O[iMic]);
 
-			token_root_general_mics_e_mus_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "mu");
-			token_root_general_mics_e_mus_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_V[iMic]);
+			token_root_general_mics_e_mus_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "mu"); settings_validate(token_root_general_mics_e_mus_V[iMic]);
+			token_root_general_mics_e_mus_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_V[iMic]); settings_validate(token_root_general_mics_e_mus_A[iMic]);
 
-			token_root_general_mics_e_mus_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 0);
-			token_root_general_mics_e_mus_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_0_V[iMic]);
-			token_root_general_mics_e_mus_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 1);
-			token_root_general_mics_e_mus_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_1_V[iMic]);
-			token_root_general_mics_e_mus_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 2);
-			token_root_general_mics_e_mus_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_2_V[iMic]);
+			token_root_general_mics_e_mus_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 0); settings_validate(token_root_general_mics_e_mus_0_V[iMic]);
+			token_root_general_mics_e_mus_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_0_V[iMic]); settings_validate(token_root_general_mics_e_mus_0_N[iMic]);
+			token_root_general_mics_e_mus_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 1); settings_validate(token_root_general_mics_e_mus_1_V[iMic]);
+			token_root_general_mics_e_mus_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_1_V[iMic]); settings_validate(token_root_general_mics_e_mus_1_N[iMic]);
+			token_root_general_mics_e_mus_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_mus_A[iMic], 2); settings_validate(token_root_general_mics_e_mus_2_V[iMic]);
+			token_root_general_mics_e_mus_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_mus_2_V[iMic]); settings_validate(token_root_general_mics_e_mus_2_N[iMic]);
 
-			token_root_general_mics_e_sigma2s_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "sigma2");
-			token_root_general_mics_e_sigma2s_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_V[iMic]);
+			token_root_general_mics_e_sigma2s_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "sigma2"); settings_validate(token_root_general_mics_e_sigma2s_V[iMic]);
+			token_root_general_mics_e_sigma2s_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_A[iMic]);
 
-			token_root_general_mics_e_sigma2s_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 0);
-			token_root_general_mics_e_sigma2s_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_0_V[iMic]);
-			token_root_general_mics_e_sigma2s_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 1);
-			token_root_general_mics_e_sigma2s_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_1_V[iMic]);
-			token_root_general_mics_e_sigma2s_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 2);
-			token_root_general_mics_e_sigma2s_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_2_V[iMic]);
-			token_root_general_mics_e_sigma2s_3_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 3);
-			token_root_general_mics_e_sigma2s_3_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_3_V[iMic]);
-			token_root_general_mics_e_sigma2s_4_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 4);
-			token_root_general_mics_e_sigma2s_4_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_4_V[iMic]);
-			token_root_general_mics_e_sigma2s_5_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 5);
-			token_root_general_mics_e_sigma2s_5_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_5_V[iMic]);
-			token_root_general_mics_e_sigma2s_6_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 6);
-			token_root_general_mics_e_sigma2s_6_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_6_V[iMic]);
-			token_root_general_mics_e_sigma2s_7_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 7);
-			token_root_general_mics_e_sigma2s_7_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_7_V[iMic]);
-			token_root_general_mics_e_sigma2s_8_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 8);
-			token_root_general_mics_e_sigma2s_8_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_8_V[iMic]);
+			token_root_general_mics_e_sigma2s_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 0); settings_validate(token_root_general_mics_e_sigma2s_0_V[iMic]);
+			token_root_general_mics_e_sigma2s_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_0_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_0_N[iMic]);
+			token_root_general_mics_e_sigma2s_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 1); settings_validate(token_root_general_mics_e_sigma2s_1_V[iMic]);
+			token_root_general_mics_e_sigma2s_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_1_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_1_N[iMic]);
+			token_root_general_mics_e_sigma2s_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 2); settings_validate(token_root_general_mics_e_sigma2s_2_V[iMic]);
+			token_root_general_mics_e_sigma2s_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_2_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_2_N[iMic]);
+			token_root_general_mics_e_sigma2s_3_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 3); settings_validate(token_root_general_mics_e_sigma2s_3_V[iMic]);
+			token_root_general_mics_e_sigma2s_3_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_3_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_3_N[iMic]);
+			token_root_general_mics_e_sigma2s_4_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 4); settings_validate(token_root_general_mics_e_sigma2s_4_V[iMic]);
+			token_root_general_mics_e_sigma2s_4_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_4_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_4_N[iMic]);
+			token_root_general_mics_e_sigma2s_5_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 5); settings_validate(token_root_general_mics_e_sigma2s_5_V[iMic]);
+			token_root_general_mics_e_sigma2s_5_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_5_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_5_N[iMic]);
+			token_root_general_mics_e_sigma2s_6_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 6); settings_validate(token_root_general_mics_e_sigma2s_6_V[iMic]);
+			token_root_general_mics_e_sigma2s_6_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_6_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_6_N[iMic]);
+			token_root_general_mics_e_sigma2s_7_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 7); settings_validate(token_root_general_mics_e_sigma2s_7_V[iMic]);
+			token_root_general_mics_e_sigma2s_7_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_7_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_7_N[iMic]);
+			token_root_general_mics_e_sigma2s_8_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_sigma2s_A[iMic], 8); settings_validate(token_root_general_mics_e_sigma2s_8_V[iMic]);
+			token_root_general_mics_e_sigma2s_8_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_sigma2s_8_V[iMic]); settings_validate(token_root_general_mics_e_sigma2s_8_N[iMic]);
 
-			token_root_general_mics_e_directions_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "direction");
-			token_root_general_mics_e_directions_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_V[iMic]);
+			token_root_general_mics_e_directions_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "direction"); settings_validate(token_root_general_mics_e_directions_V[iMic]);
+			token_root_general_mics_e_directions_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_V[iMic]); settings_validate(token_root_general_mics_e_directions_A[iMic]);
 
-			token_root_general_mics_e_directions_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 0);
-			token_root_general_mics_e_directions_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_0_V[iMic]);
-			token_root_general_mics_e_directions_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 1);
-			token_root_general_mics_e_directions_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_1_V[iMic]);
-			token_root_general_mics_e_directions_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 2);
-			token_root_general_mics_e_directions_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_2_V[iMic]);
+			token_root_general_mics_e_directions_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 0); settings_validate(token_root_general_mics_e_directions_0_V[iMic]);
+			token_root_general_mics_e_directions_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_0_V[iMic]); settings_validate(token_root_general_mics_e_directions_0_N[iMic]);
+			token_root_general_mics_e_directions_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 1); settings_validate(token_root_general_mics_e_directions_1_V[iMic]);
+			token_root_general_mics_e_directions_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_1_V[iMic]); settings_validate(token_root_general_mics_e_directions_1_N[iMic]);
+			token_root_general_mics_e_directions_2_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_directions_A[iMic], 2); settings_validate(token_root_general_mics_e_directions_2_V[iMic]);
+			token_root_general_mics_e_directions_2_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_directions_2_V[iMic]); settings_validate(token_root_general_mics_e_directions_2_N[iMic]);
 
-			token_root_general_mics_e_angles_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "angle");
-			token_root_general_mics_e_angles_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_V[iMic]);
+			token_root_general_mics_e_angles_V[iMic] = json_tokens_getFromObject(tokens, string, token_root_general_mics_e_O[iMic], "angle"); settings_validate(token_root_general_mics_e_angles_V[iMic]);
+			token_root_general_mics_e_angles_A[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_V[iMic]); settings_validate(token_root_general_mics_e_angles_A[iMic]);
 
-			token_root_general_mics_e_angles_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_angles_A[iMic], 0);
-			token_root_general_mics_e_angles_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_0_V[iMic]);
-			token_root_general_mics_e_angles_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_angles_A[iMic], 1);
-			token_root_general_mics_e_angles_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_1_V[iMic]);
+			token_root_general_mics_e_angles_0_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_angles_A[iMic], 0); settings_validate(token_root_general_mics_e_angles_0_V[iMic]);
+			token_root_general_mics_e_angles_0_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_0_V[iMic]); settings_validate(token_root_general_mics_e_angles_0_N[iMic]);
+			token_root_general_mics_e_angles_1_V[iMic] = json_tokens_getFromArray(tokens, string, token_root_general_mics_e_angles_A[iMic], 1); settings_validate(token_root_general_mics_e_angles_1_V[iMic]);
+			token_root_general_mics_e_angles_1_N[iMic] = json_tokens_getFromValue(tokens, string, token_root_general_mics_e_angles_1_V[iMic]); settings_validate(token_root_general_mics_e_angles_1_N[iMic]);
 
 		}
 
-		token_root_general_spatialfilters_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "spatialfilters");
-		token_root_general_spatialfilters_A = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_V);
+		token_root_general_spatialfilters_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "spatialfilters"); settings_validate(token_root_general_spatialfilters_V);
+		token_root_general_spatialfilters_A = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_V); settings_validate(token_root_general_spatialfilters_A);
 		
 		nSpatialFilters = json_tokens_count(tokens, string, token_root_general_spatialfilters_A);
 
 		for (iSpatialFilter = 0; iSpatialFilter < nSpatialFilters; iSpatialFilter++) {
 
-			token_root_general_spatialfilters_e_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_A, iSpatialFilter);
-			token_root_general_spatialfilters_e_O[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_A, iSpatialFilter); settings_validate(token_root_general_spatialfilters_e_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_O[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_O[iSpatialFilter]);
 
-			token_root_general_spatialfilters_e_directions_V[iSpatialFilter] = json_tokens_getFromObject(tokens, string, token_root_general_spatialfilters_e_O[iSpatialFilter], "directions");
-			token_root_general_spatialfilters_e_directions_A[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_V[iSpatialFilter] = json_tokens_getFromObject(tokens, string, token_root_general_spatialfilters_e_O[iSpatialFilter], "directions"); settings_validate(token_root_general_spatialfilters_e_directions_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_A[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_directions_A[iSpatialFilter]);
 
-			token_root_general_spatialfilters_e_directions_0_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 0);
-			token_root_general_spatialfilters_e_directions_0_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_0_V[iSpatialFilter]);
-			token_root_general_spatialfilters_e_directions_1_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 1);
-			token_root_general_spatialfilters_e_directions_1_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_1_V[iSpatialFilter]);
-			token_root_general_spatialfilters_e_directions_2_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 2);
-			token_root_general_spatialfilters_e_directions_2_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_2_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_0_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 0); settings_validate(token_root_general_spatialfilters_e_directions_0_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_0_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_0_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_directions_0_N[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_1_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 1); settings_validate(token_root_general_spatialfilters_e_directions_1_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_1_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_1_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_directions_1_N[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_2_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_directions_A[iSpatialFilter], 2); settings_validate(token_root_general_spatialfilters_e_directions_2_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_directions_2_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_directions_2_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_directions_2_N[iSpatialFilter]);
 
-			token_root_general_spatialfilters_e_angles_V[iSpatialFilter] = json_tokens_getFromObject(tokens, string, token_root_general_spatialfilters_e_O[iSpatialFilter], "angles");
-			token_root_general_spatialfilters_e_angles_A[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_V[iSpatialFilter] = json_tokens_getFromObject(tokens, string, token_root_general_spatialfilters_e_O[iSpatialFilter], "angles"); settings_validate(token_root_general_spatialfilters_e_angles_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_A[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_angles_A[iSpatialFilter]);
 
-			token_root_general_spatialfilters_e_angles_0_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_angles_A[iSpatialFilter], 0);
-			token_root_general_spatialfilters_e_angles_0_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_0_V[iSpatialFilter]);
-			token_root_general_spatialfilters_e_angles_1_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_angles_A[iSpatialFilter], 1);
-			token_root_general_spatialfilters_e_angles_1_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_1_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_0_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_angles_A[iSpatialFilter], 0); settings_validate(token_root_general_spatialfilters_e_angles_0_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_0_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_0_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_angles_0_N[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_1_V[iSpatialFilter] = json_tokens_getFromArray(tokens, string, token_root_general_spatialfilters_e_angles_A[iSpatialFilter], 1); settings_validate(token_root_general_spatialfilters_e_angles_1_V[iSpatialFilter]);
+			token_root_general_spatialfilters_e_angles_1_N[iSpatialFilter] = json_tokens_getFromValue(tokens, string, token_root_general_spatialfilters_e_angles_1_V[iSpatialFilter]); settings_validate(token_root_general_spatialfilters_e_angles_1_N[iSpatialFilter]);
 
 		}
 
-		token_root_general_nthetas_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "nThetas");
-		token_root_general_nthetas_N = json_tokens_getFromValue(tokens, string, token_root_general_nthetas_V);
-		token_root_general_gainmin_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "gainMin");
-		token_root_general_gainmin_N = json_tokens_getFromValue(tokens, string, token_root_general_gainmin_V);
+		token_root_general_nthetas_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "nThetas"); settings_validate(token_root_general_nthetas_V);
+		token_root_general_nthetas_N = json_tokens_getFromValue(tokens, string, token_root_general_nthetas_V); settings_validate(token_root_general_nthetas_N);
+		token_root_general_gainmin_V = json_tokens_getFromObject(tokens, string, token_root_general_O, "gainMin"); settings_validate(token_root_general_gainmin_V);
+		token_root_general_gainmin_N = json_tokens_getFromValue(tokens, string, token_root_general_gainmin_V); settings_validate(token_root_general_gainmin_N);
 
-		token_root_sne_V = json_tokens_getFromObject(tokens, string, token_root_O, "sne");
-		token_root_sne_O = json_tokens_getFromValue(tokens, string, token_root_sne_V);
+		token_root_sne_V = json_tokens_getFromObject(tokens, string, token_root_O, "sne"); settings_validate(token_root_sne_V);
+		token_root_sne_O = json_tokens_getFromValue(tokens, string, token_root_sne_V); settings_validate(token_root_sne_O);
 
-		token_root_sne_b_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "b");
-		token_root_sne_b_N = json_tokens_getFromValue(tokens, string, token_root_sne_b_V);
-		token_root_sne_alphaS_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "alphaS");
-		token_root_sne_alphaS_N = json_tokens_getFromValue(tokens, string, token_root_sne_alphaS_V);
-		token_root_sne_L_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "L");
-		token_root_sne_L_N = json_tokens_getFromValue(tokens, string, token_root_sne_L_V);
-		token_root_sne_delta_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "delta");
-		token_root_sne_delta_N = json_tokens_getFromValue(tokens, string, token_root_sne_delta_V);
-		token_root_sne_alphaD_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "alphaD");
-		token_root_sne_alphaD_N = json_tokens_getFromValue(tokens, string, token_root_sne_alphaD_V);
+		token_root_sne_b_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "b"); settings_validate(token_root_sne_b_V);
+		token_root_sne_b_N = json_tokens_getFromValue(tokens, string, token_root_sne_b_V); settings_validate(token_root_sne_b_N);
+		token_root_sne_alphaS_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "alphaS"); settings_validate(token_root_sne_alphaS_V);
+		token_root_sne_alphaS_N = json_tokens_getFromValue(tokens, string, token_root_sne_alphaS_V); settings_validate(token_root_sne_alphaS_N);
+		token_root_sne_L_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "L"); settings_validate(token_root_sne_L_V);
+		token_root_sne_L_N = json_tokens_getFromValue(tokens, string, token_root_sne_L_V); settings_validate(token_root_sne_L_N);
+		token_root_sne_delta_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "delta"); settings_validate(token_root_sne_delta_V);
+		token_root_sne_delta_N = json_tokens_getFromValue(tokens, string, token_root_sne_delta_V); settings_validate(token_root_sne_delta_N);
+		token_root_sne_alphaD_V = json_tokens_getFromObject(tokens, string, token_root_sne_O, "alphaD"); settings_validate(token_root_sne_alphaD_V);
+		token_root_sne_alphaD_N = json_tokens_getFromValue(tokens, string, token_root_sne_alphaD_V); settings_validate(token_root_sne_alphaD_N);
 
-		token_root_ssl_V = json_tokens_getFromObject(tokens, string, token_root_O, "ssl");
-		token_root_ssl_O = json_tokens_getFromValue(tokens, string, token_root_ssl_V);
+		token_root_ssl_V = json_tokens_getFromObject(tokens, string, token_root_O, "ssl"); settings_validate(token_root_ssl_V);
+		token_root_ssl_O = json_tokens_getFromValue(tokens, string, token_root_ssl_V); settings_validate(token_root_ssl_O);
 
-		token_root_ssl_nPots_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nPots");
-		token_root_ssl_nPots_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nPots_V);
-		token_root_ssl_nMatches_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nMatches");
-		token_root_ssl_nMatches_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nMatches_V);
-		token_root_ssl_probMin_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "probMin");
-		token_root_ssl_probMin_N = json_tokens_getFromValue(tokens, string, token_root_ssl_probMin_V);
-		token_root_ssl_nRefinedLevels_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nRefinedLevels");
-		token_root_ssl_nRefinedLevels_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nRefinedLevels_V);
-		token_root_ssl_interpRate_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "interpRate");
-		token_root_ssl_interpRate_N = json_tokens_getFromValue(tokens, string, token_root_ssl_interpRate_V);
+		token_root_ssl_nPots_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nPots"); settings_validate(token_root_ssl_nPots_V);
+		token_root_ssl_nPots_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nPots_V); settings_validate(token_root_ssl_nPots_N);
+		token_root_ssl_nMatches_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nMatches"); settings_validate(token_root_ssl_nMatches_V);
+		token_root_ssl_nMatches_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nMatches_V); settings_validate(token_root_ssl_nMatches_N);
+		token_root_ssl_probMin_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "probMin"); settings_validate(token_root_ssl_probMin_V);
+		token_root_ssl_probMin_N = json_tokens_getFromValue(tokens, string, token_root_ssl_probMin_V); settings_validate(token_root_ssl_probMin_N);
+		token_root_ssl_nRefinedLevels_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "nRefinedLevels"); settings_validate(token_root_ssl_nRefinedLevels_V);
+		token_root_ssl_nRefinedLevels_N = json_tokens_getFromValue(tokens, string, token_root_ssl_nRefinedLevels_V); settings_validate(token_root_ssl_nRefinedLevels_N);
+		token_root_ssl_interpRate_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "interpRate"); settings_validate(token_root_ssl_interpRate_V);
+		token_root_ssl_interpRate_N = json_tokens_getFromValue(tokens, string, token_root_ssl_interpRate_V); settings_validate(token_root_ssl_interpRate_N);
 
-		token_root_ssl_scans_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "scans");
-		token_root_ssl_scans_A = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_V);
+		token_root_ssl_scans_V = json_tokens_getFromObject(tokens, string, token_root_ssl_O, "scans"); settings_validate(token_root_ssl_scans_V);
+		token_root_ssl_scans_A = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_V); settings_validate(token_root_ssl_scans_A);
 
 		nScans = json_tokens_count(tokens, string, token_root_ssl_scans_A);
 
 		for (iScan = 0; iScan < nScans; iScan++) {
 
-			token_root_ssl_scans_e_V[iScan] = json_tokens_getFromArray(tokens, string, token_root_ssl_scans_A, iScan);
-			token_root_ssl_scans_e_O[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_V[iScan]);
+			token_root_ssl_scans_e_V[iScan] = json_tokens_getFromArray(tokens, string, token_root_ssl_scans_A, iScan); settings_validate(token_root_ssl_scans_e_V[iScan]);
+			token_root_ssl_scans_e_O[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_V[iScan]); settings_validate(token_root_ssl_scans_e_O[iScan]);
 
-			token_root_ssl_scans_e_level_V[iScan] = json_tokens_getFromObject(tokens, string, token_root_ssl_scans_e_O[iScan], "level");
-			token_root_ssl_scans_e_level_N[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_level_V[iScan]);
-			token_root_ssl_scans_e_delta_V[iScan] = json_tokens_getFromObject(tokens, string, token_root_ssl_scans_e_O[iScan], "delta");
-			token_root_ssl_scans_e_delta_N[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_delta_V[iScan]);
+			token_root_ssl_scans_e_level_V[iScan] = json_tokens_getFromObject(tokens, string, token_root_ssl_scans_e_O[iScan], "level"); settings_validate(token_root_ssl_scans_e_level_V[iScan]);
+			token_root_ssl_scans_e_level_N[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_level_V[iScan]); settings_validate(token_root_ssl_scans_e_level_N[iScan]);
+			token_root_ssl_scans_e_delta_V[iScan] = json_tokens_getFromObject(tokens, string, token_root_ssl_scans_e_O[iScan], "delta"); settings_validate(token_root_ssl_scans_e_delta_V[iScan]);
+			token_root_ssl_scans_e_delta_N[iScan] = json_tokens_getFromValue(tokens, string, token_root_ssl_scans_e_delta_V[iScan]); settings_validate(token_root_ssl_scans_e_delta_N[iScan]);
 
 		}
 
-		token_root_sst_V = json_tokens_getFromObject(tokens, string, token_root_O, "sst");
-		token_root_sst_O = json_tokens_getFromValue(tokens, string, token_root_sst_V);
+		token_root_sst_V = json_tokens_getFromObject(tokens, string, token_root_O, "sst"); settings_validate(token_root_sst_V);
+		token_root_sst_O = json_tokens_getFromValue(tokens, string, token_root_sst_V); settings_validate(token_root_sst_O);
 
-		token_root_sst_mode_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "mode");
-		token_root_sst_mode_S = json_tokens_getFromValue(tokens, string, token_root_sst_mode_V);
-		token_root_sst_add_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "add");
-		token_root_sst_add_S = json_tokens_getFromValue(tokens, string, token_root_sst_add_V);
+		token_root_sst_mode_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "mode"); settings_validate(token_root_sst_mode_V);
+		token_root_sst_mode_S = json_tokens_getFromValue(tokens, string, token_root_sst_mode_V); settings_validate(token_root_sst_mode_S);
+		token_root_sst_add_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "add"); settings_validate(token_root_sst_add_V);
+		token_root_sst_add_S = json_tokens_getFromValue(tokens, string, token_root_sst_add_V); settings_validate(token_root_sst_add_S);
 
-		token_root_sst_energy_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "energy");
-		token_root_sst_energy_O = json_tokens_getFromValue(tokens, string, token_root_sst_energy_V);
-		token_root_sst_energy_active_V = json_tokens_getFromObject(tokens, string, token_root_sst_energy_O, "active");
-		token_root_sst_energy_active_A = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_V);
-		token_root_sst_energy_inactive_V = json_tokens_getFromObject(tokens, string, token_root_sst_energy_O, "inactive");
-		token_root_sst_energy_inactive_A = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_V);
+		token_root_sst_energy_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "energy"); settings_validate(token_root_sst_energy_V);
+		token_root_sst_energy_O = json_tokens_getFromValue(tokens, string, token_root_sst_energy_V); settings_validate(token_root_sst_energy_O);
+		token_root_sst_energy_active_V = json_tokens_getFromObject(tokens, string, token_root_sst_energy_O, "active"); settings_validate(token_root_sst_energy_active_V);
+		token_root_sst_energy_active_A = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_V); settings_validate(token_root_sst_energy_active_A);
+		token_root_sst_energy_inactive_V = json_tokens_getFromObject(tokens, string, token_root_sst_energy_O, "inactive"); settings_validate(token_root_sst_energy_inactive_V);
+		token_root_sst_energy_inactive_A = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_V); settings_validate(token_root_sst_energy_inactive_A);
 
 		nGaussiansActive = json_tokens_count(tokens, string, token_root_sst_energy_active_A);
 
 		for (iGaussianActive = 0; iGaussianActive < nGaussiansActive; iGaussianActive++) {
 
-			token_root_sst_energy_active_e_V[iGaussianActive] = json_tokens_getFromArray(tokens, string, token_root_sst_energy_active_A, iGaussianActive);
-			token_root_sst_energy_active_e_O[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_V[iGaussianActive]);
-			token_root_sst_energy_active_e_weight_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "weight");
-			token_root_sst_energy_active_e_weight_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_weight_V[iGaussianActive]);
-			token_root_sst_energy_active_e_mu_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "mu");
-			token_root_sst_energy_active_e_mu_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_mu_V[iGaussianActive]);
-			token_root_sst_energy_active_e_sigma2_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "sigma2");
-			token_root_sst_energy_active_e_sigma2_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_sigma2_V[iGaussianActive]);
+			token_root_sst_energy_active_e_V[iGaussianActive] = json_tokens_getFromArray(tokens, string, token_root_sst_energy_active_A, iGaussianActive); settings_validate(token_root_sst_energy_active_e_V[iGaussianActive]);
+			token_root_sst_energy_active_e_O[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_V[iGaussianActive]); settings_validate(token_root_sst_energy_active_e_O[iGaussianActive]);
+			token_root_sst_energy_active_e_weight_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "weight"); settings_validate(token_root_sst_energy_active_e_weight_V[iGaussianActive]);
+			token_root_sst_energy_active_e_weight_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_weight_V[iGaussianActive]); settings_validate(token_root_sst_energy_active_e_weight_N[iGaussianActive]);
+			token_root_sst_energy_active_e_mu_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "mu"); settings_validate(token_root_sst_energy_active_e_mu_V[iGaussianActive]);
+			token_root_sst_energy_active_e_mu_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_mu_V[iGaussianActive]); settings_validate(token_root_sst_energy_active_e_mu_N[iGaussianActive]);
+			token_root_sst_energy_active_e_sigma2_V[iGaussianActive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_active_e_O[iGaussianActive], "sigma2"); settings_validate(token_root_sst_energy_active_e_sigma2_V[iGaussianActive]);
+			token_root_sst_energy_active_e_sigma2_N[iGaussianActive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_active_e_sigma2_V[iGaussianActive]); settings_validate(token_root_sst_energy_active_e_sigma2_N[iGaussianActive]);
 
 		}
 
@@ -619,191 +588,166 @@
 
 		for (iGaussianInactive = 0; iGaussianInactive < nGaussiansInactive; iGaussianInactive++) {
 
-			token_root_sst_energy_inactive_e_V[iGaussianInactive] = json_tokens_getFromArray(tokens, string, token_root_sst_energy_inactive_A, iGaussianInactive);
-			token_root_sst_energy_inactive_e_O[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_V[iGaussianInactive]);
-			token_root_sst_energy_inactive_e_weight_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "weight");
-			token_root_sst_energy_inactive_e_weight_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_weight_V[iGaussianInactive]);
-			token_root_sst_energy_inactive_e_mu_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "mu");
-			token_root_sst_energy_inactive_e_mu_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_mu_V[iGaussianInactive]);
-			token_root_sst_energy_inactive_e_sigma2_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "sigma2");
-			token_root_sst_energy_inactive_e_sigma2_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_sigma2_V[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_V[iGaussianInactive] = json_tokens_getFromArray(tokens, string, token_root_sst_energy_inactive_A, iGaussianInactive); settings_validate(token_root_sst_energy_inactive_e_V[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_O[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_V[iGaussianInactive]); settings_validate(token_root_sst_energy_inactive_e_O[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_weight_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "weight"); settings_validate(token_root_sst_energy_inactive_e_weight_V[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_weight_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_weight_V[iGaussianInactive]); settings_validate(token_root_sst_energy_inactive_e_weight_N[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_mu_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "mu"); settings_validate(token_root_sst_energy_inactive_e_mu_V[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_mu_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_mu_V[iGaussianInactive]); settings_validate(token_root_sst_energy_inactive_e_mu_N[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_sigma2_V[iGaussianInactive] = json_tokens_getFromObject(tokens, string, token_root_sst_energy_inactive_e_O[iGaussianInactive], "sigma2"); settings_validate(token_root_sst_energy_inactive_e_sigma2_V[iGaussianInactive]);
+			token_root_sst_energy_inactive_e_sigma2_N[iGaussianInactive] = json_tokens_getFromValue(tokens, string, token_root_sst_energy_inactive_e_sigma2_V[iGaussianInactive]); settings_validate(token_root_sst_energy_inactive_e_sigma2_N[iGaussianInactive]);
 
 		}
 
-		token_root_sst_sigmaR2_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "sigmaR2");
-		token_root_sst_sigmaR2_O = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_V);
-		token_root_sst_sigmaR2_prob_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "prob");
-		token_root_sst_sigmaR2_prob_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_prob_V);
-		token_root_sst_sigmaR2_active_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "active");
-		token_root_sst_sigmaR2_active_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_active_V);
-		token_root_sst_sigmaR2_target_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "target");
-		token_root_sst_sigmaR2_target_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_target_V);
+		token_root_sst_sigmaR2_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "sigmaR2"); settings_validate(token_root_sst_sigmaR2_V);
+		token_root_sst_sigmaR2_O = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_V); settings_validate(token_root_sst_sigmaR2_O);
+		token_root_sst_sigmaR2_prob_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "prob"); settings_validate(token_root_sst_sigmaR2_prob_V);
+		token_root_sst_sigmaR2_prob_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_prob_V); settings_validate(token_root_sst_sigmaR2_prob_N);
+		token_root_sst_sigmaR2_active_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "active"); settings_validate(token_root_sst_sigmaR2_active_V);
+		token_root_sst_sigmaR2_active_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_active_V); settings_validate(token_root_sst_sigmaR2_active_N);
+		token_root_sst_sigmaR2_target_V = json_tokens_getFromObject(tokens, string, token_root_sst_sigmaR2_O, "target"); settings_validate(token_root_sst_sigmaR2_target_V);
+		token_root_sst_sigmaR2_target_N = json_tokens_getFromValue(tokens, string, token_root_sst_sigmaR2_target_V); settings_validate(token_root_sst_sigmaR2_target_N);
 
-		token_root_sst_P_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "P");
-		token_root_sst_P_O = json_tokens_getFromValue(tokens, string, token_root_sst_P_V);
-		token_root_sst_P_false_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "false");
-		token_root_sst_P_false_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_false_V);
-		token_root_sst_P_new_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "new");
-		token_root_sst_P_new_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_new_V);
-		token_root_sst_P_track_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "track");
-		token_root_sst_P_track_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_track_V);
+		token_root_sst_P_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "P"); settings_validate(token_root_sst_P_V);
+		token_root_sst_P_O = json_tokens_getFromValue(tokens, string, token_root_sst_P_V); settings_validate(token_root_sst_P_O);
+		token_root_sst_P_false_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "false"); settings_validate(token_root_sst_P_false_V);
+		token_root_sst_P_false_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_false_V); settings_validate(token_root_sst_P_false_N);
+		token_root_sst_P_new_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "new"); settings_validate(token_root_sst_P_new_V);
+		token_root_sst_P_new_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_new_V); settings_validate(token_root_sst_P_new_N);
+		token_root_sst_P_track_V = json_tokens_getFromObject(tokens, string, token_root_sst_P_O, "track"); settings_validate(token_root_sst_P_track_V);
+		token_root_sst_P_track_N = json_tokens_getFromValue(tokens, string, token_root_sst_P_track_V); settings_validate(token_root_sst_P_track_N);
 
-		token_root_sst_levels_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "levels");
-		token_root_sst_levels_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_V);
-		token_root_sst_levels_new_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "new");
-		token_root_sst_levels_new_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_new_V);
-		token_root_sst_levels_new_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_new_O, "theta");
-		token_root_sst_levels_new_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_new_theta_V);
-		token_root_sst_levels_prob_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "prob");
-		token_root_sst_levels_prob_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_V);
-		token_root_sst_levels_prob_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_prob_O, "theta");
-		token_root_sst_levels_prob_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_theta_V);
-		token_root_sst_levels_prob_N_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_prob_O, "N");
-		token_root_sst_levels_prob_N_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_N_V);
-		token_root_sst_levels_inactive_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "inactive");
-		token_root_sst_levels_inactive_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_V);
-		token_root_sst_levels_inactive_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_inactive_O, "theta");
-		token_root_sst_levels_inactive_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_theta_V);
-		token_root_sst_levels_inactive_Ns_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_inactive_O, "N");
-		token_root_sst_levels_inactive_Ns_A = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_Ns_V);
+		token_root_sst_levels_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "levels"); settings_validate(token_root_sst_levels_V);
+		token_root_sst_levels_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_V); settings_validate(token_root_sst_levels_O);
+		token_root_sst_levels_new_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "new"); settings_validate(token_root_sst_levels_new_V);
+		token_root_sst_levels_new_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_new_V); settings_validate(token_root_sst_levels_new_O);
+		token_root_sst_levels_new_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_new_O, "theta"); settings_validate(token_root_sst_levels_new_theta_V);
+		token_root_sst_levels_new_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_new_theta_V); settings_validate(token_root_sst_levels_new_theta_N);
+		token_root_sst_levels_prob_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "prob"); settings_validate(token_root_sst_levels_prob_V);
+		token_root_sst_levels_prob_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_V); settings_validate(token_root_sst_levels_prob_O);
+		token_root_sst_levels_prob_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_prob_O, "theta"); settings_validate(token_root_sst_levels_prob_theta_V);
+		token_root_sst_levels_prob_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_theta_V); settings_validate(token_root_sst_levels_prob_theta_N);
+		token_root_sst_levels_prob_N_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_prob_O, "N"); settings_validate(token_root_sst_levels_prob_N_V);
+		token_root_sst_levels_prob_N_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_prob_N_V); settings_validate(token_root_sst_levels_prob_N_N);
+		token_root_sst_levels_inactive_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_O, "inactive"); settings_validate(token_root_sst_levels_inactive_V);
+		token_root_sst_levels_inactive_O = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_V); settings_validate(token_root_sst_levels_inactive_O);
+		token_root_sst_levels_inactive_theta_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_inactive_O, "theta"); settings_validate(token_root_sst_levels_inactive_theta_V);
+		token_root_sst_levels_inactive_theta_N = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_theta_V); settings_validate(token_root_sst_levels_inactive_theta_N);
+		token_root_sst_levels_inactive_Ns_V = json_tokens_getFromObject(tokens, string, token_root_sst_levels_inactive_O, "N"); settings_validate(token_root_sst_levels_inactive_Ns_V);
+		token_root_sst_levels_inactive_Ns_A = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_Ns_V); settings_validate(token_root_sst_levels_inactive_Ns_A);
 
 		nLevels = json_tokens_count(tokens, string, token_root_sst_levels_inactive_Ns_A);
 
 		for (iLevel = 0; iLevel < nLevels; iLevel++) {
 
-			token_root_sst_levels_inactive_Ns_e_V[iLevel] = json_tokens_getFromArray(tokens, string, token_root_sst_levels_inactive_Ns_A, iLevel);
-			token_root_sst_levels_inactive_Ns_e_N[iLevel] = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_Ns_e_V[iLevel]);
+			token_root_sst_levels_inactive_Ns_e_V[iLevel] = json_tokens_getFromArray(tokens, string, token_root_sst_levels_inactive_Ns_A, iLevel); settings_validate(token_root_sst_levels_inactive_Ns_e_V[iLevel]);
+			token_root_sst_levels_inactive_Ns_e_N[iLevel] = json_tokens_getFromValue(tokens, string, token_root_sst_levels_inactive_Ns_e_V[iLevel]); settings_validate(token_root_sst_levels_inactive_Ns_e_N[iLevel]);
 
 		}
 
-		token_root_sst_kalman_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "kalman");
-		token_root_sst_kalman_O = json_tokens_getFromValue(tokens, string, token_root_sst_kalman_V);
-		token_root_sst_kalman_sigmaQ_V = json_tokens_getFromObject(tokens, string, token_root_sst_kalman_O, "sigmaQ");
-		token_root_sst_kalman_sigmaQ_N = json_tokens_getFromValue(tokens, string, token_root_sst_kalman_sigmaQ_V);
+		token_root_sst_kalman_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "kalman"); settings_validate(token_root_sst_kalman_V);
+		token_root_sst_kalman_O = json_tokens_getFromValue(tokens, string, token_root_sst_kalman_V); settings_validate(token_root_sst_kalman_O);
+		token_root_sst_kalman_sigmaQ_V = json_tokens_getFromObject(tokens, string, token_root_sst_kalman_O, "sigmaQ"); settings_validate(token_root_sst_kalman_sigmaQ_V);
+		token_root_sst_kalman_sigmaQ_N = json_tokens_getFromValue(tokens, string, token_root_sst_kalman_sigmaQ_V); settings_validate(token_root_sst_kalman_sigmaQ_N);
 
-		token_root_sst_particle_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "particle");
-		token_root_sst_particle_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_V);
-		token_root_sst_particle_nParticles_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "nParticles");
-		token_root_sst_particle_nParticles_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_nParticles_V);
+		token_root_sst_particle_V = json_tokens_getFromObject(tokens, string, token_root_sst_O, "particle"); settings_validate(token_root_sst_particle_V);
+		token_root_sst_particle_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_V); settings_validate(token_root_sst_particle_O);
+		token_root_sst_particle_nParticles_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "nParticles"); settings_validate(token_root_sst_particle_nParticles_V);
+		token_root_sst_particle_nParticles_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_nParticles_V); settings_validate(token_root_sst_particle_nParticles_N);
 
-		token_root_sst_particle_stationary_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "stationary");
-		token_root_sst_particle_stationary_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_V);
-		token_root_sst_particle_stationary_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "alpha");
-		token_root_sst_particle_stationary_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_alpha_V);
-		token_root_sst_particle_stationary_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "beta");
-		token_root_sst_particle_stationary_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_beta_V);
-		token_root_sst_particle_stationary_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "ratio");
-		token_root_sst_particle_stationary_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_ratio_V);
+		token_root_sst_particle_stationary_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "stationary"); settings_validate(token_root_sst_particle_stationary_V);
+		token_root_sst_particle_stationary_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_V); settings_validate(token_root_sst_particle_stationary_O);
+		token_root_sst_particle_stationary_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "alpha"); settings_validate(token_root_sst_particle_stationary_alpha_V);
+		token_root_sst_particle_stationary_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_alpha_V); settings_validate(token_root_sst_particle_stationary_alpha_N);
+		token_root_sst_particle_stationary_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "beta"); settings_validate(token_root_sst_particle_stationary_beta_V);
+		token_root_sst_particle_stationary_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_beta_V); settings_validate(token_root_sst_particle_stationary_beta_N);
+		token_root_sst_particle_stationary_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_stationary_O, "ratio"); settings_validate(token_root_sst_particle_stationary_ratio_V);
+		token_root_sst_particle_stationary_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_stationary_ratio_V); settings_validate(token_root_sst_particle_stationary_ratio_N);
 		
-		token_root_sst_particle_velocity_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "velocity");
-		token_root_sst_particle_velocity_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_V);
-		token_root_sst_particle_velocity_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "alpha");
-		token_root_sst_particle_velocity_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_alpha_V);
-		token_root_sst_particle_velocity_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "beta");
-		token_root_sst_particle_velocity_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_beta_V);
-		token_root_sst_particle_velocity_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "ratio");
-		token_root_sst_particle_velocity_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_ratio_V);
+		token_root_sst_particle_velocity_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "velocity"); settings_validate(token_root_sst_particle_velocity_V);
+		token_root_sst_particle_velocity_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_V); settings_validate(token_root_sst_particle_velocity_O);
+		token_root_sst_particle_velocity_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "alpha"); settings_validate(token_root_sst_particle_velocity_alpha_V);
+		token_root_sst_particle_velocity_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_alpha_V); settings_validate(token_root_sst_particle_velocity_alpha_N);
+		token_root_sst_particle_velocity_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "beta"); settings_validate(token_root_sst_particle_velocity_beta_V);
+		token_root_sst_particle_velocity_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_beta_V); settings_validate(token_root_sst_particle_velocity_beta_N);
+		token_root_sst_particle_velocity_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_velocity_O, "ratio"); settings_validate(token_root_sst_particle_velocity_ratio_V);
+		token_root_sst_particle_velocity_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_velocity_ratio_V); settings_validate(token_root_sst_particle_velocity_ratio_N);
 		
-		token_root_sst_particle_acceleration_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "acceleration");
-		token_root_sst_particle_acceleration_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_V);
-		token_root_sst_particle_acceleration_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "alpha");
-		token_root_sst_particle_acceleration_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_alpha_V);
-		token_root_sst_particle_acceleration_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "beta");
-		token_root_sst_particle_acceleration_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_beta_V);
-		token_root_sst_particle_acceleration_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "ratio");
-		token_root_sst_particle_acceleration_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_ratio_V);
+		token_root_sst_particle_acceleration_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "acceleration"); settings_validate(token_root_sst_particle_acceleration_V);
+		token_root_sst_particle_acceleration_O = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_V); settings_validate(token_root_sst_particle_acceleration_O);
+		token_root_sst_particle_acceleration_alpha_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "alpha"); settings_validate(token_root_sst_particle_acceleration_alpha_V);
+		token_root_sst_particle_acceleration_alpha_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_alpha_V); settings_validate(token_root_sst_particle_acceleration_alpha_N);
+		token_root_sst_particle_acceleration_beta_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "beta"); settings_validate(token_root_sst_particle_acceleration_beta_V);
+		token_root_sst_particle_acceleration_beta_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_beta_V); settings_validate(token_root_sst_particle_acceleration_beta_N);
+		token_root_sst_particle_acceleration_ratio_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_acceleration_O, "ratio"); settings_validate(token_root_sst_particle_acceleration_ratio_V);
+		token_root_sst_particle_acceleration_ratio_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_acceleration_ratio_V); settings_validate(token_root_sst_particle_acceleration_ratio_N);
 		
-		token_root_sst_particle_Nmin_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "Nmin");
-		token_root_sst_particle_Nmin_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_Nmin_V);
+		token_root_sst_particle_Nmin_V = json_tokens_getFromObject(tokens, string, token_root_sst_particle_O, "Nmin"); settings_validate(token_root_sst_particle_Nmin_V);
+		token_root_sst_particle_Nmin_N = json_tokens_getFromValue(tokens, string, token_root_sst_particle_Nmin_V); settings_validate(token_root_sst_particle_Nmin_N);
 
-		token_root_sss_V = json_tokens_getFromObject(tokens, string, token_root_O, "sss");
-		token_root_sss_O = json_tokens_getFromValue(tokens, string, token_root_sss_V);
+		token_root_sss_V = json_tokens_getFromObject(tokens, string, token_root_O, "sss"); settings_validate(token_root_sss_V);
+		token_root_sss_O = json_tokens_getFromValue(tokens, string, token_root_sss_V); settings_validate(token_root_sss_O);
 
-		token_root_sss_offset_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "offset");
-		token_root_sss_offset_N = json_tokens_getFromValue(tokens, string, token_root_sss_offset_V);
+		token_root_sss_offset_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "offset"); settings_validate(token_root_sss_offset_V);
+		token_root_sss_offset_N = json_tokens_getFromValue(tokens, string, token_root_sss_offset_V); settings_validate(token_root_sss_offset_N);
 
-		token_root_sss_separation_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "separation");
-		token_root_sss_separation_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_V);
+		token_root_sss_separation_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "separation"); settings_validate(token_root_sss_separation_V);
+		token_root_sss_separation_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_V); settings_validate(token_root_sss_separation_O);
 
-		token_root_sss_separation_mode_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "mode");
-		token_root_sss_separation_mode_S = json_tokens_getFromValue(tokens, string, token_root_sss_separation_mode_V);
-		token_root_sss_separation_techniques_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "techniques");
-		token_root_sss_separation_techniques_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_V);
-		token_root_sss_separation_techniques_dds_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dds");
-		token_root_sss_separation_techniques_dds_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dds_V);
-		token_root_sss_separation_techniques_dgss_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dgss");
-		token_root_sss_separation_techniques_dgss_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_V);
-		token_root_sss_separation_techniques_dgss_mu_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_dgss_O, "mu");
-		token_root_sss_separation_techniques_dgss_mu_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_mu_V);
-		token_root_sss_separation_techniques_dgss_lambda_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_dgss_O, "lambda");
-		token_root_sss_separation_techniques_dgss_lambda_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_lambda_V);
-		token_root_sss_separation_techniques_dmvdr_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dmvdr");
-		token_root_sss_separation_techniques_dmvdr_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dmvdr_V);
+		token_root_sss_separation_mode_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "mode"); settings_validate(token_root_sss_separation_mode_V);
+		token_root_sss_separation_mode_S = json_tokens_getFromValue(tokens, string, token_root_sss_separation_mode_V); settings_validate(token_root_sss_separation_mode_S);
+		token_root_sss_separation_techniques_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "techniques"); settings_validate(token_root_sss_separation_techniques_V);
+		token_root_sss_separation_techniques_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_V); settings_validate(token_root_sss_separation_techniques_O);
+		token_root_sss_separation_techniques_dds_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dds"); settings_validate(token_root_sss_separation_techniques_dds_V);
+		token_root_sss_separation_techniques_dds_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dds_V); settings_validate(token_root_sss_separation_techniques_dds_O);
+		token_root_sss_separation_techniques_dgss_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dgss"); settings_validate(token_root_sss_separation_techniques_dgss_V);
+		token_root_sss_separation_techniques_dgss_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_V); settings_validate(token_root_sss_separation_techniques_dgss_O);
+		token_root_sss_separation_techniques_dgss_mu_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_dgss_O, "mu"); settings_validate(token_root_sss_separation_techniques_dgss_mu_V);
+		token_root_sss_separation_techniques_dgss_mu_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_mu_V); settings_validate(token_root_sss_separation_techniques_dgss_mu_N);
+		token_root_sss_separation_techniques_dgss_lambda_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_dgss_O, "lambda"); settings_validate(token_root_sss_separation_techniques_dgss_lambda_V);
+		token_root_sss_separation_techniques_dgss_lambda_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dgss_lambda_V); settings_validate(token_root_sss_separation_techniques_dgss_lambda_N);
+		token_root_sss_separation_techniques_dmvdr_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_techniques_O, "dmvdr"); settings_validate(token_root_sss_separation_techniques_dmvdr_V);
+		token_root_sss_separation_techniques_dmvdr_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_techniques_dmvdr_V); settings_validate(token_root_sss_separation_techniques_dmvdr_O);
 
-		token_root_sss_separation_format_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_O, "format");
-		token_root_sss_separation_format_O = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_V);
-		token_root_sss_separation_format_fS_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_format_O, "fS");
-		token_root_sss_separation_format_fS_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_fS_V);
-		token_root_sss_separation_format_hopSize_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_format_O, "hopSize");
-		token_root_sss_separation_format_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_hopSize_V);
-		token_root_sss_separation_format_nBits_V = json_tokens_getFromObject(tokens, string, token_root_sss_separation_format_O, "nBits");
-		token_root_sss_separation_format_nBits_N = json_tokens_getFromValue(tokens, string, token_root_sss_separation_format_nBits_V);
+		token_root_sss_postfiltering_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "postfiltering"); settings_validate(token_root_sss_postfiltering_V);
+		token_root_sss_postfiltering_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_V); settings_validate(token_root_sss_postfiltering_O);
 
-		token_root_sss_postfiltering_V = json_tokens_getFromObject(tokens, string, token_root_sss_O, "postfiltering");
-		token_root_sss_postfiltering_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_V);
-
-		token_root_sss_postfiltering_mode_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "mode");
-		token_root_sss_postfiltering_mode_S = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_mode_V);
-		token_root_sss_postfiltering_techniques_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "techniques");
-		token_root_sss_postfiltering_techniques_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_V);
-		token_root_sss_postfiltering_techniques_ms_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_O, "ms");
-		token_root_sss_postfiltering_techniques_ms_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_V);
-		token_root_sss_postfiltering_techniques_ms_alphaPmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaPmin");
-		token_root_sss_postfiltering_techniques_ms_alphaPmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaPmin_V);
-		token_root_sss_postfiltering_techniques_ms_eta_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "eta");
-		token_root_sss_postfiltering_techniques_ms_eta_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_eta_V);
-		token_root_sss_postfiltering_techniques_ms_alphaZ_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaZ");
-		token_root_sss_postfiltering_techniques_ms_alphaZ_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaZ_V);
-		token_root_sss_postfiltering_techniques_ms_thetaWin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "thetaWin");
-		token_root_sss_postfiltering_techniques_ms_thetaWin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_thetaWin_V);
-		token_root_sss_postfiltering_techniques_ms_alphaWin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaWin");
-		token_root_sss_postfiltering_techniques_ms_alphaWin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaWin_V);
-		token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "maxAbsenceProb");
-		token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_V);
-		token_root_sss_postfiltering_techniques_ms_Gmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "Gmin");
-		token_root_sss_postfiltering_techniques_ms_Gmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_Gmin_V);
-		token_root_sss_postfiltering_techniques_ms_winSizeLocal_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeLocal");
-		token_root_sss_postfiltering_techniques_ms_winSizeLocal_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeLocal_V);
-		token_root_sss_postfiltering_techniques_ms_winSizeGlobal_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeGlobal");
-		token_root_sss_postfiltering_techniques_ms_winSizeGlobal_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeGlobal_V);
-		token_root_sss_postfiltering_techniques_ms_winSizeFrame_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeFrame");
-		token_root_sss_postfiltering_techniques_ms_winSizeFrame_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeFrame_V);
-		token_root_sss_postfiltering_techniques_ss_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_O, "ss");
-		token_root_sss_postfiltering_techniques_ss_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_V);
-		token_root_sss_postfiltering_techniques_ss_Gmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gmin");
-		token_root_sss_postfiltering_techniques_ss_Gmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gmin_V);
-		token_root_sss_postfiltering_techniques_ss_Gmid_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gmid");
-		token_root_sss_postfiltering_techniques_ss_Gmid_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gmid_V);
-		token_root_sss_postfiltering_techniques_ss_Gslope_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gslope");
-		token_root_sss_postfiltering_techniques_ss_Gslope_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gslope_V);
-		
-		token_root_sss_postfiltering_format_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "format");
-		token_root_sss_postfiltering_format_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_format_V);
-		token_root_sss_postfiltering_format_fS_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_format_O, "fS");
-		token_root_sss_postfiltering_format_fS_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_format_fS_V);
-		token_root_sss_postfiltering_format_hopSize_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_format_O, "hopSize");
-		token_root_sss_postfiltering_format_hopSize_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_format_hopSize_V);
-		token_root_sss_postfiltering_format_nBits_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_format_O, "nBits");
-		token_root_sss_postfiltering_format_nBits_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_format_nBits_V);
+		token_root_sss_postfiltering_mode_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "mode"); settings_validate(token_root_sss_postfiltering_mode_V);
+		token_root_sss_postfiltering_mode_S = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_mode_V); settings_validate(token_root_sss_postfiltering_mode_S);
+		token_root_sss_postfiltering_techniques_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_O, "techniques"); settings_validate(token_root_sss_postfiltering_techniques_V);
+		token_root_sss_postfiltering_techniques_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_V); settings_validate(token_root_sss_postfiltering_techniques_O);
+		token_root_sss_postfiltering_techniques_ms_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_O, "ms"); settings_validate(token_root_sss_postfiltering_techniques_ms_V);
+		token_root_sss_postfiltering_techniques_ms_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_V); settings_validate(token_root_sss_postfiltering_techniques_ms_O);
+		token_root_sss_postfiltering_techniques_ms_alphaPmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaPmin"); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaPmin_V);
+		token_root_sss_postfiltering_techniques_ms_alphaPmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaPmin_V); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaPmin_N);
+		token_root_sss_postfiltering_techniques_ms_eta_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "eta"); settings_validate(token_root_sss_postfiltering_techniques_ms_eta_V);
+		token_root_sss_postfiltering_techniques_ms_eta_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_eta_V); settings_validate(token_root_sss_postfiltering_techniques_ms_eta_N);
+		token_root_sss_postfiltering_techniques_ms_alphaZ_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaZ"); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaZ_V);
+		token_root_sss_postfiltering_techniques_ms_alphaZ_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaZ_V); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaZ_N);
+		token_root_sss_postfiltering_techniques_ms_thetaWin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "thetaWin"); settings_validate(token_root_sss_postfiltering_techniques_ms_thetaWin_V);
+		token_root_sss_postfiltering_techniques_ms_thetaWin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_thetaWin_V); settings_validate(token_root_sss_postfiltering_techniques_ms_thetaWin_N);
+		token_root_sss_postfiltering_techniques_ms_alphaWin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "alphaWin"); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaWin_V);
+		token_root_sss_postfiltering_techniques_ms_alphaWin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_alphaWin_V); settings_validate(token_root_sss_postfiltering_techniques_ms_alphaWin_N);
+		token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "maxAbsenceProb"); settings_validate(token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_V);
+		token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_V); settings_validate(token_root_sss_postfiltering_techniques_ms_maxAbsenceProb_N);
+		token_root_sss_postfiltering_techniques_ms_Gmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "Gmin"); settings_validate(token_root_sss_postfiltering_techniques_ms_Gmin_V);
+		token_root_sss_postfiltering_techniques_ms_Gmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_Gmin_V); settings_validate(token_root_sss_postfiltering_techniques_ms_Gmin_N);
+		token_root_sss_postfiltering_techniques_ms_winSizeLocal_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeLocal"); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeLocal_V);
+		token_root_sss_postfiltering_techniques_ms_winSizeLocal_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeLocal_V); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeLocal_N);
+		token_root_sss_postfiltering_techniques_ms_winSizeGlobal_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeGlobal"); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeGlobal_V);
+		token_root_sss_postfiltering_techniques_ms_winSizeGlobal_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeGlobal_V); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeGlobal_N);
+		token_root_sss_postfiltering_techniques_ms_winSizeFrame_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ms_O, "winSizeFrame"); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeFrame_V);
+		token_root_sss_postfiltering_techniques_ms_winSizeFrame_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ms_winSizeFrame_V); settings_validate(token_root_sss_postfiltering_techniques_ms_winSizeFrame_N);
+		token_root_sss_postfiltering_techniques_ss_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_O, "ss"); settings_validate(token_root_sss_postfiltering_techniques_ss_V);
+		token_root_sss_postfiltering_techniques_ss_O = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_V); settings_validate(token_root_sss_postfiltering_techniques_ss_O);
+		token_root_sss_postfiltering_techniques_ss_Gmin_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gmin"); settings_validate(token_root_sss_postfiltering_techniques_ss_Gmin_V);
+		token_root_sss_postfiltering_techniques_ss_Gmin_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gmin_V); settings_validate(token_root_sss_postfiltering_techniques_ss_Gmin_N);
+		token_root_sss_postfiltering_techniques_ss_Gmid_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gmid"); settings_validate(token_root_sss_postfiltering_techniques_ss_Gmid_V);
+		token_root_sss_postfiltering_techniques_ss_Gmid_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gmid_V); settings_validate(token_root_sss_postfiltering_techniques_ss_Gmid_N);
+		token_root_sss_postfiltering_techniques_ss_Gslope_V = json_tokens_getFromObject(tokens, string, token_root_sss_postfiltering_techniques_ss_O, "Gslope"); settings_validate(token_root_sss_postfiltering_techniques_ss_Gslope_V);
+		token_root_sss_postfiltering_techniques_ss_Gslope_N = json_tokens_getFromValue(tokens, string, token_root_sss_postfiltering_techniques_ss_Gslope_V); settings_validate(token_root_sss_postfiltering_techniques_ss_Gslope_N);	
 
 		// Access each token
-
-		json_tokens_extractInt(tokens, string, token_root_socket_raw_N, &(sets->socket.raw));
-		json_tokens_extractInt(tokens, string, token_root_socket_targets_N, &(sets->socket.targets));
-		json_tokens_extractInt(tokens, string, token_root_socket_pots_N, &(sets->socket.pots));
-		json_tokens_extractInt(tokens, string, token_root_socket_tracks_N, &(sets->socket.tracks));
-		json_tokens_extractInt(tokens, string, token_root_socket_seps_N, &(sets->socket.seps));
-		json_tokens_extractInt(tokens, string, token_root_socket_pfs_N, &(sets->socket.pfs));
 
 		json_tokens_extractFloat(tokens, string, token_root_general_epsilon_N, &(sets->general.epsilon));
 		json_tokens_extractInt(tokens, string, token_root_general_size_hopSize_N, &(sets->general.size.hopSize));
@@ -969,15 +913,6 @@
 		unsigned int n;
 		unsigned int d;
 
-		printf("socket.raw = %u\n", sets->socket.raw);
-		printf("socket.targets = %u\n", sets->socket.targets);
-		printf("socket.pots = %u\n", sets->socket.pots);
-		printf("socket.tracks = %u\n", sets->socket.tracks);
-		printf("socket.seps = %u\n", sets->socket.seps);
-		printf("socket.pfs = %u\n", sets->socket.pfs);		
-
-		printf("\n");
-
 		printf("general.epsilon = %e\n", sets->general.epsilon);
 		printf("general.size.hopSize = %u\n", sets->general.size.hopSize);
 		printf("general.size.frameSize = %u\n", sets->general.size.frameSize);
@@ -1128,5 +1063,16 @@
 		printf("sss.postfiltering.techniques.ss.Gmin = %f\n", sets->sss.postfiltering.techniques.ss.Gmin);
 		printf("sss.postfiltering.techniques.ss.Gmid = %f\n", sets->sss.postfiltering.techniques.ss.Gmid);
 		printf("sss.postfiltering.techniques.ss.Gslope = %f\n", sets->sss.postfiltering.techniques.ss.Gslope);
+
+	}
+
+	void settings_validate(int token) {
+
+		if (token == -1) {
+
+			printf("Error parsing JSON\n");
+			exit(EXIT_FAILURE);
+
+		}		
 
 	}

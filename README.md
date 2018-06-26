@@ -49,40 +49,36 @@ make
 
 Each microphone array has a different geometry, and this needs to be configured. Moreover, additional parameters need to be specified to ensure the system will process the signals from a microphone array properly. A tutorial is being written and will be available soon to explain what are the important steps to follow to configure your system. Some prewritten configuration files (in JSON format) are also available to work with existing hardware.
 
+## Sockets
+
+ODAS works as a server with many sockets to get inputs and outputs. The ports from and to which data are read are defined in a socket file (in JSON format).
+
 ## Running
 
 ### Read the content of a file, and return track sources results to a file
 
-You must define the port that will receive the RAW audio. Typically you would use a RAW file format, with sample in signed 16-bits format, little endian, and the number of channels that corresponds to the number of microphones. Here, suppose the chosen port is 5000, and say the RAW file is `myAudio.raw`.
+You must define the port that will receive the RAW audio. Typically you would use a RAW file format, with sample in signed 16-bits format, little endian, and the number of channels that corresponds to the number of microphones. Here, suppose the chosen port is 5001, and say the RAW file is `myAudio.raw`.
 
-You must define the port that will send the tracked source results. The results is formatted in JSON. Here, suppose the chosen port is 6000, and the results will be stored in `tracked.json`.
+You must define the port that will send the tracked source results. The results is formatted in JSON. Here, suppose the chosen port is 6002, and the results will be stored in `tracked.json`.
 
-You get the following section of code in the configuration file (let's call it `myConfig.json`):
+All other ununed ports are set to 0.
+
+Suppose you are using a UMA8 microphone array from MiniDSP, you can use the following configuration file:
 
 ```
-    ...
+config/minidsp/uma8.json
+```
 
-    "socket":
-    {
+Now the following socket file defines the ports used in this example:
 
-        "raw": 5000,
-        "targets": 0,
-        
-        "pots": 0,
-        "tracks": 6000,
-        "seps": 0,
-        "pfs": 0
-
-    },
-
-    ...
-
+```
+socket/sst.json
 ```
 
 Then you can launch odas:
 
 ```
-bin/core -c myConfig.json
+bin/core -c config/minidsp/uma8.json -s socket/ssl.json 
 ```
 
 You should see something like this:
@@ -107,15 +103,15 @@ The system is now awaiting for RAW data to process.
 Open a new terminal, and type the following command:
 
 ```
-cat myAudio.raw | netcat localhost 5000
+cat myAudio.raw | netcat localhost 5001
 ```
 
-This will send the RAW data to ODAS via the port 5000.
+This will send the RAW data to ODAS via the port 5001.
 
 Now open another terminal, and type the following command:
 
 ```
-netcat localhost 6000 > tracked.json
+netcat localhost 6002 > tracked.json
 ```
 
 This will output the result in the `tracked.json` file. Once the whole RAW file is processed, the sockets should close, and ODAS terminate.

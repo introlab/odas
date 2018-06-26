@@ -1,15 +1,15 @@
 
 	#include "params.h"
 
-    void params_process(const settings * sets, configs * cfgs) {
+    void params_process(const settings * sets, const sockets * scks, configs * cfgs) {
 
-    	params_process_src_hops(sets, cfgs->src_hops_config);
+    	params_process_src_hops(scks, cfgs->src_hops_config);
     	params_process_msg_hops(sets, cfgs->msg_hops_config);
-        params_process_snk_hops(sets, cfgs->snk_hops_config);
+        params_process_snk_hops(scks, cfgs->snk_hops_config);
 
-    	params_process_src_targets(sets, cfgs->src_targets_config);
+    	params_process_src_targets(scks, cfgs->src_targets_config);
     	params_process_msg_targets(sets, cfgs->msg_targets_config);
-        params_process_snk_targets(sets, cfgs->snk_targets_config);
+        params_process_snk_targets(scks, cfgs->snk_targets_config);
 
         params_process_mod_stft(sets, cfgs->mod_stft_config);
         params_process_msg_spectra(sets, cfgs->msg_spectra_config);
@@ -19,11 +19,11 @@
 
         params_process_mod_ssl(sets, cfgs->mod_ssl_config);
         params_process_msg_pots(sets, cfgs->msg_pots_config);
-        params_process_snk_pots(sets, cfgs->snk_pots_config);
+        params_process_snk_pots(scks, cfgs->snk_pots_config);
 
         params_process_mod_sst(sets, cfgs->mod_sst_config);
         params_process_msg_tracks(sets, cfgs->msg_tracks_config);
-        params_process_snk_tracks(sets, cfgs->snk_tracks_config);
+        params_process_snk_tracks(scks, cfgs->snk_tracks_config);
 
         params_process_mod_lag(sets, cfgs->mod_lag_config);
         params_process_msg_spectra_lag(sets, cfgs->msg_spectra_lag_config);
@@ -33,18 +33,18 @@
         params_process_msg_spectra_sep(sets, cfgs->msg_spectra_sep_config);
         params_process_mod_istft_sep(sets, cfgs->mod_istft_sep_config);
         params_process_msg_hops_sep(sets, cfgs->msg_hops_sep_config);
-        params_process_snk_hops_sep(sets, cfgs->snk_hops_sep_config);
+        params_process_snk_hops_sep(scks, cfgs->snk_hops_sep_config);
 
         params_process_msg_spectra_pf(sets, cfgs->msg_spectra_pf_config);
         params_process_mod_istft_pf(sets, cfgs->mod_istft_pf_config);
         params_process_msg_hops_pf(sets, cfgs->msg_hops_pf_config);
-        params_process_snk_hops_pf(sets, cfgs->snk_hops_pf_config);
+        params_process_snk_hops_pf(scks, cfgs->snk_hops_pf_config);
 
     }
 
-    void params_process_src_hops(const settings * sets, src_hops_cfg * cfg) {
+    void params_process_src_hops(const sockets * scks, src_hops_cfg * cfg) {
 
-        cfg->port = sets->socket.raw;
+        cfg->port = scks->raw;
 
     }
 
@@ -55,15 +55,15 @@
 
     }
     
-    void params_process_snk_hops(const settings * sets, snk_hops_cfg * cfg) {
+    void params_process_snk_hops(const sockets * scks, snk_hops_cfg * cfg) {
 
         cfg->port = 0;
 
     }
 
-    void params_process_src_targets(const settings * sets, src_targets_cfg * cfg) {
+    void params_process_src_targets(const sockets * scks, src_targets_cfg * cfg) {
 
-        cfg->port = sets->socket.targets;
+        cfg->port = scks->targets;
 
     }
 
@@ -73,7 +73,7 @@
 
     }
 
-    void params_process_snk_targets(const settings * sets, snk_targets_cfg * cfg) {
+    void params_process_snk_targets(const sockets * scks, snk_targets_cfg * cfg) {
 
         cfg->port = 0;
 
@@ -188,9 +188,9 @@
 
     }
 
-    void params_process_snk_pots(const settings * sets, snk_pots_cfg * cfg) {
+    void params_process_snk_pots(const sockets * scks, snk_pots_cfg * cfg) {
 
-        cfg->port = sets->socket.pots;
+        cfg->port = scks->pots;
 
     }
 
@@ -289,9 +289,9 @@
 
     }
 
-    void params_process_snk_tracks(const settings * sets, snk_tracks_cfg * cfg) {
+    void params_process_snk_tracks(const sockets * scks, snk_tracks_cfg * cfg) {
 
-        cfg->port = sets->socket.tracks;
+        cfg->port = scks->tracks;
 
     }
 
@@ -416,9 +416,9 @@
 
     }
 
-    void params_process_snk_hops_sep(const settings * sets, snk_hops_cfg * cfg) {
+    void params_process_snk_hops_sep(const sockets * scks, snk_hops_cfg * cfg) {
      
-        cfg->port = sets->socket.seps;
+        cfg->port = scks->seps;
 
     }
 
@@ -442,8 +442,8 @@
 
     }
 
-    void params_process_snk_hops_pf(const settings * sets, snk_hops_cfg * cfg) {
+    void params_process_snk_hops_pf(const sockets * scks, snk_hops_cfg * cfg) {
         
-        cfg->port = sets->socket.pfs;
+        cfg->port = scks->pfs;
 
     }

@@ -8,19 +8,6 @@
 
     },
 
-    "socket":
-    {
-
-        "raw": 5000,
-        "targets": 0,
-        
-        "pots": 6000,
-        "tracks": 0,
-        "seps": 0,
-        "pfs": 0
-
-    },
-
     "general":
     {
         
