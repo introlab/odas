@@ -197,3 +197,4 @@ target_link_libraries(core
 
 install(TARGETS odas DESTINATION lib)
 
+add_executable(tools_bits demo/tools/bits.c)
