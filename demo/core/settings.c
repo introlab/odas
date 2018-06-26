@@ -387,9 +387,8 @@
 		if (fp == NULL) { printf("Cannot open file %s\n", file); exit(EXIT_FAILURE); }
 		while(feof(fp)==0) {
 			line[0] = 0x00;
-			line = fgets(line, nBytesPerLine, fp);
-			if (line != NULL)
-				strcat(string, line);
+			fgets(line, nBytesPerLine, fp);
+			strcat(string, line);
 		}
 		fclose(fp);
 		
