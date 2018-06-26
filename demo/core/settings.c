@@ -24,8 +24,8 @@
 		char * string;
 		FILE * fp;
 
-		unsigned int nTokens = 1024;
-		unsigned int nBytesPerLine = 4096;
+		unsigned int nTokens = 4096;
+		unsigned int nBytesPerLine = 1024;
 		unsigned int nBytesPerString = 65536;
 
 		int parseRtn;
