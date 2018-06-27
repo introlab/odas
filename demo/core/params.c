@@ -33,11 +33,13 @@
         params_process_mod_istft_sep(sets, cfgs->mod_istft_sep_config);
         params_process_msg_hops_sep(sets, cfgs->msg_hops_sep_config);
         params_process_snk_hops_sep(scks, cfgs->snk_hops_sep_config);
+        params_process_snk_hopstracks_sep(scks, cfgs->snk_hopstracks_sep_config);
 
         params_process_msg_spectra_pf(sets, cfgs->msg_spectra_pf_config);
         params_process_mod_istft_pf(sets, cfgs->mod_istft_pf_config);
         params_process_msg_hops_pf(sets, cfgs->msg_hops_pf_config);
         params_process_snk_hops_pf(scks, cfgs->snk_hops_pf_config);
+        params_process_snk_hopstracks_pf(scks, cfgs->snk_hopstracks_pf_config);
 
     }
 

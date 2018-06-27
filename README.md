@@ -111,7 +111,7 @@ This will send the RAW data to ODAS via the port 5001.
 Now open another terminal, and type the following command:
 
 ```
-netcat localhost 6002 > tracked.json
+socketcat -p 6002 > tracked.json
 ```
 
 This will output the result in the `tracked.json` file. Once the whole RAW file is processed, the sockets should close, and ODAS terminate.
@@ -131,7 +131,7 @@ bin/core -c settings/config/minidsp/uma8.json -s settings/socket/sst.json
 Then you launch the another terminal that will receive the results:
 
 ```
-netcat localhost 6002
+bin/socketcat -p 6002
 ```
 
 Finally, you pipeline the audio stream from arecord to ODAS, going through the tools:

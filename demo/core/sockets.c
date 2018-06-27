@@ -110,9 +110,9 @@
 		token_root_sockets_seps_N = json_tokens_getFromValue(tokens, string, token_root_sockets_seps_V); sockets_validate(token_root_sockets_seps_N);
 		token_root_sockets_pfs_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "pfs"); sockets_validate(token_root_sockets_pfs_V);
 		token_root_sockets_pfs_N = json_tokens_getFromValue(tokens, string, token_root_sockets_pfs_V); sockets_validate(token_root_sockets_pfs_N);
-		token_root_sockets_iseps_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "seps"); sockets_validate(token_root_sockets_iseps_V);
+		token_root_sockets_iseps_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "iseps"); sockets_validate(token_root_sockets_iseps_V);
 		token_root_sockets_iseps_N = json_tokens_getFromValue(tokens, string, token_root_sockets_iseps_V); sockets_validate(token_root_sockets_iseps_N);
-		token_root_sockets_ipfs_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "pfs"); sockets_validate(token_root_sockets_ipfs_V);
+		token_root_sockets_ipfs_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "ipfs"); sockets_validate(token_root_sockets_ipfs_V);
 		token_root_sockets_ipfs_N = json_tokens_getFromValue(tokens, string, token_root_sockets_ipfs_V); sockets_validate(token_root_sockets_ipfs_N);
 
 		// Access each token
