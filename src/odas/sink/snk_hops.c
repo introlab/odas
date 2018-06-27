@@ -41,8 +41,8 @@
         memset(obj->bytes, 0x00, 4 * sizeof(char));
 
         obj->bufferSize = obj->hopSize * obj->nChannels * 2;
-        obj->buffer = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * obj->bufferSize);
-        memset(obj->buffer, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * obj->bufferSize);
+        obj->buffer = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
 
         obj->in = (msg_hops_obj *) NULL;
 
