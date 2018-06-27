@@ -134,7 +134,8 @@ add_library(odas SHARED
     src/odas/amodule/amod_sss.c
     src/odas/amodule/amod_sst.c
     src/odas/amodule/amod_stft.c
-    src/odas/asink/asnk_hops.c    
+    src/odas/asink/asnk_hops.c
+    src/odas/asink/asnk_hopstracks.c
     src/odas/asink/asnk_pots.c
     src/odas/asink/asnk_targets.c
     src/odas/asink/asnk_tracks.c
@@ -161,6 +162,7 @@ add_library(odas SHARED
     src/odas/module/mod_sst.c
     src/odas/module/mod_stft.c
     src/odas/sink/snk_hops.c
+    src/odas/sink/snk_hopstracks.c
     src/odas/sink/snk_pots.c
     src/odas/sink/snk_targets.c
     src/odas/sink/snk_tracks.c

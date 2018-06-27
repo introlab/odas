@@ -38,11 +38,13 @@
         amod_istft_obj * amod_istft_sep;
         acon_hops_obj * acon_hops_sep;
         asnk_hops_obj * asnk_hops_sep;
+        asnk_hopstracks_obj * asnk_hopstracks_sep;
 
         acon_spectra_obj * acon_spectra_pf;
         amod_istft_obj * amod_istft_pf;
         acon_hops_obj * acon_hops_pf;
         asnk_hops_obj * asnk_hops_pf;
+        asnk_hopstracks_obj * asnk_hopstracks_pf;
 
     } objects;
 

@@ -36,11 +36,13 @@
         mod_istft_cfg * mod_istft_sep_config;
         msg_hops_cfg * msg_hops_sep_config;
         snk_hops_cfg * snk_hops_sep_config;
+        snk_hopstracks_cfg * snk_hopstracks_sep_config;
 
         msg_spectra_cfg * msg_spectra_pf_config;
         mod_istft_cfg * mod_istft_pf_config;
         msg_hops_cfg * msg_hops_pf_config;
         snk_hops_cfg * snk_hops_pf_config;
+        snk_hopstracks_cfg * snk_hopstracks_pf_config;
 
     } configs;
 

@@ -45,11 +45,13 @@
         objs->amod_istft_sep = (amod_istft_obj *) NULL;
         objs->acon_hops_sep = (acon_hops_obj *) NULL;
         objs->asnk_hops_sep = (asnk_hops_obj *) NULL;
+        objs->asnk_hopstracks_sep = (asnk_hopstracks_obj *) NULL;
         
         objs->acon_spectra_pf = (acon_spectra_obj *) NULL;
         objs->amod_istft_pf = (amod_istft_obj *) NULL;
         objs->acon_hops_pf = (acon_hops_obj *) NULL;
         objs->asnk_hops_pf = (asnk_hops_obj *) NULL;
+        objs->asnk_hopstracks_pf = (asnk_hopstracks_obj *) NULL;
 
         if (cfgs->src_hops_config->port != 0) { src_raw = 1; }
         if (cfgs->src_targets_config->port != 0) { src_targets = 1; }
@@ -57,6 +59,8 @@
         if (cfgs->snk_tracks_config->port != 0) { snk_tracks = 1; }
         if (cfgs->snk_hops_sep_config->port != 0) { snk_sep = 1; }
         if (cfgs->snk_hops_pf_config->port != 0) { snk_pf = 1; }
+        //if (cfgs->snk_hopstracks_sep_config->port != 0) { snk_sep = 1; }
+        //if (cfgs->snk_hopstracks_pf_config->port != 0) { snk_pf = 1; }
 
         if (src_raw == 0) {
 
@@ -170,7 +174,7 @@
         objs->asnk_pots = asnk_pots_construct(cfgs->snk_pots_config, cfgs->msg_pots_config);
 
         objs->amod_sst = amod_sst_construct(cfgs->mod_sst_config, cfgs->mod_ssl_config, cfgs->msg_pots_config, cfgs->msg_targets_config, cfgs->msg_tracks_config);
-        objs->acon_tracks = acon_tracks_construct(nMessages, 2, cfgs->msg_tracks_config);
+        objs->acon_tracks = acon_tracks_construct(nMessages, 4, cfgs->msg_tracks_config);
         objs->asnk_tracks = asnk_tracks_construct(cfgs->snk_tracks_config, cfgs->msg_tracks_config);
 
         objs->amod_lag = amod_lag_construct(cfgs->mod_lag_config, cfgs->msg_spectra_config);
@@ -182,13 +186,15 @@
 
         objs->acon_spectra_sep = acon_spectra_construct(nMessages, 1, cfgs->msg_spectra_sep_config);
         objs->amod_istft_sep = amod_istft_construct(cfgs->mod_istft_sep_config, cfgs->msg_spectra_sep_config, cfgs->msg_hops_sep_config);
-        objs->acon_hops_sep = acon_hops_construct(nMessages, 1, cfgs->msg_hops_sep_config);
+        objs->acon_hops_sep = acon_hops_construct(nMessages, 2, cfgs->msg_hops_sep_config);
         objs->asnk_hops_sep = asnk_hops_construct(cfgs->snk_hops_sep_config, cfgs->msg_hops_sep_config);
+        objs->asnk_hopstracks_sep = asnk_hopstracks_construct(cfgs->snk_hopstracks_sep_config, cfgs->msg_hops_sep_config, cfgs->msg_tracks_config);
 
         objs->acon_spectra_pf = acon_spectra_construct(nMessages, 1, cfgs->msg_spectra_pf_config);
         objs->amod_istft_pf = amod_istft_construct(cfgs->mod_istft_pf_config, cfgs->msg_spectra_pf_config, cfgs->msg_hops_pf_config);
-        objs->acon_hops_pf = acon_hops_construct(nMessages, 1, cfgs->msg_hops_pf_config);
+        objs->acon_hops_pf = acon_hops_construct(nMessages, 2, cfgs->msg_hops_pf_config);
         objs->asnk_hops_pf = asnk_hops_construct(cfgs->snk_hops_pf_config, cfgs->msg_hops_pf_config);
+        objs->asnk_hopstracks_pf = asnk_hopstracks_construct(cfgs->snk_hopstracks_pf_config, cfgs->msg_hops_pf_config, cfgs->msg_tracks_config);
 
         asrc_hops_connect(objs->asrc_hops, objs->acon_hops->in);
         asnk_hops_connect(objs->asnk_hops, objs->acon_hops->outs[0]);
@@ -211,9 +217,11 @@
         
         amod_istft_connect(objs->amod_istft_sep, objs->acon_spectra_sep->outs[0], objs->acon_hops_sep->in);
         asnk_hops_connect(objs->asnk_hops_sep, objs->acon_hops_sep->outs[0]);
+        asnk_hopstracks_connect(objs->asnk_hopstracks_sep, objs->acon_hops_sep->outs[1], objs->acon_tracks->outs[2]);
 
         amod_istft_connect(objs->amod_istft_pf, objs->acon_spectra_pf->outs[0], objs->acon_hops_pf->in);
         asnk_hops_connect(objs->asnk_hops_pf, objs->acon_hops_pf->outs[0]);
+        asnk_hopstracks_connect(objs->asnk_hopstracks_pf, objs->acon_hops_pf->outs[1], objs->acon_tracks->outs[3]);
 
     }
 
@@ -249,11 +257,13 @@
         if (objs->amod_istft_sep != NULL) { amod_istft_destroy(objs->amod_istft_sep); }
         if (objs->acon_hops_sep != NULL) { acon_hops_destroy(objs->acon_hops_sep); }
         if (objs->asnk_hops_sep != NULL) { asnk_hops_destroy(objs->asnk_hops_sep); }
+        if (objs->asnk_hopstracks_sep != NULL) { asnk_hopstracks_destroy(objs->asnk_hopstracks_sep); }
         
         if (objs->acon_spectra_pf != NULL) { acon_spectra_destroy(objs->acon_spectra_pf); }
         if (objs->amod_istft_pf != NULL) { amod_istft_destroy(objs->amod_istft_pf); }
         if (objs->acon_hops_pf != NULL) { acon_hops_destroy(objs->acon_hops_pf); }
         if (objs->asnk_hops_pf != NULL) { asnk_hops_destroy(objs->asnk_hops_pf); }
+        if (objs->asnk_hopstracks_pf != NULL) { asnk_hopstracks_destroy(objs->asnk_hopstracks_pf); }
 
         free((void *) objs);
 

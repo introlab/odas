@@ -27,6 +27,7 @@ extern "C" {
     #include <module/mod_stft.h>
     
     #include <sink/snk_hops.h>
+    #include <sink/snk_hopstracks.h>
     #include <sink/snk_pots.h>
     #include <sink/snk_targets.h>
     #include <sink/snk_tracks.h>
@@ -58,6 +59,7 @@ extern "C" {
     #include <amodule/amod_stft.h>
     
     #include <asink/asnk_hops.h>
+    #include <asink/asnk_hopstracks.h>
     #include <asink/asnk_pots.h>
     #include <asink/asnk_targets.h>
     #include <asink/asnk_tracks.h>
