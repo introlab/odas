@@ -46,7 +46,7 @@
 
     }
 
-    int validate_format(const char * formats[][4], char format[]) {
+    int validate_format(const char * formats[][4], const char format[]) {
 
         unsigned int iFormat = 0;
         int match = -1;
@@ -65,7 +65,7 @@
 
     }
 
-    unsigned char extract_bits(const char * formats[][4], char format[]) {
+    unsigned char extract_bits(const char * formats[][4], const char format[]) {
 
         unsigned int iFormat = 0;
         unsigned char bits = 0;
@@ -84,7 +84,7 @@
 
     }
 
-    char extract_order(const char * formats[][4], char format[]) {
+    char extract_order(const char * formats[][4], const char format[]) {
 
         unsigned int iFormat = 0;
         char order = 0x00;
