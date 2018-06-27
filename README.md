@@ -78,7 +78,7 @@ settings/socket/sst.json
 Then you can launch odas:
 
 ```
-bin/core -c settings/config/minidsp/uma8.json -s settings/socket/ssl.json 
+bin/core -c settings/config/minidsp/uma8.json -s settings/socket/sst.json 
 ```
 
 You should see something like this:
@@ -115,3 +115,29 @@ netcat localhost 6002 > tracked.json
 ```
 
 This will output the result in the `tracked.json` file. Once the whole RAW file is processed, the sockets should close, and ODAS terminate.
+
+### Read from a sound card, and return track sources results to terminal
+
+Suppose you are still using UMA8 microphone array from MiniDSP. We use the same configuration and socket JSON files as in the previous example.
+
+This sound card provides us with 8 channels, though only the first 7 are connected to microphones (the last one is left silence). Moreover, the sample format is provided in signed 32-bit little endian, while ODAS expects 16-bit little endians. To solve this formatting and channels mapping issue, let's use some tools provided by ODAS, that are the `formatter` and the `mapper`.
+
+You first launch odas:
+
+```
+bin/core -c settings/config/minidsp/uma8.json -s settings/socket/sst.json 
+```
+
+Then you launch the another terminal that will receive the results:
+
+```
+netcat localhost 6002
+```
+
+Finally, you pipeline the audio stream from arecord to ODAS, going through the tools:
+
+```
+arecord --device=hw:1,0 --channels=8 --rate=48000 --format=S32_LE --file-type=raw | bin/mapper -i 8 -o "0-6" -b s32le | bin/formatter -i s32le -o s16le | netcat localhost 5001
+```
+
+You should see the tracking results appear live in the last terminal.

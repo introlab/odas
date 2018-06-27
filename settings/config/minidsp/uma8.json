@@ -15,13 +15,13 @@
         
         "size": 
         {
-            "hopSize": 128,
-            "frameSize": 256
+            "hopSize": 512,
+            "frameSize": 1024
         },
         
         "samplerate":
         {
-            "mu": 16000,
+            "mu": 48000,
             "sigma2": 0.01
         },
 

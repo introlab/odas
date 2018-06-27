@@ -197,5 +197,5 @@ target_link_libraries(core
 
 install(TARGETS odas DESTINATION lib)
 
-add_executable(tools_bits demo/tools/bits.c)
-add_executable(tools_channels demo/tools/channels.c)
+add_executable(formatter demo/tools/formatter.c)
+add_executable(mapper demo/tools/mapper.c)
