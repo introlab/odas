@@ -131,7 +131,7 @@ bin/core -c settings/config/minidsp/uma8.json -s settings/socket/sst.json
 Then you launch the another terminal that will receive the results:
 
 ```
-bin/socketcat -p 6002
+netcat localhost 6002
 ```
 
 Finally, you pipeline the audio stream from arecord to ODAS, going through the tools:
