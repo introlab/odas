@@ -216,7 +216,7 @@
 
         det = 0.0f;
 
-        if ((obj->nRows == 3) && (obj->nCols == 3)) {
+        if ((obj->nRows == 2) && (obj->nCols == 2)) {
 
             a00 = obj->array[0*obj->nRows+0];
             a01 = obj->array[0*obj->nRows+1];
