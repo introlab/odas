@@ -55,6 +55,8 @@
 
     void params_process_snk_hops_sep(const sockets * scks, snk_hops_cfg * cfg);
 
+    void params_process_snk_hopstracks_sep(const sockets * scks, snk_hopstracks_cfg * cfg);
+
     void params_process_msg_spectra_pf(const settings * sets, msg_spectra_cfg * cfg);
 
     void params_process_mod_istft_pf(const settings * sets, mod_istft_cfg * cfg);
@@ -62,5 +64,7 @@
     void params_process_msg_hops_pf(const settings * sets, msg_hops_cfg * cfg);
 
     void params_process_snk_hops_pf(const sockets * scks, snk_hops_cfg * cfg);
+
+    void params_process_snk_hopstracks_pf(const sockets * scks, snk_hopstracks_cfg * cfg);
 
 #endif

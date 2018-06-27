@@ -37,11 +37,13 @@
         cfgs->mod_istft_sep_config = mod_istft_cfg_construct();
         cfgs->msg_hops_sep_config = msg_hops_cfg_construct();
         cfgs->snk_hops_sep_config = snk_hops_cfg_construct();
+        cfgs->snk_hopstracks_sep_config = snk_hopstracks_cfg_construct();
 
         cfgs->msg_spectra_pf_config = msg_spectra_cfg_construct();
         cfgs->mod_istft_pf_config = mod_istft_cfg_construct();
         cfgs->msg_hops_pf_config = msg_hops_cfg_construct();
         cfgs->snk_hops_pf_config = snk_hops_cfg_construct();
+        cfgs->snk_hopstracks_pf_config = snk_hopstracks_cfg_construct();
 
         return cfgs;
 
@@ -79,11 +81,13 @@
         mod_istft_cfg_destroy(cfgs->mod_istft_sep_config);
         msg_hops_cfg_destroy(cfgs->msg_hops_sep_config);
         snk_hops_cfg_destroy(cfgs->snk_hops_sep_config);
+        snk_hopstracks_cfg_destroy(cfgs->snk_hopstracks_sep_config);
 
         msg_spectra_cfg_destroy(cfgs->msg_spectra_pf_config);
         mod_istft_cfg_destroy(cfgs->mod_istft_pf_config);
         msg_hops_cfg_destroy(cfgs->msg_hops_pf_config);
         snk_hops_cfg_destroy(cfgs->snk_hops_pf_config);
+        snk_hopstracks_cfg_destroy(cfgs->snk_hopstracks_pf_config);
 
         free((void *) cfgs);
 

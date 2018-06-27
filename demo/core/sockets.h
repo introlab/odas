@@ -10,6 +10,8 @@
 		unsigned int tracks;
 		unsigned int seps;
 		unsigned int pfs;
+		unsigned int iseps;
+		unsigned int ipfs;
 
 	} sockets;
 

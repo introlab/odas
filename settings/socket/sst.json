@@ -7,6 +7,8 @@
         "pots": 0,
         "tracks": 6002,
         "seps": 0,
-        "pfs": 0
+        "pfs": 0,
+        "iseps": 0,
+        "ipfs": 0       
     }
 }

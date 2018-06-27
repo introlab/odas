@@ -35,7 +35,6 @@
 
     void snk_hopstracks_destroy(snk_hopstracks_obj * obj) {
 
-        free((void *) obj->bytes);
         free((void *) obj->bufferOneCh);
         free((void *) obj->buffer);
         free((void *) obj);        

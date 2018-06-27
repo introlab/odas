@@ -59,8 +59,8 @@
         if (cfgs->snk_tracks_config->port != 0) { snk_tracks = 1; }
         if (cfgs->snk_hops_sep_config->port != 0) { snk_sep = 1; }
         if (cfgs->snk_hops_pf_config->port != 0) { snk_pf = 1; }
-        //if (cfgs->snk_hopstracks_sep_config->port != 0) { snk_sep = 1; }
-        //if (cfgs->snk_hopstracks_pf_config->port != 0) { snk_pf = 1; }
+        if (cfgs->snk_hopstracks_sep_config->port != 0) { snk_sep = 1; }
+        if (cfgs->snk_hopstracks_pf_config->port != 0) { snk_pf = 1; }
 
         if (src_raw == 0) {
 
@@ -303,11 +303,13 @@
         if (objs->amod_istft_sep != NULL) { thread_start(objs->amod_istft_sep->thread); }
         if (objs->acon_hops_sep != NULL) { thread_start(objs->acon_hops_sep->thread); }
         if (objs->asnk_hops_sep != NULL) { thread_start(objs->asnk_hops_sep->thread); }
+        if (objs->asnk_hopstracks_sep != NULL) { thread_start(objs->asnk_hopstracks_sep->thread); }
         
         if (objs->acon_spectra_pf != NULL) { thread_start(objs->acon_spectra_pf->thread); }
         if (objs->amod_istft_pf != NULL) { thread_start(objs->amod_istft_pf->thread); }
         if (objs->acon_hops_pf != NULL) { thread_start(objs->acon_hops_pf->thread); }
         if (objs->asnk_hops_pf != NULL) { thread_start(objs->asnk_hops_pf->thread); }
+        if (objs->asnk_hopstracks_pf != NULL) { thread_start(objs->asnk_hopstracks_pf->thread); }
 
         // Join threads
 
@@ -341,10 +343,12 @@
         if (objs->amod_istft_sep != NULL) { thread_join(objs->amod_istft_sep->thread); }
         if (objs->acon_hops_sep != NULL) { thread_join(objs->acon_hops_sep->thread); }
         if (objs->asnk_hops_sep != NULL) { thread_join(objs->asnk_hops_sep->thread); }
+        if (objs->asnk_hopstracks_sep != NULL) { thread_join(objs->asnk_hopstracks_sep->thread); }
         
         if (objs->acon_spectra_pf != NULL) { thread_join(objs->acon_spectra_pf->thread); }
         if (objs->amod_istft_pf != NULL) { thread_join(objs->amod_istft_pf->thread); }
         if (objs->acon_hops_pf != NULL) { thread_join(objs->acon_hops_pf->thread); }
         if (objs->asnk_hops_pf != NULL) { thread_join(objs->asnk_hops_pf->thread); }
+        if (objs->asnk_hopstracks_pf != NULL) { thread_join(objs->asnk_hopstracks_pf->thread); }
 
     }

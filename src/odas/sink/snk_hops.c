@@ -52,7 +52,6 @@
 
     void snk_hops_destroy(snk_hops_obj * obj) {
 
-        free((void *) obj->bytes);
         free((void *) obj->buffer);
         free((void *) obj);
 

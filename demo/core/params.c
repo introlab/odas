@@ -422,6 +422,12 @@
 
     }
 
+    void params_process_snk_hopstracks_sep(const sockets * scks, snk_hopstracks_cfg * cfg) {
+
+        cfg->port = scks->iseps;
+
+    }
+
     void params_process_msg_spectra_pf(const settings * sets, msg_spectra_cfg * cfg) {
 
         cfg->halfFrameSize = sets->general.size.frameSize / 2 + 1;
@@ -447,3 +453,10 @@
         cfg->port = scks->pfs;
 
     }
+
+    void params_process_snk_hopstracks_pf(const sockets * scks, snk_hopstracks_cfg * cfg) {
+
+        cfg->port = scks->ipfs;
+
+    }
+

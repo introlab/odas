@@ -19,6 +19,8 @@
 		scks->tracks = 0;
 		scks->seps = 0;
 		scks->pfs = 0;
+		scks->iseps = 0;
+		scks->ipfs = 0;
 
 		return scks;
 
@@ -61,6 +63,10 @@
 		int token_root_sockets_seps_N;
 		int token_root_sockets_pfs_V;
 		int token_root_sockets_pfs_N;
+		int token_root_sockets_iseps_V;
+		int token_root_sockets_iseps_N;
+		int token_root_sockets_ipfs_V;
+		int token_root_sockets_ipfs_N;
 
 		// Allocate	
 
@@ -104,6 +110,10 @@
 		token_root_sockets_seps_N = json_tokens_getFromValue(tokens, string, token_root_sockets_seps_V); sockets_validate(token_root_sockets_seps_N);
 		token_root_sockets_pfs_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "pfs"); sockets_validate(token_root_sockets_pfs_V);
 		token_root_sockets_pfs_N = json_tokens_getFromValue(tokens, string, token_root_sockets_pfs_V); sockets_validate(token_root_sockets_pfs_N);
+		token_root_sockets_iseps_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "seps"); sockets_validate(token_root_sockets_iseps_V);
+		token_root_sockets_iseps_N = json_tokens_getFromValue(tokens, string, token_root_sockets_iseps_V); sockets_validate(token_root_sockets_iseps_N);
+		token_root_sockets_ipfs_V = json_tokens_getFromObject(tokens, string, token_root_sockets_O, "pfs"); sockets_validate(token_root_sockets_ipfs_V);
+		token_root_sockets_ipfs_N = json_tokens_getFromValue(tokens, string, token_root_sockets_ipfs_V); sockets_validate(token_root_sockets_ipfs_N);
 
 		// Access each token
 
@@ -113,6 +123,8 @@
 		json_tokens_extractInt(tokens, string, token_root_sockets_tracks_N, &(scks->tracks));
 		json_tokens_extractInt(tokens, string, token_root_sockets_seps_N, &(scks->seps));
 		json_tokens_extractInt(tokens, string, token_root_sockets_pfs_N, &(scks->pfs));
+		json_tokens_extractInt(tokens, string, token_root_sockets_iseps_N, &(scks->iseps));
+		json_tokens_extractInt(tokens, string, token_root_sockets_ipfs_N, &(scks->ipfs));
 
 		// Free
 
@@ -130,6 +142,8 @@
 		printf("sockets.tracks = %u\n", scks->tracks);
 		printf("sockets.seps = %u\n", scks->seps);
 		printf("sockets.pfs = %u\n", scks->pfs);
+		printf("sockets.iseps = %u\n", scks->iseps);
+		printf("sockets.ipfs = %u\n", scks->ipfs);
 
 	}
 
