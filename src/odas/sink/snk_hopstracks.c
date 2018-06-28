@@ -17,15 +17,12 @@
         obj->port = snk_hopstracks_config->port;        
 
         obj->nBytes = 2;
-        obj->nSamples = obj->hopSize * obj->nChannels;       
-        obj->bufferSize = obj->hopSize * (obj->nChannels + 1) * obj->nBytes;
+        obj->bufferSize = obj->hopSize * (obj->nChannels * 2) * obj->nBytes;
 
         obj->bufferInterleave = (char *) malloc(sizeof(char) * obj->bufferSize);
         memset(obj->bufferInterleave, 0x00, sizeof(char) * obj->bufferSize);
         obj->bufferPerChannel = (char *) malloc(sizeof(char) * obj->bufferSize);
         memset(obj->bufferPerChannel, 0x00, sizeof(char) * obj->bufferSize);
-        obj->buffer = (float *) malloc(sizeof(float) * obj->nSamples);
-        memset(obj->buffer, 0x00, sizeof(float) * obj->nSamples);
 
         obj->in1 = (msg_hops_obj *) NULL;
         obj->in2 = (msg_tracks_obj *) NULL;
@@ -38,7 +35,6 @@
 
         free((void *) obj->bufferPerChannel);
         free((void *) obj->bufferInterleave);
-        free((void *) obj->buffer);
         free((void *) obj);        
 
     }
@@ -140,19 +136,19 @@
         unsigned int iElement;
         unsigned int nBytes;
 
-        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-            memcpy(&(obj->buffer[iChannel * obj->hopSize]), obj->in1->hops->array[iChannel], obj->hopSize * sizeof(float));
-        }        
-
-        pcm_normalized2SXle(obj->bufferPerChannel, obj->buffer, obj->nBytes, obj->nSamples);
-
-        nBytes = obj->nSamples * obj->nBytes;
-        memset(&(obj->bufferPerChannel[nBytes]), 0xFF, sizeof(unsigned long long));
-        nBytes += sizeof(unsigned long long);
-        memcpy(&(obj->bufferPerChannel[nBytes]), &(obj->in1->timeStamp), sizeof(unsigned long long));
-        nBytes += sizeof(unsigned long long);
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {            
+            pcm_normalized2SXle(&(obj->bufferPerChannel[iChannel * 2 * obj->hopSize * obj->nBytes]), obj->in1->hops->array[iChannel], obj->nBytes, obj->hopSize);
+        }
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            nBytes = (iChannel * 2 + 1) * obj->hopSize * obj->nBytes;
+            
+            memset(&(obj->bufferPerChannel[nBytes]), 0xFF, sizeof(unsigned long long));    
+            nBytes += sizeof(unsigned long long);
+
+            memcpy(&(obj->bufferPerChannel[nBytes]), &(obj->in1->timeStamp), sizeof(unsigned long long));
+            nBytes += sizeof(unsigned long long);
 
             memcpy(&(obj->bufferPerChannel[nBytes]), &(obj->in2->tracks->ids[iChannel]), sizeof(unsigned long long));
             nBytes += sizeof(unsigned long long);
@@ -166,7 +162,7 @@
 
         }
         
-        interleave_perchannel2interleave(obj->bufferInterleave, obj->bufferPerChannel, obj->nBytes, obj->nChannels + 1, obj->hopSize);       
+        interleave_perchannel2interleave(obj->bufferInterleave, obj->bufferPerChannel, obj->nBytes, obj->nChannels * 2, obj->hopSize);       
 
     }
 

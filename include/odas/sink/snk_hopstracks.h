@@ -22,11 +22,9 @@
         unsigned int nChannels;
 
         unsigned int nBytes;
-        unsigned int nSamples;
         unsigned int bufferSize;
         char * bufferInterleave;
         char * bufferPerChannel;
-        float * buffer;   
 
         int server_id;
         int connection_id;

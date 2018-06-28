@@ -48,11 +48,9 @@
         unsigned int port;        
 
         unsigned int nBytes;
-        unsigned int nSamples;
         unsigned int bufferSize;
         char * bufferInterleave;
         char * bufferPerChannel;
-        float * buffer;
 
         msg_hops_obj * out;
 

@@ -39,15 +39,12 @@
         obj->port = src_hops_config->port;        
 
         obj->nBytes = 2;
-        obj->nSamples = obj->hopSize * obj->nChannels;
-        obj->bufferSize = obj->nSamples * obj->nBytes;
+        obj->bufferSize = obj->nChannels * obj->hopSize * obj->nBytes;
 
         obj->bufferInterleave = (char *) malloc(sizeof(char) * obj->bufferSize);
         memset(obj->bufferInterleave, 0x00, sizeof(char) * obj->bufferSize);
         obj->bufferPerChannel = (char *) malloc(sizeof(char) * obj->bufferSize);
         memset(obj->bufferPerChannel, 0x00, sizeof(char) * obj->bufferSize);       
-        obj->buffer = (float *) malloc(sizeof(float) * obj->nSamples);
-        memset(obj->buffer, 0x00, sizeof(float) * obj->nSamples);
 
         obj->out = (msg_hops_obj *) NULL;
         
@@ -59,7 +56,6 @@
 
         free((void *) obj->bufferInterleave);
         free((void *) obj->bufferPerChannel);
-        free((void *) obj->buffer);
         free((void *) obj);
 
     }
@@ -151,10 +147,9 @@
         unsigned int iChannel;
 
         interleave_interleave2perchannel(obj->bufferPerChannel, obj->bufferInterleave, obj->nBytes, obj->nChannels, obj->hopSize);
-        pcm_SXle2normalized(obj->buffer, obj->bufferPerChannel, obj->nBytes, obj->nSamples);
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-            memcpy(obj->out->hops->array[iChannel], &(obj->buffer[iChannel * obj->hopSize]), obj->hopSize * sizeof(float));
+            pcm_SXle2normalized(obj->out->hops->array[iChannel], &(obj->bufferPerChannel[iChannel * obj->hopSize * obj->nBytes]), obj->nBytes, obj->hopSize);
         }
 
     }
