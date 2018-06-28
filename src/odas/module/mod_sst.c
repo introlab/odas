@@ -390,6 +390,7 @@
         float sourceActivity;
         int rtnValue;
         char targetFound;
+        int iTrackWithTarget;
 
         if (obj->in1->timeStamp != obj->in2->timeStamp) {
 
@@ -408,20 +409,27 @@
 
             for (iTargetMax = 0; iTargetMax < obj->nTargetsMax; iTargetMax++) {
 
+                iTrackWithTarget = -1;
+
                 if (strcmp(obj->in2->targets->tags[iTargetMax], "") != 0) {
+
+                    // First check if this target source is already part of the tracked sources
 
                     targetFound = 0x00;
 
                     for (iTrackMax = 0; iTrackMax < obj->nTracksMax; iTrackMax++) {
 
                         if (strcmp(obj->in2->targets->tags[iTargetMax], obj->tags[iTrackMax]) == 0) {
-                            
+
                             targetFound = 0x01;
+                            iTrackWithTarget = iTrackMax;
                             break;
 
                         }
 
                     }
+
+                    // If not, then find a free spot and add it
 
                     if (targetFound == 0x00) {
 
@@ -429,48 +437,56 @@
 
                             if (obj->ids[iTrackMax] == 0) {
 
+                                iTrackWithTarget = iTrackMax;
+
                                 obj->id++;
-                                obj->ids[iTrackMax] = obj->id;
-                                strcpy(obj->tags[iTrackMax], obj->in2->targets->tags[iTargetMax]);
-
-                                switch(obj->mode) {
-
-                                    case 'k':
-
-                                        kalman2kalman_init_targets(obj->kalman2kalman_prob, 
-                                                                   obj->in2->targets,
-                                                                   iTargetMax, 
-                                                                   obj->kalmans[iTrackMax]); 
-
-                                    break;
-
-                                    case 'p':
-
-                                        particle2particle_init_targets(obj->particle2particle_prob, 
-                                                                       obj->in2->targets,
-                                                                       iTargetMax, 
-                                                                       obj->particles[iTrackMax]);
-
-                                    break;
-
-                                    default:
-
-                                        printf("Invalid filter type.\n");
-                                        exit(EXIT_FAILURE);
-
-                                    break;
-
-                                }
-
-                                obj->type[iTrackMax] = 'T';
-                                obj->n_prob[iTrackMax] = 0;
-                                obj->mean_prob[iTrackMax] = 0.0f;
-
+                                obj->ids[iTrackWithTarget] = obj->id;
+                                strcpy(obj->tags[iTrackWithTarget], obj->in2->targets->tags[iTargetMax]);
+                                
                                 break;
 
                             }
 
                         }
+
+                    }
+
+                    // If a spot was found, or the target source already had its spot, then just update position
+
+                    if (iTrackWithTarget != -1) {
+
+                        switch(obj->mode) {
+
+                            case 'k':
+
+                                kalman2kalman_init_targets(obj->kalman2kalman_prob, 
+                                                           obj->in2->targets,
+                                                           iTargetMax, 
+                                                           obj->kalmans[iTrackWithTarget]); 
+
+                            break;
+
+                            case 'p':
+
+                                particle2particle_init_targets(obj->particle2particle_prob, 
+                                                               obj->in2->targets,
+                                                               iTargetMax, 
+                                                               obj->particles[iTrackWithTarget]);
+
+                            break;
+
+                            default:
+
+                                printf("Invalid filter type.\n");
+                                exit(EXIT_FAILURE);
+
+                            break;
+
+                        }
+
+                        obj->type[iTrackWithTarget] = 'T';
+                        obj->n_prob[iTrackWithTarget] = 0;
+                        obj->mean_prob[iTrackWithTarget] = 0.0f;
 
                     }
 

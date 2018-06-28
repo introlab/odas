@@ -346,7 +346,7 @@
             if (rtn != proc.nBytesIn) { break; }
             processor_process(&proc, cIn, cOut);
             rtn = write(STDOUT_FILENO, cOut, proc.nBytesOut);
-            fsync(STDOUT_FILENO);
+            //fsync(STDOUT_FILENO);
 
         }        
 
