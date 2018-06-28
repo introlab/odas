@@ -200,8 +200,5 @@ target_link_libraries(core
 
 install(TARGETS odas DESTINATION lib)
 
-add_executable(test_pcm debug/test_pcm.c)
-target_link_libraries(test_pcm odas)
-
 add_executable(formatter demo/tools/formatter.c)
 add_executable(mapper demo/tools/mapper.c)
