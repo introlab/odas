@@ -34,6 +34,7 @@
     #include "../message/msg_hops.h"
     #include "../signal/hop.h"
     #include "../utils/pcm.h"
+    #include "../utils/interleave.h"
 
     typedef struct src_hops_obj {
 
@@ -46,10 +47,12 @@
         int connection_id;
         unsigned int port;        
 
-        char * buffer;
+        unsigned int nBytes;
+        unsigned int nSamples;
         unsigned int bufferSize;
-
-        char bytes[4];
+        char * bufferInterleave;
+        char * bufferPerChannel;
+        float * buffer;
 
         msg_hops_obj * out;
 

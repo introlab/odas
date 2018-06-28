@@ -38,10 +38,16 @@
         obj->connection_id = 0;
         obj->port = src_hops_config->port;        
 
-        memset(obj->bytes, 0x00, 4 * sizeof(char));
-        obj->bufferSize = obj->hopSize * obj->nChannels * 2;
-        obj->buffer = (char *) malloc(sizeof(char) * obj->bufferSize);
-        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
+        obj->nBytes = 2;
+        obj->nSamples = obj->hopSize * obj->nChannels;
+        obj->bufferSize = obj->nSamples * obj->nBytes;
+
+        obj->bufferInterleave = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferInterleave, 0x00, sizeof(char) * obj->bufferSize);
+        obj->bufferPerChannel = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferPerChannel, 0x00, sizeof(char) * obj->bufferSize);       
+        obj->buffer = (float *) malloc(sizeof(float) * obj->nSamples);
+        memset(obj->buffer, 0x00, sizeof(float) * obj->nSamples);
 
         obj->out = (msg_hops_obj *) NULL;
         
@@ -51,6 +57,8 @@
 
     void src_hops_destroy(src_hops_obj * obj) {
 
+        free((void *) obj->bufferInterleave);
+        free((void *) obj->bufferPerChannel);
         free((void *) obj->buffer);
         free((void *) obj);
 
@@ -117,7 +125,7 @@
 
         nBytes = 0;
 
-        while( (messageSize = recv(obj->connection_id, &(obj->buffer[nBytes]), (obj->bufferSize-nBytes), 0)) > 0) {
+        while( (messageSize = recv(obj->connection_id, &(obj->bufferInterleave[nBytes]), (obj->bufferSize-nBytes), 0)) > 0) {
 
             nBytes += messageSize;
 
@@ -140,27 +148,13 @@
 
     void src_hops_process_format(src_hops_obj * obj) {
 
-        unsigned int iSample;
         unsigned int iChannel;
-        unsigned int nBytes;
-        float sample;
 
-        nBytes = 2;
+        interleave_interleave2perchannel(obj->bufferPerChannel, obj->bufferInterleave, obj->nBytes, obj->nChannels, obj->hopSize);
+        pcm_SXle2normalized(obj->buffer, obj->bufferPerChannel, obj->nBytes, obj->nSamples);
 
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                memcpy(&(obj->bytes[4-nBytes]),
-                       &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
-                       sizeof(char) * nBytes);
-
-                sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
-
-                obj->out->hops->array[iChannel][iSample] = sample;
-
-            }
-
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            memcpy(obj->out->hops->array[iChannel], &(obj->buffer[iChannel * obj->hopSize]), obj->hopSize * sizeof(float));
         }
 
     }

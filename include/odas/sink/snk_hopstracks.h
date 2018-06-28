@@ -11,6 +11,7 @@
 
     #include "../message/msg_hops.h"
     #include "../message/msg_tracks.h"
+    #include "../utils/interleave.h"
     #include "../utils/pcm.h"
 
     typedef struct snk_hopstracks_obj {
@@ -20,17 +21,15 @@
         unsigned int hopSize;
         unsigned int nChannels;
 
-        char * bufferOneCh;
-        unsigned int bufferOneChSize;
-
-        char * buffer;
+        unsigned int nBytes;
+        char * bufferPerChannel;
+        char * bufferInterleave;
         unsigned int bufferSize;
+        float * buffer;       
 
         int server_id;
         int connection_id;
         unsigned int port;       
-
-        char bytes[4];
 
         msg_hops_obj * in1;
         msg_tracks_obj * in2;

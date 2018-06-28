@@ -16,15 +16,14 @@
         obj->connection_id = 0;
         obj->port = snk_hopstracks_config->port;        
 
-        memset(obj->bytes, 0x00, 4 * sizeof(char));
-
-        obj->bufferOneChSize = obj->hopSize * 2;
-        obj->bufferOneCh = (char *) malloc(sizeof(char) * obj->bufferOneChSize);
-        memset(obj->bufferOneCh, 0x00, sizeof(char) * obj->bufferOneChSize);
-
-        obj->bufferSize = obj->hopSize * obj->nChannels * 2 * 2;
-        obj->buffer = (char *) malloc(sizeof(char) * obj->bufferSize);
-        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
+        obj->nBytes = 2;
+        obj->bufferSize = obj->hopSize * (obj->nChannels + 1) * obj->nBytes;
+        obj->bufferPerChannel = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferPerChannel, 0x00, sizeof(char) * obj->bufferSize);
+        obj->bufferInterleave = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferInterleave, 0x00, sizeof(char) * obj->bufferSize);
+        obj->buffer = (float *) malloc(sizeof(float) * obj->bufferSize);
+        memset(obj->buffer, 0x00, sizeof(float) * obj->bufferSize);
 
         obj->in1 = (msg_hops_obj *) NULL;
         obj->in2 = (msg_tracks_obj *) NULL;
@@ -35,7 +34,8 @@
 
     void snk_hopstracks_destroy(snk_hopstracks_obj * obj) {
 
-        free((void *) obj->bufferOneCh);
+        free((void *) obj->bufferPerChannel);
+        free((void *) obj->bufferInterleave);
         free((void *) obj->buffer);
         free((void *) obj);        
 
@@ -123,7 +123,7 @@
 
         if (obj->port != 0) {
 
-            if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
+            if (send(obj->connection_id, obj->bufferInterleave, obj->bufferSize, 0) < 0) {
                 printf("Sink hops: Could not send message.\n");
                 exit(EXIT_FAILURE);           
             }
@@ -134,53 +134,7 @@
 
     void snk_hopstracks_process_format(snk_hopstracks_obj * obj) {
 
-        unsigned int iChannel;
-        unsigned int iSample;
-        float sample;
-        unsigned int nBytes;
-        unsigned int nBytesTotal;
-        unsigned int ptrBytes;
-
-        nBytes = 2;
-        nBytesTotal = 0;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                sample = obj->in1->hops->array[iChannel][iSample];
-                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                nBytesTotal += 2 * nBytes;
-
-            }
-
-        }
-
-        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-            memset(obj->bufferOneCh, 0x00, sizeof(char) * obj->bufferOneChSize);
-
-            sprintf(obj->bufferOneCh, "{\"id\":%llu,\"tag\":\"%s\",\"x\":%1.3f,\"y\":%1.3f,\"z\":%1.3f,\"activity\": %1.3f}", 
-                    obj->in2->tracks->ids[iChannel],
-                    obj->in2->tracks->tags[iChannel],
-                    obj->in2->tracks->array[iChannel*3+0], 
-                    obj->in2->tracks->array[iChannel*3+1], 
-                    obj->in2->tracks->array[iChannel*3+2],
-                    obj->in2->tracks->activity[iChannel]);
-
-            nBytesTotal = iChannel * nBytes * 2 + nBytes;
-
-            for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bufferOneCh[iSample*nBytes]), nBytes * sizeof(char));
-
-                nBytesTotal += obj->nChannels * nBytes * 2;
-
-            }
-
-        }       
+        
 
     }
 

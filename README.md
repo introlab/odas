@@ -111,7 +111,7 @@ This will send the RAW data to ODAS via the port 5001.
 Now open another terminal, and type the following command:
 
 ```
-socketcat -p 6002 > tracked.json
+netcat -p 6002 > tracked.json
 ```
 
 This will output the result in the `tracked.json` file. Once the whole RAW file is processed, the sockets should close, and ODAS terminate.
@@ -137,7 +137,7 @@ netcat localhost 6002
 Finally, you pipeline the audio stream from arecord to ODAS, going through the tools:
 
 ```
-arecord --device=hw:1,0 --channels=8 --rate=48000 --format=S32_LE --file-type=raw | bin/mapper -i 8 -o "0-6" -b s32le | bin/formatter -i s32le -o s16le | netcat localhost 5001
+arecord --device=hw:1,0 --channels=8 --rate=16000 --format=S32_LE --file-type=raw | bin/mapper -i 8 -o "0-6" -b s32le | bin/formatter -i s32le -o s16le | netcat localhost 5001
 ```
 
 You should see the tracking results appear live in the last terminal.

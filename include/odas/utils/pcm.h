@@ -25,11 +25,11 @@
 
     #include <math.h>
     #include <limits.h>
+    #include <stdlib.h>
+    #include <string.h>
 
-    float pcm_signedXXbits2normalized(const char * bytes, const unsigned int nBytes);
+    void pcm_SXle2normalized(float * normalized, const char * SXle, const unsigned int nBytes, const unsigned int nSamples);
 
-    void pcm_signedXXbits2json(const char * bytes, const unsigned int nBytes, char * json);
-
-    void pcm_normalized2signedXXbits(const float sample, const unsigned int nBytes, char * bytes);
+    void pcm_normalized2SXle(char * SXle, const float * normalized, const unsigned int nBytes, const unsigned int nSamples);
 
 #endif

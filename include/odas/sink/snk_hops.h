@@ -33,6 +33,7 @@
 
     #include "../message/msg_hops.h"
     #include "../utils/pcm.h"
+    #include "../utils/interleave.h"
 
     typedef struct snk_hops_obj {
 
@@ -41,14 +42,16 @@
         unsigned int hopSize;
         unsigned int nChannels;
 
-        char * buffer;
-        unsigned int bufferSize;
-
         int server_id;
         int connection_id;
         unsigned int port;       
 
-        char bytes[4];
+        unsigned int nBytes;
+        unsigned int nSamples;
+        unsigned int bufferSize;
+        char * bufferInterleave;
+        char * bufferPerChannel;
+        float * buffer;
 
         msg_hops_obj * in;
 

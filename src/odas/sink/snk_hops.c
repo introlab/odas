@@ -38,11 +38,16 @@
         obj->connection_id = 0;
         obj->port = snk_hops_config->port;        
 
-        memset(obj->bytes, 0x00, 4 * sizeof(char));
+        obj->nBytes = 2;
+        obj->nSamples = obj->hopSize * obj->nChannels;
+        obj->bufferSize = obj->nSamples * obj->nBytes;
 
-        obj->bufferSize = obj->hopSize * obj->nChannels * 2;
-        obj->buffer = (char *) malloc(sizeof(char) * obj->bufferSize);
-        memset(obj->buffer, 0x00, sizeof(char) * obj->bufferSize);
+        obj->bufferInterleave = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferInterleave, 0x00, sizeof(char) * obj->bufferSize);
+        obj->bufferPerChannel = (char *) malloc(sizeof(char) * obj->bufferSize);
+        memset(obj->bufferPerChannel, 0x00, sizeof(char) * obj->bufferSize);
+        obj->buffer = (float *) malloc(sizeof(float) * obj->nSamples);
+        memset(obj->buffer, 0x00, sizeof(float) * obj->nSamples);
 
         obj->in = (msg_hops_obj *) NULL;
 
@@ -52,6 +57,8 @@
 
     void snk_hops_destroy(snk_hops_obj * obj) {
 
+        free((void *) obj->bufferInterleave);
+        free((void *) obj->bufferPerChannel);
         free((void *) obj->buffer);
         free((void *) obj);
 
@@ -130,7 +137,7 @@
 
         if (obj->port != 0) {
 
-            if (send(obj->connection_id, obj->buffer, obj->bufferSize, 0) < 0) {
+            if (send(obj->connection_id, obj->bufferInterleave, obj->bufferSize, 0) < 0) {
                 printf("Sink hops: Could not send message.\n");
                 exit(EXIT_FAILURE);           
             }
@@ -142,27 +149,13 @@
     void snk_hops_process_format(snk_hops_obj * obj) {
 
         unsigned int iChannel;
-        unsigned int iSample;
-        float sample;
-        unsigned int nBytes;
-        unsigned int nBytesTotal;
 
-        nBytes = 2;
-        nBytesTotal = 0;
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+            memcpy(&(obj->buffer[iChannel * obj->hopSize]), obj->in->hops->array[iChannel], obj->hopSize * sizeof(float));
+        }        
 
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                sample = obj->in->hops->array[iChannel][iSample];
-                pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
-
-                nBytesTotal += nBytes;
-
-            }
-
-        }
+        pcm_normalized2SXle(obj->bufferPerChannel, obj->buffer, obj->nBytes, obj->nSamples);
+        interleave_perchannel2interleave(obj->bufferInterleave, obj->bufferPerChannel, obj->nBytes, obj->nChannels, obj->hopSize);
 
     }
 

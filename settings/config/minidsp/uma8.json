@@ -15,13 +15,13 @@
         
         "size": 
         {
-            "hopSize": 512,
-            "frameSize": 1024
+            "hopSize": 128,
+            "frameSize": 256
         },
         
         "samplerate":
         {
-            "mu": 48000,
+            "mu": 16000,
             "sigma2": 0.01
         },
 
@@ -145,7 +145,7 @@
 
             "inactive":
             [
-                { "weight": 1.0, "mu": 0.25, "sigma2": 0.0025 }
+                { "weight": 1.0, "mu": 0.15, "sigma2": 0.0025 }
             ]
         },
 
@@ -168,19 +168,19 @@
 
             "new":
             {
-                "theta": 0.3
+                "theta": 0.2
             },
 
             "prob":
             {
-                "theta": 0.8,
+                "theta": 0.5,
                 "N": 5
             },
 
             "inactive":
             {
-                "theta": 0.9,
-                "N": [ 150, 150, 150, 150 ]
+                "theta": 0.95,
+                "N": [ 100, 100, 100, 100 ]
             }
 
         },

@@ -107,6 +107,7 @@ add_library(odas SHARED
     src/odas/utils/fifo.c
     src/odas/utils/gaussian.c
     src/odas/utils/gaussjordan.c
+    src/odas/utils/interleave.c
     src/odas/utils/inverse.c
     src/odas/utils/json.c
     src/odas/utils/matrix.c
@@ -198,6 +199,9 @@ target_link_libraries(core
 )
 
 install(TARGETS odas DESTINATION lib)
+
+add_executable(test_pcm debug/test_pcm.c)
+target_link_libraries(test_pcm odas)
 
 add_executable(formatter demo/tools/formatter.c)
 add_executable(mapper demo/tools/mapper.c)
