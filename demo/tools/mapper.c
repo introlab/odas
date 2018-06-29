@@ -263,7 +263,7 @@
 	int main(int argc, char * argv[]) {
 
         int c;
-        char strBits[6] = "";
+        char strBits[64] = "";
         char nIn = 0;
         char strOut[256] = "";
 

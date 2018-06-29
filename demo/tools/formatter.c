@@ -157,8 +157,8 @@
 	int main(int argc, char * argv[]) {
 
         int c;
-        char strIn[6] = "";
-        char strOut[6] = "";
+        char strIn[64] = "";
+        char strOut[64] = "";
 
         unsigned int nBitsIn;
         unsigned int nBitsOut;

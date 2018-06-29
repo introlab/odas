@@ -146,6 +146,8 @@
             
             memset(&(obj->bufferPerChannel[nBytes]), 0xFF, sizeof(unsigned long long));    
             nBytes += sizeof(unsigned long long);
+            memset(&(obj->bufferPerChannel[nBytes]), 0x00, sizeof(unsigned long long));    
+            nBytes += sizeof(unsigned long long);
 
             memcpy(&(obj->bufferPerChannel[nBytes]), &(obj->in1->timeStamp), sizeof(unsigned long long));
             nBytes += sizeof(unsigned long long);
@@ -154,6 +156,9 @@
             nBytes += sizeof(unsigned long long);
 
             for (iElement = 0; iElement < 3; iElement++) {
+
+                memset(&(obj->bufferPerChannel[nBytes]), 0x00, sizeof(float));
+                nBytes += sizeof(float);
 
                 memcpy(&(obj->bufferPerChannel[nBytes]), &(obj->in2->tracks->array[iChannel*3+iElement]), sizeof(float));
                 nBytes += sizeof(float);
