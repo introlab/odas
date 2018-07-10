@@ -4,16 +4,20 @@
     #include <stdio.h>
     #include <string.h>
     #include <unistd.h>
-
-    unsigned long long counter = 0;
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
 
     typedef struct processor{
 
         char bufferAudio[32];
         char bufferData[32];
 
+        char flagTag;
         unsigned long long id;
-        FILE * fp;
+
+        struct sockaddr_in server_address;
+        int sid;
 
     } processor;
     
@@ -38,6 +42,9 @@
         printf("\n");
         printf("  -b     Bit format­\n");
         printf("  -h     Help\n");
+        printf("  -i     IP address (default is localhost)\n");
+        printf("  -p     Port number\n");
+        printf("  -t     Tag stream with ID\n");
         printf("\n");
         printf(" List of supported bit formats:\n");
         printf("\n");
@@ -89,13 +96,28 @@
 
     }
 
-    void processor_init(processor * proc) {
+    void processor_init(processor * proc, const char flagTag, const char strIp[], const unsigned int port) {
 
         memset(proc->bufferData, 0x00, 32 * sizeof(char));
         memset(proc->bufferAudio, 0x00, 32 * sizeof(char));
 
         proc->id = 0;
-        proc->fp = NULL;
+        proc->flagTag = flagTag;
+
+        proc->sid = -1;
+
+        memset(&proc->server_address, 0x00, sizeof(proc->server_address));
+        proc->server_address.sin_family = AF_INET;
+        
+        if (strcmp(strIp, "") == 0) { 
+            proc->server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+        }
+        else { 
+            inet_pton(AF_INET, strIp, &(proc->server_address.sin_addr));
+        }
+                
+        proc->server_address.sin_port = htons(port);
+
 
     }
 
@@ -106,9 +128,6 @@
         unsigned long long flag2;
         unsigned long long timeStamp;
         unsigned long long id;
-
-        unsigned int tmp;
-        counter++;
 
         memmove(&(proc->bufferData[0]), &(proc->bufferData[1]), 31 * sizeof(char));
         proc->bufferData[31] = cData;
@@ -129,22 +148,36 @@
 
         if (proc->id != 0) {
 
-            if (proc->fp == NULL) {
+            if (proc->sid == -1) {
 
-                sprintf(fileStr, "%08llu.raw", proc->id);
-                proc->fp = fopen(fileStr, "wb");
+                printf("Creating connection for %llu\n", proc->id);
+                
+                if ((proc->sid = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+                    printf("Cannot connect to socket\n");
+                    exit(EXIT_FAILURE);                   
+                }
+
+                if ((connect(proc->sid,(struct sockaddr *)&(proc->server_address),sizeof(proc->server_address))) < 0) {
+                    printf("Cannot connect to socket\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (proc->flagTag == 1) {
+                    send(proc->sid, &(proc->id), sizeof(unsigned long long), 0);
+                }
 
             }
 
-            fwrite(&(proc->bufferAudio[0]), 1, sizeof(char), proc->fp);
+            send(proc->sid, &(proc->bufferAudio[0]), sizeof(char), 0);
 
         }
         else {
 
-            if (proc->fp != NULL) {
+            if (proc->sid != -1) {
 
-                fclose(proc->fp);
-                proc->fp = NULL;
+                printf("Closing connection for %llu\n", proc->id);
+                close(proc->sid);
+                proc->sid = -1;
 
             }
 
@@ -154,10 +187,10 @@
 
     void processor_terminate(processor * proc) {
 
-        if (proc->fp != NULL) {
+        if (proc->sid != -1) {
 
-            fclose(proc->fp);
-            proc->fp = NULL;
+            close(proc->sid);
+            proc->sid = -1;
 
         }        
 
@@ -174,6 +207,10 @@
         char cAudio[4];
         char cData[4];
         unsigned int iByte;
+        char flagTag = 0;
+
+        char strIp[64] = "";
+        unsigned int portInput = 0;
 
         processor proc;
 
@@ -190,7 +227,7 @@
             {"",""}
         };
 
-        while ((c = getopt(argc,argv, "b:h")) != -1) {
+        while ((c = getopt(argc,argv, "b:hi:p:t")) != -1) {
 
             switch(c) {
 
@@ -209,6 +246,24 @@
 
                 break;
 
+                case 'i':
+
+                    strcpy(strIp, optarg);
+
+                break;
+
+                case 'p':
+
+                    portInput = atoi(optarg);
+
+                break;
+
+                case 't':
+
+                    flagTag = 1;
+
+                break;
+
             }
 
         }
@@ -217,11 +272,15 @@
             printf("Missing bit format\n");
             exit(EXIT_FAILURE);
         }
+        if (portInput == 0) {
+            printf("Missing port number\n");
+            exit(EXIT_FAILURE);
+        }
 
         nBits = extract_bits(formats, strBits);
         nBytes = nBits / 8;
 
-        processor_init(&proc);
+        processor_init(&proc, flagTag, strIp, portInput);
 
         while(1) {
 

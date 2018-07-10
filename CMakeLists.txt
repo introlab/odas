@@ -200,5 +200,7 @@ target_link_libraries(core
 
 install(TARGETS odas DESTINATION lib)
 
+add_executable(filer demo/tools/filer.c)
 add_executable(formatter demo/tools/formatter.c)
 add_executable(mapper demo/tools/mapper.c)
+add_executable(sequencer demo/tools/sequencer.c)

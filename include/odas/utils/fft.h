@@ -1,11 +1,11 @@
 #ifndef __ODAS_UTILS_FFT
 #define __ODAS_UTILS_FFT
 
-   /**
-    * \file     cmatrix.h
-    * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
+    /**
+    * \file     fft.h
+    * \author   Francois Grondin <fgrondin@mit.edu>
+    * \version  3.0
+    * \date     2018-07-02
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify

@@ -1,11 +1,11 @@
 #ifndef __ODAS_CONNECTOR_SPECTRA
 #define __ODAS_CONNECTOR_SPECTRA
 
-   /**
+    /**
     * \file     con_spectra.h
-    * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
+    * \author   Francois Grondin <fgrondin@mit.edu>
+    * \version  3.0
+    * \date     2018-07-02
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
     */
-
     #include "../message/msg_spectra.h"
 
     #include <stdlib.h>

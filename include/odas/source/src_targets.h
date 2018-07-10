@@ -1,11 +1,11 @@
 #ifndef __ODAS_SOURCE_TARGETS
 #define __ODAS_SOURCE_TARGETS
 
-   /**
+    /**
     * \file     src_targets.h
-    * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-06-12
+    * \author   Francois Grondin <fgrondin@mit.edu>
+    * \version  3.0
+    * \date     2018-07-02
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify

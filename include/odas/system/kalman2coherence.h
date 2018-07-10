@@ -1,11 +1,11 @@
 #ifndef __ODAS_SYSTEM_KALMAN2PRIOR
 #define __ODAS_SYSTEM_KALMAN2PRIOR
 
-   /**
-    * \file     kalman2prior.h
-    * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
+    /**
+    * \file     kalman2coherence.h
+    * \author   Francois Grondin <fgrondin@mit.edu>
+    * \version  3.0
+    * \date     2018-07-02
     * \copyright
     *
     * This program is free software: you can redistribute it and/or modify
