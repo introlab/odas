@@ -61,7 +61,6 @@
 
     void pots_zero(pots_obj * obj) {
 
-      obj->nPots = 0;
       memset(obj->array, 0x00, sizeof(float) * 4 * obj->nPots);
 
     }
