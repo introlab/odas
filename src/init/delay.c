@@ -113,7 +113,7 @@
         obj = taus_construct_zero(points->nPoints, nPairs);
 
         mu_t = -1.0f * ((float) fS * interpRate) / soundspeed->mu;
-        sigma2_t = ((float) fS * interpRate) * soundspeed->sigma2 / (soundspeed->mu * soundspeed->mu);
+        sigma2_t = ((float) fS * interpRate) * ((float) fS * interpRate) * soundspeed->sigma2 / (soundspeed->mu * soundspeed->mu * soundspeed->mu * soundspeed->mu);
 
         iPair = 0;
 
@@ -125,15 +125,15 @@
                 mu_ij_y = mics->mu[iChannel1*3+1] - mics->mu[iChannel2*3+1];
                 mu_ij_z = mics->mu[iChannel1*3+2] - mics->mu[iChannel2*3+2];
 
-                sigma_ij_xx = mics->sigma2[iChannel1*9+0];
-                sigma_ij_xy = mics->sigma2[iChannel1*9+1];
-                sigma_ij_xz = mics->sigma2[iChannel1*9+2];
-                sigma_ij_yx = mics->sigma2[iChannel1*9+3];
-                sigma_ij_yy = mics->sigma2[iChannel1*9+4];
-                sigma_ij_yz = mics->sigma2[iChannel1*9+5];
-                sigma_ij_zx = mics->sigma2[iChannel1*9+6];
-                sigma_ij_zy = mics->sigma2[iChannel1*9+7];
-                sigma_ij_zz = mics->sigma2[iChannel1*9+8];
+                sigma_ij_xx = mics->sigma2[iChannel1*9+0] + mics->sigma2[iChannel2*9+0];
+                sigma_ij_xy = mics->sigma2[iChannel1*9+1] + mics->sigma2[iChannel2*9+1];
+                sigma_ij_xz = mics->sigma2[iChannel1*9+2] + mics->sigma2[iChannel2*9+2];
+                sigma_ij_yx = mics->sigma2[iChannel1*9+3] + mics->sigma2[iChannel2*9+3];
+                sigma_ij_yy = mics->sigma2[iChannel1*9+4] + mics->sigma2[iChannel2*9+4];
+                sigma_ij_yz = mics->sigma2[iChannel1*9+5] + mics->sigma2[iChannel2*9+5];
+                sigma_ij_zx = mics->sigma2[iChannel1*9+6] + mics->sigma2[iChannel2*9+6];
+                sigma_ij_zy = mics->sigma2[iChannel1*9+7] + mics->sigma2[iChannel2*9+7];
+                sigma_ij_zz = mics->sigma2[iChannel1*9+8] + mics->sigma2[iChannel2*9+8];
 
                 for (iPoint = 0; iPoint < points->nPoints; iPoint++) {
 
