@@ -324,7 +324,7 @@
 
                     if ((obj->S[iChannel][iBin] < (obj->Smin[iChannel][iBin] * obj->delta)) || (obj->lambdaD[iChannel][iBin] > obj->S[iChannel][iBin])) {
 
-                        obj->lambdaDnext[iChannel][iBin] = (1.0f - obj->alphaD) * obj->lambdaD[iChannel][iBin] + obj->alphaD * obj->S[iChannel][iBin];
+                        obj->lambdaDnext[iChannel][iBin] = (1.0f - obj->alphaD) * obj->lambdaD[iChannel][iBin] + obj->alphaD * noisys->array[iChannel][iBin];
 
                     }
 
