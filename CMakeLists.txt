@@ -193,6 +193,8 @@ target_link_libraries(odas
 	${PC_FFTW3_LIBRARIES}
 	${PC_ALSA_LIBRARIES}
     ${PC_LIBCONFIG_LIBRARIES}
+    pulse
+    pulse-simple
 	m
     pthread
 )
