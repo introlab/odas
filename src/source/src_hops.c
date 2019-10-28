@@ -186,8 +186,58 @@
         obj->ss.rate = obj->fS;
         obj->ss.channels = obj->nChannels;
 
+        obj->map.channels = obj->nChannels;
+        switch(obj->nChannels)
+        {
+            case 1:
+                obj->map.map[0] = PA_CHANNEL_POSITION_MONO;
+                break;
+
+            case 2:
+                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                break;
+
+            case 8:
+                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[1] = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                obj->map.map[2] = PA_CHANNEL_POSITION_REAR_LEFT;
+                obj->map.map[3] = PA_CHANNEL_POSITION_REAR_RIGHT;
+                obj->map.map[4] = PA_CHANNEL_POSITION_FRONT_CENTER;
+                obj->map.map[5] = PA_CHANNEL_POSITION_LFE;
+                obj->map.map[6] = PA_CHANNEL_POSITION_SIDE_LEFT;
+                obj->map.map[7] = PA_CHANNEL_POSITION_SIDE_RIGHT;
+                break;
+
+            case 16:
+                obj->map.map[0]  = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[1]  = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                obj->map.map[2]  = PA_CHANNEL_POSITION_REAR_LEFT;
+                obj->map.map[3]  = PA_CHANNEL_POSITION_REAR_RIGHT;
+                obj->map.map[4]  = PA_CHANNEL_POSITION_FRONT_CENTER;
+                obj->map.map[5]  = PA_CHANNEL_POSITION_LFE;
+                obj->map.map[6]  = PA_CHANNEL_POSITION_SIDE_LEFT;
+                obj->map.map[7]  = PA_CHANNEL_POSITION_SIDE_RIGHT;
+                obj->map.map[8]  = PA_CHANNEL_POSITION_AUX0;
+                obj->map.map[9]  = PA_CHANNEL_POSITION_AUX1;
+                obj->map.map[10] = PA_CHANNEL_POSITION_AUX2;
+                obj->map.map[11] = PA_CHANNEL_POSITION_AUX3;
+                obj->map.map[12] = PA_CHANNEL_POSITION_AUX4;
+                obj->map.map[13] = PA_CHANNEL_POSITION_AUX5;
+                obj->map.map[14] = PA_CHANNEL_POSITION_AUX6;
+                obj->map.map[15] = PA_CHANNEL_POSITION_AUX7;
+                break;
+
+            default:
+
+                printf("Source hops: Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+        }
+
         int err;
-        if (!(obj->pa = pa_simple_new(NULL, "Odas", PA_STREAM_RECORD, obj->interface->deviceName, "record", &obj->ss, NULL, NULL, &err))) {
+        if (!(obj->pa = pa_simple_new(NULL, "Odas", PA_STREAM_RECORD, obj->interface->deviceName, "record", &obj->ss, &obj->map, NULL, &err))) {
             printf("Source hops: Cannot open pulseaudio device %s: %s\n", obj->interface->deviceName, pa_strerror(err));
             exit(EXIT_FAILURE);
         }

@@ -51,6 +51,7 @@
         snd_pcm_t * ch;
         pa_simple * pa;
         pa_sample_spec ss;
+        pa_channel_map map;
 
         char * buffer;
         unsigned int bufferSize;
