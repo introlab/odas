@@ -8,6 +8,8 @@
 
         objs = (objects *) malloc(sizeof(objects));
 
+        map_init(&objs->timestamp_map);
+
         // +----------------------------------------------------------+
         // | Construct                                                |
         // +----------------------------------------------------------+
@@ -18,10 +20,12 @@
 
                 // +--------------------------------------------------+
                 // | Source                                           |
-                // +--------------------------------------------------+  
+                // +--------------------------------------------------+
 
                     objs->src_hops_mics_object = src_hops_construct(cfgs->src_hops_mics_config, 
                                                                     cfgs->msg_hops_mics_raw_config);
+                    
+                    src_hops_set_timestamp_map(objs->src_hops_mics_object, &objs->timestamp_map);
 
                 // +--------------------------------------------------+
                 // | Connector                                        |
@@ -262,6 +266,8 @@
 
                     objs->snk_hops_seps_vol_object = snk_hops_construct(cfgs->snk_hops_seps_vol_config, 
                                                                         cfgs->msg_hops_seps_vol_config);
+
+                    snk_hops_set_timestamp_map(objs->snk_hops_seps_vol_object, &objs->timestamp_map);                                                                        
 
                     objs->snk_hops_pfs_vol_object = snk_hops_construct(cfgs->snk_hops_pfs_vol_config, 
                                                                        cfgs->msg_hops_pfs_vol_config);
@@ -567,6 +573,8 @@
         // | Destroy                                                  |
         // +----------------------------------------------------------+
 
+            map_deinit(&objs->timestamp_map);
+
             // +------------------------------------------------------+
             // | Raw                                                  |
             // +------------------------------------------------------+  
@@ -820,6 +828,8 @@
 
         objs->nMessages = 100;
 
+        map_init(&objs->timestamp_map);
+
         // +----------------------------------------------------------+
         // | Construct                                                |
         // +----------------------------------------------------------+
@@ -834,6 +844,8 @@
 
                     objs->asrc_hops_mics_object = asrc_hops_construct(cfgs->src_hops_mics_config, 
                                                                       cfgs->msg_hops_mics_raw_config);
+
+                    src_hops_set_timestamp_map(objs->asrc_hops_mics_object->src_hops, &objs->timestamp_map);  
                 
                 // +--------------------------------------------------+
                 // | Connector                                        |
@@ -1076,6 +1088,8 @@
 
                     objs->asnk_hops_seps_vol_object = asnk_hops_construct(cfgs->snk_hops_seps_vol_config, 
                                                                           cfgs->msg_hops_seps_vol_config);
+
+                    snk_hops_set_timestamp_map(objs->asnk_hops_seps_vol_object->snk_hops, &objs->timestamp_map);  
 
                     objs->asnk_hops_pfs_vol_object = asnk_hops_construct(cfgs->snk_hops_pfs_vol_config, 
                                                                          cfgs->msg_hops_pfs_vol_config);
@@ -1380,6 +1394,8 @@
         // +----------------------------------------------------------+
         // | Destroy                                                  |
         // +----------------------------------------------------------+
+
+            map_deinit(&objs->timestamp_map);
 
             // +------------------------------------------------------+
             // | Raw                                                  |

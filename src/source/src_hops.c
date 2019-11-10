@@ -31,6 +31,7 @@
         obj = (src_hops_obj *) malloc(sizeof(src_hops_obj));
 
         obj->timeStamp = 0;
+        obj->timeStampMap = NULL;
 
         obj->hopSize = msg_hops_config->hopSize;
         obj->nChannels = msg_hops_config->nChannels;
@@ -195,7 +196,7 @@
 
             case 2:
                 obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_LEFT;
-                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                obj->map.map[1] = PA_CHANNEL_POSITION_FRONT_RIGHT;
                 break;
 
             case 8:
@@ -521,6 +522,33 @@
 
         }
 
+        struct timeval currentTime;
+        gettimeofday(&currentTime, NULL);
+        unsigned long long microseconds = currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+
+        // remove pulseaudio latency
+        pa_usec_t latency;
+        latency = pa_simple_get_latency(obj->pa, &err);
+        if (latency == (pa_usec_t) -1) {
+            printf("Source hops: Could not get pulseaudio latency: %s\n", pa_strerror(err));
+            rtnValue = -1;
+        }
+
+        unsigned long long timestamp = obj->timeStamp + 1;
+        unsigned long long readTimeStamp = microseconds - latency;
+
+        const int n = snprintf(NULL, 0, "%llu", timestamp);
+        char key[n+1];
+        int c = snprintf(key, n+1, "%llu", timestamp);
+        if (key[n] != '\0' || c != n) {
+            printf("Source hops: Invalid timestamp \n");
+            rtnValue = -1;
+        }
+
+        if (obj->timeStampMap != NULL) {
+            map_set(obj->timeStampMap, key, readTimeStamp);
+        }
+
         return rtnValue;
 
     }
@@ -631,6 +659,11 @@
 
         }
 
+    }
+
+    void src_hops_set_timestamp_map(src_hops_obj * obj, map_ull_t * timestamp_map)
+    {
+        obj->timeStampMap = timestamp_map;
     }
 
     src_hops_cfg * src_hops_cfg_construct(void) {

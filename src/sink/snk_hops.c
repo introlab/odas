@@ -30,6 +30,8 @@
         obj = (snk_hops_obj *) malloc(sizeof(snk_hops_obj));
 
         obj->timeStamp = 0;
+        obj->readTimeStamp = 0;
+        obj->timeStampMap = NULL;
 
         obj->hopSize = msg_hops_config->hopSize;
         obj->nChannels = msg_hops_config->nChannels;
@@ -55,9 +57,13 @@
 
         }
 
-        obj->buffer = (char *) malloc(sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
-        memset(obj->buffer, 0x00, sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4);
-        obj->bufferSize = 0;
+        unsigned int headerSize = sizeof(obj->readTimeStamp);
+        unsigned int audioSize = sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4;
+
+        obj->buffer = (char *) malloc(headerSize + audioSize);
+        memset(obj->buffer, 0x00, headerSize + audioSize);
+        obj->audioSize = 0;
+        obj->headerSize = headerSize;
 
         obj->in = (msg_hops_obj *) NULL;
 
@@ -212,6 +218,25 @@
 
         if (obj->in->timeStamp != 0) {
 
+            if (obj->timeStampMap != NULL)
+            {
+                const int n = snprintf(NULL, 0, "%llu", obj->in->timeStamp);
+                char key[n+1];
+                int c = snprintf(key, n+1, "%llu", obj->in->timeStamp);
+                if (key[n] != '\0' || c != n) {
+                    printf("Sink hops: Invalid timestamp \n");
+                    rtnValue = -1;
+                }
+
+                unsigned long long* readTimeStamp = map_get(obj->timeStampMap, key);
+                if (readTimeStamp) {
+                    obj->readTimeStamp = *readTimeStamp;
+                    map_remove(obj->timeStampMap, key);
+                } else {
+                    printf("Sink hops: timestamp not found \n");
+                }
+            }
+
             switch(obj->format->type) {
 
                 case format_binary_int08:
@@ -303,13 +328,22 @@
 
     void snk_hops_process_interface_file(snk_hops_obj * obj) {
 
-        fwrite(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
+        fwrite(obj->buffer, sizeof(char), obj->audioSize, obj->fp);
 
     }
 
     void snk_hops_process_interface_socket(snk_hops_obj * obj) {
 
-        if (send(obj->sid, obj->buffer, obj->bufferSize, 0) < 0) {
+        char* bufferToSend = obj->buffer + obj->headerSize;
+        unsigned int bytesToSend = obj->audioSize;
+
+        if (obj->readTimeStamp != 0) {
+            bufferToSend = obj->buffer;
+            bytesToSend = obj->headerSize + obj->audioSize;
+            memcpy(obj->buffer, &obj->readTimeStamp, obj->headerSize);
+        }
+
+        if (send(obj->sid, bufferToSend, bytesToSend, 0) < 0) {
             printf("Sink hops: Could not send message.\n");
             exit(EXIT_FAILURE);
         }
@@ -341,7 +375,7 @@
 
         }
 
-        obj->bufferSize = nBytesTotal;
+        obj->audioSize = nBytesTotal;
 
     }
 
@@ -371,7 +405,7 @@
 
         }
 
-        obj->bufferSize = nBytesTotal;
+        obj->audioSize = nBytesTotal;
 
     }
 
@@ -400,7 +434,7 @@
 
         }
 
-        obj->bufferSize = nBytesTotal;
+        obj->audioSize = nBytesTotal;
 
     }    
 
@@ -429,15 +463,20 @@
 
         }
 
-        obj->bufferSize = nBytesTotal;
+        obj->audioSize = nBytesTotal;
 
     }
 
     void snk_hops_process_format_undefined(snk_hops_obj * obj) {
 
         obj->buffer[0] = 0x00;
-        obj->bufferSize = 0;
+        obj->audioSize = 0;
 
+    }
+
+    void snk_hops_set_timestamp_map(snk_hops_obj * obj, map_ull_t * timestamp_map)
+    {
+        obj->timeStampMap = timestamp_map;
     }
 
     snk_hops_cfg * snk_hops_cfg_construct(void) {

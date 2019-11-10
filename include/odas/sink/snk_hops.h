@@ -32,6 +32,7 @@
     #include <arpa/inet.h>
 
     #include "../general/format.h"
+    #include "../general/map.h"
     #include "../general/interface.h"
     #include "../message/msg_hops.h"
     #include "../utils/pcm.h"
@@ -39,6 +40,8 @@
     typedef struct snk_hops_obj {
 
         unsigned long long timeStamp;
+        unsigned long long readTimeStamp;
+        map_ull_t * timeStampMap;
 
         unsigned int hopSize;
         unsigned int nChannels;
@@ -48,7 +51,8 @@
         interface_obj * interface;
 
         char * buffer;
-        unsigned int bufferSize;
+        unsigned int headerSize;
+        unsigned int audioSize;
 
         FILE * fp;
 
@@ -110,6 +114,8 @@
     void snk_hops_process_format_binary_int32(snk_hops_obj * obj);
 
     void snk_hops_process_format_undefined(snk_hops_obj * obj);
+
+    void snk_hops_set_timestamp_map(snk_hops_obj * obj, map_ull_t * timestamp_map);
 
     snk_hops_cfg * snk_hops_cfg_construct(void);
 

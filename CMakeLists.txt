@@ -27,6 +27,7 @@ set(SRC
     src/general/format.c
     src/general/interface.c
     src/general/link.c
+    src/general/map.c
     src/general/mic.c
     src/general/samplerate.c
     src/general/soundspeed.c
