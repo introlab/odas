@@ -61,7 +61,10 @@
         unsigned int audioSize = sizeof(char) * msg_hops_config->nChannels * msg_hops_config->hopSize * 4;
 
         obj->buffer = (char *) malloc(headerSize + audioSize);
-        memset(obj->buffer, 0x00, headerSize + audioSize);
+        obj->headerBufferPtr = obj->buffer;
+        obj->audioBufferPtr = obj->buffer + headerSize;
+        memset(obj->headerBufferPtr, 0x00, headerSize);
+        memset(obj->audioBufferPtr, 0x00, audioSize);
         obj->audioSize = 0;
         obj->headerSize = headerSize;
 
@@ -328,19 +331,19 @@
 
     void snk_hops_process_interface_file(snk_hops_obj * obj) {
 
-        fwrite(obj->buffer, sizeof(char), obj->audioSize, obj->fp);
+        fwrite(obj->audioBufferPtr, sizeof(char), obj->audioSize, obj->fp);
 
     }
 
     void snk_hops_process_interface_socket(snk_hops_obj * obj) {
 
-        char* bufferToSend = obj->buffer + obj->headerSize;
+        char* bufferToSend = obj->audioBufferPtr;
         unsigned int bytesToSend = obj->audioSize;
 
         if (obj->readTimeStamp != 0) {
-            bufferToSend = obj->buffer;
+            bufferToSend = obj->headerBufferPtr;
             bytesToSend = obj->headerSize + obj->audioSize;
-            memcpy(obj->buffer, &obj->readTimeStamp, obj->headerSize);
+            memcpy(obj->headerBufferPtr, &obj->readTimeStamp, obj->headerSize);
         }
 
         if (send(obj->sid, bufferToSend, bytesToSend, 0) < 0) {
@@ -367,7 +370,7 @@
 
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+                memcpy(&(obj->audioBufferPtr[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
 
                 nBytesTotal += nBytes;
 
@@ -396,7 +399,7 @@
 
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+                memcpy(&(obj->audioBufferPtr[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
 
                 nBytesTotal += nBytes;
 
@@ -426,7 +429,7 @@
 
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+                memcpy(&(obj->audioBufferPtr[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
 
                 nBytesTotal += nBytes;
 
@@ -455,7 +458,7 @@
 
                 sample = obj->in->hops->array[iChannel][iSample];
                 pcm_normalized2signedXXbits(sample, nBytes, obj->bytes);
-                memcpy(&(obj->buffer[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
+                memcpy(&(obj->audioBufferPtr[nBytesTotal]), &(obj->bytes[4-nBytes]), sizeof(char) * nBytes);
 
                 nBytesTotal += nBytes;
 
@@ -469,7 +472,7 @@
 
     void snk_hops_process_format_undefined(snk_hops_obj * obj) {
 
-        obj->buffer[0] = 0x00;
+        obj->audioBufferPtr[0] = 0x00;
         obj->audioSize = 0;
 
     }

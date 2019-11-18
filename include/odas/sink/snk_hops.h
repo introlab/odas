@@ -51,6 +51,8 @@
         interface_obj * interface;
 
         char * buffer;
+        char * headerBufferPtr;
+        char * audioBufferPtr;
         unsigned int headerSize;
         unsigned int audioSize;
 
