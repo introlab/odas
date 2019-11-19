@@ -32,6 +32,7 @@
 
     #include "../general/format.h"
     #include "../general/interface.h"
+    #include "../general/map.h"
     #include "../message/msg_hops.h"
     #include "../signal/hop.h"
     #include "../utils/pcm.h"
@@ -39,6 +40,7 @@
     typedef struct src_hops_obj {
 
         unsigned long long timeStamp;
+        map_ull_t * timeStampMap;
 
         unsigned int hopSize;
         unsigned int nChannels;
@@ -108,6 +110,8 @@
     void src_hops_process_format_binary_int24(src_hops_obj * obj);
 
     void src_hops_process_format_binary_int32(src_hops_obj * obj);
+
+    void src_hops_set_timestamp_map(src_hops_obj * obj, map_ull_t * timestamp_map);
 
     src_hops_cfg * src_hops_cfg_construct(void);
 
