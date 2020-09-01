@@ -11,6 +11,7 @@
 
         prf->src_hops_mics_prf = 0.0f;
         prf->con_hops_mics_raw_prf = 0.0f;
+        prf->snk_hops_mics_raw_prf = 0.0f;
 
         prf->mod_mapping_mics_prf = 0.0f;
         prf->con_hops_mics_map_prf = 0.0f;
@@ -77,7 +78,8 @@
 
         source = prf->src_hops_mics_prf;
 
-        sink = prf->snk_pots_ssl_prf +
+        sink = prf->snk_hops_mics_raw_prf +
+               prf->snk_pots_ssl_prf +
                prf->snk_tracks_sst_prf + 
                prf->snk_hops_seps_vol_prf +
                prf->snk_hops_pfs_vol_prf +
@@ -126,6 +128,7 @@
         printf("| + Raw                                      |\n");
         printf("|    - Source.......... %07.3f (%06.2f%%)    |\n",prf->src_hops_mics_prf,roundf(10000.0f * prf->src_hops_mics_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_mics_raw_prf,roundf(10000.0f * prf->con_hops_mics_raw_prf / prf->duration) / 100.0f);
+        printf("|    - Sink............ %07.3f (%06.2f%%)    |\n",prf->snk_hops_mics_raw_prf,roundf(10000.0f * prf->snk_hops_mics_raw_prf / prf->duration) / 100.0f);
         printf("| + Mapping                                  |\n");
         printf("|    - Module.......... %07.3f (%06.2f%%)    |\n",prf->mod_mapping_mics_prf,roundf(10000.0f * prf->mod_mapping_mics_prf / prf->duration) / 100.0f);
         printf("|    - Connector....... %07.3f (%06.2f%%)    |\n",prf->con_hops_mics_map_prf,roundf(10000.0f * prf->con_hops_mics_map_prf / prf->duration) / 100.0f);

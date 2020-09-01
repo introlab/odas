@@ -244,6 +244,80 @@
 
     }
 
+    snk_hops_cfg * parameters_snk_hops_mics_raw_config(const char * fileConfig) {
+
+        snk_hops_cfg * cfg;
+        unsigned int tmpInt1;
+        char * tmpStr1;
+        char * tmpStr2;
+
+        cfg = snk_hops_cfg_construct();
+
+        // +----------------------------------------------------------+
+        // | Sample rate                                              |
+        // +----------------------------------------------------------+
+
+            cfg->fS = parameters_lookup_int(fileConfig, "raw.fS");
+
+        // +----------------------------------------------------------+
+        // | Format                                                   |
+        // +----------------------------------------------------------+
+
+            tmpInt1 = parameters_lookup_int(fileConfig, "raw.nBits");
+
+            if ((tmpInt1 == 8) || (tmpInt1 == 16) || (tmpInt1 == 24) || (tmpInt1 == 32)) {
+                cfg->format = format_construct_binary_int(tmpInt1);
+            }
+            else {
+                printf("raw.nBits: Invalid number of bits\n");
+                exit(EXIT_FAILURE);
+            }    
+
+        // +----------------------------------------------------------+
+        // | Interface                                                |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "raw.record.interface.type");
+
+            if (strcmp(tmpStr1, "blackhole") == 0) {
+
+                cfg->interface = interface_construct_blackhole();
+                cfg->format = format_construct_undefined();
+
+            }
+            else if (strcmp(tmpStr1, "file") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "raw.record.interface.path");
+                cfg->interface = interface_construct_file(tmpStr2);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "socket") == 0) { 
+
+                tmpStr2 = parameters_lookup_string(fileConfig, "raw.record.interface.ip");
+                tmpInt1 = parameters_lookup_int(fileConfig, "raw.record.interface.port");
+
+                cfg->interface = interface_construct_socket(tmpStr2, tmpInt1);
+                free((void *) tmpStr2);
+
+            }
+            else if (strcmp(tmpStr1, "terminal") == 0) {
+
+                cfg->interface = interface_construct_terminal();               
+
+            }
+            else {
+
+                printf("raw.record.interface.type: Invalid type\n");
+                exit(EXIT_FAILURE);
+
+            }
+
+            free((void *) tmpStr1);        
+
+        return cfg;
+
+    }
 
     mod_mapping_cfg * parameters_mod_mapping_mics_config(const char * fileConfig) {
 

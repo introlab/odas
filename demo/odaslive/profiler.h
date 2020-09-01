@@ -11,6 +11,7 @@
 
         float src_hops_mics_prf;
         float con_hops_mics_raw_prf;
+        float snk_hops_mics_raw_prf;
 
         float mod_mapping_mics_prf;
         float con_hops_mics_map_prf;

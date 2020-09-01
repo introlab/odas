@@ -10,6 +10,7 @@
                 
         src_hops_cfg * src_hops_mics_config;
         msg_hops_cfg * msg_hops_mics_raw_config;
+        snk_hops_cfg * snk_hops_mics_raw_config;
 
         mod_mapping_cfg * mod_mapping_mics_config;
         msg_hops_cfg * msg_hops_mics_map_config;

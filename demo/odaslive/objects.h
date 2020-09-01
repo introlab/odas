@@ -10,7 +10,8 @@
     typedef struct objects {
 
         src_hops_obj * src_hops_mics_object;
-        con_hops_obj * con_hops_mics_raw_object; 
+        con_hops_obj * con_hops_mics_raw_object;
+        snk_hops_obj * snk_hops_mics_raw_object;
 
         mod_mapping_obj * mod_mapping_mics_object;
         con_hops_obj * con_hops_mics_map_object;              
@@ -68,6 +69,7 @@
 
         asrc_hops_obj * asrc_hops_mics_object;
         acon_hops_obj * acon_hops_mics_raw_object; 
+        asnk_hops_obj * asnk_hops_mics_raw_object;        
 
         amod_mapping_obj * amod_mapping_mics_object;
         acon_hops_obj * acon_hops_mics_map_object;              

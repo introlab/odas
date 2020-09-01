@@ -27,7 +27,14 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+  
 
-                    objs->con_hops_mics_raw_object = con_hops_construct(1, cfgs->msg_hops_mics_raw_config);
+                    objs->con_hops_mics_raw_object = con_hops_construct(2, cfgs->msg_hops_mics_raw_config);
+
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+
+
+                    objs->snk_hops_mics_raw_object = snk_hops_construct(cfgs->snk_hops_mics_raw_config, 
+                                                                        cfgs->msg_hops_mics_raw_config);
 
             // +------------------------------------------------------+
             // | Mapping                                              |
@@ -307,6 +314,13 @@
                     src_hops_connect(objs->src_hops_mics_object, 
                                      objs->con_hops_mics_raw_object->in);
 
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    snk_hops_connect(objs->snk_hops_mics_raw_object,
+                                     objs->con_hops_mics_raw_object->outs[1]);
+
             // +------------------------------------------------------+
             // | Mapping                                              |
             // +------------------------------------------------------+  
@@ -583,6 +597,12 @@
 
                     con_hops_destroy(objs->con_hops_mics_raw_object);
 
+                // +--------------------------------------------------+
+                // | Sink                                             |
+                // +--------------------------------------------------+                      
+
+                    snk_hops_destroy(objs->snk_hops_mics_raw_object);
+
             // +------------------------------------------------------+
             // | Mapping                                              |
             // +------------------------------------------------------+  
@@ -839,7 +859,14 @@
                 // | Connector                                        |
                 // +--------------------------------------------------+
 
-                    objs->acon_hops_mics_raw_object = acon_hops_construct(1, objs->nMessages, cfgs->msg_hops_mics_raw_config);  
+                    objs->acon_hops_mics_raw_object = acon_hops_construct(2, objs->nMessages, cfgs->msg_hops_mics_raw_config);  
+
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+
+
+                    objs->asnk_hops_mics_raw_object = asnk_hops_construct(cfgs->snk_hops_mics_raw_config, 
+                                                                          cfgs->msg_hops_mics_raw_config);
 
             // +------------------------------------------------------+
             // | Mapping                                              |
@@ -1121,6 +1148,13 @@
                     asrc_hops_connect(objs->asrc_hops_mics_object, 
                                       objs->acon_hops_mics_raw_object->in);
 
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+
+
+                    asnk_hops_connect(objs->asnk_hops_mics_raw_object,
+                                      objs->acon_hops_mics_raw_object->outs[1]);
+
             // +------------------------------------------------------+
             // | Mapping                                              |
             // +------------------------------------------------------+  
@@ -1396,6 +1430,12 @@
                 // +--------------------------------------------------+  
 
                     acon_hops_destroy(objs->acon_hops_mics_raw_object);
+
+                // +--------------------------------------------------+
+                // | Sinks                                            |
+                // +--------------------------------------------------+ 
+
+                    asnk_hops_destroy(objs->asnk_hops_mics_raw_object);
 
             // +------------------------------------------------------+
             // | Mapping                                              |
