@@ -27,12 +27,9 @@
     #include <stdio.h>
     #include <string.h>
     #include <alsa/asoundlib.h>
-    #include <pulse/simple.h>
-    #include <pulse/error.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
-    #include "../general/map.h"
     #include "../message/msg_hops.h"
     #include "../signal/hop.h"
     #include "../utils/pcm.h"
@@ -40,7 +37,6 @@
     typedef struct src_hops_obj {
 
         unsigned long long timeStamp;
-        map_ull_t * timeStampMap;
 
         unsigned int hopSize;
         unsigned int nChannels;
@@ -51,9 +47,6 @@
 
         FILE * fp;
         snd_pcm_t * ch;
-        pa_simple * pa;
-        pa_sample_spec ss;
-        pa_channel_map map;
 
         char * buffer;
         unsigned int bufferSize;
@@ -85,23 +78,17 @@
 
     void src_hops_open_interface_soundcard(src_hops_obj * obj);
 
-    void src_hops_open_interface_pulseaudio(src_hops_obj * obj);
-
     void src_hops_close(src_hops_obj * obj);
 
     void src_hops_close_interface_file(src_hops_obj * obj);
 
     void src_hops_close_interface_soundcard(src_hops_obj * obj);
 
-    void src_hops_close_interface_pulseaudio(src_hops_obj * obj);
-
     int src_hops_process(src_hops_obj * obj);
 
     int src_hops_process_interface_file(src_hops_obj * obj);
 
     int src_hops_process_interface_soundcard(src_hops_obj * obj);
-
-    int src_hops_process_interface_pulseaudio(src_hops_obj * obj);
 
     void src_hops_process_format_binary_int08(src_hops_obj * obj);
 
@@ -110,8 +97,6 @@
     void src_hops_process_format_binary_int24(src_hops_obj * obj);
 
     void src_hops_process_format_binary_int32(src_hops_obj * obj);
-
-    void src_hops_set_timestamp_map(src_hops_obj * obj, map_ull_t * timestamp_map);
 
     src_hops_cfg * src_hops_cfg_construct(void);
 

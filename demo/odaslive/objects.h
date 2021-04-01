@@ -60,8 +60,6 @@
         con_categories_obj * con_categories_object;
         snk_categories_obj * snk_categories_object;
 
-        map_ull_t timestamp_map;
-
     } objects;   
 
     typedef struct aobjects {
@@ -118,8 +116,6 @@
         amod_classify_obj * amod_classify_object;
         acon_categories_obj * acon_categories_object;
         asnk_categories_obj * asnk_categories_object;
-
-        map_ull_t timestamp_map;
 
     } aobjects;
  

@@ -213,54 +213,6 @@
 
     }
 
-    interface_obj * interface_construct_pulseaudio(const char * sourceName) {
-
-        interface_obj * obj;
-
-        obj = (interface_obj *) malloc(sizeof(interface_obj));
-
-        // +----------------------------------------------------------+
-        // | Type                                                     |
-        // +----------------------------------------------------------+
-
-            obj->type = interface_pulseaudio;
-
-        // +----------------------------------------------------------+
-        // | Blackhole                                                |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        // +----------------------------------------------------------+
-        // | File                                                     |
-        // +----------------------------------------------------------+
-
-            obj->fileName = (char *) NULL;
-
-        // +----------------------------------------------------------+
-        // | Socket                                                   |
-        // +----------------------------------------------------------+
-
-            obj->ip = (char *) NULL;
-            obj->port = 0;
-
-        // +----------------------------------------------------------+
-        // | Soundcard                                                |
-        // +----------------------------------------------------------+
-
-            obj->deviceName = (char *) malloc(sizeof(char) * (strlen(sourceName)+1));
-            strcpy(obj->deviceName, sourceName);
-
-        // +----------------------------------------------------------+
-        // | Terminal                                                 |
-        // +----------------------------------------------------------+
-
-            // (Empty)
-
-        return obj;        
-
-    }
-
    interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device) {
 
        char * deviceName = (char *) malloc(sizeof(char) * 1024);
@@ -415,15 +367,6 @@
             }
 
         // +----------------------------------------------------------+
-        // | Pulseaudio                                               |
-        // +----------------------------------------------------------+
-
-            if (obj->type == interface_pulseaudio) {
-                clone->deviceName = obj->deviceName;
-            }
-
-
-        // +----------------------------------------------------------+
         // | Terminal                                                 |
         // +----------------------------------------------------------+
 
@@ -486,12 +429,6 @@
                 case interface_soundcard:
 
                     printf("type = soundcard_name, devicename = %s\n",obj->deviceName);
-
-                    break;
-
-                case interface_pulseaudio:
-
-                    printf("type = pulseaudio, devicename = %s\n", obj->deviceName);
 
                     break;
 
