@@ -31,6 +31,7 @@
         obj = (src_hops_obj *) malloc(sizeof(src_hops_obj));
 
         obj->timeStamp = 0;
+        obj->timeStampMap = NULL;
 
         obj->hopSize = msg_hops_config->hopSize;
         obj->nChannels = msg_hops_config->nChannels;
@@ -48,7 +49,11 @@
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int08)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int16)) ||
               ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)))) {
+              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)) ||
+              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int08)) ||
+              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int16)) ||
+              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int24)) ||
+              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int32)))) {
             
             printf("Source hops: Invalid interface and/or format.\n");
             exit(EXIT_FAILURE);
@@ -111,6 +116,12 @@
 
             break;
 
+            case interface_pulseaudio:
+
+                src_hops_open_interface_pulseaudio(obj);
+
+            break;
+
             default:
 
                 printf("Source hops: Invalid interface type.\n");
@@ -131,6 +142,107 @@
             exit(EXIT_FAILURE);
         }
 
+    }
+
+    void src_hops_open_interface_pulseaudio(src_hops_obj * obj) {
+
+        pa_sample_format_t format;
+
+        switch (obj->format->type) {
+            
+            case format_binary_int08:
+
+                format = PA_SAMPLE_U8;
+
+            break;
+
+            case format_binary_int16:
+
+                format = PA_SAMPLE_S16LE;
+
+            break;
+
+            case format_binary_int24:
+
+                format = PA_SAMPLE_S24LE;
+
+            break;
+            
+            case format_binary_int32:
+            
+                format = PA_SAMPLE_S32LE;
+            
+            break;
+
+            default:
+
+                printf("Source hops: Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+
+        }
+
+        obj->ss.format = format;
+        obj->ss.rate = obj->fS;
+        obj->ss.channels = obj->nChannels;
+
+        obj->map.channels = obj->nChannels;
+        switch(obj->nChannels)
+        {
+            case 1:
+                obj->map.map[0] = PA_CHANNEL_POSITION_MONO;
+                break;
+
+            case 2:
+                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[1] = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                break;
+
+            case 8:
+                obj->map.map[0] = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[1] = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                obj->map.map[2] = PA_CHANNEL_POSITION_REAR_LEFT;
+                obj->map.map[3] = PA_CHANNEL_POSITION_REAR_RIGHT;
+                obj->map.map[4] = PA_CHANNEL_POSITION_FRONT_CENTER;
+                obj->map.map[5] = PA_CHANNEL_POSITION_LFE;
+                obj->map.map[6] = PA_CHANNEL_POSITION_SIDE_LEFT;
+                obj->map.map[7] = PA_CHANNEL_POSITION_SIDE_RIGHT;
+                break;
+
+            case 16:
+                obj->map.map[0]  = PA_CHANNEL_POSITION_FRONT_LEFT;
+                obj->map.map[1]  = PA_CHANNEL_POSITION_FRONT_RIGHT;
+                obj->map.map[2]  = PA_CHANNEL_POSITION_REAR_LEFT;
+                obj->map.map[3]  = PA_CHANNEL_POSITION_REAR_RIGHT;
+                obj->map.map[4]  = PA_CHANNEL_POSITION_FRONT_CENTER;
+                obj->map.map[5]  = PA_CHANNEL_POSITION_LFE;
+                obj->map.map[6]  = PA_CHANNEL_POSITION_SIDE_LEFT;
+                obj->map.map[7]  = PA_CHANNEL_POSITION_SIDE_RIGHT;
+                obj->map.map[8]  = PA_CHANNEL_POSITION_AUX0;
+                obj->map.map[9]  = PA_CHANNEL_POSITION_AUX1;
+                obj->map.map[10] = PA_CHANNEL_POSITION_AUX2;
+                obj->map.map[11] = PA_CHANNEL_POSITION_AUX3;
+                obj->map.map[12] = PA_CHANNEL_POSITION_AUX4;
+                obj->map.map[13] = PA_CHANNEL_POSITION_AUX5;
+                obj->map.map[14] = PA_CHANNEL_POSITION_AUX6;
+                obj->map.map[15] = PA_CHANNEL_POSITION_AUX7;
+                break;
+
+            default:
+
+                printf("Source hops: Invalid format.\n");
+                exit(EXIT_FAILURE);
+
+            break;
+        }
+
+        int err;
+        if (!(obj->pa = pa_simple_new(NULL, "Odas", PA_STREAM_RECORD, obj->interface->deviceName, "record", &obj->ss, &obj->map, NULL, &err))) {
+            printf("Source hops: Cannot open pulseaudio device %s: %s\n", obj->interface->deviceName, pa_strerror(err));
+            exit(EXIT_FAILURE);
+        }
+        
     }
 
     void src_hops_open_interface_soundcard(src_hops_obj * obj) {
@@ -240,6 +352,12 @@
 
             break;
 
+            case interface_pulseaudio:
+
+                src_hops_close_interface_pulseaudio(obj);
+
+            break;
+
             default:
 
                 printf("Source hops: Invalid interface type.\n");
@@ -260,6 +378,13 @@
     void src_hops_close_interface_soundcard(src_hops_obj * obj) {
 
         snd_pcm_close(obj->ch);
+
+    }
+
+    void src_hops_close_interface_pulseaudio(src_hops_obj * obj) {
+
+        if (obj->pa != NULL)
+            pa_simple_free(obj->pa);
 
     }
 
@@ -316,6 +441,12 @@
 
             break;
 
+            case interface_pulseaudio:
+
+                rtnValue = src_hops_process_interface_pulseaudio(obj);
+
+            break;
+
             default:
 
                 printf("Source hops: Invalid interface type.\n");
@@ -369,6 +500,53 @@
 
             rtnValue = -1;
 
+        }
+
+        return rtnValue;
+
+    }
+
+    int src_hops_process_interface_pulseaudio(src_hops_obj * obj) {
+
+        int rtnValue;
+        int err;
+
+        if (pa_simple_read(obj->pa, obj->buffer, obj->bufferSize, &err) < 0) {
+            
+            rtnValue = -1;
+
+        }
+        else {
+
+            rtnValue = 0;
+
+        }
+
+        struct timeval currentTime;
+        gettimeofday(&currentTime, NULL);
+        unsigned long long microseconds = currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+
+        // remove pulseaudio latency
+        pa_usec_t latency;
+        latency = pa_simple_get_latency(obj->pa, &err);
+        if (latency == (pa_usec_t) -1) {
+            printf("Source hops: Could not get pulseaudio latency: %s\n", pa_strerror(err));
+            rtnValue = -1;
+        }
+
+        unsigned long long timestamp = obj->timeStamp + 1;
+        unsigned long long readTimeStamp = microseconds - latency;
+
+        const int n = snprintf(NULL, 0, "%llu", timestamp);
+        char key[n+1];
+        int c = snprintf(key, n+1, "%llu", timestamp);
+        if (key[n] != '\0' || c != n) {
+            printf("Source hops: Invalid timestamp \n");
+            rtnValue = -1;
+        }
+
+        if (obj->timeStampMap != NULL) {
+            map_set(obj->timeStampMap, key, readTimeStamp);
         }
 
         return rtnValue;
@@ -481,6 +659,11 @@
 
         }
 
+    }
+
+    void src_hops_set_timestamp_map(src_hops_obj * obj, map_ull_t * timestamp_map)
+    {
+        obj->timeStampMap = timestamp_map;
     }
 
     src_hops_cfg * src_hops_cfg_construct(void) {
