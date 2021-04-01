@@ -35,7 +35,6 @@
         interface_socket = 3,
         interface_soundcard = 4,
         interface_terminal = 5,
-        interface_pulseaudio = 6
 
     } interface_type;
 
@@ -59,8 +58,6 @@
     interface_obj * interface_construct_file(const char * fileName);
 
     interface_obj * interface_construct_socket(const char * ip, const unsigned int port);
-
-    interface_obj * interface_construct_pulseaudio(const char * sourceName);
 
     interface_obj * interface_construct_soundcard(const unsigned int card, const unsigned int device);
 

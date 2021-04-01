@@ -205,13 +205,6 @@
                 cfg->interface = interface_construct_soundcard_by_name(tmpStr2);
 
             }
-            else if (strcmp(tmpStr1, "pulseaudio") == 0) {
-
-                tmpStr2 = parameters_lookup_string(fileConfig, "raw.interface.source");
-
-                cfg->interface = interface_construct_pulseaudio(tmpStr2);
-
-            }
             else {
                 printf("raw.interface.type: Invalid type\n");
                 exit(EXIT_FAILURE);
