@@ -93,6 +93,8 @@ void src_hops_close_interface_file(src_hops_obj *obj);
 
 void src_hops_close_interface_soundcard(src_hops_obj *obj);
 
+void src_hops_close_interface_socket(src_hops_obj *obj);
+
 int src_hops_process(src_hops_obj *obj);
 
 int src_hops_process_interface_file(src_hops_obj *obj);

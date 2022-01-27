@@ -282,6 +282,12 @@ void src_hops_close(src_hops_obj *obj)
 
         break;
 
+    case interface_socket:
+
+        src_hops_close_interface_socket(obj);
+
+        break;
+
     default:
 
         printf("Source hops: Invalid interface type.\n");
@@ -432,11 +438,11 @@ int src_hops_process_interface_socket(src_hops_obj *obj)
     int rtnValue;
 
     // ssize_t recv(int sockfd, void *buf, size_t len, int flags);
-    nBytesTotal = recv(obj->sid, obj->buffer, obj->bufferSize, 0);
+    nBytesTotal = recv(obj->sid, obj->buffer, obj->bufferSize, MSG_WAITALL);
 
     if (nBytesTotal == obj->bufferSize)
     {
-        printf("Received %d bytes", nBytesTotal);
+
         rtnValue = 0;
     }
     else
