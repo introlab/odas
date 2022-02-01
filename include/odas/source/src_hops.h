@@ -27,6 +27,8 @@
     #include <stdio.h>
     #include <string.h>
     #include <alsa/asoundlib.h>
+    #include <pulse/simple.h>
+    #include <pulse/error.h>
 
     #include "../general/format.h"
     #include "../general/interface.h"
@@ -47,6 +49,8 @@
 
         FILE * fp;
         snd_pcm_t * ch;
+        pa_simple * pa;
+        pa_sample_spec ss;
 
         char * buffer;
         unsigned int bufferSize;
@@ -78,17 +82,23 @@
 
     void src_hops_open_interface_soundcard(src_hops_obj * obj);
 
+    void src_hops_open_interface_pulseaudio(src_hops_obj * obj);
+
     void src_hops_close(src_hops_obj * obj);
 
     void src_hops_close_interface_file(src_hops_obj * obj);
 
     void src_hops_close_interface_soundcard(src_hops_obj * obj);
 
+    void src_hops_close_interface_pulseaudio(src_hops_obj * obj);
+
     int src_hops_process(src_hops_obj * obj);
 
     int src_hops_process_interface_file(src_hops_obj * obj);
 
     int src_hops_process_interface_soundcard(src_hops_obj * obj);
+
+    int src_hops_process_interface_pulseaudio(src_hops_obj * obj);
 
     void src_hops_process_format_binary_int08(src_hops_obj * obj);
 
