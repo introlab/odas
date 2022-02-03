@@ -3,6 +3,7 @@
 
     #include <odas/odas.h>
     #include <libconfig.h>
+    #include <stdbool.h>
     
     int parameters_lookup_int(const char * file, const char * path);
 
@@ -12,10 +13,14 @@
 
     unsigned int parameters_count(const char * file, const char * path);
 
+    bool parameters_exists(const char * file, const char * path);
+
 
     src_hops_cfg * parameters_src_hops_mics_config(const char * fileConfig);
 
     msg_hops_cfg * parameters_msg_hops_mics_raw_config(const char * fileConfig);
+
+    pa_channel_map* parameters_pa_channel_map_config(const char* fileConfig);
 
 
     mod_mapping_cfg * parameters_mod_mapping_mics_config(const char * fileConfig);

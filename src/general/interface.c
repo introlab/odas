@@ -306,7 +306,8 @@
        // | Soundcard                                                |
        // +----------------------------------------------------------+
 
-       obj->deviceName = deviceName;
+        obj->deviceName = (char *) malloc(sizeof(char) * (strlen(deviceName)+1));
+        strcpy(obj->deviceName, deviceName);
 
        // +----------------------------------------------------------+
        // | Terminal                                                 |

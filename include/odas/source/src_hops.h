@@ -51,6 +51,7 @@
         snd_pcm_t * ch;
         pa_simple * pa;
         pa_sample_spec ss;
+        pa_channel_map cm;
 
         char * buffer;
         unsigned int bufferSize;
@@ -65,6 +66,7 @@
 
         format_obj * format;
         interface_obj * interface;
+        pa_channel_map * channel_map;
 
     } src_hops_cfg;
 
