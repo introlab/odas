@@ -43,14 +43,11 @@
             // Will not be null if in pulseaudio mode
             memcpy(&obj->cm, src_hops_config->channel_map, sizeof(pa_channel_map));
         }
-        else
+        else if (obj->interface->type == interface_pulseaudio)
         {
-            // Can be null if not in pulseaudio mode ONLY
-            if (obj->interface->type == interface_pulseaudio)
-            {
-                printf("Error: Pulseaudio interface requires channel map.\n");
-                exit(EXIT_FAILURE);
-            }
+            // Can't be null if we are in pulseaudio mode
+            printf("Error: Pulseaudio interface requires channel map.\n");
+            exit(EXIT_FAILURE);
         }
 
         memset(obj->bytes, 0x00, 4 * sizeof(char));

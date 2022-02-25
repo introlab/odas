@@ -141,37 +141,6 @@
 
     }
 
-    bool parameters_exists(const char * file, const char * path)
-    {
-        config_t cfg;
-        unsigned int rtnValue;
-
-        config_init(&cfg); 
-
-        if(!config_read_file(&cfg, file))
-        {
-            
-            printf("%s:%d - %s\n", config_error_file(&cfg), config_error_line(&cfg), config_error_text(&cfg));
-            config_destroy(&cfg);
-          
-            exit(EXIT_FAILURE);
-
-        }
-
-        if (config_lookup(&cfg, path) == NULL)
-        {
-            rtnValue = false;
-        }
-        else
-        {
-            rtnValue = true;
-        }
-
-        config_destroy(&cfg);   
-
-        return rtnValue;
-    }
-
     src_hops_cfg * parameters_src_hops_mics_config(const char * fileConfig) {
 
         src_hops_cfg * cfg;
@@ -290,86 +259,39 @@
 
     pa_channel_map* parameters_pa_channel_map_config(const char* fileConfig)
     {
-        bool channelNamesExists = parameters_exists(fileConfig, "raw.interface.channelnames");
-        bool channelMapExists = parameters_exists(fileConfig, "raw.interface.channelmap");
-        if (channelNamesExists && channelMapExists)
+        unsigned int nChannels = parameters_count(fileConfig, "raw.interface.channelmap");
+        pa_channel_map* map = (pa_channel_map*) malloc(sizeof(pa_channel_map));
+        pa_channel_map_init(map);
+        map->channels = 0;
+
+        char * tmpStr1 = (char *) malloc(sizeof(char) * 1024);
+        for (unsigned int iChannel = 0; iChannel < nChannels; ++iChannel)
         {
-            printf("Configuration error: raw.interface.channelnames and raw.interface.channelmap cannot be used at the same time\n");
+            sprintf(tmpStr1, "raw.interface.channelmap.[%u]", iChannel);
+            char* channel = parameters_lookup_string(fileConfig, tmpStr1);
+            if (((map->map[iChannel] = pa_channel_position_from_string(channel)) == PA_CHANNEL_POSITION_INVALID))
+            {
+                printf("Invalid channel position: %s\n", channel);
+                exit(EXIT_FAILURE);
+            }
+            ++(map->channels);
+            free((void *) channel);
+        }
+        free((void *) tmpStr1);
+
+        if (map->channels != parameters_lookup_int(fileConfig, "raw.nChannels"))
+        {
+            printf("Configuration error: raw.interface.channelmap length does not match raw.nChannels\n");
             exit(EXIT_FAILURE);
         }
-        else if (!(channelNamesExists || channelMapExists))
+
+        if (!pa_channel_map_valid(map))
         {
-            printf("Configuration error: either raw.interface.channelnames or raw.interface.channelmap must be used with pulseaudio\n");
+            printf("Invalid channel map\n");
             exit(EXIT_FAILURE);
         }
-
-        if (channelNamesExists)
-        {
-            char * tmpStr;
-            pa_channel_map* map = (pa_channel_map*) malloc(sizeof(pa_channel_map));
-            pa_channel_map_init(map);
-            map->channels = parameters_lookup_int(fileConfig, "raw.nChannels");
-
-            tmpStr = parameters_lookup_string(fileConfig, "raw.interface.channelnames");
-
-            if (!pa_channel_map_parse(map, tmpStr))
-            {
-                printf("Invalid channel map string: %s\n", tmpStr);
-                exit(EXIT_FAILURE);
-            }
-
-            if (map->channels != parameters_lookup_int(fileConfig, "raw.nChannels"))
-            {
-                printf("Configuration error: raw.interface.channelnames length does not match raw.nChannels\n");
-                exit(EXIT_FAILURE);
-            }
-
-            if (!pa_channel_map_valid(map))
-            {
-                printf("Invalid channel map\n");
-                exit(EXIT_FAILURE);
-            }
-
-            free((void *) tmpStr);
-
-            return map;
-
-        }
-        else
-        {
-            unsigned int nChannels = parameters_count(fileConfig, "raw.interface.channelmap");
-            char tmpStr[1024];
-            pa_channel_map* map = (pa_channel_map*) malloc(sizeof(pa_channel_map));
-            pa_channel_map_init(map);
-            map->channels = 0;
-
-            for (unsigned int iChannel = 0; iChannel < nChannels; ++iChannel)
-            {
-                sprintf(tmpStr, "raw.interface.channelmap.[%u]", iChannel);
-                char* channel = parameters_lookup_string(fileConfig, tmpStr);
-                if (((map->map[iChannel] = pa_channel_position_from_string(channel)) == PA_CHANNEL_POSITION_INVALID))
-                {
-                    printf("Invalid channel position: %s\n", channel);
-                    exit(EXIT_FAILURE);
-                }
-                ++(map->channels);
-                free(channel);
-            }
-
-            if (map->channels != parameters_lookup_int(fileConfig, "raw.nChannels"))
-            {
-                printf("Configuration error: raw.interface.channelmap length does not match raw.nChannels\n");
-                exit(EXIT_FAILURE);
-            }
-
-            if (!pa_channel_map_valid(map))
-            {
-                printf("Invalid channel map\n");
-                exit(EXIT_FAILURE);
-            }
-            
-            return map;
-        }
+        
+        return map;
     }
 
     mod_mapping_cfg * parameters_mod_mapping_mics_config(const char * fileConfig) {
