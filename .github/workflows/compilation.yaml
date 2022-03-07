@@ -32,6 +32,6 @@ jobs:
       - name: Run CMake and build odas
         working-directory: build
         run: |
-          cmake ../ -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          cmake ../ -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DCMAKE_INSTALL_PREFIX=install
           make -j2
           make install
