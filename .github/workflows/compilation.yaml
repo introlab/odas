@@ -2,9 +2,9 @@ name: compilation
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -26,13 +26,12 @@ jobs:
           sudo apt-get install cmake gcc build-essential libfftw3-dev libconfig-dev libasound2-dev gfortran texinfo pulseaudio libpulse-dev
 
       - name: Create build directory
-        working-directory: odas
         run: |
           mkdir build
 
-      - name: Run CMake and build opentera-webrtc-native-client
-        working-directory: odas/build
+      - name: Run CMake and build odas
+        working-directory: build
         run: |
-          cmake ../ -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          cmake ../ -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DCMAKE_INSTALL_PREFIX=install
           make -j2
           make install
