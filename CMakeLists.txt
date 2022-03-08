@@ -12,10 +12,10 @@ pkg_check_modules(PC_LIBCONFIG REQUIRED libconfig)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-set(CMAKE_BUILD_TYPE "Release")
-
-set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
-set(LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/lib")
+# Compile in release mode if not set
+if(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE "Release")
+endif(NOT CMAKE_BUILD_TYPE)
 
 #Add base directory for includes (global)
 include_directories(include/odas)
@@ -193,6 +193,8 @@ target_link_libraries(odas
 	${PC_FFTW3_LIBRARIES}
 	${PC_ALSA_LIBRARIES}
     ${PC_LIBCONFIG_LIBRARIES}
+    pulse
+    pulse-simple
 	m
     pthread
 )
@@ -217,5 +219,3 @@ target_link_libraries(odasserver
 )
 
 install(TARGETS odas DESTINATION lib)
-
-

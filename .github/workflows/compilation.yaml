@@ -1,0 +1,38 @@
+name: compilation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-18.04]
+        build-type: [Debug, Release]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake gcc build-essential libfftw3-dev libconfig-dev libasound2-dev gfortran texinfo pulseaudio libpulse-dev
+
+      - name: Create build directory
+        working-directory: odas
+        run: |
+          mkdir build
+
+      - name: Run CMake and build opentera-webrtc-native-client
+        working-directory: odas/build
+        run: |
+          cmake ../ -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          make -j2
+          make install
