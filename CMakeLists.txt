@@ -9,6 +9,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
 pkg_check_modules(PC_ALSA REQUIRED alsa)
 pkg_check_modules(PC_LIBCONFIG REQUIRED libconfig)
+pkg_check_modules(PC_PULSEAUDIO REQUIRED libpulse-simple)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
@@ -30,7 +31,7 @@ set(SRC
     src/general/mic.c
     src/general/samplerate.c
     src/general/soundspeed.c
-    src/general/spatialfilter.c    
+    src/general/spatialfilter.c
     src/general/thread.c
 
     src/init/combining.c
@@ -143,13 +144,13 @@ set(SRC
     src/amodule/amod_stft.c
     src/amodule/amod_volume.c
     src/asink/asnk_categories.c
-    src/asink/asnk_hops.c    
+    src/asink/asnk_hops.c
     src/asink/asnk_pots.c
     src/asink/asnk_powers.c
     src/asink/asnk_spectra.c
     src/asink/asnk_tracks.c
-    src/asource/asrc_hops.c  
-    
+    src/asource/asrc_hops.c
+
     src/connector/con_categories.c
     src/connector/con_hops.c
     src/connector/con_pots.c
@@ -190,12 +191,11 @@ add_library(odas SHARED
 )
 
 target_link_libraries(odas
-	${PC_FFTW3_LIBRARIES}
-	${PC_ALSA_LIBRARIES}
+    ${PC_FFTW3_LIBRARIES}
+    ${PC_ALSA_LIBRARIES}
     ${PC_LIBCONFIG_LIBRARIES}
-    pulse
-    pulse-simple
-	m
+    ${PC_PULSEAUDIO_LIBRARIES}
+    m
     pthread
 )
 
