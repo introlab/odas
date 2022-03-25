@@ -2,7 +2,7 @@ project(ODAS)
 cmake_minimum_required(VERSION 2.4.6..3.16)
 
 if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
+    cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
 option(ODAS_INSTALL_EXECUTABLES "Install the odaslive and odasserver executables along with the odas library" OFF)
@@ -17,7 +17,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Compile in release mode if not set
 if(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE "Release")
+    SET(CMAKE_BUILD_TYPE "Release")
 endif(NOT CMAKE_BUILD_TYPE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -272,8 +272,11 @@ set(PUBLIC_HEADER
 )
 
 add_library(odas SHARED
-	${SRC}
-    PUBLIC_HEADER ${PUBLIC_HEADER}
+    ${SRC}
+)
+set_property(
+    TARGET odas
+    PROPERTY PUBLIC_HEADER ${PUBLIC_HEADER}
 )
 
 target_link_libraries(odas
