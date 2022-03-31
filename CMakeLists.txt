@@ -1,9 +1,11 @@
 project(ODAS)
-cmake_minimum_required(VERSION 2.4.6)
+cmake_minimum_required(VERSION 2.4.6..3.16)
 
 if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
+    cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
+
+option(ODAS_INSTALL_EXECUTABLES "Install the odaslive and odasserver executables along with the odas library" OFF)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
@@ -15,8 +17,11 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Compile in release mode if not set
 if(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE "Release")
+    SET(CMAKE_BUILD_TYPE "Release")
 endif(NOT CMAKE_BUILD_TYPE)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
 #Add base directory for includes (global)
 include_directories(include/odas)
@@ -187,7 +192,7 @@ set(SRC
 )
 
 add_library(odas SHARED
-	${SRC}
+    ${SRC}
 )
 
 target_link_libraries(odas
@@ -218,4 +223,18 @@ target_link_libraries(odasserver
     odas
 )
 
-install(TARGETS odas DESTINATION lib)
+install(TARGETS odas LIBRARY DESTINATION lib)
+install(
+    DIRECTORY include/
+    DESTINATION include
+    FILES_MATCHING
+        PATTERN "*.h"
+)
+
+if(ODAS_INSTALL_EXECUTABLES)
+    install(TARGETS odaslive DESTINATION bin)
+    install(TARGETS odasserver DESTINATION bin)
+endif()
+
+unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY)
