@@ -6,6 +6,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 option(ODAS_INSTALL_EXECUTABLES "Install the odaslive and odasserver executables along with the odas library" OFF)
+option(ODAS_FORCE_BIN_AND_LIB_DIRS "Force the installation of the odas library and executables in the bin and lib directories" ON)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
@@ -20,13 +21,13 @@ if(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE "Release")
 endif(NOT CMAKE_BUILD_TYPE)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+if(ODAS_FORCE_BIN_AND_LIB_DIRS)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+endif()
 
 #Add base directory for includes (global)
 include_directories(include/odas)
-
-add_subdirectory(include)
 
 set(SRC
 
@@ -236,5 +237,7 @@ if(ODAS_INSTALL_EXECUTABLES)
     install(TARGETS odasserver DESTINATION bin)
 endif()
 
-unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+if(ODAS_FORCE_BIN_AND_LIB_DIRS)
+    unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+    unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+endif()
