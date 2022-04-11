@@ -1,624 +1,675 @@
-   
-   /**
-    * \file     src_hops.c
-    * \author   François Grondin <francois.grondin2@usherbrooke.ca>
-    * \version  2.0
-    * \date     2018-03-18
-    * \copyright
-    *
-    * This program is free software: you can redistribute it and/or modify
-    * it under the terms of the GNU General Public License as published by
-    * the Free Software Foundation, either version 3 of the License, or
-    * (at your option) any later version.
-    *
-    * This program is distributed in the hope that it will be useful,
-    * but WITHOUT ANY WARRANTY; without even the implied warranty of
-    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    * GNU General Public License for more details.
-    * 
-    * You should have received a copy of the GNU General Public License
-    * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    *
-    */
-    
-    #include <source/src_hops.h>
+/**
+* \file     src_hops.c
+* \author   François Grondin <francois.grondin2@usherbrooke.ca>
+* \version  2.0
+* \date     2018-03-18
+* \copyright
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*/
 
-    src_hops_obj * src_hops_construct(const src_hops_cfg * src_hops_config, const msg_hops_cfg * msg_hops_config) {
+#include <source/src_hops.h>
 
-        src_hops_obj * obj;
-        unsigned int nBytes;
+src_hops_obj * src_hops_construct(const src_hops_cfg * src_hops_config, const msg_hops_cfg * msg_hops_config) {
 
-        obj = (src_hops_obj *) malloc(sizeof(src_hops_obj));
+    src_hops_obj * obj;
+    unsigned int nBytes;
 
-        obj->timeStamp = 0;
+    obj = (src_hops_obj *) malloc(sizeof(src_hops_obj));
 
-        obj->hopSize = msg_hops_config->hopSize;
-        obj->nChannels = msg_hops_config->nChannels;
-        obj->fS = msg_hops_config->fS;
-        
-        obj->format = format_clone(src_hops_config->format);
-        obj->interface = interface_clone(src_hops_config->interface);
-        if (src_hops_config->channel_map != NULL)
-        {
-            // Will not be null if in pulseaudio mode
-            memcpy(&obj->cm, src_hops_config->channel_map, sizeof(pa_channel_map));
-        }
-        else if (obj->interface->type == interface_pulseaudio)
-        {
-            // Can't be null if we are in pulseaudio mode
-            printf("Error: Pulseaudio interface requires channel map.\n");
-            exit(EXIT_FAILURE);
-        }
+    obj->timeStamp = 0;
 
-        memset(obj->bytes, 0x00, 4 * sizeof(char));
+    obj->hopSize = msg_hops_config->hopSize;
+    obj->nChannels = msg_hops_config->nChannels;
+    obj->fS = msg_hops_config->fS;
 
-        if (!(((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_file)  && (obj->format->type == format_binary_int32)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_soundcard)  && (obj->format->type == format_binary_int32)) ||
-              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int08)) ||
-              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int16)) ||
-              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int24)) ||
-              ((obj->interface->type == interface_pulseaudio)  && (obj->format->type == format_binary_int32)))) {
-            
-            printf("Source hops: Invalid interface and/or format.\n");
-            exit(EXIT_FAILURE);
-
-        }
-
-        obj->buffer = (char *) malloc(sizeof(char) * obj->hopSize * obj->nChannels * 4);
-        memset(obj->buffer, 0x00, sizeof(char) * obj->hopSize * obj->nChannels * 4);
-
-        switch (obj->format->type) {
-
-            case format_binary_int08: obj->bufferSize = obj->hopSize * obj->nChannels * 1; break;
-            case format_binary_int16: obj->bufferSize = obj->hopSize * obj->nChannels * 2; break;
-            case format_binary_int24: obj->bufferSize = obj->hopSize * obj->nChannels * 3; break;
-            case format_binary_int32: obj->bufferSize = obj->hopSize * obj->nChannels * 4; break;
-
-        }      
-
-        obj->out = (msg_hops_obj *) NULL;
-        
-        return obj;
-
+    obj->format = format_clone(src_hops_config->format);
+    obj->interface = interface_clone(src_hops_config->interface);
+    if (src_hops_config->channel_map != NULL)
+    {
+        // Will not be null if in pulseaudio mode
+        memcpy(&obj->cm, src_hops_config->channel_map, sizeof(pa_channel_map));
+    }
+    else if (obj->interface->type == interface_pulseaudio)
+    {
+        // Can't be null if we are in pulseaudio mode
+        printf("Error: Pulseaudio interface requires channel map.\n");
+        exit(EXIT_FAILURE);
     }
 
-    void src_hops_destroy(src_hops_obj * obj) {
+    memset(obj->bytes, 0x00, 4 * sizeof(char));
 
-        free((void *) obj->buffer);
-        format_destroy(obj->format);
-        interface_destroy(obj->interface);
+    if (!((obj->interface->type == interface_file ||
+            obj->interface->type == interface_soundcard ||
+            obj->interface->type == interface_pulseaudio ||
+            obj->interface->type == interface_socket) &&
+          (obj->format->type == format_binary_int08 ||
+           obj->format->type == format_binary_int16 ||
+           obj->format->type == format_binary_int24 ||
+           obj->format->type == format_binary_int32))) {
 
-        free((void *) obj);
-
+        printf("Source hops: Invalid interface and/or format.\n");
+        exit(EXIT_FAILURE);
     }
 
-    void src_hops_connect(src_hops_obj * obj, msg_hops_obj * out) {
+    obj->buffer = (char *) malloc(sizeof(char) * obj->hopSize * obj->nChannels * 4);
+    memset(obj->buffer, 0x00, sizeof(char) * obj->hopSize * obj->nChannels * 4);
 
-        obj->out = out;
+    switch (obj->format->type) {
 
+    case format_binary_int08:
+        obj->bufferSize = obj->hopSize * obj->nChannels * 1;
+        break;
+    case format_binary_int16:
+        obj->bufferSize = obj->hopSize * obj->nChannels * 2;
+        break;
+    case format_binary_int24:
+        obj->bufferSize = obj->hopSize * obj->nChannels * 3;
+        break;
+    case format_binary_int32:
+        obj->bufferSize = obj->hopSize * obj->nChannels * 4;
+        break;
     }
 
-    void src_hops_disconnect(src_hops_obj * obj) {
+    obj->out = (msg_hops_obj *) NULL;
 
-        obj->out = (msg_hops_obj *) NULL;
+    return obj;
+}
 
-    }
+void src_hops_destroy(src_hops_obj * obj) {
 
-    void src_hops_open(src_hops_obj * obj) {
+    free((void *) obj->buffer);
+    format_destroy(obj->format);
+    interface_destroy(obj->interface);
 
-        switch(obj->interface->type) {
+    free((void *) obj);
+}
 
-            case interface_file:
+void src_hops_connect(src_hops_obj * obj, msg_hops_obj * out) {
 
-                src_hops_open_interface_file(obj);
+    obj->out = out;
+}
 
-            break;
+void src_hops_disconnect(src_hops_obj * obj) {
 
-            case interface_soundcard:
+    obj->out = (msg_hops_obj *) NULL;
+}
 
-                src_hops_open_interface_soundcard(obj);
+void src_hops_open(src_hops_obj * obj) {
 
-            break;
+    switch (obj->interface->type) {
 
-            case interface_pulseaudio:
+        case interface_file:
+
+            src_hops_open_interface_file(obj);
+
+        break;
+
+        case interface_soundcard:
+
+            src_hops_open_interface_soundcard(obj);
+
+        break;
+
+        case interface_pulseaudio:
 
                 src_hops_open_interface_pulseaudio(obj);
 
-            break;
+        break;
 
-            default:
+        case interface_socket:
 
-                printf("Source hops: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
+            src_hops_open_interface_socket(obj);
 
-            break;
+        break;
 
-        }        
+        default:
+
+            printf("Source hops: Invalid interface type.\n");
+            exit(EXIT_FAILURE);
+
+        break;
 
     }
 
-    void src_hops_open_interface_file(src_hops_obj * obj) {
+}
 
-        obj->fp = fopen(obj->interface->fileName, "rb");
+void src_hops_open_interface_file(src_hops_obj * obj) {
 
-        if (obj->fp == NULL) {
-            printf("Cannot open file %s\n",obj->interface->fileName);
+    obj->fp = fopen(obj->interface->fileName, "rb");
+
+    if (obj->fp == NULL) {
+        printf("Cannot open file %s\n", obj->interface->fileName);
+        exit(EXIT_FAILURE);
+    }
+
+}
+
+void src_hops_open_interface_soundcard(src_hops_obj * obj) {
+
+    snd_pcm_hw_params_t * hw_params;
+    snd_pcm_format_t format;
+    int err;
+
+    switch (obj->format->type) {
+
+        case format_binary_int08:
+
+            format = SND_PCM_FORMAT_S8;
+
+        break;
+
+        case format_binary_int16:
+
+            format = SND_PCM_FORMAT_S16_LE;
+
+        break;
+
+        case format_binary_int24:
+
+            format = SND_PCM_FORMAT_S24_LE;
+
+        break;
+
+        case format_binary_int32:
+
+            format = SND_PCM_FORMAT_S32_LE;
+
+        break;
+
+        default:
+
+            printf("Source hops: Invalid format.\n");
             exit(EXIT_FAILURE);
-        }
+
+        break;
 
     }
 
-    void src_hops_open_interface_pulseaudio(src_hops_obj * obj) {
-
-        pa_sample_format_t format;
-
-        switch (obj->format->type) {
-            
-            case format_binary_int08:
-
-                format = PA_SAMPLE_U8;
-
-            break;
-
-            case format_binary_int16:
-
-                format = PA_SAMPLE_S16LE;
-
-            break;
-
-            case format_binary_int24:
-
-                format = PA_SAMPLE_S24LE;
-
-            break;
-            
-            case format_binary_int32:
-            
-                format = PA_SAMPLE_S32LE;
-            
-            break;
-
-            default:
-
-                printf("Source hops: Invalid format.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        obj->ss.format = format;
-        obj->ss.rate = obj->fS;
-        obj->ss.channels = obj->nChannels;
-
-        int err;
-        if (!(obj->pa = pa_simple_new(NULL, "Odas", PA_STREAM_RECORD, obj->interface->deviceName, "record", &obj->ss, &obj->cm, NULL, &err))) {
-            printf("Source hops: Cannot open pulseaudio device %s: %s\n", obj->interface->deviceName, pa_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-        
+    if ((err = snd_pcm_open(&(obj->ch), obj->interface->deviceName, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
+        printf("Source hops: Cannot open audio device %s: %s\n", obj->interface->deviceName, snd_strerror(err));
+        exit(EXIT_FAILURE);
     }
 
-    void src_hops_open_interface_soundcard(src_hops_obj * obj) {
+    if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
+        printf("Source hops: Cannot allocate hardware parameter structure: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-        snd_pcm_hw_params_t * hw_params;
-        snd_pcm_format_t format;
-        int err;
+    if ((err = snd_pcm_hw_params_any(obj->ch, hw_params)) < 0) {
+        printf("Source hops: Cannot initialize hardware parameter structure: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-        switch (obj->format->type) {
-            
-            case format_binary_int08:
+    if ((err = snd_pcm_hw_params_set_access(obj->ch, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
+        printf("Source hops: Cannot set access type: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-                format = SND_PCM_FORMAT_S8;
+    if ((err = snd_pcm_hw_params_set_format(obj->ch, hw_params, format)) < 0) {
+        printf("Source hops: Cannot set sample format: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-            break;
+    if ((err = snd_pcm_hw_params_set_rate(obj->ch, hw_params, obj->fS, 0)) < 0) {
+        printf("Source hops: Cannot set sample rate: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-            case format_binary_int16:
+    if ((err = snd_pcm_hw_params_set_channels(obj->ch, hw_params, obj->nChannels)) < 0) {
+        printf("Source hops: Cannot set channel count: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-                format = SND_PCM_FORMAT_S16_LE;
+    if ((err = snd_pcm_hw_params(obj->ch, hw_params)) < 0) {
+        printf("Source hops: Cannot set parameters: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-            break;
+    snd_pcm_hw_params_free(hw_params);
 
-            case format_binary_int24:
+    if ((err = snd_pcm_prepare(obj->ch)) < 0) {
+        printf("Source hops: Cannot prepare audio interface for use: %s\n", snd_strerror(err));
+        exit(EXIT_FAILURE);
+    }
 
-                format = SND_PCM_FORMAT_S24_LE;
+}
 
-            break;
-            
-            case format_binary_int32:
-            
-                format = SND_PCM_FORMAT_S32_LE;
-            
-            break;
+void src_hops_open_interface_pulseaudio(src_hops_obj * obj) {
 
-            default:
+    pa_sample_format_t format;
 
-                printf("Source hops: Invalid format.\n");
-                exit(EXIT_FAILURE);
+    switch (obj->format->type) {
 
-            break;
+        case format_binary_int08:
 
-        }       
+            format = PA_SAMPLE_U8;
 
+        break;
 
-        if ((err = snd_pcm_open(&(obj->ch), obj->interface->deviceName, SND_PCM_STREAM_CAPTURE, 0)) < 0) {
-            printf("Source hops: Cannot open audio device %s: %s\n",obj->interface->deviceName, snd_strerror(err));
+        case format_binary_int16:
+
+            format = PA_SAMPLE_S16LE;
+
+        break;
+
+        case format_binary_int24:
+
+            format = PA_SAMPLE_S24LE;
+
+        break;
+
+        case format_binary_int32:
+
+            format = PA_SAMPLE_S32LE;
+
+        break;
+
+        default:
+
+            printf("Source hops: Invalid format.\n");
             exit(EXIT_FAILURE);
-        }
 
-        if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0) {
-            printf("Source hops: Cannot allocate hardware parameter structure: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params_any(obj->ch, hw_params)) < 0) {
-            printf("Source hops: Cannot initialize hardware parameter structure: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params_set_access(obj->ch, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
-            printf("Source hops: Cannot set access type: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params_set_format(obj->ch, hw_params, format)) < 0) {
-            printf("Source hops: Cannot set sample format: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params_set_rate(obj->ch, hw_params, obj->fS, 0)) < 0) {
-            printf("Source hops: Cannot set sample rate: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params_set_channels(obj->ch, hw_params, obj->nChannels)) < 0) {
-            printf("Source hops: Cannot set channel count: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        if ((err = snd_pcm_hw_params(obj->ch, hw_params)) < 0) {
-            printf("Source hops: Cannot set parameters: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
-
-        snd_pcm_hw_params_free(hw_params);
-
-        if ((err = snd_pcm_prepare(obj->ch)) < 0) {
-            printf("Source hops: Cannot prepare audio interface for use: %s\n", snd_strerror(err));
-            exit(EXIT_FAILURE);
-        }
+        break;
 
     }
 
-    void src_hops_close(src_hops_obj * obj) {
+    obj->ss.format = format;
+    obj->ss.rate = obj->fS;
+    obj->ss.channels = obj->nChannels;
 
-        switch(obj->interface->type) {
-
-            case interface_file:
-
-                src_hops_close_interface_file(obj);
-
-            break;
-
-            case interface_soundcard:
-
-                src_hops_close_interface_soundcard(obj);
-
-            break;
-
-            case interface_pulseaudio:
-
-                src_hops_close_interface_pulseaudio(obj);
-
-            break;
-
-            default:
-
-                printf("Source hops: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
+    int err;
+    if (!(obj->pa = pa_simple_new(NULL, "Odas", PA_STREAM_RECORD, obj->interface->deviceName, "record", &obj->ss, &obj->cm, NULL, &err))) {
+        printf("Source hops: Cannot open pulseaudio device %s: %s\n", obj->interface->deviceName, pa_strerror(err));
+        exit(EXIT_FAILURE);
     }
 
-    void src_hops_close_interface_file(src_hops_obj * obj) {
+}
 
-        fclose(obj->fp);
+void src_hops_open_interface_socket(src_hops_obj * obj) {
 
+    memset(&(obj->sserver), 0x00, sizeof(struct sockaddr_in));
+
+    obj->sserver.sin_family = AF_INET;
+    obj->sserver.sin_addr.s_addr = inet_addr(obj->interface->ip);
+    obj->sserver.sin_port = htons(obj->interface->port);
+    obj->sid = socket(AF_INET, SOCK_STREAM, 0);
+
+    if ((connect(obj->sid, (struct sockaddr *) &(obj->sserver), sizeof(obj->sserver))) < 0) {
+        printf("Source hops: Cannot connect to server\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void src_hops_close(src_hops_obj * obj) {
+
+    switch (obj->interface->type) {
+
+        case interface_file:
+
+            src_hops_close_interface_file(obj);
+
+        break;
+
+        case interface_soundcard:
+
+            src_hops_close_interface_soundcard(obj);
+
+        break;
+
+        case interface_pulseaudio:
+
+            src_hops_close_interface_pulseaudio(obj);
+
+        break;
+
+        case interface_socket:
+
+            src_hops_close_interface_socket(obj);
+
+        break;
+
+        default:
+
+            printf("Source hops: Invalid interface type.\n");
+            exit(EXIT_FAILURE);
+
+        break;
+    }
+}
+
+void src_hops_close_interface_file(src_hops_obj * obj) {
+
+    fclose(obj->fp);
+
+}
+
+void src_hops_close_interface_soundcard(src_hops_obj * obj) {
+
+    snd_pcm_close(obj->ch);
+
+}
+   
+void src_hops_close_interface_pulseaudio(src_hops_obj * obj) {
+
+    if (obj->pa != NULL)
+        pa_simple_free(obj->pa);
+
+}
+
+void src_hops_close_interface_socket(src_hops_obj * obj) {
+    
+    close(obj->sid);
+
+}
+
+int src_hops_process(src_hops_obj * obj) {
+
+    int rtnValue;
+
+    switch (obj->format->type) {
+
+        case format_binary_int08:
+
+            src_hops_process_format_binary_int08(obj);
+
+        break;
+
+        case format_binary_int16:
+
+            src_hops_process_format_binary_int16(obj);
+
+        break;
+
+        case format_binary_int24:
+
+            src_hops_process_format_binary_int24(obj);
+
+        break;
+
+        case format_binary_int32:
+
+            src_hops_process_format_binary_int32(obj);
+
+        break;
+
+        default:
+
+            printf("Source hops: Invalid format type.\n");
+            exit(EXIT_FAILURE);
+
+        break;
     }
 
-    void src_hops_close_interface_soundcard(src_hops_obj * obj) {
+    switch (obj->interface->type) {
 
-        snd_pcm_close(obj->ch);
+        case interface_file:
 
-    }
+            rtnValue = src_hops_process_interface_file(obj);
 
-    void src_hops_close_interface_pulseaudio(src_hops_obj * obj) {
+        break;
 
-        if (obj->pa != NULL)
-            pa_simple_free(obj->pa);
+        case interface_soundcard:
 
-    }
+            rtnValue = src_hops_process_interface_soundcard(obj);
 
-    int src_hops_process(src_hops_obj * obj) {
+        break;
 
-        int rtnValue;
-
-        switch(obj->format->type) {
-
-            case format_binary_int08:
-
-                src_hops_process_format_binary_int08(obj);
-
-            break;
-
-            case format_binary_int16:
-
-                src_hops_process_format_binary_int16(obj);                
-
-            break;
-
-            case format_binary_int24:
-
-                src_hops_process_format_binary_int24(obj);
-
-            break;
-
-            case format_binary_int32:
-
-                src_hops_process_format_binary_int32(obj);
-
-            break;
-
-            default:
-
-                printf("Source hops: Invalid format type.\n");
-                exit(EXIT_FAILURE);
-
-            break;
-
-        }
-
-        switch(obj->interface->type) {
-
-            case interface_file:
-
-                rtnValue = src_hops_process_interface_file(obj);
-
-            break;
-
-            case interface_soundcard:
-
-                rtnValue = src_hops_process_interface_soundcard(obj);
-
-            break;
-
-            case interface_pulseaudio:
+        case interface_pulseaudio:
 
                 rtnValue = src_hops_process_interface_pulseaudio(obj);
 
-            break;
+        break;
 
-            default:
+        case interface_socket:
 
-                printf("Source hops: Invalid interface type.\n");
-                exit(EXIT_FAILURE);
+            rtnValue = src_hops_process_interface_socket(obj);
 
-            break;
+        break;
 
-        }
+        default:
 
-        obj->timeStamp++;
-        obj->out->timeStamp = obj->timeStamp;
+            printf("Source hops: Invalid interface type.\n");
+            exit(EXIT_FAILURE);
 
-        return rtnValue;
+        break;
+    }
+
+    obj->timeStamp++;
+    obj->out->timeStamp = obj->timeStamp;
+
+    return rtnValue;
+}
+
+int src_hops_process_interface_file(src_hops_obj * obj) {
+
+    unsigned int nBytesTotal;
+    int rtnValue;
+
+    nBytesTotal = fread(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
+
+    if (nBytesTotal == obj->bufferSize) {
+
+        rtnValue = 0;
+        
+    }
+    else {
+
+        rtnValue = -1;
+    
+    }
+
+    return rtnValue;
+}
+
+int src_hops_process_interface_soundcard(src_hops_obj * obj) {
+
+    unsigned int nSamples;
+    int rtnValue;
+    int err;
+
+    if (err = snd_pcm_readi(obj->ch, obj->buffer, obj->hopSize) > 0) {
+
+        rtnValue = 0;
+        
+    }
+    else {
+
+        rtnValue = -1;
+    
+    }
+
+    return rtnValue;
+}
+
+int src_hops_process_interface_pulseaudio(src_hops_obj * obj) {
+
+    int rtnValue;
+    int err;
+
+    if (pa_simple_read(obj->pa, obj->buffer, obj->bufferSize, &err) < 0) {
+
+        rtnValue = -1;
+
+    }
+    else {
+
+        rtnValue = 0;
 
     }
 
-    int src_hops_process_interface_file(src_hops_obj * obj) {
+    return rtnValue;
 
-        unsigned int nBytesTotal;
-        int rtnValue;
+}
 
-        nBytesTotal = fread(obj->buffer, sizeof(char), obj->bufferSize, obj->fp);
 
-        if (nBytesTotal == obj->bufferSize) {
+int src_hops_process_interface_socket(src_hops_obj * obj) {
+    
+    unsigned int nBytesTotal;
+    int rtnValue;
+
+    // ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+    nBytesTotal = recv(obj->sid, obj->buffer, obj->bufferSize, MSG_WAITALL);
+
+    if (nBytesTotal == obj->bufferSize) {
+
+        rtnValue = 0;
+        
+    }
+    else {
+
+        rtnValue = -1;
+    
+    }
+
+    return rtnValue;
+}
+
+void src_hops_process_format_binary_int08(src_hops_obj * obj) {
+
+    unsigned int iSample;
+    unsigned int iChannel;
+    unsigned int nBytes;
+    float sample;
+
+    nBytes = 1;
+
+    for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            memcpy(&(obj->bytes[4 - nBytes]),
+                   &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
+                   sizeof(char) * nBytes);
+
+            sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
+
+            obj->out->hops->array[iChannel][iSample] = sample;
             
-            rtnValue = 0;    
-
         }
-        else {
-
-            rtnValue = -1;
-
-        }
-
-        return rtnValue;
-
+        
     }
+    
+}
 
-    int src_hops_process_interface_soundcard(src_hops_obj * obj) {
+void src_hops_process_format_binary_int16(src_hops_obj * obj) {
 
-        unsigned int nSamples;
-        int rtnValue;
-        int err;
+    unsigned int iSample;
+    unsigned int iChannel;
+    unsigned int nBytes;
+    float sample;
 
-        if (err = snd_pcm_readi(obj->ch, obj->buffer, obj->hopSize) > 0) {
+    nBytes = 2;
+
+    for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            memcpy(&(obj->bytes[4 - nBytes]),
+                   &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
+                   sizeof(char) * nBytes);
+
+            sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
+
+            obj->out->hops->array[iChannel][iSample] = sample;
             
-            rtnValue = 0;    
-
         }
-        else {
-
-            rtnValue = -1;
-
-        }
-
-        return rtnValue;
-
+        
     }
+    
+}
 
-    int src_hops_process_interface_pulseaudio(src_hops_obj * obj) {
+void src_hops_process_format_binary_int24(src_hops_obj * obj) {
 
-        int rtnValue;
-        int err;
+    unsigned int iSample;
+    unsigned int iChannel;
+    unsigned int nBytes;
+    float sample;
 
-        if (pa_simple_read(obj->pa, obj->buffer, obj->bufferSize, &err) < 0) {
+    nBytes = 3;
+
+    for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            memcpy(&(obj->bytes[4 - nBytes]),
+                   &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
+                   sizeof(char) * nBytes);
+
+            sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
+
+            obj->out->hops->array[iChannel][iSample] = sample;
             
-            rtnValue = -1;
-
         }
-        else {
+        
+    }
+    
+}
 
-            rtnValue = 0;
+void src_hops_process_format_binary_int32(src_hops_obj * obj) {
 
+    unsigned int iSample;
+    unsigned int iChannel;
+    unsigned int nBytes;
+    float sample;
+
+    nBytes = 4;
+
+    for (iSample = 0; iSample < obj->hopSize; iSample++) {
+
+        for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+
+            memcpy(&(obj->bytes[4 - nBytes]),
+                   &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
+                   sizeof(char) * nBytes);
+
+            sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
+
+            obj->out->hops->array[iChannel][iSample] = sample;
+        
         }
-
-        return rtnValue;
-
+    
     }
 
-    void src_hops_process_format_binary_int08(src_hops_obj * obj) {
+}
 
-        unsigned int iSample;
-        unsigned int iChannel;
-        unsigned int nBytes;
-        float sample;
+src_hops_cfg * src_hops_cfg_construct(void) {
 
-        nBytes = 1;
+    src_hops_cfg * cfg;
 
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
+    cfg = (src_hops_cfg *) malloc(sizeof(src_hops_cfg));
 
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
+    cfg->format = (format_obj *) NULL;
+    cfg->interface = (interface_obj *) NULL;
 
-                memcpy(&(obj->bytes[4-nBytes]),
-                       &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
-                       sizeof(char) * nBytes);
+    return cfg;
+}
 
-                sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
 
-                obj->out->hops->array[iChannel][iSample] = sample;
+void src_hops_cfg_destroy(src_hops_cfg * src_hops_config) {
 
-            }
-
-        }
-
+    if (src_hops_config->format != NULL) {
+        format_destroy(src_hops_config->format);
+    }
+    if (src_hops_config->interface != NULL) {
+        interface_destroy(src_hops_config->interface);
+    }
+    if (src_hops_config->channel_map != NULL) {
+        free((void *) src_hops_config->channel_map);
     }
 
-    void src_hops_process_format_binary_int16(src_hops_obj * obj) {
-
-        unsigned int iSample;
-        unsigned int iChannel;
-        unsigned int nBytes;
-        float sample;
-
-        nBytes = 2;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                memcpy(&(obj->bytes[4-nBytes]),
-                       &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
-                       sizeof(char) * nBytes);
-
-                sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
-
-                obj->out->hops->array[iChannel][iSample] = sample;
-
-            }
-
-        }
-
-    }
-
-    void src_hops_process_format_binary_int24(src_hops_obj * obj) {
-
-        unsigned int iSample;
-        unsigned int iChannel;
-        unsigned int nBytes;
-        float sample;
-
-        nBytes = 3;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                memcpy(&(obj->bytes[4-nBytes]),
-                       &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
-                       sizeof(char) * nBytes);
-
-                sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
-
-                obj->out->hops->array[iChannel][iSample] = sample;
-
-            }
-
-        }
-
-    }
-
-    void src_hops_process_format_binary_int32(src_hops_obj * obj) {
-
-        unsigned int iSample;
-        unsigned int iChannel;
-        unsigned int nBytes;
-        float sample;
-
-        nBytes = 4;
-
-        for (iSample = 0; iSample < obj->hopSize; iSample++) {
-
-            for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
-
-                memcpy(&(obj->bytes[4-nBytes]),
-                       &(obj->buffer[(iSample * obj->nChannels + iChannel) * nBytes]),
-                       sizeof(char) * nBytes);
-
-                sample = pcm_signedXXbits2normalized(obj->bytes, nBytes);
-
-                obj->out->hops->array[iChannel][iSample] = sample;
-
-            }
-
-        }
-
-    }
-
-    src_hops_cfg * src_hops_cfg_construct(void) {
-
-        src_hops_cfg * cfg;
-
-        cfg = (src_hops_cfg *) malloc(sizeof(src_hops_cfg));
-
-        cfg->format = (format_obj *) NULL;
-        cfg->interface = (interface_obj *) NULL;
-
-        return cfg;
-
-    }
-
-    void src_hops_cfg_destroy(src_hops_cfg * src_hops_config) {
-
-        if (src_hops_config->format != NULL) {
-            format_destroy(src_hops_config->format);
-        }
-        if (src_hops_config->interface != NULL) {
-            interface_destroy(src_hops_config->interface);
-        }
-        if (src_hops_config->channel_map != NULL) {
-            free((void *) src_hops_config->channel_map);
-        }
-
-        free((void *) src_hops_config);
-
-    }
+    free((void *) src_hops_config);
+    
+}
