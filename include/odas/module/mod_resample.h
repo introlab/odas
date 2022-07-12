@@ -17,7 +17,7 @@
     * but WITHOUT ANY WARRANTY; without even the implied warranty of
     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     * GNU General Public License for more details.
-    * 
+    *
     * You should have received a copy of the GNU General Public License
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
@@ -53,8 +53,8 @@
         unsigned int fSout;
         unsigned int hopSizeIn;
         unsigned int hopSizeOut;
-        float ratio;
-        
+        double ratio;
+
         unsigned int frameSize;
         unsigned int halfFrameSize;
         unsigned int lowPassCut;
@@ -62,7 +62,7 @@
         hop2hop_buffer_obj * hop2hop;
 
         hop2frame_obj * hop2frame;
-        frames_obj * framesAnalysis; 
+        frames_obj * framesAnalysis;
         frame2freq_obj * frame2freq;
         freqs_obj * freqsAnalysis;
         freq2freq_lowpass_obj * freq2freq_lowpass;
@@ -80,7 +80,7 @@
     } mod_resample_obj;
 
     typedef struct mod_resample_cfg {
-        
+
         unsigned int fSin;
         unsigned int fSout;
 
@@ -98,13 +98,13 @@
 
     int mod_resample_process_push_up(mod_resample_obj * obj);
 
-    int mod_resample_process_push_same(mod_resample_obj * obj);    
+    int mod_resample_process_push_same(mod_resample_obj * obj);
 
     int mod_resample_process_pop_down(mod_resample_obj * obj);
 
     int mod_resample_process_pop_up(mod_resample_obj * obj);
 
-    int mod_resample_process_pop_same(mod_resample_obj * obj);    
+    int mod_resample_process_pop_same(mod_resample_obj * obj);
 
     void mod_resample_connect(mod_resample_obj * obj, msg_hops_obj * in, msg_hops_obj * out);
 
