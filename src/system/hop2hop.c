@@ -15,12 +15,12 @@
     * but WITHOUT ANY WARRANTY; without even the implied warranty of
     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     * GNU General Public License for more details.
-    * 
+    *
     * You should have received a copy of the GNU General Public License
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
     */
-    
+
     #include <system/hop2hop.h>
 
     hop2hop_multiplex_obj * hop2hop_multiplex_construct_zero(const unsigned int hopSize) {
@@ -62,7 +62,7 @@
 
     }
 
-    hop2hop_buffer_obj * hop2hop_buffer_construct_zero(const unsigned int nSignals, const unsigned int hopSizeIn, const unsigned int hopSizeOut, const float ratio) {
+    hop2hop_buffer_obj * hop2hop_buffer_construct_zero(const unsigned int nSignals, const unsigned int hopSizeIn, const unsigned int hopSizeOut, const double ratio) {
 
         hop2hop_buffer_obj * obj;
         unsigned int iSignal;
@@ -72,11 +72,11 @@
         obj->nSignals = nSignals;
         obj->hopSizeIn = hopSizeIn;
         obj->hopSizeOut = hopSizeOut;
-        obj->intervalIn = (float) hopSizeIn;
-        obj->intervalOut = ((float) hopSizeOut) / ratio;
-        obj->intervalSize = 0.0f;
+        obj->intervalIn = (double) hopSizeIn;
+        obj->intervalOut = ((double) hopSizeOut) / ratio;
+        obj->intervalSize = 0.0;
         obj->ratio = ratio;
-        obj->delta = 1.0f / ratio;
+        obj->delta = 1.0 / ratio;
 
         if (obj->intervalIn >= obj->intervalOut) {
 
@@ -89,13 +89,13 @@
 
         }
 
-        obj->iRead = 0.0f;
-        obj->iWrite = 0.0f;
+        obj->iRead = 0.0;
+        obj->iWrite = 0.0;
 
         obj->array = (float **) malloc(sizeof(float *) * nSignals);
 
         for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
-            
+
             obj->array[iSignal] = (float *) malloc(sizeof(float) * obj->bufferSize);
             memset(obj->array[iSignal], 0x00, sizeof(float) * obj->bufferSize);
 
@@ -131,11 +131,11 @@
 
         unsigned int iSignal;
 
-        if ((obj->intervalSize + obj->intervalIn) <= ((float) obj->bufferSize)) {
+        if ((obj->intervalSize + obj->intervalIn) <= ((double) obj->bufferSize)) {
 
             iWriteInt = (unsigned int) obj->iWrite;
 
-            if ((obj->iWrite + obj->intervalIn) <= ((float) obj->bufferSize)) {
+            if ((obj->iWrite + obj->intervalIn) <= ((double) obj->bufferSize)) {
 
                 iHop1 = 0;
                 iBuffer1 = iWriteInt;
@@ -170,10 +170,10 @@
 
             }
 
-            obj->intervalSize += (float) obj->intervalIn;
+            obj->intervalSize += (double) obj->intervalIn;
 
-            obj->iWrite += (float) obj->intervalIn;
-            obj->iWrite = fmod(obj->iWrite, (float) obj->bufferSize);
+            obj->iWrite += (double) obj->intervalIn;
+            obj->iWrite = fmod(obj->iWrite, (double) obj->bufferSize);
 
         }
 
@@ -184,10 +184,10 @@
         unsigned int iSample;
         unsigned int iReadFloor;
         unsigned int iReadCeil;
-        float yFloor;
-        float yCeil;
-        float yDelta;
-        float xDelta;
+        double yFloor;
+        double yCeil;
+        double yDelta;
+        double xDelta;
 
         unsigned int iSignal;
 
@@ -195,11 +195,11 @@
 
             for (iSample = 0; iSample < obj->hopSizeOut; iSample++) {
 
-                iReadFloor = (unsigned int) floorf(obj->iRead);
+                iReadFloor = (unsigned int) floor(obj->iRead);
                 iReadCeil = (iReadFloor + 1) % obj->bufferSize;
 
-                xDelta = obj->iRead - floorf(obj->iRead);
-                
+                xDelta = obj->iRead - floor(obj->iRead);
+
                 for (iSignal = 0; iSignal < obj->nSignals; iSignal++) {
 
                     yFloor = obj->array[iSignal][iReadFloor];
@@ -211,11 +211,11 @@
                 }
 
                 obj->iRead += obj->delta;
-                obj->iRead = fmod(obj->iRead, (float) obj->bufferSize);
+                obj->iRead = fmod(obj->iRead, (double) obj->bufferSize);
 
             }
 
-            obj->intervalSize -= (float) obj->intervalOut;
+            obj->intervalSize -= (double) obj->intervalOut;
 
         }
 
@@ -227,8 +227,8 @@
 
         rtnValue = 0;
 
-        if ((obj->intervalSize + obj->intervalIn) > ((float) obj->bufferSize)) {
-            
+        if ((obj->intervalSize + obj->intervalIn) > ((double) obj->bufferSize)) {
+
             rtnValue = 1;
 
         }
@@ -244,7 +244,7 @@
         rtnValue = 0;
 
         if (obj->intervalOut > obj->intervalSize) {
-            
+
             rtnValue = 1;
 
         }

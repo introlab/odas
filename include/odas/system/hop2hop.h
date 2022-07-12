@@ -17,7 +17,7 @@
     * but WITHOUT ANY WARRANTY; without even the implied warranty of
     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     * GNU General Public License for more details.
-    * 
+    *
     * You should have received a copy of the GNU General Public License
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
@@ -33,7 +33,7 @@
     typedef struct hop2hop_multiplex_obj {
 
         unsigned int hopSize;
-                
+
     } hop2hop_multiplex_obj;
 
     typedef struct hop2hop_buffer_obj {
@@ -41,15 +41,15 @@
         unsigned int nSignals;
         unsigned int hopSizeIn;
         unsigned int hopSizeOut;
-        float intervalIn;
-        float intervalOut;
-        float intervalSize;
+        double intervalIn;
+        double intervalOut;
+        double intervalSize;
         unsigned int bufferSize;
-        float ratio;
-        float delta;
+        double ratio;
+        double delta;
 
-        float iWrite;
-        float iRead;
+        double iWrite;
+        double iRead;
 
         float ** array;
 
@@ -66,9 +66,9 @@
 
     void hop2hop_multiplex_destroy(hop2hop_multiplex_obj * obj);
 
-    void hop2hop_multiplex_process(hop2hop_multiplex_obj * obj, const links_obj * links, const hops_obj * src, hops_obj * dest);    
+    void hop2hop_multiplex_process(hop2hop_multiplex_obj * obj, const links_obj * links, const hops_obj * src, hops_obj * dest);
 
-    hop2hop_buffer_obj * hop2hop_buffer_construct_zero(const unsigned int nSignals, const unsigned int hopSizeIn, const unsigned int hopSizeOut, const float ratio);
+    hop2hop_buffer_obj * hop2hop_buffer_construct_zero(const unsigned int nSignals, const unsigned int hopSizeIn, const unsigned int hopSizeOut, const double ratio);
 
     void hop2hop_buffer_destroy(hop2hop_buffer_obj * obj);
 

@@ -15,12 +15,12 @@
     * but WITHOUT ANY WARRANTY; without even the implied warranty of
     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     * GNU General Public License for more details.
-    * 
+    *
     * You should have received a copy of the GNU General Public License
     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
     *
     */
-    
+
     #include <module/mod_resample.h>
 
     mod_resample_obj * mod_resample_construct(const mod_resample_cfg * mod_resample_config, const msg_hops_cfg * msg_hops_in_config, const msg_hops_cfg * msg_hops_out_config) {
@@ -47,7 +47,7 @@
         obj->fSout = mod_resample_config->fSout;
         obj->hopSizeIn = msg_hops_in_config->hopSize;
         obj->hopSizeOut = msg_hops_out_config->hopSize;
-        obj->ratio = ((float) obj->fSout) / ((float) obj->fSin);
+        obj->ratio = ((double) obj->fSout) / ((double) obj->fSin);
 
         switch (obj->type) {
 
@@ -55,7 +55,7 @@
 
                 obj->frameSize = obj->hopSizeIn * 2;
                 obj->halfFrameSize = obj->frameSize / 2 + 1;
-                obj->lowPassCut = (unsigned int) floorf(((float) (obj->frameSize/2)) * obj->ratio);
+                obj->lowPassCut = (unsigned int) floor(((double) (obj->frameSize/2)) * obj->ratio);
 
                 obj->hop2hop = hop2hop_buffer_construct_zero(obj->nChannels, obj->hopSizeIn, obj->hopSizeOut, obj->ratio);
 
@@ -69,17 +69,17 @@
                 obj->framesSynthesis = frames_construct_zero(obj->nChannels, obj->frameSize);
                 obj->frame2hop = frame2hop_construct_zero(obj->hopSizeIn, obj->frameSize, obj->nChannels);
                 obj->hops = hops_construct_zero(obj->nChannels, obj->hopSizeIn);
-                
+
             break;
 
             case 'u':
 
                 obj->frameSize = obj->hopSizeOut * 2;
                 obj->halfFrameSize = obj->frameSize / 2 + 1;
-                obj->lowPassCut = (unsigned int) floorf(((float) (obj->frameSize/2)) / obj->ratio);
+                obj->lowPassCut = (unsigned int) floor(((double) (obj->frameSize/2)) / obj->ratio);
 
                 obj->hop2hop = hop2hop_buffer_construct_zero(obj->nChannels, obj->hopSizeIn, obj->hopSizeOut, obj->ratio);
-                
+
                 obj->hop2frame = hop2frame_construct_zero(obj->hopSizeOut, obj->frameSize, obj->nChannels);
                 obj->framesAnalysis = frames_construct_zero(obj->nChannels, obj->frameSize);
                 obj->frame2freq = frame2freq_construct_zero(obj->frameSize, obj->halfFrameSize);
@@ -89,7 +89,7 @@
                 obj->freq2frame = freq2frame_construct_zero(obj->frameSize, obj->halfFrameSize);
                 obj->framesSynthesis = frames_construct_zero(obj->nChannels, obj->frameSize);
                 obj->frame2hop = frame2hop_construct_zero(obj->hopSizeOut, obj->frameSize, obj->nChannels);
-                obj->hops = hops_construct_zero(obj->nChannels, obj->hopSizeOut);                
+                obj->hops = hops_construct_zero(obj->nChannels, obj->hopSizeOut);
 
             break;
 
@@ -245,7 +245,7 @@
 
                 if (obj->enabled == 1) {
 
-                    hop2frame_process(obj->hop2frame, 
+                    hop2frame_process(obj->hop2frame,
                                       obj->in->hops,
                                       obj->framesAnalysis);
 
@@ -260,7 +260,7 @@
                     freq2frame_process(obj->freq2frame,
                                        obj->freqsSynthesis,
                                        obj->framesSynthesis);
-                 
+
                     frame2hop_process(obj->frame2hop,
                                       obj->framesSynthesis,
                                       obj->hops);
@@ -321,7 +321,7 @@
             obj->noMorePush = 1;
             rtnValue = -1;
 
-        }        
+        }
 
         return rtnValue;
 
@@ -355,7 +355,7 @@
         else {
 
             obj->noMorePush = 1;
-            rtnValue = -1;            
+            rtnValue = -1;
 
         }
 
@@ -412,7 +412,7 @@
                 hop2hop_buffer_pop(obj->hop2hop,
                                    obj->hops);
 
-                hop2frame_process(obj->hop2frame, 
+                hop2frame_process(obj->hop2frame,
                                   obj->hops,
                                   obj->framesAnalysis);
 
@@ -427,7 +427,7 @@
                 freq2frame_process(obj->freq2frame,
                                    obj->freqsSynthesis,
                                    obj->framesSynthesis);
-             
+
                 frame2hop_process(obj->frame2hop,
                                   obj->framesSynthesis,
                                   obj->out->hops);
