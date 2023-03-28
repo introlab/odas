@@ -11,7 +11,7 @@ ROS: Please visite the [odas_ros project](https://github.com/introlab/odas_ros).
 
 # License
 
-Odas is provided with the [MIT](LICENSE) license.
+ODAS is provided with the [MIT](LICENSE) license.
 
 # Graphical User Interface (GUI) for Data Visualization
 
