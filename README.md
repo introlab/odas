@@ -9,6 +9,10 @@ ROS: Please visite the [odas_ros project](https://github.com/introlab/odas_ros).
 
 [![ODAS Demonstration](https://img.youtube.com/vi/n7y2rLAnd5I/0.jpg)](https://youtu.be/n7y2rLAnd5I)
 
+# License
+
+ODAS is provided with the [MIT](LICENSE) license.
+
 # Graphical User Interface (GUI) for Data Visualization
 
 Please have a look at the [odas_web](https://github.com/introlab/odas_web) project.
