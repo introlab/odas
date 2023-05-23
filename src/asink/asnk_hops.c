@@ -94,5 +94,6 @@
 
         // Close the sink
         snk_hops_close(obj->snk_hops);
+        return NULL;
 
     }

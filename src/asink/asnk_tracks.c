@@ -94,5 +94,6 @@
 
         // Close the sink
         snk_tracks_close(obj->snk_tracks);
+        return NULL;
 
     }

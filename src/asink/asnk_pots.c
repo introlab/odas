@@ -94,5 +94,6 @@
 
         // Close the sink
         snk_pots_close(obj->snk_pots);
+        return NULL;
 
     }
