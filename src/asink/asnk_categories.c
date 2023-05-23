@@ -94,5 +94,6 @@
 
         // Close the sink
         snk_categories_close(obj->snk_categories);
+        return NULL;
 
     }

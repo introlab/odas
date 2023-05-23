@@ -105,5 +105,6 @@
         msg_hops_out = amsg_hops_empty_pop(obj->out);
         msg_hops_zero(msg_hops_out);
         amsg_hops_filled_push(obj->out, msg_hops_out);
+        return NULL;
 
     }
