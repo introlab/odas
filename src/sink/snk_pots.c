@@ -352,30 +352,32 @@
     void snk_pots_process_format_text_json(snk_pots_obj * obj) {
 
         unsigned int iPot;
+        int tmpBufferSize;
 
         obj->buffer[0] = 0x00;
+        tmpBufferSize = 0;
 
-        sprintf(obj->buffer,"%s{\n",obj->buffer);
-        sprintf(obj->buffer,"%s    \"timeStamp\": %llu,\n",obj->buffer,obj->in->timeStamp);
-        sprintf(obj->buffer,"%s    \"src\": [\n",obj->buffer);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"{\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"    \"timeStamp\": %llu,\n",obj->in->timeStamp);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"    \"src\": [\n");
 
         for (iPot = 0; iPot < obj->nPots; iPot++) {
 
-            sprintf(obj->buffer,"%s        { \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"E\": %1.3f }", obj->buffer, 
+            tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"        { \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"E\": %1.3f }",
                     obj->in->pots->array[iPot*4+0], obj->in->pots->array[iPot*4+1], obj->in->pots->array[iPot*4+2], obj->in->pots->array[iPot*4+3]);
 
             if (iPot != (obj->nPots - 1)) {
 
-                sprintf(obj->buffer,"%s,",obj->buffer);
+                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,",");
 
             }
 
-            sprintf(obj->buffer,"%s\n",obj->buffer);
+            tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"\n");
 
         }
         
-        sprintf(obj->buffer,"%s    ]\n",obj->buffer);
-        sprintf(obj->buffer,"%s}\n",obj->buffer);        
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"    ]\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"}\n");
 
         obj->bufferSize = strlen(obj->buffer);
 
