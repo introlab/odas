@@ -347,23 +347,23 @@
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
-            switch (obj->in->categories->array[iChannel]) {
+            switch(obj->in->categories->array[iChannel]) {
 
-            case 0x01:
+                case 0x01:
 
-                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"speech\" }");
-
-                break;
-
-            case 0x00:
-
-                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"nonspeech\" }");
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"speech\" }");
 
                 break;
 
-            default:
+                case 0x00:
 
-                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"undefined\" }");
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"nonspeech\" }");
+
+                break;
+
+                default:
+
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"undefined\" }");
 
                 break;
 
