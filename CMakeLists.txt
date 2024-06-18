@@ -7,6 +7,8 @@ endif(COMMAND cmake_policy)
 
 option(ODAS_INSTALL_EXECUTABLES "Install the odaslive and odasserver executables along with the odas library" OFF)
 option(ODAS_FORCE_BIN_AND_LIB_DIRS "Force the installation of the odas library and executables in the bin and lib directories" ON)
+option(ODAS_DISABLE_INSTALL "Disable the installation of the odas library and executables" OFF)
+
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PC_FFTW3 REQUIRED fftw3f)
@@ -224,18 +226,21 @@ target_link_libraries(odasserver
     odas
 )
 
-install(TARGETS odas LIBRARY DESTINATION lib)
-install(
-    DIRECTORY include/
-    DESTINATION include
-    FILES_MATCHING
-        PATTERN "*.h"
-)
+if (NOT ODAS_DISABLE_INSTALL)
+    install(TARGETS odas LIBRARY DESTINATION lib)
+    install(
+        DIRECTORY include/
+        DESTINATION include
+        FILES_MATCHING
+            PATTERN "*.h"
+    )
 
-if(ODAS_INSTALL_EXECUTABLES)
-    install(TARGETS odaslive DESTINATION bin)
-    install(TARGETS odasserver DESTINATION bin)
+    if(ODAS_INSTALL_EXECUTABLES)
+        install(TARGETS odaslive DESTINATION bin)
+        install(TARGETS odasserver DESTINATION bin)
+    endif()
 endif()
+
 
 if(ODAS_FORCE_BIN_AND_LIB_DIRS)
     unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
