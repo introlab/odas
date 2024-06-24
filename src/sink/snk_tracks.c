@@ -341,17 +341,18 @@
     void snk_tracks_process_format_text_json(snk_tracks_obj * obj) {
 
         unsigned int iTrack;
+        int tmpBufferSize;
 
         obj->buffer[0] = 0x00;
+        tmpBufferSize = 0;
 
-        sprintf(obj->buffer,"%s{\n",obj->buffer);
-        sprintf(obj->buffer,"%s    \"timeStamp\": %llu,\n",obj->buffer,obj->in->timeStamp);
-        sprintf(obj->buffer,"%s    \"src\": [\n",obj->buffer);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"{\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"    \"timeStamp\": %llu,\n",obj->in->timeStamp);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"    \"src\": [\n");
 
         for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
-            sprintf(obj->buffer,"%s        { \"id\": %llu, \"tag\": \"%s\", \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"activity\": %1.3f }", 
-                    obj->buffer,
+            tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"        { \"id\": %llu, \"tag\": \"%s\", \"x\": %1.3f, \"y\": %1.3f, \"z\": %1.3f, \"activity\": %1.3f }",
                     obj->in->tracks->ids[iTrack],
                     obj->in->tracks->tags[iTrack],
                     obj->in->tracks->array[iTrack*3+0], 
@@ -361,16 +362,16 @@
 
             if (iTrack != (obj->nTracks - 1)) {
 
-                sprintf(obj->buffer,"%s,",obj->buffer);
+                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, ",");
 
             }
 
-            sprintf(obj->buffer,"%s\n",obj->buffer);
+            tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "\n");
 
         }
-        
-        sprintf(obj->buffer,"%s    ]\n",obj->buffer);
-        sprintf(obj->buffer,"%s}\n",obj->buffer);
+
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "    ]\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"}\n");
 
         obj->bufferSize = strlen(obj->buffer);
 

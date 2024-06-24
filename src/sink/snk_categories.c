@@ -336,12 +336,14 @@
     void snk_categories_process_format_text_json(snk_categories_obj * obj) {
 
         unsigned int iChannel;
+        int tmpBufferSize;
 
         obj->buffer[0] = 0x00;
+        tmpBufferSize = 0;
 
-        sprintf(obj->buffer,"%s{\n",obj->buffer);
-        sprintf(obj->buffer,"%s    \"timeStamp\": %llu,\n",obj->buffer,obj->in->timeStamp);
-        sprintf(obj->buffer,"%s    \"src\": [\n",obj->buffer);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "{\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "    \"timeStamp\": %llu,\n", obj->in->timeStamp);
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "    \"src\": [\n");
 
         for (iChannel = 0; iChannel < obj->nChannels; iChannel++) {
 
@@ -349,19 +351,19 @@
 
                 case 0x01:
 
-                    sprintf(obj->buffer,"%s        { \"category\": \"speech\" }",obj->buffer);
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"speech\" }");
 
                 break;
 
                 case 0x00:
 
-                    sprintf(obj->buffer,"%s        { \"category\": \"nonspeech\" }",obj->buffer);
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"nonspeech\" }");
 
                 break;
 
                 default:
 
-                    sprintf(obj->buffer,"%s        { \"category\": \"undefined\" }",obj->buffer);
+                    tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "        { \"category\": \"undefined\" }");
 
                 break;
 
@@ -369,16 +371,16 @@
 
             if (iChannel != (obj->nChannels - 1)) {
 
-                sprintf(obj->buffer,"%s,",obj->buffer);
+                tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, ",");
 
             }
 
-            sprintf(obj->buffer,"%s\n",obj->buffer);
+            tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "\n");
 
         }
-        
-        sprintf(obj->buffer,"%s    ]\n",obj->buffer);
-        sprintf(obj->buffer,"%s}\n",obj->buffer);
+
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize, "    ]\n");
+        tmpBufferSize += sprintf(obj->buffer + tmpBufferSize,"}\n");
 
         obj->bufferSize = strlen(obj->buffer);
 
