@@ -5,6 +5,7 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
+option(ODAS_BUILD_SHARED_LIBRARY "Build shared library" ON)
 option(ODAS_INSTALL_EXECUTABLES "Install the odaslive and odasserver executables along with the odas library" OFF)
 option(ODAS_FORCE_BIN_AND_LIB_DIRS "Force the installation of the odas library and executables in the bin and lib directories" ON)
 option(ODAS_DISABLE_INSTALL "Disable the installation of the odas library and executables" OFF)
@@ -194,11 +195,14 @@ set(SRC
 
 )
 
-add_library(odas SHARED
-    ${SRC}
-)
+if (ODAS_BUILD_SHARED_LIBRARY)
+    add_library(odas SHARED ${SRC})
+else()
+    add_library(odas STATIC ${SRC})
+endif()
 
 target_link_libraries(odas
+    PUBLIC
     ${PC_FFTW3_LIBRARIES}
     ${PC_ALSA_LIBRARIES}
     ${PC_LIBCONFIG_LIBRARIES}
