@@ -41,6 +41,8 @@
         memset(obj->array, 0x00, sizeof(float) * 3 * nTracks);
         obj->ids = (unsigned long long *) malloc(sizeof(unsigned long long) * nTracks);
         memset(obj->ids, 0x00, sizeof(unsigned long long) * nTracks);
+        obj->dropped = (unsigned long long *) malloc(sizeof(unsigned long long) * nTracks);
+        memset(obj->dropped, 0x00, sizeof(unsigned long long) * nTracks);
 
         obj->tags = (char **) malloc(sizeof(char *) * nTracks);
 
@@ -64,6 +66,7 @@
 
         free((void *) obj->array);
         free((void *) obj->ids);
+        free((void *) obj->dropped);
 
         for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
             free((void *) obj->tags[iTrack]);
@@ -87,6 +90,8 @@
         memcpy(clone->array, obj->array, sizeof(float) * 3 * obj->nTracks);
         clone->ids = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracks);
         memcpy(clone->ids, obj->ids, sizeof(unsigned long long) * obj->nTracks);
+        clone->dropped = (unsigned long long *) malloc(sizeof(unsigned long long) * obj->nTracks);
+        memcpy(clone->dropped, obj->dropped, sizeof(unsigned long long) * obj->nTracks);
 
         clone->tags = (char **) malloc(sizeof(char *) * obj->nTracks);
 
@@ -111,6 +116,7 @@
         dest->nTracks = src->nTracks;
         memcpy(dest->array, src->array, sizeof(float) * 3 * src->nTracks);
         memcpy(dest->ids, src->ids, sizeof(unsigned long long) * src->nTracks);
+        memcpy(dest->dropped, src->dropped, sizeof(unsigned long long) * src->nTracks);
         
         for (iTrack = 0; iTrack < src->nTracks; iTrack++) {
 
@@ -128,6 +134,7 @@
 
         memset(obj->array, 0x00, sizeof(float) * 3 * obj->nTracks);
         memset(obj->ids, 0x00, sizeof(unsigned long long) * obj->nTracks);       
+        memset(obj->dropped, 0x00, sizeof(unsigned long long) * obj->nTracks);       
 
         for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
             
@@ -154,5 +161,8 @@
                    obj->activity[iTrack]);
             
         }
+        for (iTrack = 0; iTrack < obj->nTracks; iTrack++) {
 
+            printf("Dropped (%04llu)\n", obj->dropped[iTrack]);
+        }
     }

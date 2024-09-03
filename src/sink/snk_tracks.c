@@ -341,6 +341,9 @@
     void snk_tracks_process_format_text_json(snk_tracks_obj * obj) {
 
         unsigned int iTrack;
+		int addedDroppedEntry;
+		
+		addedDroppedEntry = 0;
 
         obj->buffer[0] = 0x00;
 
@@ -368,6 +371,25 @@
             sprintf(obj->buffer,"%s\n",obj->buffer);
 
         }
+        
+        sprintf(obj->buffer,"%s    ],\n",obj->buffer);
+        sprintf(obj->buffer,"%s    \"dropped\": [\n",obj->buffer);
+
+        for (iTrack = 0; iTrack < obj->nTracks; iTrack++)
+		{
+			if(obj->in->tracks->dropped[iTrack]!=0)
+			{
+				if(addedDroppedEntry == 1)
+				{
+					sprintf(obj->buffer,"%s,",obj->buffer);
+				}
+				sprintf(obj->buffer,"%s        { \"id\": %llu }", 
+						obj->buffer, obj->in->tracks->dropped[iTrack]);
+				addedDroppedEntry = 1;
+			}
+		}
+
+    	sprintf(obj->buffer,"%s\n",obj->buffer);
         
         sprintf(obj->buffer,"%s    ]\n",obj->buffer);
         sprintf(obj->buffer,"%s}\n",obj->buffer);

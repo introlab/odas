@@ -37,6 +37,7 @@
 
         unsigned int nTracks;
         unsigned long long * ids;
+        unsigned long long * dropped;
         char ** tags;
         float * array;
         float * activity;
