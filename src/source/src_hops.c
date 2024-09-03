@@ -154,7 +154,13 @@ void src_hops_open(src_hops_obj * obj) {
 
 void src_hops_open_interface_file(src_hops_obj * obj) {
 
-    obj->fp = fopen(obj->interface->fileName, "rb");
+	if (strcmp(obj->interface->fileName, "stdin") == 0)
+	{
+		obj->fp = freopen(NULL, "rb", stdin);
+	}else
+	{
+    	obj->fp = fopen(obj->interface->fileName, "rb");
+	}
 
     if (obj->fp == NULL) {
         printf("Cannot open file %s\n", obj->interface->fileName);
