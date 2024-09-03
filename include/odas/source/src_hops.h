@@ -57,6 +57,7 @@ typedef struct src_hops_obj {
     interface_obj *interface;
 
     FILE * fp;
+	FILE * output_dump_file;
     snd_pcm_t * ch;
     pa_simple * pa;
     pa_sample_spec ss;
@@ -78,7 +79,7 @@ typedef struct src_hops_cfg {
     format_obj * format;
     interface_obj * interface;
     pa_channel_map * channel_map;
-
+	char* output_dump_filename;
 } src_hops_cfg;
 
 src_hops_obj * src_hops_construct(const src_hops_cfg * src_hops_config, const msg_hops_cfg * msg_hops_config);

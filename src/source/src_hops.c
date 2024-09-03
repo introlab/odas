@@ -43,6 +43,18 @@ src_hops_obj * src_hops_construct(const src_hops_cfg * src_hops_config, const ms
 
     obj->format = format_clone(src_hops_config->format);
     obj->interface = interface_clone(src_hops_config->interface);
+	if (src_hops_config->output_dump_filename!=NULL)
+	{
+		obj->output_dump_file = fopen(src_hops_config->output_dump_filename, "wb");
+
+		if (obj->output_dump_file == NULL) {
+			printf("Cannot open raw dump file %s\n", src_hops_config->output_dump_filename);
+			exit(EXIT_FAILURE);
+		}
+	}else
+	{
+		obj->output_dump_file = NULL;
+	}
     if (src_hops_config->channel_map != NULL)
     {
         // Will not be null if in pulseaudio mode
@@ -99,6 +111,11 @@ void src_hops_destroy(src_hops_obj * obj) {
     free((void *) obj->buffer);
     format_destroy(obj->format);
     interface_destroy(obj->interface);
+	
+	if (obj->output_dump_file != NULL)
+	{
+		fclose(obj->output_dump_file);
+	}
 
     free((void *) obj);
 }
@@ -354,6 +371,11 @@ void src_hops_close(src_hops_obj * obj) {
 
         break;
     }
+	if (obj->output_dump_file)
+	{
+		fclose(obj->output_dump_file);
+		obj->output_dump_file = NULL;
+	}
 }
 
 void src_hops_close_interface_file(src_hops_obj * obj) {
@@ -455,6 +477,11 @@ int src_hops_process(src_hops_obj * obj) {
 
     obj->timeStamp++;
     obj->out->timeStamp = obj->timeStamp;
+
+	if(obj->output_dump_file != NULL)
+	{
+		fwrite(obj->buffer, sizeof(char), obj->bufferSize, obj->output_dump_file);
+	}
 
     return rtnValue;
 }
@@ -659,6 +686,7 @@ src_hops_cfg * src_hops_cfg_construct(void) {
 
     cfg->format = (format_obj *) NULL;
     cfg->interface = (interface_obj *) NULL;
+	cfg->output_dump_filename = NULL;
 
     return cfg;
 }
@@ -675,6 +703,10 @@ void src_hops_cfg_destroy(src_hops_cfg * src_hops_config) {
     if (src_hops_config->channel_map != NULL) {
         free((void *) src_hops_config->channel_map);
     }
+
+	if (src_hops_config->output_dump_filename != NULL) {
+		free((void *) src_hops_config->output_dump_filename);
+	}
 
     free((void *) src_hops_config);
     

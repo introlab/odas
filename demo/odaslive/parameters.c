@@ -223,6 +223,19 @@
                 exit(EXIT_FAILURE);
             }
 
+        // +----------------------------------------------------------+
+        // | Debug dump                                                |
+        // +----------------------------------------------------------+
+
+            tmpStr1 = parameters_lookup_string(fileConfig, "raw.output_dump_file");
+
+            if (strcmp(tmpStr1, "") != 0) { 
+
+            	cfg->output_dump_filename = (char *) malloc(sizeof(char) * (strlen(tmpStr1)+1));
+            	strcpy(cfg->output_dump_filename, tmpStr1);
+            }
+			
+
             free((void *) tmpStr1);
 
         return cfg;
