@@ -156,7 +156,7 @@
 
         }
 
-        diffuse_cst = 1.0f / (4.0f * M_PI * ((float) nPointsActive) / ((float) spatialindexes->nPoints));
+		diffuse_cst = (((float)nPointsActive) / (4.0f * M_PI * (float)spatialindexes->nPoints));
 
         points_destroy(points);
         beampatterns_destroy(beampatterns_mics);
