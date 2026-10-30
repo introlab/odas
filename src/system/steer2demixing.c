@@ -132,8 +132,14 @@
                     }       
                     else {
 
-                        demixings->array[iSep][iSampleBC * 2 + 0] = 0.0f;
-                        demixings->array[iSep][iSampleBC * 2 + 1] = 0.0f;
+                        for (iBin = 0; iBin < obj->halfFrameSize; iBin++) {
+
+                            iSampleBC = iBin * obj->nChannels + iChannel;
+
+                            demixings->array[iSep][iSampleBC * 2 + 0] = 0.0f;
+                            demixings->array[iSep][iSampleBC * 2 + 1] = 0.0f;
+
+                        }
 
                     }             
 
